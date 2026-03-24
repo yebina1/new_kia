@@ -12,7 +12,7 @@
 .inner {
   position: sticky;
   top: 0;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   overflow: hidden;
   background-color: #0a0e17;
@@ -109,12 +109,14 @@
   }
 }
 
+
+
+/* section.match */
+/* ===== Intro: 기본 HTML 구조에 배경 적용 ===== */
 .match .inner {
   padding: 0;
 }
 
-/* section.match */
-/* ===== Intro: 기본 HTML 구조에 배경 적용 ===== */
 .intro {
   position: relative;
   width: 100%;
@@ -228,8 +230,6 @@ section[class*="option"] .bottom>ul.cars>li>h2 {
   position: absolute;
   bottom: 50px;
   left: 30px;
-  font-size: 2rem;
-  font-weight: 600;
   z-index: 2;
   transition: opacity 0.4s ease;
 }
@@ -254,13 +254,13 @@ section[class*="option"] .bottom>ul.cars>li .info_con {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.85);
-  padding: 40px 30px;
   z-index: 3;
   display: flex;
   flex-direction: column;
   justify-content: center;
   opacity: 0;
   visibility: hidden;
+  padding: 64px;
   transition: opacity 0.4s ease, visibility 0.4s ease;
 }
 

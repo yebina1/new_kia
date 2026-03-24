@@ -145,6 +145,33 @@ function applyScrollSnap() {
   });
 }
 
+// ===== 스크롤 이벤트 핸들러 =====
+function handleScroll() {
+  // 컨테이너의 전체 높이에서 뷰포트를 뺀 만큼이 스크롤 가능 거리
+  const $containerTop = $container.offsetTop;
+  const $containerHeight = $container.offsetHeight;
+  const $scrollable = $containerHeight - window.innerHeight;
+  const $scrolled = window.scrollY - $containerTop;
+  const $p = Math.max(0, Math.min(1, $scrolled / $scrollable));
+  $progress = $p * $totalDuration;
+
+  if ($rafId) cancelAnimationFrame($rafId);
+  $rafId = requestAnimationFrame(() => {
+    updateLayers();
+    $rafId = null;
+  });
+
+  if ($scrollTimeout) clearTimeout($scrollTimeout);
+  $scrollTimeout = setTimeout(() => {
+    applyScrollSnap();
+  }, 150);
+}
+
+// ===== 초기화 =====
+window.addEventListener("scroll", handleScroll, { passive: true });
+window.addEventListener("resize", handleScroll, { passive: true });
+handleScroll();
+
 /* section.match */
 // ===== 스크롤 이벤트 핸들러 =====
 function handleScroll() {
