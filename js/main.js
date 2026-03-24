@@ -161,11 +161,6 @@ function handleScroll() {
     updateLayers();
     $rafId = null;
   });
-
-  if ($scrollTimeout) clearTimeout($scrollTimeout);
-  $scrollTimeout = setTimeout(() => {
-    applyScrollSnap();
-  }, 150);
 }
 
 // ===== 초기화 =====
