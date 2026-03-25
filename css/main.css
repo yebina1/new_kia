@@ -192,6 +192,7 @@ section[class*="option"] .inner {
 /* Top: 제목 + 링크 */
 section[class*="option"] .top {
   flex: 1;
+  width: 100%;
   padding: 32px 64px;
   display: flex;
   justify-content: space-between;
@@ -229,42 +230,76 @@ section[class*="option"] .bottom>ul {
   gap: 0;
 }
 
-section[class*="option"] .bottom>ul.cars>li,
-section[class*="option"] .bottom>ul>li {
+section[class*="option"] .bottom>ul.cars>li {
   position: relative;
   flex: 1;
   height: 100%;
   overflow: hidden;
   cursor: pointer;
-    padding: 64px;
+  padding: 64px;
+  background-size: cover;
+  background-position: center;
 }
 
-section[class*="option"] .bottom>ul>li>h2,
 section[class*="option"] .bottom>ul.cars>li>h2 {
   z-index: 2;
   transition: opacity 0.4s ease;
-}
-
-section[class*="option"] .bottom>ul>li{
-  align-content: flex-end;
 }
 
 section[class*="option"] .bottom>ul>li>p{
   font-family: var(--font-outfit);
 }
 
-section.option1 .bottom>ul.cars>li:nth-child(1){
-  
+section.option01 .bottom>ul.cars>li:nth-child(1){
+  background-image: url("../img/main/match/Outdoor_Adventure_01_Telluride_img.jpg");
 }
 
-section[class*="option"] .bottom>ul>li>p,
+section.option01 .bottom>ul.cars>li:nth-child(2){
+  background-image: url("../img/main/match/Outdoor_Adventure_02_Sportage_img.jpg");
+}
+section.option01 .bottom>ul.cars>li:nth-child(3){
+  background-image: url("../img/main/match/Outdoor_Adventure_03_Sorento_img.jpg");
+}
+
+section.option02 .bottom>ul.cars>li:nth-child(1){
+  background-image: url("../img/main/match/City_Commute_01_Seltos_img.jpg");
+}
+
+section.option02 .bottom>ul.cars>li:nth-child(2){
+  background-image: url("../img/main/match/City_Commute_02_K4_img.jpg");
+}
+section.option02 .bottom>ul.cars>li:nth-child(3){
+  background-image: url("../img/main/match/City_Commute_03_Niro_Hybrid_img.jpg");
+}
+
+section.option03 .bottom>ul.cars>li:nth-child(1){
+  background-image: url("../img/main/match/Family_Roadtrips_01_EV9_img.jpg");
+}
+
+section.option03 .bottom>ul.cars>li:nth-child(2){
+  background-image: url("../img/main/match/Family_Roadtrips_02_Telluride_img.jpg");
+}
+section.option03 .bottom>ul.cars>li:nth-child(3){
+  background-image: url("../img/main/match/Family_Roadtrips_03_Carnival_img.jpg");
+}
+
+section.option04 .bottom>ul.cars>li:nth-child(1){
+  background-image: url("../img/main/match/Electric_Eco_01_Niro_EV_img.jpg");
+}
+
+section.option04 .bottom>ul.cars>li:nth-child(2){
+  background-image: url("../img/main/match/Electric_Eco_02_EV6_img.jpg");
+}
+section.option04 .bottom>ul.cars>li:nth-child(3){
+  background-image: url("../img/main/match/Electric_Eco_03_EV9_img.jpg");
+}
+
 section[class*="option"] .bottom>ul.cars>li>p {
   z-index: 2;
   opacity: 0.8;
   transition: opacity 0.4s ease;
 }
 
-section[class*="option"] .bottom>ul>li strong,
 section[class*="option"] .bottom>ul.cars>li strong{
   font-style: normal;
   font-weight: 400;
@@ -272,7 +307,6 @@ section[class*="option"] .bottom>ul.cars>li strong{
 }
 
 /* ===== Hover: info_con 숨김/표시 ===== */
-section[class*="option"] .bottom>ul>li .info_con,
 section[class*="option"] .bottom>ul.cars>li .info_con {
   position: absolute;
   top: 0;
@@ -291,35 +325,30 @@ section[class*="option"] .bottom>ul.cars>li .info_con {
   transition: opacity 0.4s ease, visibility 0.4s ease;
 }
 
-
-section[class*="option"] .bottom>ul>li:hover .info_con,
 section[class*="option"] .bottom>ul.cars>li:hover .info_con {
   opacity: 1;
   visibility: visible;
 }
 
-section[class*="option"] .bottom>ul>li .info_con>p,
 section[class*="option"] .bottom>ul.cars>li .info_con>p{
   padding-block: 16px;
   color: var(--kia-white1);
 }
 
-section[class*="option"] .bottom>ul>li .info_con>ul.info,
 section[class*="option"] .bottom>ul.cars>li .info_con>ul.info{
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-section[class*="option"] .bottom>ul>li .info_con>ul.info>li,
 section[class*="option"] .bottom>ul.cars>li .info_con>ul.info>li{
   display: flex;
   flex-direction: column;
   gap: 4px;
   width: 100%;
+  padding-inline: 16px;
 }
 
-section[class*="option"] .bottom>ul>li .info_con>ul.info>li>b,
 section[class*="option"] .bottom>ul.cars>li .info_con>ul.info>li>b{
   color: var(--kia-white1);
   font-size: 18px;
@@ -328,7 +357,6 @@ section[class*="option"] .bottom>ul.cars>li .info_con>ul.info>li>b{
   line-height: 130%;
 }
 
-section[class*="option"] .bottom>ul>li .info_con>ul.info>li>p,
 section[class*="option"] .bottom>ul.cars>li .info_con>ul.info>li>p{
   color: var(--kia-white2);
   font-size: 16px;
@@ -338,8 +366,6 @@ section[class*="option"] .bottom>ul.cars>li .info_con>ul.info>li>p{
 }
 
 /* hover시 기존 h2, p 숨기기 */
-section[class*="option"] .bottom>ul>li:hover>h2,
-section[class*="option"] .bottom>ul>li:hover>p,
 section[class*="option"] .bottom>ul.cars>li:hover>h2,
 section[class*="option"] .bottom>ul.cars>li:hover>p {
   opacity: 0;
