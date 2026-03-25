@@ -225,15 +225,25 @@ section[class*="option"] .bottom>ul.cars>li>h2 {
 }
 
 section[class*="option"] .bottom>ul>li{
+  align-content: flex-end;
+}
+
+section[class*="option"] .bottom>ul>li>p{
+  font-family: var(--font-outfit);
 }
 
 section[class*="option"] .bottom>ul>li>p,
 section[class*="option"] .bottom>ul.cars>li>p {
-
-  font-size: 0.9rem;
   z-index: 2;
   opacity: 0.8;
   transition: opacity 0.4s ease;
+}
+
+section[class*="option"] .bottom>ul>li strong,
+section[class*="option"] .bottom>ul.cars>li strong{
+  font-style: normal;
+  font-weight: 400;
+  color: var(--kia-white2);
 }
 
 /* ===== Hover: info_con 숨김/표시 ===== */
@@ -249,16 +259,57 @@ section[class*="option"] .bottom>ul.cars>li .info_con {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  gap: 16px;
   opacity: 0;
   visibility: hidden;
   padding: 64px;
   transition: opacity 0.4s ease, visibility 0.4s ease;
 }
 
+
 section[class*="option"] .bottom>ul>li:hover .info_con,
 section[class*="option"] .bottom>ul.cars>li:hover .info_con {
   opacity: 1;
   visibility: visible;
+}
+
+section[class*="option"] .bottom>ul>li .info_con>p,
+section[class*="option"] .bottom>ul.cars>li .info_con>p{
+  padding-block: 16px;
+  color: var(--kia-white1);
+}
+
+section[class*="option"] .bottom>ul>li .info_con>ul.info,
+section[class*="option"] .bottom>ul.cars>li .info_con>ul.info{
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+section[class*="option"] .bottom>ul>li .info_con>ul.info>li,
+section[class*="option"] .bottom>ul.cars>li .info_con>ul.info>li{
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+section[class*="option"] .bottom>ul>li .info_con>ul.info>li>b,
+section[class*="option"] .bottom>ul.cars>li .info_con>ul.info>li>b{
+  color: var(--kia-white1);
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 130%;
+}
+
+section[class*="option"] .bottom>ul>li .info_con>ul.info>li>p,
+section[class*="option"] .bottom>ul.cars>li .info_con>ul.info>li>p{
+  color: var(--kia-white2);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 130%
 }
 
 /* hover시 기존 h2, p 숨기기 */
