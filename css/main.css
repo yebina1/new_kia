@@ -215,22 +215,21 @@ section[class*="option"] .bottom>ul>li {
   height: 100%;
   overflow: hidden;
   cursor: pointer;
+    padding: 64px;
 }
 
 section[class*="option"] .bottom>ul>li>h2,
 section[class*="option"] .bottom>ul.cars>li>h2 {
-  position: absolute;
-  bottom: 50px;
-  left: 30px;
   z-index: 2;
   transition: opacity 0.4s ease;
 }
 
+section[class*="option"] .bottom>ul>li{
+}
+
 section[class*="option"] .bottom>ul>li>p,
 section[class*="option"] .bottom>ul.cars>li>p {
-  position: absolute;
-  bottom: 25px;
-  left: 30px;
+
   font-size: 0.9rem;
   z-index: 2;
   opacity: 0.8;
