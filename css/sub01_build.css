@@ -20,6 +20,15 @@ body {
   color: #fff;
 }
 
+.build_wrap {
+  min-height: 100vh;
+  background-color: #0c1115;
+  background-image: var(--build-page-bg, none);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+}
+
 img {
   display: block;
   width: 100%;
@@ -39,10 +48,11 @@ button {
 
 .hero {
   width: 100%;
+  min-height: 100vh;
   padding: 0;
   position: relative;
   overflow: hidden;
-  background-image: url("../kia/img/sub01_build/build_bg.png");
+  background-image: var(--hero-bg-image, var(--build-page-bg, none));
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;

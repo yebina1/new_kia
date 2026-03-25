@@ -26,7 +26,8 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".hero_bottom_tabs button")
   );
   const categoryOrder = topTabButtons.map((button) => button.dataset.category);
-  const defaultBackgroundImage = "../kia/img/sub01_build/build_bg.png";
+  const defaultBackgroundImage =
+    heroSection?.dataset.defaultBg || "./img/sub01_build/build_bg.png";
   const trimStageData = {
     Sportage: {
       grade: "X-Line AWD",
@@ -308,7 +309,10 @@ document.addEventListener("DOMContentLoaded", () => {
       heroTitle.classList.add(`hero_title_${titleKey}`);
     }
 
-    heroSection.style.backgroundImage = `url("${currentCar.bgImage}")`;
+    heroSection.style.setProperty(
+      "--hero-bg-image",
+      `url("${currentCar.bgImage}")`
+    );
     heroCarImage.src = currentCar.carImage;
     heroCarImage.alt = currentCar.alt;
 
