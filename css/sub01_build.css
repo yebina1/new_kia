@@ -1,1 +1,1205 @@
 @charset "utf-8";
+
+/* reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #f3f3f3;
+  font-family: "Pretendard Variable", "Noto Sans KR", sans-serif;
+  color: #fff;
+}
+
+img {
+  display: block;
+  width: 100%;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font: inherit;
+}
+
+.hero {
+  width: 100%;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+  background-image: url("../kia/img/sub01_build/build_bg.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+}
+
+.hero_header_space {
+  width: 100%;
+  height: 64px;
+}
+
+.hero_visual {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: calc(100vh - 64px);
+  min-height: 760px;
+  overflow: hidden;
+  padding-top: 124px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: transparent;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center top,
+    rgba(255, 255, 255, 0.14) 0%,
+    rgba(255, 255, 255, 0.02) 38%,
+    transparent 60%
+  );
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero::after {
+  content: none;
+}
+
+.hero_overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(18, 23, 30, 0.45),
+      rgba(18, 23, 30, 0.15) 32%,
+      rgba(18, 23, 30, 0.35)
+    );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.hero_top_tabs {
+  position: absolute;
+  top: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(251, 246, 239, 0.25);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  /* Highlight */
+  box-shadow:
+    inset 1px 2px 2px rgba(255, 255, 255, 0.117),
+    inset -1px -1.5px 2px rgba(0, 0, 0, 0.2),
+    inset 0 0 10px rgba(255, 255, 255, 0),
+    1px 2px 4px rgba(0, 0, 0, 0.6);
+  outline: 1px solid rgba(255, 255, 255, 0.2);
+  outline-offset: -1px;
+  overflow: hidden;
+}
+
+.hero_trim_header {
+  position: absolute;
+  top: 16px;
+  left: 64px;
+  right: 64px;
+  z-index: 6;
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  pointer-events: none;
+}
+
+.hero_trim_header.is-visible {
+  display: flex;
+}
+
+.hero_trim_header_logo,
+.hero_trim_header_nav {
+  height: 54px;
+  border-radius: 999px;
+  background: rgba(251, 246, 239, 0.08);
+  border: 1px dashed rgba(251, 246, 239, 0.28);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.hero_trim_header_logo {
+  width: 96px;
+}
+
+.hero_trim_header_nav {
+  width: min(48vw, 540px);
+}
+
+.hero_trim_header_logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Outfit", sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #fbf6ef;
+}
+
+.hero_trim_header_nav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 0 24px;
+}
+
+.hero_trim_header_nav span {
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  color: rgba(251, 246, 239, 0.84);
+  white-space: nowrap;
+}
+
+.hero_top_tabs.is-hidden,
+.hero_model_stage.is-hidden,
+.hero_start_btn.is-hidden {
+  display: none;
+}
+
+.hero_trim_stage {
+  position: absolute;
+  inset: 104px 64px 120px;
+  display: none;
+  grid-template-columns: minmax(320px, 420px) minmax(420px, 1fr);
+  grid-template-rows: auto 1fr auto;
+  column-gap: 48px;
+  row-gap: 32px;
+  align-items: start;
+  z-index: 4;
+}
+
+.hero_trim_stage.is-visible {
+  display: grid;
+}
+
+.hero_trim_intro {
+  align-self: start;
+  padding-top: 40px;
+}
+
+.hero_trim_title {
+  margin: 0 0 8px;
+  letter-spacing: 2px;
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.hero_trim_grade,
+.hero_trim_price,
+.hero_trim_lease {
+  margin: 0;
+  color: #fbf6ef;
+}
+
+.hero_trim_grade {
+  font-family: "Inter", sans-serif;
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.hero_trim_price,
+.hero_trim_lease {
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: rgba(251, 246, 239, 0.85);
+}
+
+.hero_trim_vehicle {
+  grid-column: 1;
+  grid-row: 2 / span 2;
+  align-self: end;
+  width: min(46vw, 560px);
+  filter: drop-shadow(0 30px 35px rgba(0, 0, 0, 0.32));
+}
+
+.hero_trim_vehicle img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.hero_trim_panel {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  padding: 24px;
+  border-radius: 32px;
+  background: rgba(121, 121, 121, 0.22);
+  border: 1px solid rgba(251, 246, 239, 0.18);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.08);
+}
+
+.hero_trim_panel_title {
+  margin: 0 0 16px;
+  font-size: 52px;
+}
+
+.hero_trim_cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.hero_trim_card {
+  padding: 20px 16px 14px;
+  border-radius: 24px;
+  background: rgba(91, 91, 91, 0.18);
+  border: 1px solid rgba(251, 246, 239, 0.18);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.hero_trim_card.selected {
+  background: rgba(111, 111, 111, 0.28);
+  border-color: rgba(160, 247, 255, 0.92);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 8px 20px rgba(0, 0, 0, 0.12),
+    0 0 0 1px rgba(160, 247, 255, 0.45);
+}
+
+.hero_trim_card_head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.hero_trim_card_head strong {
+  font-family: "Inter", sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  color: #fbf6ef;
+}
+
+.hero_trim_select_btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 84px;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background:
+    linear-gradient(
+      -45deg,
+      rgba(255, 255, 255, 0.8) 0%,
+      rgba(255, 255, 255, 0.34) 18%,
+      rgba(255, 255, 255, 0.08) 38%,
+      rgba(255, 255, 255, 0) 56%,
+      rgba(0, 0, 0, 0.1) 100%
+    ),
+    rgba(251, 246, 239, 0.26);
+  color: #fbf6ef;
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  border: 1px solid rgba(251, 246, 239, 0.32);
+  border-top-color: rgba(255, 255, 255, 0.68);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.16),
+    0 6px 14px rgba(0, 0, 0, 0.14);
+  backdrop-filter: blur(4px) saturate(187%);
+  -webkit-backdrop-filter: blur(4px) saturate(187%);
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
+}
+
+.hero_trim_select_btn:hover {
+  transform: translateY(-1px);
+}
+
+.hero_trim_card.selected .hero_trim_select_btn {
+  border-color: rgba(160, 247, 255, 0.92);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.16),
+    0 6px 14px rgba(0, 0, 0, 0.14),
+    0 0 0 1px rgba(160, 247, 255, 0.45);
+}
+
+.hero_trim_card_details {
+  display: none;
+  padding: 0 8px 12px 18px;
+}
+
+.hero_trim_card.expanded .hero_trim_card_details {
+  display: block;
+}
+
+.hero_trim_card_details ul {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  list-style: disc;
+}
+
+.hero_trim_card_details li {
+  color: #fbf6ef;
+  font-family: "Inter", sans-serif;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.hero_trim_more_btn {
+  width: 100%;
+  padding: 10px 0 0;
+  border-top: 1px solid rgba(251, 246, 239, 0.24);
+  color: rgba(251, 246, 239, 0.82);
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  justify-content: center;
+  position: relative;
+}
+
+.hero_trim_more_btn::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  margin-left: 8px;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  transform: rotate(45deg) translateY(-2px);
+}
+
+.hero_trim_more_btn[aria-expanded="true"]::after {
+  transform: rotate(-135deg) translateY(-1px);
+}
+
+.hero_trim_actions {
+  grid-column: 2;
+  grid-row: 3;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.hero_trim_action_btn {
+  min-width: 160px;
+  height: 48px;
+  padding: 0 24px;
+  border-radius: 999px;
+  justify-content: center;
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.hero_trim_action_btn_secondary {
+  color: #121212;
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.hero_trim_action_btn_primary {
+  color: #121212;
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.hero_top_tabs button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 94px;
+  height: auto;
+  padding: 8px 16px;
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.78);
+  font-family: "Outfit", sans-serif;
+  font-size: 20px;
+  line-height: 130%;
+  font-weight: 400;
+  text-align: center;
+  white-space: nowrap;
+  transition: 0.3s;
+}
+
+.hero_top_tabs button.active {
+  background: rgba(255, 255, 255, 0.24);
+  color: #fff;
+  align-items: center;
+  padding: 4px 16px;
+}
+
+.hero_top_tabs button:hover {
+  color: #fff;
+  font-weight: 600;
+}
+
+.hero_center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 1;
+  gap: 16px;
+  width: min(92vw, 980px);
+  padding-bottom: 180px;
+}
+
+.hero_title {
+  margin: 0;
+  padding-top: 16px;
+  letter-spacing: 2px;
+  text-align: center;
+  display: inline-flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 6px;
+}
+
+.hero_car_name {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.hero_title_sorento_hybrid,
+.hero_car_name_sorento_hybrid {
+  letter-spacing: 1px;
+}
+
+.hero_title_suffix {
+  display: inline-block;
+  line-height: 80%;
+  letter-spacing: -1px;
+  vertical-align: top;
+  color: #FBF6EF;
+}
+
+.hero_title_suffix_ev6,
+.hero_title_suffix_ev_6 {
+  line-height: 120%;
+  letter-spacing: -1px;
+  transform: translateY(5px);
+  margin-left: -2px;
+}
+
+.hero_title_suffix_ev9,
+.hero_title_suffix_ev_9 {
+  line-height: 80%;
+  letter-spacing: -1px;
+}
+
+.hero_title_suffix_k4 {
+  line-height: 74%;
+  letter-spacing: -1.2px;
+  font-size: 120%;
+  margin-left: -2px;
+}
+
+.hero_catalog,
+.hero_car_list {
+  display: none;
+}
+
+.hero_car {
+  position: relative;
+  width: min(66vw, 980px);
+  filter: drop-shadow(0 30px 35px rgba(0, 0, 0, 0.32));
+}
+
+.hero_car::after {
+  content: none;
+  position: absolute;
+  left: 50%;
+  bottom: -96px;
+  transform: translateX(-50%);
+  width: min(92vw, 1200px);
+  height: 280px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 0 0 120px rgba(255, 255, 255, 0.015),
+    0 0 0 240px rgba(255, 255, 255, 0.01);
+  opacity: 0.45;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero_car img {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  transition:
+    opacity 0.38s ease,
+    transform 0.38s ease;
+  will-change: transform, opacity;
+}
+
+.hero_car img.is-sliding-out-left,
+.hero_car img.is-sliding-out-right {
+  opacity: 0;
+}
+
+.hero_car img.is-sliding-out-left {
+  transform: translateX(-72px);
+}
+
+.hero_car img.is-sliding-out-right {
+  transform: translateX(72px);
+}
+
+.hero_car img.is-sliding-in-left,
+.hero_car img.is-sliding-in-right {
+  opacity: 0;
+}
+
+.hero_car img.is-sliding-in-left {
+  transform: translateX(-72px);
+}
+
+.hero_car img.is-sliding-in-right {
+  transform: translateX(72px);
+}
+
+.hero_arrow {
+  position: absolute;
+  top: 52%;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  padding: 0;
+  flex: 0 0 60px;
+  z-index: 5;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 32px;
+  line-height: 1;
+  text-align: center;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: 0.3s;
+}
+
+.hero_arrow:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.hero_arrow_left {
+  left: 88px;
+}
+
+.hero_arrow_right {
+  right: 88px;
+}
+
+.dark_origin {
+  background:
+    linear-gradient(
+      -45deg,
+      rgba(255, 255, 255, 0.8) 0%,
+      rgba(255, 255, 255, 0.34) 18%,
+      rgba(255, 255, 255, 0.08) 38%,
+      rgba(255, 255, 255, 0) 56%,
+      rgba(0, 0, 0, 0.1) 100%
+    ),
+    rgba(251, 246, 239, 0.26);
+  backdrop-filter: blur(4px) saturate(187%);
+  -webkit-backdrop-filter: blur(4px) saturate(187%);
+  border: 1px solid rgba(251, 246, 239, 0.32);
+  border-top-color: rgba(255, 255, 255, 0.68);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.16),
+    0 8px 31px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+}
+
+.hero_start_btn {
+  position: absolute;
+  left: 50%;
+  right: auto;
+  top: auto;
+  bottom: 84px;
+  transform: translateX(-50%);
+  display: inline-flex;
+  width: auto;
+  min-width: 124px;
+  height: auto;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  z-index: 5;
+  padding: 16px 32px;
+  white-space: nowrap;
+  border-radius: 999px;
+  color: #fbf6ef;
+  font-family: "Outfit", "Pretendard Variable", "Noto Sans KR", sans-serif;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0;
+  text-align: center;
+  flex: 0 0 auto;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.hero_start_btn::after {
+  content: ">";
+  display: block;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.hero_start_btn:hover {
+  transform: translateX(-50%) translateY(-1px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.78),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.18),
+    0 12px 34px rgba(0, 0, 0, 0.2);
+}
+
+.hero_bottom_steps {
+  position: absolute;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%);
+  z-index: 5;
+  width: fit-content;
+  max-width: min(88vw, 760px);
+}
+
+.hero_progress {
+  position: relative;
+  width: 100%;
+  height: 8px;
+  margin-bottom: 10px;
+  overflow: visible;
+}
+
+.hero_progress_track,
+.hero_progress_fill {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  height: 8px;
+  border-radius: 999px;
+  transform: translateY(-50%);
+  overflow: hidden;
+}
+
+.hero_progress_track::before,
+.hero_progress_fill::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    292deg,
+    rgba(175, 194, 209, 0.2) 32.67%,
+    rgba(90, 99, 107, 0) 107.81%
+  );
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.hero_progress_track::after,
+.hero_progress_fill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.8),
+    rgba(255, 255, 255, 0.1)
+  );
+  filter: blur(2px);
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.hero_progress_track {
+  width: 100%;
+  background: rgba(99, 99, 99, 0.5);
+  border: 1px solid rgba(251, 246, 239, 0.2);
+  backdrop-filter: blur(8px) saturate(160%);
+  -webkit-backdrop-filter: blur(8px) saturate(160%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.24),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.12),
+    0 2px 8px rgba(0, 0, 0, 0.18);
+}
+
+.hero_progress_fill {
+  width: 8%;
+  min-width: 28px;
+  background: rgba(237, 237, 237, 0.5);
+  border: 1px solid rgba(251, 246, 239, 0.2);
+  backdrop-filter: blur(8px) saturate(180%);
+  -webkit-backdrop-filter: blur(8px) saturate(180%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.08),
+    0 2px 10px rgba(0, 0, 0, 0.14);
+  transition: width 0.35s ease;
+}
+
+.hero_bottom_tabs {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.hero_bottom_tabs button {
+  position: relative;
+  padding: 0;
+  color: rgba(255, 255, 255, 0.78);
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1;
+  transition:
+    color 0.3s ease,
+    font-weight 0.3s ease;
+}
+
+.hero_bottom_tabs button.active,
+.hero_bottom_tabs button:hover {
+  color: #fff;
+}
+
+.hero_bottom_tabs button.active {
+  font-weight: 600;
+}
+
+@media (max-width: 1024px) {
+  .hero_trim_stage {
+    inset: 96px 32px 116px;
+    grid-template-columns: minmax(280px, 360px) minmax(320px, 1fr);
+    column-gap: 24px;
+    row-gap: 24px;
+  }
+
+  .hero_trim_intro {
+    padding-top: 24px;
+  }
+
+  .hero_trim_panel {
+    padding: 20px;
+  }
+
+  .hero_trim_panel_title {
+    font-size: 44px;
+  }
+
+  .hero_trim_card_head strong {
+    font-size: 18px;
+  }
+
+  .hero_trim_card_details li {
+    font-size: 14px;
+  }
+
+  .hero_trim_vehicle {
+    width: min(44vw, 420px);
+  }
+
+  .hero_trim_action_btn {
+    min-width: 136px;
+    font-size: 14px;
+  }
+
+  .hero_trim_header {
+    left: 32px;
+    right: 32px;
+    top: 16px;
+    gap: 16px;
+  }
+
+  .hero_trim_header_logo {
+    width: 80px;
+    height: 48px;
+  }
+
+  .hero_trim_header_nav {
+    width: min(52vw, 420px);
+    height: 48px;
+  }
+
+  .hero_header_space {
+    height: 64px;
+  }
+
+  .hero_visual {
+    height: calc(100vh - 64px);
+    min-height: 680px;
+    padding-top: 120px;
+  }
+
+  .hero_title {
+    font-size: 48px;
+  }
+
+  .hero_center {
+    padding-bottom: 164px;
+  }
+
+  .hero_car {
+    width: min(78vw, 760px);
+  }
+
+  .hero_top_tabs {
+    top: 24px;
+    width: 490px;
+    height: 58px;
+    justify-content: center;
+    gap: 4px;
+    padding: 8px 16px;
+  }
+
+  .hero_top_tabs button {
+    min-width: auto;
+    height: 42px;
+    padding: 8px 14px;
+    font-size: 16px;
+    line-height: 1;
+  }
+
+  .hero_top_tabs button.active {
+    height: 34px;
+    padding: 4px 14px;
+  }
+
+  .hero_arrow_left {
+    left: 32px;
+  }
+
+  .hero_arrow_right {
+    right: 32px;
+  }
+
+  .hero_start_btn {
+    bottom: 88px;
+    min-width: 120px;
+    padding: 16px 24px;
+    font-size: 20px;
+  }
+
+  .hero_start_btn::after {
+    font-size: 20px;
+  }
+
+  .hero_bottom_steps {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    width: fit-content;
+    max-width: calc(100% - 240px);
+    bottom: 28px;
+  }
+
+  .hero_progress {
+    margin-bottom: 8px;
+  }
+
+  .hero_bottom_tabs {
+    gap: 32px;
+    width: fit-content;
+    max-width: 100%;
+    justify-content: center;
+    overflow-x: visible;
+    padding-bottom: 0;
+    margin: 0 auto;
+  }
+
+  .hero_bottom_tabs button {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 360px) {
+  .hero_trim_stage {
+    inset: 64px 16px 88px;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto;
+    row-gap: 16px;
+  }
+
+  .hero_trim_intro,
+  .hero_trim_vehicle,
+  .hero_trim_panel,
+  .hero_trim_actions {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .hero_trim_intro {
+    padding-top: 0;
+  }
+
+  .hero_trim_title {
+    margin-bottom: 4px;
+    font-size: 32px;
+    gap: 4px;
+  }
+
+  .hero_trim_grade {
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+
+  .hero_trim_price,
+  .hero_trim_lease {
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  .hero_trim_vehicle {
+    width: 100%;
+    max-width: 240px;
+    justify-self: center;
+  }
+
+  .hero_trim_panel {
+    padding: 16px;
+    border-radius: 24px;
+  }
+
+  .hero_trim_panel_title {
+    margin-bottom: 12px;
+    font-size: 32px;
+  }
+
+  .hero_trim_cards {
+    gap: 8px;
+  }
+
+  .hero_trim_card {
+    padding: 14px 12px 10px;
+    border-radius: 20px;
+  }
+
+  .hero_trim_card_head {
+    margin-bottom: 8px;
+  }
+
+  .hero_trim_card_head strong {
+    font-size: 14px;
+  }
+
+  .hero_trim_select_btn {
+    min-width: 64px;
+    height: 24px;
+    font-size: 10px;
+  }
+
+  .hero_trim_card_details {
+    padding: 0 4px 10px 18px;
+  }
+
+  .hero_trim_card_details li {
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  .hero_trim_more_btn {
+    font-size: 11px;
+    padding-top: 8px;
+  }
+
+  .hero_trim_actions {
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .hero_trim_action_btn {
+    min-width: 0;
+    width: calc(50% - 4px);
+    height: 40px;
+    padding: 0 12px;
+    font-size: 12px;
+  }
+
+  .hero_trim_header {
+    left: 16px;
+    right: 16px;
+    top: 12px;
+    gap: 8px;
+  }
+
+  .hero_trim_header_logo {
+    width: 56px;
+    height: 36px;
+  }
+
+  .hero_trim_header_nav {
+    width: 180px;
+    height: 36px;
+  }
+
+  .hero_header_space {
+    height: 32px;
+  }
+
+  .hero_visual {
+    height: calc(100vh - 32px);
+    min-height: 640px;
+    padding-top: 56px;
+  }
+
+  .hero_top_tabs {
+    top: 16px;
+    width: 336px;
+    height: 44px;
+    justify-content: center;
+    flex-wrap: nowrap;
+    gap: 4px;
+    padding: 4px 8px;
+    border-radius: 24px;
+  }
+
+  .hero_top_tabs button {
+    min-width: auto;
+    height: 28px;
+    padding: 4px 6px;
+    font-size: 12px;
+    line-height: 1;
+  }
+
+  .hero_top_tabs button.active {
+    height: 28px;
+    padding: 4px 6px;
+  }
+
+  .hero_title {
+    padding-top: 0;
+    font-size: 28px;
+  }
+
+  .hero_center {
+    padding-bottom: 244px;
+    gap: 8px;
+  }
+
+  .hero_car {
+    width: calc(100% - 72px);
+  }
+
+  .hero_arrow {
+    width: 40px;
+    height: 40px;
+    flex-basis: 40px;
+    font-size: 20px;
+  }
+
+  .hero_arrow_left {
+    left: 8px;
+  }
+
+  .hero_arrow_right {
+    right: 8px;
+  }
+
+  .hero_start_btn {
+    bottom: 120px;
+    min-width: 96px;
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+
+  .hero_start_btn::after {
+    font-size: 14px;
+  }
+
+  .hero_bottom_steps {
+    left: 12px;
+    right: 12px;
+    transform: none;
+    width: auto;
+    max-width: none;
+    bottom: 32px;
+  }
+
+  .hero_progress {
+    height: 4px;
+    margin-bottom: 8px;
+  }
+
+  .hero_progress_track,
+  .hero_progress_fill {
+    height: 4px;
+  }
+
+  .hero_bottom_tabs {
+    gap: 8px;
+    width: 100%;
+    overflow-x: auto;
+    justify-content: flex-start;
+    padding: 0 0 4px;
+    scroll-padding-left: 0;
+  }
+
+  .hero_bottom_tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hero_bottom_tabs button {
+    font-size: 14px;
+    letter-spacing: 0;
+    flex: 0 0 auto;
+  }
+}
