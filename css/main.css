@@ -232,6 +232,10 @@ section[class*="option"] .bottom>ul>li>p{
   font-family: var(--font-outfit);
 }
 
+section.option1 .bottom>ul.cars>li:nth-child(1){
+
+}
+
 section[class*="option"] .bottom>ul>li>p,
 section[class*="option"] .bottom>ul.cars>li>p {
   z-index: 2;
