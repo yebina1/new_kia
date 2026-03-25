@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const heroSection = document.getElementById("heroSection");
+  const heroBgImage = document.getElementById("heroBgImage");
   const heroTitle = document.getElementById("heroTitle");
   const heroCarImage = document.getElementById("heroCarImage");
   const heroModelStage = document.getElementById("heroModelStage");
@@ -26,30 +27,102 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".hero_bottom_tabs button")
   );
   const categoryOrder = topTabButtons.map((button) => button.dataset.category);
-  const defaultBackgroundImage = "../kia/img/sub01_build/build_bg.png";
+  const defaultBackgroundImage =
+    heroSection?.dataset.defaultBg || "./img/sub01_build/build_bg.png";
+
   const trimStageData = {
     Sportage: {
       grade: "X-Line AWD",
       price: "$33,390 Starting MSRP*",
       lease: "$379 / 36 mo est. lease payments*",
-      trims: ["LX FWD", "EX FWD", "X-Line AWD", "X-Pro Prestige AWD"]
+      trims: [
+        {
+          name: "LX FWD",
+          price: "$28,690 Starting MSRP*",
+          lease: "$329 / 36 mo est. lease payments*",
+          details: ["2.5L 4-cylinder Engine", "12.2-in. Instrument Display", "17-in. Alloy Wheels"]
+        },
+        {
+          name: "EX FWD",
+          price: "$30,490 Starting MSRP*",
+          lease: "$349 / 36 mo est. lease payments*",
+          details: ["Panoramic Sunroof", "Smart Power Liftgate", "SynTex Seat Trim"]
+        },
+        {
+          name: "X-Line AWD",
+          price: "$33,390 Starting MSRP*",
+          lease: "$379 / 36 mo est. lease payments*",
+          details: ["Active AWD", "19-in. Gloss Black Wheels", "X-Line Exterior Styling"]
+        },
+        {
+          name: "X-Pro Prestige AWD",
+          price: "$39,590 Starting MSRP*",
+          lease: "$439 / 36 mo est. lease payments*",
+          details: ["All-Terrain Tires", "Harman Kardon Premium Audio", "Ventilated Front Seats"]
+        }
+      ]
     },
     "Sorento Hybrid": {
       grade: "Prestige AWD",
       price: "$38,690 Starting MSRP*",
       lease: "$429 / 36 mo est. lease payments*",
       trims: [
-        "EX FWD",
-        "SX Prestige FWD",
-        "EX AWD",
-        "Prestige AWD"
+        {
+          name: "EX FWD",
+          price: "$38,690 Starting MSRP*",
+          lease: "$429 / 36 mo est. lease payments*",
+          details: ["Turbo Hybrid Powertrain", "12.3-in. Touchscreen", "Digital Key 2"]
+        },
+        {
+          name: "SX Prestige FWD",
+          price: "$43,590 Starting MSRP*",
+          lease: "$469 / 36 mo est. lease payments*",
+          details: ["Bose Premium Audio", "360 Surround View Monitor", "Blind-Spot View Monitor"]
+        },
+        {
+          name: "EX AWD",
+          price: "$40,490 Starting MSRP*",
+          lease: "$449 / 36 mo est. lease payments*",
+          details: ["Torque-Vectoring AWD", "Heated Steering Wheel", "Smart Power Tailgate"]
+        },
+        {
+          name: "Prestige AWD",
+          price: "$46,890 Starting MSRP*",
+          lease: "$499 / 36 mo est. lease payments*",
+          details: ["Leather Seat Trim", "Dual Panoramic Displays", "Premium Interior Finish"]
+        }
       ]
     },
     EV6: {
       grade: "GT-Line AWD",
       price: "$42,900 Starting MSRP*",
       lease: "$529 / 36 mo est. lease payments*",
-      trims: ["Light RWD", "Wind RWD", "GT-Line AWD", "GT AWD"]
+      trims: [
+        {
+          name: "Light RWD",
+          price: "$42,900 Starting MSRP*",
+          lease: "$529 / 36 mo est. lease payments*",
+          details: ["EPA-est. 232-mile range", "Rear-Wheel Drive", "Fast DC Charging"]
+        },
+        {
+          name: "Wind RWD",
+          price: "$48,700 Starting MSRP*",
+          lease: "$569 / 36 mo est. lease payments*",
+          details: ["EPA-est. 310-mile range", "Meridian Audio", "Heated Front Seats"]
+        },
+        {
+          name: "GT-Line AWD",
+          price: "$57,600 Starting MSRP*",
+          lease: "$629 / 36 mo est. lease payments*",
+          details: ["Dual Motor AWD", "Augmented Reality HUD", "20-in. Alloy Wheels"]
+        },
+        {
+          name: "GT AWD",
+          price: "$61,600 Starting MSRP*",
+          lease: "$699 / 36 mo est. lease payments*",
+          details: ["576 hp", "Electronically Controlled Suspension", "GT Interior Accents"]
+        }
+      ]
     },
     EV9: {
       grade: "Land AWD",
@@ -58,6 +131,9 @@ document.addEventListener("DOMContentLoaded", () => {
       trims: [
         {
           name: "Light RWD",
+          price: "$54,900 Starting MSRP*",
+          lease: "$548 / 36 mo est. lease payments*",
+          image: "./img/sub01_build/trim_light.png",
           details: [
             "$54,900 Starting MSRP*",
             "NACS Charging Port",
@@ -66,6 +142,9 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         {
           name: "Light Long Range RWD",
+          price: "$57,900 Starting MSRP*",
+          lease: "$578 / 36 mo est. lease payments*",
+          image: "./img/sub01_build/trim_light.png",
           details: [
             "$57,900 Starting MSRP*",
             "7-Passenger Seating or 6-Passenger Option",
@@ -75,16 +154,20 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         {
           name: "Wind AWD",
+          price: "$63,900 Starting MSRP*",
+          lease: "$618 / 36 mo est. lease payments*",
           details: [
             "$63,900 Starting MSRP*",
             "379 hp & 443 lb.-ft. of torque (Dual Motor)",
             "Dual Sunroofs & Driver's Memory System",
-            "Blind-Spot & 360° Surround View Monitor*",
+            "Blind-Spot & 360 Surround View Monitor*",
             "Included All-Wheel Drive"
           ]
         },
         {
           name: "Land AWD",
+          price: "$68,900 Starting MSRP*",
+          lease: "$648 / 36 mo est. lease payments*",
           details: [
             "$68,900 Starting MSRP*",
             "Meridian Premium Audio System*",
@@ -95,6 +178,8 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         {
           name: "GT-Line AWD",
+          price: "$71,900 Starting MSRP*",
+          lease: "$698 / 36 mo est. lease payments*",
           details: [
             "$71,900 Starting MSRP*",
             "0-60 mph in 4.5 seconds*",
@@ -109,9 +194,65 @@ document.addEventListener("DOMContentLoaded", () => {
       grade: "GT-Line Turbo",
       price: "$25,190 Starting MSRP*",
       lease: "$299 / 36 mo est. lease payments*",
-      trims: ["LXS", "EX", "GT-Line", "GT-Line Turbo"]
+      trims: [
+        {
+          name: "LXS",
+          price: "$21,990 Starting MSRP*",
+          lease: "$259 / 36 mo est. lease payments*",
+          details: ["2.0L Engine", "12.3-in. Display", "Kia Connect"]
+        },
+        {
+          name: "EX",
+          price: "$23,990 Starting MSRP*",
+          lease: "$279 / 36 mo est. lease payments*",
+          details: ["Panoramic Display", "Heated Front Seats", "Wireless Charging"]
+        },
+        {
+          name: "GT-Line",
+          price: "$25,190 Starting MSRP*",
+          lease: "$299 / 36 mo est. lease payments*",
+          details: ["Sport Exterior Package", "18-in. Alloy Wheels", "Gloss Black Trim"]
+        },
+        {
+          name: "GT-Line Turbo",
+          price: "$28,090 Starting MSRP*",
+          lease: "$339 / 36 mo est. lease payments*",
+          details: ["1.6L Turbo Engine", "Multi-Link Rear Suspension", "GT-Line Interior"]
+        }
+      ]
     }
   };
+
+  function hydrateEv9TrimDataFromHtml() {
+    const trimCardElements = Array.from(
+      document.querySelectorAll("#heroTrimCards .hero_trim_card")
+    );
+
+    if (!trimCardElements.length) {
+      return;
+    }
+
+    trimStageData.EV9.trims = trimCardElements.map((card) => {
+      const name = card.querySelector("strong")?.textContent?.trim() || "EV9 Trim";
+      const imageElement = card.querySelector(".hero_trim_card_asset");
+      const priceText =
+        card.querySelector(".hero_trim_card_price")?.textContent?.trim();
+      const leaseText =
+        card.querySelector(".hero_trim_card_lease")?.textContent?.trim();
+      const details = Array.from(card.querySelectorAll(".hero_trim_card_details li"))
+        .map((item) => item.textContent?.trim())
+        .filter(Boolean);
+
+      return {
+        name,
+        price: priceText || details[0] || trimStageData.EV9.price,
+        lease: leaseText || trimStageData.EV9.lease,
+        image: imageElement?.getAttribute("src") || "./img/sub01_build/trim_light.png",
+        alt: imageElement?.getAttribute("alt") || name,
+        details
+      };
+    });
+  }
 
   function getFallbackTitle(imagePath) {
     if (!imagePath) {
@@ -160,87 +301,29 @@ document.addEventListener("DOMContentLoaded", () => {
       .replace(/^_+|_+$/g, "");
   }
 
-  function renderTrimCards(title) {
-    if (!heroTrimCards) {
-      return;
-    }
-
-    const trimData = trimStageData[title] || trimStageData.EV9;
-    heroTrimCards.innerHTML = trimData.trims
-      .map(
-        (trimItem, index) => {
-          const normalizedTrim =
-            typeof trimItem === "string"
-              ? {
-                  name: trimItem,
-                  details: [trimData.price, trimData.grade, "More details coming soon"]
-                }
-              : trimItem;
-
-          return `
-          <article class="hero_trim_card${index === selectedTrimIndex ? " selected" : ""}${index === 0 ? " expanded" : ""}" data-trim-index="${index}">
-            <div class="hero_trim_card_head">
-              <strong>${escapeHtml(normalizedTrim.name)}</strong>
-              <button type="button" class="hero_trim_select_btn" aria-pressed="${index === selectedTrimIndex ? "true" : "false"}">
-                ${index === selectedTrimIndex ? "Selected" : "Select"}
-              </button>
-            </div>
-            <div class="hero_trim_card_details">
-              <ul>
-                ${normalizedTrim.details
-                  .map((detail) => `<li>${escapeHtml(detail)}</li>`)
-                  .join("")}
-              </ul>
-            </div>
-            <button type="button" class="hero_trim_more_btn" aria-expanded="${index === 0 ? "true" : "false"}">
-              More
-            </button>
-          </article>
-        `;
-        }
-      )
-      .join("");
+  function getTrimDataForTitle(title) {
+    return trimStageData[title] || trimStageData.EV9;
   }
 
-  function setSelectedTrimCard(targetIndex) {
-    if (!heroTrimCards) {
-      return;
+  function getNormalizedTrim(trimData, trimItem, fallbackImage, fallbackAlt) {
+    if (typeof trimItem !== "string") {
+      return {
+        ...trimItem,
+        price: trimItem.price || trimData.price,
+        lease: trimItem.lease || trimData.lease,
+        image: trimItem.image || fallbackImage,
+        alt: trimItem.alt || fallbackAlt
+      };
     }
 
-    const trimCards = Array.from(heroTrimCards.querySelectorAll(".hero_trim_card"));
-    selectedTrimIndex = targetIndex;
-
-    trimCards.forEach((card, index) => {
-      const isSelected = index === selectedTrimIndex;
-      card.classList.toggle("selected", isSelected);
-
-      const selectButton = card.querySelector(".hero_trim_select_btn");
-      if (selectButton) {
-        selectButton.textContent = isSelected ? "Selected" : "Select";
-        selectButton.setAttribute("aria-pressed", isSelected ? "true" : "false");
-      }
-    });
-  }
-
-  function toggleTrimDetails(targetIndex) {
-    if (!heroTrimCards) {
-      return;
-    }
-
-    const trimCards = Array.from(heroTrimCards.querySelectorAll(".hero_trim_card"));
-    const targetCard = trimCards[targetIndex];
-
-    if (!targetCard) {
-      return;
-    }
-
-    const willExpand = !targetCard.classList.contains("expanded");
-    targetCard.classList.toggle("expanded", willExpand);
-
-    const moreButton = targetCard.querySelector(".hero_trim_more_btn");
-    if (moreButton) {
-      moreButton.setAttribute("aria-expanded", willExpand ? "true" : "false");
-    }
+    return {
+      name: trimItem,
+      price: trimData.price,
+      lease: trimData.lease,
+      image: fallbackImage,
+      alt: fallbackAlt,
+      details: [trimData.price, trimData.grade, "More details coming soon"]
+    };
   }
 
   const catalog = heroCatalog
@@ -281,7 +364,171 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentIndex = 0;
   let isAnimating = false;
   let currentStep = 0;
-  let selectedTrimIndex = 0;
+  let selectedTrimIndex = null;
+
+  function isEv9Selected() {
+    return getCurrentCar()?.title === "EV9";
+  }
+
+  function getAllowedStep(stepIndex) {
+    if (isEv9Selected()) {
+      return stepIndex;
+    }
+
+    return Math.min(stepIndex, 0);
+  }
+
+  function syncEv9OnlyState() {
+    const ev9Selected = isEv9Selected();
+
+    stepButtons.forEach((button, index) => {
+      const isLocked = !ev9Selected && index > 0;
+      button.disabled = isLocked;
+      button.setAttribute("aria-disabled", isLocked ? "true" : "false");
+    });
+
+    if (startStepButton) {
+      startStepButton.disabled = !ev9Selected;
+      startStepButton.setAttribute(
+        "aria-disabled",
+        !ev9Selected ? "true" : "false"
+      );
+    }
+
+    if (!ev9Selected && currentStep > 0) {
+      updateSteps(0);
+    }
+  }
+
+  function getCurrentCar() {
+    return currentCars[currentIndex] || null;
+  }
+
+  function getCurrentTrimItems(title) {
+    const trimData = getTrimDataForTitle(title);
+    const currentCar = getCurrentCar();
+
+    return trimData.trims.map((trimItem) =>
+      getNormalizedTrim(
+        trimData,
+        trimItem,
+        currentCar?.carImage || "./img/sub01_build/trim_light.png",
+        currentCar?.alt || title
+      )
+    );
+  }
+
+  function applySelectedTrim(title) {
+    if (!heroTrimTitle || !heroTrimImage) {
+      return;
+    }
+
+    const trimData = getTrimDataForTitle(title);
+    const trimItems = getCurrentTrimItems(title);
+    const selectedTrim =
+      selectedTrimIndex === null
+        ? trimItems[0] || null
+        : trimItems[selectedTrimIndex] || trimItems[0] || null;
+    const titleKey = getTitleKey(title);
+
+    heroTrimTitle.innerHTML = formatCarTitleMarkup(title);
+    heroTrimTitle.className = "hero_trim_title";
+
+    if (titleKey) {
+      heroTrimTitle.classList.add(`hero_title_${titleKey}`);
+    }
+
+    heroTrimGrade.textContent = selectedTrim?.name || trimData.grade;
+    heroTrimPrice.textContent = selectedTrim?.price || trimData.price;
+    heroTrimLease.textContent = selectedTrim?.lease || trimData.lease;
+    heroTrimImage.src = selectedTrim?.image || "./img/sub01_build/trim_light.png";
+    heroTrimImage.alt = selectedTrim?.alt || title;
+  }
+
+  function renderTrimCards(title) {
+    if (!heroTrimCards) {
+      return;
+    }
+
+    const trimItems = getCurrentTrimItems(title);
+    heroTrimCards.innerHTML = trimItems
+      .map(
+        (trimItem, index) => `
+          <article class="hero_trim_card${index === selectedTrimIndex ? " selected" : ""}${index === 0 ? " expanded" : ""}" data-trim-index="${index}">
+            <div class="hero_trim_card_head">
+              <strong>${escapeHtml(trimItem.name)}</strong>
+              <button type="button" class="hero_trim_select_btn" aria-pressed="${index === selectedTrimIndex ? "true" : "false"}">
+                Select
+              </button>
+            </div>
+            <div class="hero_trim_card_details">
+              <ul>
+                ${trimItem.details
+                  .map((detail) => `<li>${escapeHtml(detail)}</li>`)
+                  .join("")}
+              </ul>
+            </div>
+            <button type="button" class="hero_trim_more_btn" aria-expanded="${index === 0 ? "true" : "false"}">
+              More
+            </button>
+          </article>
+        `
+      )
+      .join("");
+  }
+
+  function setSelectedTrimCard(targetIndex) {
+    if (!heroTrimCards) {
+      return;
+    }
+
+    const trimCards = Array.from(heroTrimCards.querySelectorAll(".hero_trim_card"));
+    selectedTrimIndex = selectedTrimIndex === targetIndex ? null : targetIndex;
+
+    trimCards.forEach((card, index) => {
+      const isSelected = index === selectedTrimIndex;
+      card.classList.toggle("selected", isSelected);
+      if (isSelected) {
+        card.classList.add("expanded");
+      }
+
+      const selectButton = card.querySelector(".hero_trim_select_btn");
+      if (selectButton) {
+        selectButton.setAttribute("aria-pressed", isSelected ? "true" : "false");
+      }
+
+      const moreButton = card.querySelector(".hero_trim_more_btn");
+      if (moreButton && isSelected) {
+        moreButton.setAttribute("aria-expanded", "true");
+      }
+    });
+
+    const currentCar = getCurrentCar();
+    if (currentCar) {
+      applySelectedTrim(currentCar.title);
+    }
+  }
+
+  function toggleTrimDetails(targetIndex) {
+    if (!heroTrimCards) {
+      return;
+    }
+
+    const trimCards = Array.from(heroTrimCards.querySelectorAll(".hero_trim_card"));
+    const targetCard = trimCards[targetIndex];
+
+    if (!targetCard) {
+      return;
+    }
+
+    const willExpand = !targetCard.classList.contains("expanded");
+    targetCard.classList.toggle("expanded", willExpand);
+
+    const moreButton = targetCard.querySelector(".hero_trim_more_btn");
+    if (moreButton) {
+      moreButton.setAttribute("aria-expanded", willExpand ? "true" : "false");
+    }
+  }
 
   function syncArrowState() {
     const availableCategoryCount = categoryOrder.filter(
@@ -308,25 +555,16 @@ document.addEventListener("DOMContentLoaded", () => {
       heroTitle.classList.add(`hero_title_${titleKey}`);
     }
 
-    heroSection.style.backgroundImage = `url("${currentCar.bgImage}")`;
+    if (heroBgImage) {
+      heroBgImage.src = currentCar.bgImage;
+    }
+
     heroCarImage.src = currentCar.carImage;
     heroCarImage.alt = currentCar.alt;
 
     if (heroTrimTitle && heroTrimImage) {
-      const trimData = trimStageData[currentCar.title] || trimStageData.EV9;
-      heroTrimTitle.innerHTML = formatCarTitleMarkup(currentCar.title);
-      heroTrimTitle.className = "hero_trim_title";
-
-      if (titleKey) {
-        heroTrimTitle.classList.add(`hero_title_${titleKey}`);
-      }
-
-      heroTrimGrade.textContent = trimData.grade;
-      heroTrimPrice.textContent = trimData.price;
-      heroTrimLease.textContent = trimData.lease;
-      heroTrimImage.src = currentCar.carImage;
-      heroTrimImage.alt = currentCar.alt;
       renderTrimCards(currentCar.title);
+      applySelectedTrim(currentCar.title);
     }
   }
 
@@ -360,7 +598,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function updateSteps(stepIndex) {
-    currentStep = stepIndex;
+    currentStep = getAllowedStep(stepIndex);
 
     stepButtons.forEach((button, index) => {
       const isActive = index === currentStep;
@@ -404,7 +642,7 @@ document.addEventListener("DOMContentLoaded", () => {
     currentCategory = categoryKey;
     currentCars = nextCars;
     currentIndex = 0;
-    selectedTrimIndex = 0;
+    selectedTrimIndex = null;
 
     topTabButtons.forEach((button) => {
       const isActive = button.dataset.category === currentCategory;
@@ -414,6 +652,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     renderCar(currentIndex);
     syncArrowState();
+    syncEv9OnlyState();
   }
 
   function getAdjacentCategory(direction) {
@@ -474,6 +713,7 @@ document.addEventListener("DOMContentLoaded", () => {
             currentCategory = nextCategoryKey;
             currentCars = catalog[currentCategory] || [];
             currentIndex = 0;
+            selectedTrimIndex = null;
 
             topTabButtons.forEach((button) => {
               const isActive = button.dataset.category === currentCategory;
@@ -482,10 +722,12 @@ document.addEventListener("DOMContentLoaded", () => {
             });
           } else {
             currentIndex = 0;
+            selectedTrimIndex = null;
           }
         }
       } else if (currentIndex > 0) {
         currentIndex -= 1;
+        selectedTrimIndex = null;
       } else {
         const previousCategoryKey = getAdjacentCategory("prev");
 
@@ -493,6 +735,7 @@ document.addEventListener("DOMContentLoaded", () => {
           currentCategory = previousCategoryKey;
           currentCars = catalog[currentCategory] || [];
           currentIndex = Math.max(currentCars.length - 1, 0);
+          selectedTrimIndex = null;
 
           topTabButtons.forEach((button) => {
             const isActive = button.dataset.category === currentCategory;
@@ -501,11 +744,13 @@ document.addEventListener("DOMContentLoaded", () => {
           });
         } else {
           currentIndex = Math.max(currentCars.length - 1, 0);
+          selectedTrimIndex = null;
         }
       }
 
       renderCar(currentIndex);
       syncArrowState();
+      syncEv9OnlyState();
 
       heroCarImage.classList.remove(exitClass);
       heroCarImage.classList.add(enterClass);
@@ -550,6 +795,10 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   nextColorButton?.addEventListener("click", () => {
+    if (!isEv9Selected()) {
+      return;
+    }
+
     updateSteps(Math.min(2, stepButtons.length - 1));
   });
 
@@ -583,6 +832,8 @@ document.addEventListener("DOMContentLoaded", () => {
     syncProgressPosition();
   });
 
+  hydrateEv9TrimDataFromHtml();
   setCategory(currentCategory);
+  syncEv9OnlyState();
   updateSteps(currentStep);
 });

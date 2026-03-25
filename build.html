@@ -16,32 +16,37 @@
     <link rel="stylesheet" href="css/sub01_build_media.css">
     <!-- 가져온 js -->
 
+
+    <!-- Basic Icons -->
+    <link href="https://cdn.boxicons.com/3.0.8/fonts/basic/boxicons.min.css" rel="stylesheet">
+    <!-- Filled Icons -->
+    <link href="https://cdn.boxicons.com/3.0.8/fonts/filled/boxicons-filled.min.css" rel="stylesheet">
+    <!-- Brand Icons -->
+    <link href="https://cdn.boxicons.com/3.0.8/fonts/brands/boxicons-brands.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
     <!-- 내 script -->
     <script src="js/common.js" defer></script>
     <script src="js/sub01_build.js" defer></script>
 </head>
 
 <body>
-    <div class="wrap">
-        <section class="hero" id="heroSection">
+    <div class="wrap build_wrap" style="--build-page-bg: url('./img/sub01_build/build_bg.png');">
+        <section class="hero" id="heroSection" data-default-bg="./img/sub01_build/build_bg.png">
+            <div class="hero_bg" aria-hidden="true">
+                <img id="heroBgImage" src="./img/sub01_build/build_bg.png" alt="" />
+            </div>
             <div class="hero_overlay"></div>
             <div class="hero_header_space"></div>
 
             <div class="hero_visual" id="heroVisual">
                 <div class="hero_trim_header" id="heroTrimHeader" aria-hidden="true">
-                    <div class="hero_trim_header_logo">KIA</div>
-                    <div class="hero_trim_header_nav">
-                        <span>company</span>
-                        <span>vehicles</span>
-                        <span>shopping assistant</span>
-                        <span>inventory</span>
-                        <span>center</span>
-                        <span>owners page</span>
-                        <span>search</span>
-                        <span>global</span>
-                    </div>
+                    <div class="hero_trim_header_logo" aria-hidden="true"></div>
+                    <div class="hero_trim_header_nav" aria-hidden="true"></div>
                 </div>
 
+                <!-- 상단 tab 카테고리 영역 -->
                 <div class="hero_top_tabs" id="heroTopTabs" role="tablist" aria-label="Vehicle categories">
                     <button type="button" class="active" data-category="suv" role="tab" aria-selected="true">SUV / CUV /
                         MPV</button>
@@ -50,12 +55,13 @@
                     <button type="button" data-category="sedans" role="tab" aria-selected="false">Sedans</button>
                 </div>
 
+                <!-- model 모델명 및 카드 이미지 영역 -->
                 <div class="hero_catalog" id="heroCatalog" aria-hidden="true">
                     <section class="hero_category_panel" data-category="suv">
                         <ul class="hero_car_list">
                             <li>
                                 <h2>Sportage</h2>
-                                <img src="../kia/img/sub01_build/list_sportage.png" alt="Sportage" />
+                                <img src="./img/sub01_build/list_sportage.png" alt="Sportage" />
                             </li>
                         </ul>
                     </section>
@@ -64,7 +70,7 @@
                         <ul class="hero_car_list">
                             <li>
                                 <h2 class="hero_car_name hero_car_name_sorento_hybrid">Sorento Hybrid</h2>
-                                <img src="../kia/img/sub01_build/list_sorentoHb.png" alt="Sorento Hybrid" />
+                                <img src="./img/sub01_build/list_sorentoHb.png" alt="Sorento Hybrid" />
                             </li>
                         </ul>
                     </section>
@@ -74,12 +80,12 @@
                             <li>
                                 <h2 class="hero_car_name">EV<span
                                         class="hero_title_suffix hero_title_suffix_ev_6">6</span></h2>
-                                <img src="../kia/img/sub01_build/list_ev6.png" alt="EV6" />
+                                <img src="./img/sub01_build/list_ev6.png" alt="EV6" />
                             </li>
                             <li>
                                 <h2 class="hero_car_name">EV<span
                                         class="hero_title_suffix hero_title_suffix_ev_9">9</span></h2>
-                                <img src="../kia/img/sub01_build/trim_light.png" alt="EV9" />
+                                <img src="./img/sub01_build/trim_lightLong.png" alt="EV9" />
                             </li>
                         </ul>
                     </section>
@@ -89,16 +95,19 @@
                             <li>
                                 <h2 class="hero_car_name">K<span class="hero_title_suffix hero_title_suffix_k4">4</span>
                                 </h2>
-                                <img src="../kia/img/sub01_build/list_k4.png" alt="K4" />
+                                <img src="./img/sub01_build/list_k4.png" alt="K4" />
                             </li>
                         </ul>
                     </section>
                 </div>
 
+                <!-- 단계바 모델 선택 시 리셋되는 영역 -->
+
                 <div class="hero_model_stage" id="heroModelStage">
                     <div class="hero_center">
                         <h2 class="hero_title" id="heroTitle">Sportage</h2>
 
+                        <!-- 차량 사진 옆 좌우 버튼 -->
                         <button class="hero_arrow hero_arrow_left" id="prevCar" type="button" aria-label="이전">
                             &#10094;
                         </button>
@@ -106,8 +115,9 @@
                             &#10095;
                         </button>
 
+                        <!-- 모델 선택 화면용 차량 이미지 -->
                         <div class="hero_car">
-                            <img id="heroCarImage" src="../kia/img/sub01_build/trim_light.png" alt="SUV sample image" />
+                            <img id="heroCarImage" src="./img/sub01_build/trim_light.png" alt="SUV sample image" />
                         </div>
                     </div>
                 </div>
@@ -115,25 +125,143 @@
                 <div class="hero_trim_stage" id="heroTrimStage" aria-hidden="true">
                     <div class="hero_trim_intro">
                         <h2 class="hero_trim_title" id="heroTrimTitle">EV9</h2>
-                        <p class="hero_trim_grade" id="heroTrimGrade">Land AWD</p>
-                        <p class="hero_trim_price" id="heroTrimPrice">$68,900 Starting MSRP*</p>
-                        <p class="hero_trim_lease" id="heroTrimLease">$648 / 36 mo est. lease payments*</p>
+                        <div class="hero_trim_summary">
+                            <p class="hero_trim_grade" id="heroTrimGrade">Light RWD</p>
+                            <p class="hero_trim_price" id="heroTrimPrice">$54,900 Starting MSRP*</p>
+                            <p class="hero_trim_lease" id="heroTrimLease">$560 / 36 mo est. lease payments*</p>
+                        </div>
                     </div>
 
                     <div class="hero_trim_vehicle">
-                        <img id="heroTrimImage" src="../kia/img/sub01_build/trim_light.png" alt="Trim vehicle image" />
+                        <img id="heroTrimImage" src="./img/sub01_build/trim_lightLong.png" alt="EV9 Light RWD" />
                     </div>
-
+                    <!-- trim -->
                     <section class="hero_trim_panel" aria-label="Trim options">
                         <h3 class="hero_trim_panel_title">Trim</h3>
-                        <div class="hero_trim_cards" id="heroTrimCards"></div>
+                        <div class="hero_trim_cards" id="heroTrimCards">
+                            <article class="hero_trim_card selected expanded" data-trim-index="0">
+                                <img class="hero_trim_card_asset" src="./img/sub01_build/trim_lightLong.png"
+                                    alt="EV9 Light RWD" />
+                                <div class="hero_trim_card_meta">
+                                    <p class="hero_trim_card_price">$54,900 Starting MSRP*</p>
+                                    <p class="hero_trim_card_lease">$491 / 36 mo est. lease payments*</p>
+                                </div>
+                                <div class="hero_trim_card_head">
+                                    <strong>Light RWD</strong>
+                                    <button type="button" class="hero_trim_select_btn"
+                                        aria-pressed="true">Select</button>
+                                </div>
+                                <div class="hero_trim_card_details">
+                                    <ul>
+                                        <li>$54,900 Starting MSRP*</li>
+                                        <li>NACS Charging Port</li>
+                                        <li>7-Passenger Seating w/ 2nd-row Bench Seat</li>
+                                        <li>27 Driver &amp; Safety Assistance Features*</li>
+                                    </ul>
+                                </div>
+                                <button type="button" class="hero_trim_more_btn" aria-expanded="true">More</button>
+                            </article>
+
+                            <article class="hero_trim_card" data-trim-index="1">
+                                <img class="hero_trim_card_asset" src="./img/sub01_build/trim_lightLong.png"
+                                    alt="EV9 Light Long Range RWD" />
+                                <div class="hero_trim_card_meta">
+                                    <p class="hero_trim_card_price">$57,900 Starting MSRP*</p>
+                                    <p class="hero_trim_card_lease">$511 / 36 mo est. lease payments*</p>
+                                </div>
+                                <div class="hero_trim_card_head">
+                                    <strong>Light Long Range RWD</strong>
+                                    <button type="button" class="hero_trim_select_btn"
+                                        aria-pressed="false">Select</button>
+                                </div>
+                                <div class="hero_trim_card_details">
+                                    <ul>
+                                        <li>$57,900 Starting MSRP*</li>
+                                        <li>7-Passenger Seating or 6-Passenger Option</li>
+                                        <li>Homelink Rearview Mirror &amp; Power Sunroof*</li>
+                                        <li>Front &amp; Rear Parking Sensors*</li>
+                                    </ul>
+                                </div>
+                                <button type="button" class="hero_trim_more_btn" aria-expanded="false">More</button>
+                            </article>
+
+                            <article class="hero_trim_card" data-trim-index="2">
+                                <img class="hero_trim_card_asset" src="./img/sub01_build/trim_wind.png"
+                                    alt="EV9 Wind AWD" />
+                                <div class="hero_trim_card_meta">
+                                    <p class="hero_trim_card_price">$63,900 Starting MSRP*</p>
+                                    <p class="hero_trim_card_lease">$560 / 36 mo est. lease payments*</p>
+                                </div>
+                                <div class="hero_trim_card_head">
+                                    <strong>Wind AWD</strong>
+                                    <button type="button" class="hero_trim_select_btn"
+                                        aria-pressed="false">Select</button>
+                                </div>
+                                <div class="hero_trim_card_details">
+                                    <ul>
+                                        <li>$63,900 Starting MSRP*</li>
+                                        <li>379 hp &amp; 443 lb.-ft. of torque (Dual Motor)</li>
+                                        <li>Dual Sunroofs &amp; Driver's Memory System</li>
+                                        <li>Blind-Spot &amp; 360 Surround View Monitor*</li>
+                                        <li>Included All-Wheel Drive</li>
+                                    </ul>
+                                </div>
+                                <button type="button" class="hero_trim_more_btn" aria-expanded="false">More</button>
+                            </article>
+
+                            <article class="hero_trim_card" data-trim-index="3">
+                                <img class="hero_trim_card_asset" src="./img/sub01_build/trim_light.png"
+                                    alt="EV9 Land AWD" />
+                                <div class="hero_trim_card_meta">
+                                    <p class="hero_trim_card_price">$68,900 Starting MSRP*</p>
+                                    <p class="hero_trim_card_lease">$560 / 36 mo est. lease payments*</p>
+                                </div>
+                                <div class="hero_trim_card_head">
+                                    <strong>Land AWD</strong>
+                                    <button type="button" class="hero_trim_select_btn"
+                                        aria-pressed="false">Select</button>
+                                </div>
+                                <div class="hero_trim_card_details">
+                                    <ul>
+                                        <li>$68,900 Starting MSRP*</li>
+                                        <li>Meridian Premium Audio System*</li>
+                                        <li>Self-Leveling Rear Susp. &amp; 5,000 lb. Towing*</li>
+                                        <li>Available Nightfall Edition Package</li>
+                                        <li>Included All-Wheel Drive</li>
+                                    </ul>
+                                </div>
+                                <button type="button" class="hero_trim_more_btn" aria-expanded="false">More</button>
+                            </article>
+
+                            <article class="hero_trim_card" data-trim-index="4">
+                                <img class="hero_trim_card_asset" src="./img/sub01_build/trim_light.png"
+                                    alt="EV9 GT-Line AWD" />
+                                <div class="hero_trim_card_meta">
+                                    <p class="hero_trim_card_price">$71,900 Starting MSRP*</p>
+                                    <p class="hero_trim_card_lease">$648 / 36 mo est. lease payments*</p>
+                                </div>
+                                <div class="hero_trim_card_head">
+                                    <strong>GT-Line AWD</strong>
+                                    <button type="button" class="hero_trim_select_btn"
+                                        aria-pressed="false">Select</button>
+                                </div>
+                                <div class="hero_trim_card_details">
+                                    <ul>
+                                        <li>$71,900 Starting MSRP*</li>
+                                        <li>0-60 mph in 4.5 seconds*</li>
+                                        <li>Head-Up Display &amp; 21-in. Alloy Wheels*</li>
+                                        <li>Parking Collision-Avoidance Assist Systems*</li>
+                                        <li>Included All-Wheel Drive</li>
+                                    </ul>
+                                </div>
+                                <button type="button" class="hero_trim_more_btn" aria-expanded="false">More</button>
+                            </article>
+                        </div>
                     </section>
 
                     <div class="hero_trim_actions">
-                        <button type="button" class="hero_trim_action_btn hero_trim_action_btn_secondary"
-                            id="viewModelButton">View Model</button>
-                        <button type="button" class="hero_trim_action_btn hero_trim_action_btn_primary"
-                            id="nextColorButton">Next Color</button>
+                        <button type="button" class="hero_trim_action_btn" id="viewModelButton">&lt; View Model</button>
+                        <button type="button" class="hero_trim_action_btn" id="nextColorButton">Next Color &gt;</button>
                     </div>
                 </div>
 
