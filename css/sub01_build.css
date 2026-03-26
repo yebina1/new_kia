@@ -47,6 +47,10 @@ button {
 }
 
 .hero {
+  --hero-swatch-width: 66px;
+  --hero-swatch-height: 34px;
+  --hero-color-frame-padding-block: 32px;
+  --hero-color-frame-padding-inline: 16px;
   width: 100%;
   min-height: 100vh;
   padding: 0;
@@ -328,9 +332,9 @@ button {
 
 .hero_color_seat_preview {
   position: absolute;
-  right: 140px;
-  bottom: -24px;
-  width: 152px;
+  right: 48px;
+  bottom: 16px;
+  width: 208px;
   aspect-ratio: 1;
   border-radius: 50%;
   border: 3px solid rgba(255, 255, 255, 0.88);
@@ -340,6 +344,13 @@ button {
   box-shadow:
     0 18px 36px rgba(0, 0, 0, 0.18),
     inset 0 0 0 8px rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.hero_color_seat_preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .hero_color_panels {
@@ -364,7 +375,7 @@ button {
 
 .hero_color_panel_title {
   margin: 0 0 20px;
-  font-size: 28px;
+  font-size: 40px;
 }
 
 .hero_color_choice_name,
@@ -374,9 +385,23 @@ button {
   color: #fbf6ef;
 }
 
+.hero_color_choice_row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  white-space: nowrap;
+}
+
+.hero_color_frame {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: var(--hero-color-frame-padding-block) var(--hero-color-frame-padding-inline);
+}
+
 .hero_color_choice_name {
-  margin-bottom: 10px;
-  font-size: 16px;
+  font-family: "Inter", sans-serif;
+  font-size: 24px;
   font-weight: 500;
 }
 
@@ -386,9 +411,11 @@ button {
 
 .hero_color_choice_price {
   min-height: 20px;
-  margin-bottom: 14px;
-  font-size: 14px;
-  color: rgba(251, 246, 239, 0.78);
+  margin-left: auto;
+  font-family: "Outfit", sans-serif;
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--kia-white1);
 }
 
 .hero_color_swatches {
@@ -404,8 +431,9 @@ button {
 
 .hero_color_swatch {
   position: relative;
-  width: 38px;
-  height: 26px;
+  width: var(--hero-swatch-width);
+  height: var(--hero-swatch-height);
+  flex: 0 0 var(--hero-swatch-width);
   border-radius: 999px;
   background: var(--swatch-base);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -423,34 +451,100 @@ button {
 }
 
 .hero_color_swatch.is-selected {
-  border-color: rgba(255, 255, 255, 0.88);
+  border-color: rgba(255, 255, 255, 0.22);
   box-shadow:
     inset 0 1px 1px rgba(255, 255, 255, 0.15),
-    0 0 0 2px rgba(255, 255, 255, 0.2);
+    0 0 0 2px rgba(255, 255, 255, 0.88);
 }
 
 .hero_color_swatch.is-selected::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  margin: auto;
-  width: 8px;
-  height: 8px;
-  border-right: 1.5px solid #fff;
-  border-bottom: 1.5px solid #fff;
-  transform: rotate(45deg) translate(-1px, -1px);
+  content: none;
+}
+
+.hero_color_swatch_ivory_silver.is-selected,
+.hero_color_swatch_white_pearl.is-selected,
+.hero_color_swatch_wolf_gray.is-selected {
+  border-color: rgba(18, 18, 18, 0.18);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.15),
+    0 0 0 2px var(--kia-black);
+}
+
+.hero_color_swatch_ivory_silver.is-selected::after,
+.hero_color_swatch_white_pearl.is-selected::after,
+.hero_color_swatch_wolf_gray.is-selected::after {
+  content: none;
 }
 
 .hero_color_swatch_interior {
-  width: 42px;
+  flex: 0 0 var(--hero-swatch-width);
+  width: var(--hero-swatch-width);
+  height: var(--hero-swatch-height);
+  padding: 0;
+  overflow: hidden;
+  background: none;
+}
+
+.hero_color_swatch_interior img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+/* Exterior swatch colors */
+.hero_color_swatch_panthera {
+  --swatch-base: linear-gradient(135deg, rgb(132, 132, 132) 0%, rgb(88, 88, 88) 52%, rgb(56, 56, 56) 100%);
+}
+
+.hero_color_swatch_white_pearl {
+  --swatch-base: linear-gradient(135deg, rgb(244, 247, 251) 0%, rgb(227, 231, 238) 52%, rgb(193, 198, 208) 100%);
+}
+
+.hero_color_swatch_ivory_silver {
+  --swatch-base: linear-gradient(135deg, rgb(214, 214, 214) 0%, rgb(191, 191, 191) 52%, rgb(144, 144, 144) 100%);
+}
+
+.hero_color_swatch_ocean_blue {
+  --swatch-base: linear-gradient(135deg, rgb(50, 155, 214) 0%, rgb(7, 127, 190) 52%, rgb(6, 84, 126) 100%);
+}
+
+.hero_color_swatch_road_rider_brown {
+  --swatch-base: linear-gradient(135deg, rgb(141, 136, 128) 0%, rgb(98, 94, 87) 52%, rgb(67, 64, 60) 100%);
+}
+
+.hero_color_swatch_wolf_gray {
+  --swatch-base: linear-gradient(135deg, rgb(206, 211, 219) 0%, rgb(173, 180, 192) 52%, rgb(127, 134, 145) 100%);
+}
+
+.hero_color_swatch_ebony_black {
+  --swatch-base: linear-gradient(135deg, rgb(28, 28, 28) 0%, rgb(12, 12, 12) 52%, rgb(0, 0, 0) 100%);
+}
+
+.hero_color_swatch_interior_black_gray {
+  --swatch-base: none;
+}
+
+.hero_color_swatch_interior_dark_light_gray {
+  --swatch-base: none;
 }
 
 .hero_color_actions {
   grid-area: actions;
+  position: absolute;
+  left: 40px;
+  right: 0;
+  bottom: -96px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 48px;
+  gap: 64px;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 0;
+  border-top: 0;
+  min-height: 48px;
 }
 
 .hero_package_intro {
@@ -1008,6 +1102,19 @@ button {
 }
 
 .hero_trim_stage.is-visible ~ .hero_bottom_steps .hero_bottom_tabs {
+  justify-content: center;
+  gap: 20px;
+}
+
+.hero_color_stage.is-visible ~ .hero_bottom_steps {
+  left: calc(64px + (971px / 2));
+  bottom: 24px;
+  transform: translateX(-50%);
+  width: fit-content;
+  max-width: none;
+}
+
+.hero_color_stage.is-visible ~ .hero_bottom_steps .hero_bottom_tabs {
   justify-content: center;
   gap: 20px;
 }

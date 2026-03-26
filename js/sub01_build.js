@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const heroColorLease = document.getElementById("heroColorLease");
   const heroColorImage = document.getElementById("heroColorImage");
   const heroSeatPreview = document.getElementById("heroSeatPreview");
+  const heroSeatPreviewImage = document.getElementById("heroSeatPreviewImage");
   const heroPackageStage = document.getElementById("heroPackageStage");
   const heroPackageTitle = document.getElementById("heroPackageTitle");
   const heroPackageTrim = document.getElementById("heroPackageTrim");
@@ -412,6 +413,29 @@ document.addEventListener("DOMContentLoaded", () => {
   let selectedInteriorIndex = 0;
   let selectedPackages = new Set();
 
+  function parseCurrencyValue(value) {
+    const numericValue = Number(String(value || "").replace(/[^0-9.-]/g, ""));
+    return Number.isFinite(numericValue) ? numericValue : 0;
+  }
+
+  function formatCurrencyValue(value) {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      maximumFractionDigits: 0
+    }).format(value);
+  }
+
+  function getSelectedExteriorAdjustment() {
+    const selectedExterior = getSelectedExteriorSwatch();
+    return parseCurrencyValue(selectedExterior?.dataset.price || 0);
+  }
+
+  function getAdjustedPriceLabel(basePrice) {
+    const adjustedPrice = parseCurrencyValue(basePrice) + getSelectedExteriorAdjustment();
+    return `${formatCurrencyValue(adjustedPrice)} Starting MSRP*`;
+  }
+
   function isEv9Selected() {
     return getCurrentCar()?.title === "EV9";
   }
@@ -466,6 +490,26 @@ document.addEventListener("DOMContentLoaded", () => {
     return swatches[selectedInteriorIndex] || swatches[0] || null;
   }
 
+  function getExteriorAssetFromSwatch(swatch) {
+    const assetId = swatch?.dataset.imageId;
+
+    if (!assetId) {
+      return null;
+    }
+
+    return document.getElementById(assetId);
+  }
+
+  function getInteriorAssetFromSwatch(swatch) {
+    const assetId = swatch?.dataset.imageId;
+
+    if (!assetId) {
+      return null;
+    }
+
+    return document.getElementById(assetId);
+  }
+
   function getCurrentTrimItems(title) {
     const trimData = getTrimDataForTitle(title);
     const currentCar = getCurrentCar();
@@ -505,7 +549,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     heroTrimGrade.textContent = selectedTrim?.name || trimData.grade;
-    heroTrimPrice.textContent = selectedTrim?.price || trimData.price;
+    heroTrimPrice.textContent = getAdjustedPriceLabel(
+      selectedTrim?.price || trimData.price
+    );
     heroTrimLease.textContent = selectedTrim?.lease || trimData.lease;
     heroTrimImage.src = selectedTrim?.image || "./img/sub01_build/trim_light.png";
     heroTrimImage.alt = selectedTrim?.alt || title;
@@ -519,7 +565,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       heroColorTrim.textContent = selectedTrim?.name || trimData.grade;
-      heroColorPrice.textContent = selectedTrim?.price || trimData.price;
+      heroColorPrice.textContent = getAdjustedPriceLabel(
+        selectedTrim?.price || trimData.price
+      );
       heroColorLease.textContent = selectedTrim?.lease || trimData.lease;
       heroColorImage.src = selectedTrim?.image || "./img/sub01_build/trim_light.png";
       heroColorImage.alt = selectedTrim?.alt || title;
@@ -534,7 +582,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       heroPackageTrim.textContent = selectedTrim?.name || trimData.grade;
-      heroPackagePrice.textContent = selectedTrim?.price || trimData.price;
+      heroPackagePrice.textContent = getAdjustedPriceLabel(
+        selectedTrim?.price || trimData.price
+      );
       heroPackageLease.textContent = selectedTrim?.lease || trimData.lease;
       heroPackageImage.src = selectedTrim?.image || "./img/sub01_build/trim_light.png";
       heroPackageImage.alt = selectedTrim?.alt || title;
@@ -580,8 +630,32 @@ document.addEventListener("DOMContentLoaded", () => {
       heroInteriorName.textContent = selectedInterior.dataset.name || "";
     }
 
-    if (heroSeatPreview && selectedInterior) {
-      heroSeatPreview.style.background = selectedInterior.dataset.preview || "";
+    const currentCar = getCurrentCar();
+    if (currentCar) {
+      applySelectedTrim(currentCar.title);
+    }
+
+    const selectedInteriorAsset = getInteriorAssetFromSwatch(selectedInterior);
+
+    if (heroSeatPreviewImage && selectedInteriorAsset) {
+      heroSeatPreviewImage.src =
+        selectedInteriorAsset.getAttribute("src") || heroSeatPreviewImage.src;
+      heroSeatPreviewImage.alt =
+        selectedInteriorAsset.getAttribute("alt") || heroSeatPreviewImage.alt;
+    }
+
+    const selectedExteriorAsset = getExteriorAssetFromSwatch(selectedExterior);
+
+    if (selectedExteriorAsset && heroColorImage) {
+      heroColorImage.src = selectedExteriorAsset.getAttribute("src") || heroColorImage.src;
+      heroColorImage.alt = selectedExteriorAsset.getAttribute("alt") || heroColorImage.alt;
+    }
+
+    if (selectedExteriorAsset && heroPackageImage) {
+      heroPackageImage.src =
+        selectedExteriorAsset.getAttribute("src") || heroPackageImage.src;
+      heroPackageImage.alt =
+        selectedExteriorAsset.getAttribute("alt") || heroPackageImage.alt;
     }
   }
 
@@ -679,6 +753,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const currentCar = getCurrentCar();
     if (currentCar) {
       applySelectedTrim(currentCar.title);
+      syncColorStageSelections();
     }
   }
 

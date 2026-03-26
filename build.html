@@ -274,7 +274,7 @@
                                     alt="EV9 Land AWD" />
                                 <div class="hero_trim_card_meta">
                                     <p class="hero_trim_card_price">$68,900 Starting MSRP*</p>
-                                    <p class="hero_trim_card_lease">$560 / 36 mo est. lease payments*</p>
+                                    <p class="hero_trim_card_lease">$648 / 36 mo est. lease payments*</p>
                                 </div>
                                 <div class="hero_trim_card_head">
                                     <strong>Land AWD</strong>
@@ -298,7 +298,7 @@
                                     alt="EV9 GT-Line AWD" />
                                 <div class="hero_trim_card_meta">
                                     <p class="hero_trim_card_price">$71,900 Starting MSRP*</p>
-                                    <p class="hero_trim_card_lease">$648 / 36 mo est. lease payments*</p>
+                                    <p class="hero_trim_card_lease">$677 / 36 mo est. lease payments*</p>
                                 </div>
                                 <div class="hero_trim_card_head">
                                     <strong>GT-Line AWD</strong>
@@ -337,63 +337,94 @@
 
                     <div class="hero_color_vehicle" id="heroColorVehicle">
                         <img id="heroColorImage" src="./img/sub01_build/trim_land.png" alt="EV9 Land AWD exterior" />
-                        <div class="hero_color_seat_preview" id="heroSeatPreview" aria-hidden="true"></div>
+                        <div class="hero_color_seat_preview" id="heroSeatPreview" aria-hidden="true">
+                            <img id="heroSeatPreviewImage" src="./img/sub01_build/seat_BlackGray1.png"
+                                alt="Black and Dark Gray seat trim preview" />
+                        </div>
                     </div>
 
                     <div class="hero_color_panels">
                         <section class="hero_color_panel" aria-labelledby="heroExteriorPanelTitle">
                             <h3 class="hero_color_panel_title" id="heroExteriorPanelTitle">Exterior</h3>
-                            <p class="hero_color_choice_name" id="heroExteriorName">Panthera Metal</p>
-                            <p class="hero_color_choice_price" id="heroExteriorPrice"></p>
-                            <div class="hero_color_swatches" id="heroExteriorSwatches">
-                                <button type="button" class="hero_color_swatch is-selected" data-type="exterior"
-                                    data-name="Panthera Metal" data-price="" data-theme="#4e4b47"
-                                    aria-label="Panthera Metal"
-                                    style="--swatch-base: linear-gradient(135deg, #6d6760, #413d38);"></button>
-                                <button type="button" class="hero_color_swatch" data-type="exterior"
-                                    data-name="Glacial White Pearl" data-price="+$695" data-theme="#d8dde7"
-                                    aria-label="Glacial White Pearl"
-                                    style="--swatch-base: linear-gradient(135deg, #f7fbff, #d7dfea);"></button>
-                                <button type="button" class="hero_color_swatch" data-type="exterior"
-                                    data-name="Ivory Silver" data-price="" data-theme="#b4b5b8"
-                                    aria-label="Ivory Silver"
-                                    style="--swatch-base: linear-gradient(135deg, #d7d8da, #8b8d93);"></button>
-                                <button type="button" class="hero_color_swatch" data-type="exterior"
-                                    data-name="Ocean Blue" data-price="+$695" data-theme="#1573ab"
-                                    aria-label="Ocean Blue"
-                                    style="--swatch-base: linear-gradient(135deg, #0d9be0, #125684);"></button>
-                                <button type="button" class="hero_color_swatch" data-type="exterior"
-                                    data-name="Road Rider Brown" data-price="+$1,500" data-theme="#655948"
-                                    aria-label="Road Rider Brown"
-                                    style="--swatch-base: linear-gradient(135deg, #786955, #4c4338);"></button>
-                                <button type="button" class="hero_color_swatch" data-type="exterior"
-                                    data-name="Wolf Gray" data-price="" data-theme="#c5c8d2" aria-label="Wolf Gray"
-                                    style="--swatch-base: linear-gradient(135deg, #d6d9e2, #aab0bb);"></button>
-                                <button type="button" class="hero_color_swatch" data-type="exterior"
-                                    data-name="Ebony Black" data-price="+$695" data-theme="#111111"
-                                    aria-label="Ebony Black"
-                                    style="--swatch-base: linear-gradient(135deg, #232323, #030303);"></button>
+                            <div class="hero_color_frame">
+                                <div class="hero_color_choice_row">
+                                    <p class="hero_color_choice_name" id="heroExteriorName">Panthera Metal</p>
+                                    <p class="hero_color_choice_price" id="heroExteriorPrice"></p>
+                                </div>
+                                <div class="hero_color_swatches" id="heroExteriorSwatches">
+                                    <button type="button"
+                                        class="hero_color_swatch hero_color_swatch_panthera is-selected"
+                                        data-type="exterior" data-name="Panthera Metal" data-price=""
+                                        data-image-id="colorAssetPanthera" aria-label="Panthera Metal"></button>
+                                    <button type="button" class="hero_color_swatch hero_color_swatch_white_pearl"
+                                        data-type="exterior" data-name="Glacial White Pearl" data-price="+$695"
+                                        data-image-id="colorAssetWhitePearl" aria-label="Glacial White Pearl"></button>
+                                    <button type="button" class="hero_color_swatch hero_color_swatch_ivory_silver"
+                                        data-type="exterior" data-name="Ivory Silver" data-price=""
+                                        data-image-id="colorAssetIvorySilver" aria-label="Ivory Silver"></button>
+                                    <button type="button" class="hero_color_swatch hero_color_swatch_ocean_blue"
+                                        data-type="exterior" data-name="Ocean Blue" data-price="+$695"
+                                        data-image-id="colorAssetOceanBlue" aria-label="Ocean Blue"></button>
+                                    <button type="button" class="hero_color_swatch hero_color_swatch_road_rider_brown"
+                                        data-type="exterior" data-name="Road Rider Brown" data-price="+$1,500"
+                                        data-image-id="colorAssetRoadRiderBrown" aria-label="Road Rider Brown"></button>
+                                    <button type="button" class="hero_color_swatch hero_color_swatch_wolf_gray"
+                                        data-type="exterior" data-name="Wolf Gray" data-price=""
+                                        data-image-id="colorAssetWolfGray" aria-label="Wolf Gray"></button>
+                                    <button type="button" class="hero_color_swatch hero_color_swatch_ebony_black"
+                                        data-type="exterior" data-name="Ebony Black" data-price="+$695"
+                                        data-image-id="colorAssetEbonyBlack" aria-label="Ebony Black"></button>
+                                </div>
+                            </div>
+                            <div class="hero_color_vehicle_assets" aria-hidden="true" hidden>
+                                <img id="colorAssetPanthera" src="./img/sub01_build/trim_land.png"
+                                    alt="EV9 Panthera Metal exterior" />
+                                <img id="colorAssetWhitePearl" src="./img/sub01_build/whitePearl1.png"
+                                    alt="EV9 Glacial White Pearl exterior" />
+                                <img id="colorAssetIvorySilver" src="./img/sub01_build/ivorySilver2.png"
+                                    alt="EV9 Ivory Silver exterior" />
+                                <img id="colorAssetOceanBlue" src="./img/sub01_build/oceanBlue3.png"
+                                    alt="EV9 Ocean Blue exterior" />
+                                <img id="colorAssetRoadRiderBrown" src="./img/sub01_build/brown4.png"
+                                    alt="EV9 Road Rider Brown exterior" />
+                                <img id="colorAssetWolfGray" src="./img/sub01_build/wolfGray5.png"
+                                    alt="EV9 Wolf Gray exterior" />
+                                <img id="colorAssetEbonyBlack" src="./img/sub01_build/black6.png"
+                                    alt="EV9 Ebony Black exterior" />
                             </div>
                         </section>
 
                         <section class="hero_color_panel" aria-labelledby="heroInteriorPanelTitle">
                             <h3 class="hero_color_panel_title" id="heroInteriorPanelTitle">Interior</h3>
-                            <p class="hero_color_choice_name hero_color_choice_name_interior" id="heroInteriorName">
-                                Black &amp; Dark Gray Quilted Stripes SynTex Seat Trim
-                            </p>
-                            <div class="hero_color_swatches hero_color_swatches_interior" id="heroInteriorSwatches">
-                                <button type="button" class="hero_color_swatch hero_color_swatch_interior is-selected"
-                                    data-type="interior"
-                                    data-name="Black &amp; Dark Gray Quilted Stripes SynTex Seat Trim"
-                                    data-preview="linear-gradient(135deg, #1e1f21 0%, #47484d 48%, #9fa1a6 100%)"
-                                    aria-label="Black and Dark Gray seat trim"
-                                    style="--swatch-base: linear-gradient(135deg, #101113 0%, #404249 50%, #8f939a 100%);"></button>
-                                <button type="button" class="hero_color_swatch hero_color_swatch_interior"
-                                    data-type="interior"
-                                    data-name="Dark Gray &amp; Light Gray Quilted Stripes SynTex Seat Trim"
-                                    data-preview="linear-gradient(135deg, #5b5c62 0%, #a9abb2 48%, #d9dbe0 100%)"
-                                    aria-label="Dark Gray and Light Gray seat trim"
-                                    style="--swatch-base: linear-gradient(135deg, #4e5057 0%, #b0b4bc 52%, #e1e4ea 100%);"></button>
+                            <div class="hero_color_frame">
+                                <p class="hero_color_choice_name hero_color_choice_name_interior" id="heroInteriorName">
+                                    Black &amp; Dark Gray Quilted Stripes SynTex Seat Trim
+                                </p>
+                                <div class="hero_color_swatches hero_color_swatches_interior" id="heroInteriorSwatches">
+                                    <button type="button"
+                                        class="hero_color_swatch hero_color_swatch_interior hero_color_swatch_interior_black_gray is-selected"
+                                        data-type="interior"
+                                        data-name="Black &amp; Dark Gray Quilted Stripes SynTex Seat Trim"
+                                        data-image-id="seatAssetBlackGray" aria-label="Black and Dark Gray seat trim">
+                                        <img src="img/sub01_build/seat_color1.png"
+                                            alt="Black and Dark Gray seat trim swatch" />
+                                    </button>
+                                    <button type="button"
+                                        class="hero_color_swatch hero_color_swatch_interior hero_color_swatch_interior_dark_light_gray"
+                                        data-type="interior"
+                                        data-name="Dark Gray &amp; Light Gray Quilted Stripes SynTex Seat Trim"
+                                        data-image-id="seatAssetDarkLightGray"
+                                        aria-label="Dark Gray and Light Gray seat trim">
+                                        <img src="./img/sub01_build/seat_color2.png"
+                                            alt="Dark Gray and Light Gray seat trim swatch" />
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="hero_color_seat_assets" aria-hidden="true" hidden>
+                                <img id="seatAssetBlackGray" src="img/sub01_build/seat_BlackGray1.png"
+                                    alt="Black and Dark Gray seat trim preview" />
+                                <img id="seatAssetDarkLightGray" src="./img/sub01_build/seat_DarkGray2.png"
+                                    alt="Dark Gray and Light Gray seat trim preview" />
                             </div>
                         </section>
                     </div>
