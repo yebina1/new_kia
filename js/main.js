@@ -283,3 +283,111 @@ function setupOptionScroll() {
 initLenis();
 setupIntroScroll();
 setupOptionScroll();
+
+/* section.review */
+const reviewSection = document.querySelector('.review');
+const lists = document.querySelectorAll('.review_con ul');
+const items = document.querySelectorAll('.review_con li');
+const modal = document.querySelector('.modal');
+
+let currentScroll = 0;
+const step = 276; 
+const maxScroll = (lists[0].children.length - 1) * step;
+let isWaiting = false;
+let modalShown = false; 
+let isSnapped = false; 
+
+function checkActive() {
+    const containerRect = document.querySelector('.review_con').getBoundingClientRect();
+    const centerLine = containerRect.top + (containerRect.height / 2);
+    items.forEach((item) => {
+        const itemRect = item.getBoundingClientRect();
+        const itemCenter = itemRect.top + (itemRect.height / 2);
+        if (Math.abs(centerLine - itemCenter) < 138) item.classList.add('on');
+        else item.classList.remove('on');
+    });
+}
+
+// 스크롤 잠금/해제 함수
+function setScrollLock(lock) {
+    if (lock) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = '';
+    }
+}
+
+const handleWheel = (e) => {
+    const isDown = e.deltaY > 0;
+    const sectionRect = reviewSection.getBoundingClientRect();
+    
+    // 1. 섹션 진입 시 스냅 및 바디 잠금
+    if (!isSnapped && sectionRect.top < window.innerHeight * 0.3 && sectionRect.bottom > window.innerHeight * 0.7) {
+        isSnapped = true;
+        setScrollLock(true); // 바디 스크롤 완전 차단
+        window.scrollTo({ top: reviewSection.offsetTop, behavior: 'smooth' });
+        return;
+    }
+
+    // 2. 섹션 고정 상태 (이제 브라우저는 못 움직이고 우리 JS만 일함)
+    if (isSnapped) {
+        e.preventDefault(); // 어떤 휠 동작도 브라우저에 전달 안 함
+
+        if (isWaiting) return;
+
+        // 모달 닫기 제어
+        if (modal.classList.contains('show')) {
+            isWaiting = true;
+            setTimeout(() => {
+                hideModal();
+                // 모달 닫히고 나서 약간의 대기 후 "이제 다음 휠에 나갈 수 있음" 상태로 만듦
+                setTimeout(() => { isWaiting = false; }, 500); 
+            }, 500);
+            return;
+        }
+
+        if (isDown) {
+            // 마지막 카드 + 모달까지 다 봤는데 한 번 더 굴리면? -> 잠금 해제 후 탈출
+            if (currentScroll >= maxScroll && modalShown && !modal.classList.contains('show')) {
+                isSnapped = false;
+                setScrollLock(false);
+                return;
+            }
+
+            if (currentScroll >= maxScroll) {
+                if (!modalShown) {
+                    showModal();
+                    modalShown = true; 
+                    isWaiting = true;
+                    setTimeout(() => { isWaiting = false; }, 800);
+                }
+                return;
+            }
+            currentScroll += step;
+        } else {
+            // 위로 굴릴 때: 첫 번째 카드면 잠금 해제 후 위로 탈출
+            if (currentScroll <= 0) {
+                isSnapped = false;
+                setScrollLock(false);
+                return;
+            }
+            currentScroll -= step;
+            modalShown = false; 
+        }
+
+        isWaiting = true;
+        lists.forEach(ul => {
+            ul.style.transform = `translateY(${-currentScroll}px)`;
+        });
+
+        setTimeout(checkActive, 150);
+        setTimeout(() => { isWaiting = false; }, 800); 
+    }
+};
+
+// window에 걸어서 주도권을 완전히 가져옴
+window.addEventListener('wheel', handleWheel, { passive: false });
+
+function showModal() { modal.classList.add('show'); }
+function hideModal() { modal.classList.remove('show'); }
+window.addEventListener('load', checkActive);
