@@ -51,6 +51,16 @@ button {
   --hero-swatch-height: 34px;
   --hero-color-frame-padding-block: 32px;
   --hero-color-frame-padding-inline: 16px;
+  --hero-stage-actions-left: 40px;
+  --hero-stage-actions-right: 0;
+  --hero-stage-actions-bottom: -96px;
+  --hero-stage-actions-gap: 64px;
+  --hero-stage-steps-left: calc(64px + (971px / 2));
+  --hero-stage-steps-bottom: 24px;
+  --hero-stage-steps-transform: translateX(-50%);
+  --hero-stage-steps-width: fit-content;
+  --hero-stage-steps-max-width: none;
+  --hero-stage-steps-tabs-gap: 20px;
   width: 100%;
   min-height: 100vh;
   padding: 0;
@@ -483,11 +493,14 @@ button {
   padding: 0;
   overflow: hidden;
   background: none;
+  box-sizing: border-box;
 }
 
 .hero_color_swatch_interior img {
-  width: 100%;
-  height: 100%;
+  width: calc(100% + 6px);
+  height: calc(100% + 6px);
+  max-width: none;
+  margin: -3px;
   object-fit: cover;
   object-position: center;
   display: block;
@@ -528,23 +541,6 @@ button {
 
 .hero_color_swatch_interior_dark_light_gray {
   --swatch-base: none;
-}
-
-.hero_color_actions {
-  grid-area: actions;
-  position: absolute;
-  left: 40px;
-  right: 0;
-  bottom: -96px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 64px;
-  margin-top: 0;
-  margin-bottom: 0;
-  padding-top: 0;
-  border-top: 0;
-  min-height: 48px;
 }
 
 .hero_package_intro {
@@ -748,27 +744,6 @@ button {
 
 .hero_package_card.expanded .hero_package_more_btn::after {
   transform: rotate(-135deg) translate(-1px, -1px);
-}
-
-.hero_package_actions {
-  grid-area: bottom;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 44px;
-  padding-right: 12px;
-}
-
-.hero_package_stage.is-visible ~ .hero_bottom_steps {
-  left: 120px;
-  bottom: 28px;
-  transform: none;
-  width: fit-content;
-  max-width: none;
-}
-
-.hero_package_stage.is-visible ~ .hero_bottom_steps .hero_bottom_tabs {
-  gap: 24px;
 }
 
 .hero_trim_intro {
@@ -1030,21 +1005,27 @@ button {
   transform: rotate(-135deg);
 }
 
-.hero_trim_actions {
+.hero_trim_actions,
+.hero_color_actions,
+.hero_package_actions {
   grid-area: actions;
   position: absolute;
-  left: 40px;
-  right: 0;
-  bottom: -96px;
+  left: var(--hero-stage-actions-left);
+  right: var(--hero-stage-actions-right);
+  bottom: var(--hero-stage-actions-bottom);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 64px;
+  gap: var(--hero-stage-actions-gap);
   margin-top: 0;
   margin-bottom: 0;
   padding-top: 0;
   border-top: 0;
   min-height: 48px;
+}
+
+.hero_package_actions {
+  grid-area: bottom;
 }
 
 .hero_trim_action_btn {
@@ -1093,30 +1074,21 @@ button {
     0 12px 34px rgba(0, 0, 0, 0.2);
 }
 
-.hero_trim_stage.is-visible ~ .hero_bottom_steps {
-  left: calc(64px + (971px / 2));
-  bottom: 24px;
-  transform: translateX(-50%);
-  width: fit-content;
-  max-width: none;
+.hero_trim_stage.is-visible ~ .hero_bottom_steps,
+.hero_color_stage.is-visible ~ .hero_bottom_steps,
+.hero_package_stage.is-visible ~ .hero_bottom_steps {
+  left: var(--hero-stage-steps-left);
+  bottom: var(--hero-stage-steps-bottom);
+  transform: var(--hero-stage-steps-transform);
+  width: var(--hero-stage-steps-width);
+  max-width: var(--hero-stage-steps-max-width);
 }
 
-.hero_trim_stage.is-visible ~ .hero_bottom_steps .hero_bottom_tabs {
+.hero_trim_stage.is-visible ~ .hero_bottom_steps .hero_bottom_tabs,
+.hero_color_stage.is-visible ~ .hero_bottom_steps .hero_bottom_tabs,
+.hero_package_stage.is-visible ~ .hero_bottom_steps .hero_bottom_tabs {
   justify-content: center;
-  gap: 20px;
-}
-
-.hero_color_stage.is-visible ~ .hero_bottom_steps {
-  left: calc(64px + (971px / 2));
-  bottom: 24px;
-  transform: translateX(-50%);
-  width: fit-content;
-  max-width: none;
-}
-
-.hero_color_stage.is-visible ~ .hero_bottom_steps .hero_bottom_tabs {
-  justify-content: center;
-  gap: 20px;
+  gap: var(--hero-stage-steps-tabs-gap);
 }
 
 
@@ -1521,6 +1493,13 @@ button {
 }
 
 @media (max-width: 1024px) {
+  .hero {
+    --hero-stage-actions-gap: 24px;
+    --hero-stage-steps-left: 32px;
+    --hero-stage-steps-bottom: 28px;
+    --hero-stage-steps-transform: none;
+  }
+
   .hero_package_stage {
     inset: 96px 32px 116px;
     grid-template-columns: minmax(280px, 1fr) minmax(320px, 420px);
@@ -1548,16 +1527,12 @@ button {
     font-size: 18px;
   }
 
+  .hero_trim_actions,
+  .hero_color_actions,
   .hero_package_actions {
     justify-content: center;
     gap: 24px;
     padding-right: 0;
-  }
-
-  .hero_package_stage.is-visible ~ .hero_bottom_steps {
-    left: 32px;
-    bottom: 28px;
-    transform: none;
   }
 
   .hero_trim_stage {
@@ -1705,6 +1680,15 @@ button {
 }
 
 @media (max-width: 360px) {
+  .hero {
+    --hero-stage-actions-gap: 8px;
+    --hero-stage-steps-left: 12px;
+    --hero-stage-steps-bottom: 32px;
+    --hero-stage-steps-transform: none;
+    --hero-stage-steps-width: auto;
+    --hero-stage-steps-max-width: none;
+  }
+
   .hero_package_stage {
     inset: 64px 16px 88px;
     grid-template-columns: 1fr;
@@ -1782,27 +1766,22 @@ button {
     font-size: 12px;
   }
 
+  .hero_trim_actions,
+  .hero_color_actions,
   .hero_package_actions {
     justify-content: space-between;
     gap: 8px;
     padding-right: 0;
   }
 
+  .hero_trim_actions .hero_trim_action_btn,
+  .hero_color_actions .hero_trim_action_btn,
   .hero_package_actions .hero_trim_action_btn {
     min-width: 0;
     width: calc(50% - 4px);
     height: 40px;
     padding: 0 12px;
     font-size: 12px;
-  }
-
-  .hero_package_stage.is-visible ~ .hero_bottom_steps {
-    left: 12px;
-    right: 12px;
-    transform: none;
-    width: auto;
-    max-width: none;
-    bottom: 32px;
   }
 
   .hero_trim_stage {
