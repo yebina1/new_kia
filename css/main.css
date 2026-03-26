@@ -437,6 +437,162 @@ section[class*="option"] .bottom>ul.cars>li:hover>strong {
   opacity: 0;
 }
 
+/* section.review */
+.review{
+    position: relative;
+}
+
+.review .inner {
+    max-width: 1440px;
+    height: 100vh;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    padding-block: 60px;
+}
+
+.review .tit {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+    z-index: 20;
+}
+
+.review .review_con {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    height: 530px;
+    overflow: hidden;
+    align-items: flex-start;
+    padding-top: 115px;
+}
+
+.review .review_con ul.re_left,
+.review .review_con ul.re_right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    will-change: transform;
+}
+
+.review .review_con ul > li {
+    border-radius: 32px;
+    transition: all 0.5s ease;
+    flex-shrink: 0;
+    display: flex;
+    background: #555;
+    /* 핵심: 모든 li가 위로 24px씩 올라타서 겹치게 설정 */
+    margin-top: -24px;
+    position: relative;
+    z-index: 1;
+} 
+
+/* 첫 번째 카드는 위로 올라갈 필요가 없으므로 마진 제거 */
+.review .review_con ul > li:first-child {
+    margin-top: 0;
+}
+
+.review .review_con ul > li.on {
+    opacity: 1;
+    z-index: 10;
+    transform: translateX(0); 
+}
+
+.review .review_con ul.re_left > li.on {
+    transform: translateX(64px);
+}
+
+.review .review_con ul.re_right > li.on {
+    transform: translateX(-64px);
+}
+
+.review .review_con ul > li:not(.on) {
+    opacity: 0.3;
+    z-index: 1;
+}
+
+.review .review_con ul > li > a {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 32px 48px;
+    width: 500px;
+    height: 300px;
+    box-sizing: border-box;
+}
+
+.review .review_con ul > li > a b {
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.4;
+    color: #fff;
+    display: block;
+}
+
+.review .review_con ul > li.on > a b {
+    font-style: italic;
+}
+
+.review .review_con ul > li > a p {
+    font-size: 16px;
+    line-height: 1.3;
+    color: #ccc;
+}
+
+.review .review_con ul > li > a > .star {
+    display: flex;
+    gap: 4px;
+    min-height: 14px;
+    flex-shrink: 0;
+}
+
+.review .review_con ul > li > a > .star i {
+    color: #A7BAC8;
+    font-size: 14px;
+    display: block;
+}
+
+.modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 10;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: auto;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal.show {
+    display: flex;
+    opacity: 1;
+}
+
+.modal a{
+    padding: 16px 32px;
+    border-radius: 55px;
+    font-size: 20px;
+    font-weight: 600;
+    display: flex;
+    gap: 12px;
+    font-family: "Outfit", sans-serif;
+}
+
+.modal a:hover{
+  transform: translateY(-4px);
+}
+
 /* section.map */
 .map{
   background: url("../img/main/map_bg_img.jpg") center/cover;
