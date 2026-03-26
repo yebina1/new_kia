@@ -1,1 +1,922 @@
 @charset "utf-8";
+
+.mobile_tabs {
+    display: none;
+}
+
+/* =========================
+   DESKTOP / LARGE TABLET
+========================= */
+@media (max-width: 1680px) {
+    .recco .contents {
+        grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.2fr);
+    }
+
+    .car_all section {
+        padding-right: 72px;
+    }
+}
+
+@media (max-width: 1320px) {
+    .car_all section {
+        padding-left: 96px;
+        padding-right: 48px;
+    }
+
+    .con > button {
+        left: 96px;
+    }
+}
+
+@media (max-width: 1180px) and (min-width: 821px) {
+    section.way .inner {
+        padding: 52px 24px 48px;
+    }
+
+    .recco {
+        --tablet-content-top: 126px;
+        --tablet-video-top: 132px;
+        --tablet-button-bottom: 28px;
+        --tablet-button-height: 48px;
+        --tablet-content-bottom: calc(var(--tablet-button-height) + var(--tablet-button-bottom) + 4px);
+        padding-bottom: 0;
+    }
+
+    .selection_modal_panel {
+        width: min(940px, calc(100% - 64px));
+        height: min(540px, calc(100vh - 72px));
+    }
+
+    .selection_modal_inner {
+        min-height: 100%;
+        padding: 32px 40px 28px 64px;
+        overflow: hidden;
+    }
+
+    .selection_modal_body {
+        margin-top: 24px;
+    }
+
+    .selection_modal_copy {
+        width: min(100%, 360px);
+    }
+
+    .selection_modal_visual {
+        right: -96px;
+        bottom: 24px;
+        width: min(100%, 560px);
+    }
+
+    .selection_modal_actions {
+        left: 64px;
+        right: 40px;
+        bottom: 28px;
+        gap: 12px;
+    }
+
+    .selection_modal_logo img {
+        height: 34px;
+    }
+
+    .selection_modal_header p {
+        margin-top: 4px;
+        font-size: 13px;
+    }
+
+    .selection_modal_titlebox {
+        padding: 14px 0 10px;
+    }
+
+    .selection_modal_titlebox h3 {
+        font-size: 28px;
+    }
+
+    .selection_modal_desc,
+    .selection_modal_specs {
+        margin-top: 20px;
+    }
+
+    .selection_modal_label {
+        font-size: 15px;
+    }
+
+    .selection_modal_desc p:last-child,
+    .selection_modal_specs li {
+        font-size: 16px;
+    }
+
+    .selection_modal_buttons {
+        gap: 10px;
+    }
+
+    .selection_modal_buttons button {
+        width: 156px;
+        height: 44px;
+        padding: 0 18px;
+        font-size: 15px;
+    }
+
+    .selection_modal_share {
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+        min-height: 42px;
+    }
+
+    .selection_modal_share img {
+        width: 15px;
+        height: 15px;
+    }
+
+    .selection_modal_close {
+        top: 14px;
+        right: 14px;
+        font-size: 40px;
+    }
+
+    .recco .tit h2 {
+        top: 32px;
+        font-size: 56px;
+    }
+
+    .recco .contents {
+        grid-template-columns: minmax(0, 52%) minmax(0, 48%);
+        height: clamp(640px, 78vh, 730px);
+    }
+
+    .overlay {
+        grid-template-columns: 72px minmax(0, 1fr);
+        height: 100%;
+    }
+
+    .con {
+        position: relative;
+        height: 100%;
+    }
+
+    .car_all,
+    .vid {
+        height: 100%;
+    }
+
+    .vid {
+        margin-top: var(--tablet-video-top);
+        height: calc(100% - var(--tablet-video-top));
+    }
+
+    .tab.has-icons .tab_stage {
+        transform: translateY(-50%) scale(0.82);
+        transform-origin: left center;
+    }
+
+    .car_all section {
+        height: 100%;
+        justify-content: flex-start;
+        gap: 18px;
+        padding: var(--tablet-content-top) 20px var(--tablet-content-bottom) 64px;
+    }
+
+    .car_all .top {
+        max-width: 456px;
+        gap: 8px;
+    }
+
+    .car_all .top .title p {
+        font-size: 12px;
+    }
+
+    .car_all .top .title h2 {
+        font-size: 35px;
+    }
+
+    .car_all .top > p {
+        max-width: 456px;
+        font-size: 12px;
+    }
+
+    .car_all ul {
+        max-width: 456px;
+        gap: 16px;
+    }
+
+    .car_all ul li {
+        grid-template-columns: 104px minmax(0, 1fr);
+        gap: 12px;
+    }
+
+    .car_all ul li img {
+        width: 104px;
+        height: 104px;
+    }
+
+    .car_all .txt_box {
+        min-height: 104px;
+        padding: 16px 18px;
+        border-radius: 20px;
+    }
+
+    .car_all .txt_box b {
+        margin-bottom: 6px;
+        font-size: 14px;
+    }
+
+    .car_all .txt_box p {
+        font-size: 12px;
+    }
+
+    .con > button {
+        position: absolute;
+        left: 64px;
+        bottom: 5px;
+        margin: 0;
+        width: 136px;
+        height: var(--tablet-button-height);
+        font-size: 18px;
+    }
+}
+
+/* =========================
+   TABLET / SMALL TABLET
+========================= */
+@media (max-width: 820px) {
+    section.way .inner {
+        padding: 52px 24px 40px;
+    }
+
+    .recco {
+        padding-bottom: 88px;
+    }
+
+    .recco .inner {
+        padding: 0;
+        width: 100%;
+        max-width: none;
+    }
+
+    .recco .contents,
+    .overlay {
+        display: block;
+        height: auto;
+    }
+
+    .recco .tit,
+    .tab,
+    .vid,
+    .con > button,
+    .mobile_tabs {
+        display: none;
+    }
+
+    .con,
+    .car_all {
+        position: relative;
+        width: 100%;
+        max-width: none;
+        height: auto;
+        min-height: auto;
+        box-sizing: border-box;
+    }
+
+    .con {
+        overflow: hidden;
+    }
+
+    .car_all {
+        overflow: hidden;
+    }
+
+    .car_all section,
+    .car_all section:first-child,
+    .car_all section.is-active {
+        position: relative;
+        inset: auto;
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: none;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        min-width: 100%;
+        padding: 0 24px 32px;
+        box-sizing: border-box;
+        background: #0c1115;
+        border-top: 0;
+    }
+
+    .car_all section + section {
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .mobile_hero {
+        position: relative;
+        width: 100%;
+        height: 244px;
+        margin-top: 16px;
+        overflow: hidden;
+        background:
+            linear-gradient(180deg, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.38) 100%),
+            linear-gradient(135deg, #676b72 0%, #404852 48%, #21262e 100%);
+    }
+
+    .mobile_hero_image {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+    }
+
+    .mobile_hero_title {
+        position: absolute;
+        left: 24px;
+        top: 16px;
+        margin: 0;
+        z-index: 3;
+        color: rgba(251, 246, 239, 0.82);
+        font-size: 32px;
+        line-height: 1.2;
+        font-family: "Cormorant Garamond", serif;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        white-space: nowrap;
+        text-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
+    }
+
+    .mobile_hero_placeholder {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        padding: 10px 14px;
+        border: 1px dashed rgba(255, 255, 255, 0.3);
+        color: rgba(251, 246, 239, 0.72);
+        font-size: 12px;
+        letter-spacing: 0.2em;
+        white-space: nowrap;
+    }
+
+    .mobile_dots {
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+        width: 100%;
+        padding: 14px 0 0;
+        margin: 0 0 18px;
+        box-sizing: border-box;
+        position: relative;
+    }
+
+    .mobile_dots span {
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: #6e6e6e;
+        transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .mobile_dots span.is-active {
+        background: #fbf6ef;
+        transform: scale(1.15);
+    }
+
+    .car_all .top {
+        position: relative;
+        width: 100%;
+        max-width: none;
+        min-width: 0;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+        padding: 0 24px;
+        margin: 0 0 12px;
+        box-sizing: border-box;
+        min-height: auto;
+        align-content: start;
+    }
+
+    .car_all .top .title {
+        width: 100%;
+        min-width: 0;
+        padding-right: 104px;
+        box-sizing: border-box;
+        min-height: auto;
+    }
+
+    .car_all .top .title p {
+        font-size: 12px;
+        line-height: 1;
+    }
+
+    .car_all .top .title h2 {
+        font-size: 32px;
+        line-height: 1.1;
+    }
+
+    .car_all .top > p {
+        width: 100%;
+        max-width: none;
+        padding: 0;
+        margin: 0;
+        font-size: 16px;
+        line-height: 1.4;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        box-sizing: border-box;
+        min-height: auto;
+    }
+
+    .mobile_build {
+        position: absolute;
+        right: 24px;
+        top: 8px;
+        height: 42px;
+        padding: 0 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        border: 0.5px solid rgba(255, 255, 255, 0.16);
+        background: rgba(251, 246, 239, 0.25);
+        color: #fbf6ef;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1;
+        text-align: center;
+        box-shadow: 0.188px 0.188px 0.75px 0 #0c1115;
+        white-space: nowrap;
+    }
+
+    .car_all ul {
+        width: 100%;
+        max-width: none;
+        min-width: 0;
+        gap: 16px;
+        padding: 8px 24px 0;
+        margin: 0;
+        box-sizing: border-box;
+    }
+
+    .car_all ul li {
+        display: flex;
+        align-items: stretch;
+        gap: 0;
+        overflow: visible;
+        padding-right: 0;
+        width: 100%;
+        max-width: none;
+        min-width: 0;
+        margin: 0 auto;
+        box-sizing: border-box;
+        grid-template-columns: unset;
+    }
+
+    .car_all ul li img {
+        position: relative;
+        z-index: 1;
+        flex: 0 0 80px;
+        width: 80px;
+        height: 139px;
+        display: block;
+        object-fit: cover;
+        object-position: center;
+        border-radius: 5px;
+        background:
+            linear-gradient(90deg, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.1) 100%),
+            linear-gradient(135deg, #756452 0%, #473c33 100%);
+        box-shadow: none;
+    }
+
+    .car_all .txt_box {
+        min-height: 139px;
+        flex: 1 1 auto;
+        min-width: 0;
+        width: auto;
+        max-width: none;
+        padding: 10px 8px 10px 12px;
+        border-radius: 0 5px 5px 0;
+        background: rgba(251, 246, 239, 0.14);
+        border: 0;
+        backdrop-filter: none;
+        box-sizing: border-box;
+        position: relative;
+        z-index: 2;
+        margin-left: -16px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+
+    .car_all .txt_box b {
+        width: 100%;
+        margin-bottom: 8px;
+        font-size: 16px;
+        line-height: 1.3;
+        white-space: normal;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        box-sizing: border-box;
+    }
+
+    .car_all .txt_box p {
+        width: 100%;
+        font-size: 14px;
+        line-height: 1.3;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        box-sizing: border-box;
+    }
+}
+
+/* =========================
+   MOBILE
+========================= */
+@media (max-width: 640px) {
+    .selection_modal_panel {
+        width: calc(100% - 24px);
+        height: min(680px, calc(100vh - 24px));
+    }
+
+    .selection_modal_inner {
+        padding: 48px 20px 24px;
+    }
+
+    .selection_modal_close {
+        top: 18px;
+        right: 18px;
+        font-size: 38px;
+    }
+
+    .selection_modal_titlebox h3 {
+        font-size: 30px;
+    }
+
+    .selection_modal_desc p:last-child,
+    .selection_modal_specs li,
+    .selection_modal_buttons button {
+        font-size: 18px;
+    }
+
+    .selection_modal_actions,
+    .selection_modal_buttons {
+        align-items: stretch;
+    }
+
+    .selection_modal_actions {
+        flex-direction: column;
+    }
+
+    .selection_modal_buttons {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .selection_modal_buttons button {
+        width: 100%;
+    }
+
+    .selection_modal_share {
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+        min-height: 32px;
+        align-self: center;
+    }
+
+    .wrap {
+        overflow-x: hidden;
+    }
+
+    section.way .inner {
+        padding: 32px 24px 24px;
+        width: 100%;
+        max-width: none;
+        margin: 0 auto;
+        box-sizing: border-box;
+    }
+
+    section.way .inner h2 {
+        font-size: 32px;
+        line-height: 1.2;
+    }
+
+    .recco {
+        min-height: auto;
+    }
+
+    .recco .inner {
+        padding: 0;
+        width: 100%;
+        max-width: none;
+        margin: 0 auto;
+        box-sizing: border-box;
+    }
+
+    .mobile_tabs {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0;
+        width: fit-content;
+        max-width: calc(100% - 48px);
+        margin: 0 auto;
+        padding: 8px;
+        overflow: visible;
+        background: rgba(251, 246, 239, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 55px;
+        scrollbar-width: none;
+        box-sizing: border-box;
+    }
+
+    .mobile_tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    .mobile_tabs button {
+        width: 62px;
+        min-width: 62px;
+        height: 32px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 46px;
+        border: 0;
+        background: transparent;
+        color: transparent;
+        font-size: 0;
+        font-weight: 600;
+        text-align: center;
+        line-height: 1;
+        white-space: nowrap;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 22px 22px;
+        opacity: 0.58;
+    }
+
+    .mobile_tabs button[data-group="outdoor"] {
+        background-image: url("../img/sub02_recommended/tap/tab_icon1_off.svg");
+    }
+
+    .mobile_tabs button[data-group="family"] {
+        background-image: url("../img/sub02_recommended/tap/tab_icon2_off.svg");
+    }
+
+    .mobile_tabs button[data-group="urban"] {
+        background-image: url("../img/sub02_recommended/tap/tab_icon3_off.svg");
+    }
+
+    .mobile_tabs button[data-group="electric"] {
+        background-image: url("../img/sub02_recommended/tap/tab_icon4_off.svg");
+    }
+
+    .mobile_tabs button.is-active {
+        background-color: rgba(251, 246, 239, 0.12);
+        opacity: 1;
+    }
+
+    .mobile_tabs button.is-active[data-group="outdoor"] {
+        background-image: url("../img/sub02_recommended/tap/tab_icon1_on.svg");
+    }
+
+    .mobile_tabs button.is-active[data-group="family"] {
+        background-image: url("../img/sub02_recommended/tap/tab_icon2_on.svg");
+    }
+
+    .mobile_tabs button.is-active[data-group="urban"] {
+        background-image: url("../img/sub02_recommended/tap/tab_icon3_on.svg");
+    }
+
+    .mobile_tabs button.is-active[data-group="electric"] {
+        background-image: url("../img/sub02_recommended/tap/tab_icon4_on.svg");
+    }
+
+    .recco .contents,
+    .overlay,
+    .con,
+    .car_all {
+        position: relative;
+        top: auto;
+        width: 100%;
+        max-width: none;
+        height: auto;
+        min-height: auto;
+        box-sizing: border-box;
+    }
+
+    .recco .contents {
+        margin: 0 auto;
+        padding: 0 24px;
+        overflow: visible;
+    }
+
+    .overlay {
+        background: #0c1115;
+    }
+
+    .con {
+        overflow: visible;
+    }
+
+    .car_all {
+        display: block;
+        overflow: visible;
+    }
+
+    .car_all.is-resetting {
+        overflow: visible;
+    }
+
+    .car_all::-webkit-scrollbar {
+        display: none;
+    }
+
+    .car_all section,
+    .car_all section:first-child,
+    .car_all section.is-active,
+    .car_all section.is-mobile-visible.is-mobile-current {
+        position: relative;
+        inset: auto;
+        width: auto;
+        min-width: 0;
+        max-width: none;
+        min-height: auto;
+        padding: 0 0 28px;
+        transform: none;
+        transition: none;
+        pointer-events: auto;
+        background: #0c1115;
+        box-sizing: border-box;
+        display: none;
+    }
+
+    .car_all section.is-mobile-hidden {
+        display: none;
+    }
+
+    .car_all section.is-mobile-visible {
+        display: none;
+    }
+
+    .car_all section.is-mobile-visible.is-mobile-current {
+        display: block;
+    }
+
+    .mobile_hero {
+        margin-top: 0;
+    }
+
+    .mobile_hero_title {
+        left: 24px;
+        top: 16px;
+        bottom: auto;
+        color: rgba(251, 246, 239, 0.82);
+        line-height: 1.2;
+    }
+
+    .mobile_dots {
+        padding-top: 14px;
+        margin: 0 0 18px;
+    }
+
+    .car_all .top {
+        padding: 0 24px;
+        margin-bottom: 12px;
+    }
+
+    .car_all .top .title {
+        padding-right: 104px;
+    }
+
+    .car_all .top > p {
+        line-height: 1.35;
+        min-height: auto;
+    }
+
+    .mobile_build {
+        right: 24px;
+        top: 8px;
+    }
+
+    .car_all ul {
+        padding: 8px 24px 0;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 392px) {
+    section.way .inner,
+    .recco .inner,
+    .mobile_tabs,
+    .recco .contents {
+        width: 100%;
+    }
+
+    .mobile_tabs {
+        max-width: calc(100% - 32px);
+    }
+
+    .car_all .top .title {
+        padding-right: 92px;
+    }
+
+    .mobile_build {
+        right: 24px;
+        padding: 0 16px;
+    }
+
+    .car_all .top > p,
+    .car_all ul {
+        max-width: none;
+    }
+
+    .car_all ul li {
+        width: 100%;
+    }
+
+    .car_all .txt_box {
+        width: auto;
+    }
+}
+
+@media (max-width: 820px) {
+    /* 현재 보이는 카드 구조를 세로 flex로 고정 */
+    .car_all section,
+    .car_all section:first-child,
+    .car_all section.is-active,
+    .car_all section.is-mobile-visible,
+    .car_all section.is-mobile-visible.is-mobile-current {
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* 이미지 박스 */
+    .mobile_hero {
+        order: 1;
+        display: block;
+        position: relative;
+        width: 100%;
+        height: 244px;
+        margin-top: 12px;
+        overflow: hidden;
+        background:
+            linear-gradient(180deg, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.38) 100%),
+            linear-gradient(135deg, #676b72 0%, #404852 48%, #21262e 100%);
+    }
+
+    .mobile_hero_image {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* 제목은 이미지 안 위쪽 */
+    .mobile_hero_title {
+        display: block;
+        position: absolute;
+        left: 24px;
+        top: 16px;
+        bottom: auto;
+        margin: 0;
+        z-index: 3;
+        color: rgba(251, 246, 239, 0.82);
+        font-size: 32px;
+        line-height: 1.2;
+        font-family: "Cormorant Garamond", serif;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        white-space: nowrap;
+        text-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
+    }
+
+    /* dot은 이미지 바로 아래 */
+    .mobile_dots {
+        order: 2;
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+        width: 100%;
+        padding: 14px 0 0;
+        margin: 0 0 18px;
+        position: relative;
+    }
+
+    /* 텍스트 */
+    .car_all .top {
+        order: 3;
+        padding: 0 24px;
+        margin: 0 0 12px;
+    }
+
+    /* 리스트 */
+    .car_all ul {
+        order: 4;
+        padding: 8px 24px 0;
+    }
+}
