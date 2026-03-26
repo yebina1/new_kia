@@ -178,7 +178,6 @@ section.way .inner p {
 }
 
 .selection_modal_label {
-    /* margin-bottom: 4px; */
     font-size: 18px;
     line-height: 1.3;
 }
@@ -338,6 +337,14 @@ body.modal-open {
 }
 
 .mobile_hero {
+    display: none;
+}
+
+.mobile_tabs {
+    display: none;
+}
+
+.mobile_build {
     display: none;
 }
 
@@ -762,6 +769,10 @@ body.modal-open {
     .car_all ul li img {
         width: 96px;
         height: 96px;
+    }
+
+    .mobile_build {
+        display: inline-flex;
     }
 
     .con > button {

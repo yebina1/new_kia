@@ -29,7 +29,7 @@ const recommendationThemes = {
 };
 
 const MOBILE_HERO_IMAGES = {
-    telluride_outdoor: { src: "https://www.figma.com/api/mcp/asset/bb11dec0-c5c9-4b25-b3b9-0babdaf60ef9", alt: "Telluride" },
+    telluride_outdoor: { src: "img/sub02_recommended/outdoor_adventure/telluride_1.png", alt: "Telluride" },
     sorento_outdoor: { src: "img/sub02_recommended/outdoor_adventure/Sorento1.png", alt: "Sorento" },
     sportage_outdoo: { src: "img/sub02_recommended/outdoor_adventure/Sportage1.png", alt: "Sportage" },
     ev9_family: { src: "img/sub02_recommended/family & roadtrips/ev9.png", alt: "EV9" },
@@ -95,8 +95,6 @@ document.addEventListener("DOMContentLoaded", () => {
     normalizeFeatureBullets(sections);
     enhanceMobileCards(sections);
 
-    const mobileBuildButtons = [...document.querySelectorAll(".mobile_build")];
-
     applyScrollLayout(recco, sections.length);
     renderSections(state.activeIndex, sections, title, recco, experimentalMode);
     syncMobileGroup(state, sections, carAll, mobileTabs, title);
@@ -146,14 +144,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     buildTrigger?.addEventListener("click", () => {
         const activeSection = sections[state.activeIndex];
-        if (!activeSection || activeSection.id !== "telluride_outdoor") return;
+        if (!canOpenSelectionModal(activeSection)) return;
         openSelectionModal(modal, state);
     });
 
-    mobileBuildButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-            const parentSection = button.closest("section");
-            if (!parentSection || parentSection.id !== "telluride_outdoor") return;
+    sections.forEach((section) => {
+        const mobileBuildButton = section.querySelector(".mobile_build");
+
+        mobileBuildButton?.addEventListener("click", () => {
+            if (!canOpenSelectionModal(section)) return;
             openSelectionModal(modal, state);
         });
     });
@@ -378,13 +377,22 @@ function enhanceMobileCards(sections) {
         }
 
         if (section.id === "telluride_outdoor" && !section.querySelector(".mobile_build")) {
-            const buildButton = document.createElement("button");
-            buildButton.type = "button";
-            buildButton.className = "mobile_build";
-            buildButton.textContent = "Build It";
-            section.querySelector(".top .title")?.after(buildButton);
+            const mobileBuildButton = document.createElement("button");
+            mobileBuildButton.type = "button";
+            mobileBuildButton.className = "mobile_build";
+            mobileBuildButton.textContent = "Build It";
+
+            const topArea = section.querySelector(".top");
+            if (topArea) {
+                topArea.append(mobileBuildButton);
+            }
         }
+
     });
+}
+
+function canOpenSelectionModal(section) {
+    return Boolean(section && section.id === "telluride_outdoor");
 }
 
 function applyScrollLayout(recco, totalSections) {
@@ -541,10 +549,8 @@ function syncMobileGroup(state, sections, carAll, buttons, title) {
         title.textContent = recommendationTitles[currentSection.id] || "Recommended";
     }
 
-    window.requestAnimationFrame(() => {
-        const currentHeight = currentSection.offsetHeight;
-        carAll.style.height = `${currentHeight}px`;
-    });
+    // Let the container grow with the current card so tablet widths do not collapse to 0px.
+    carAll.style.height = "auto";
 }
 
 function resetMobileState(sections, carAll) {
