@@ -265,14 +265,22 @@ section[class*="option"] .top strong {
 }
 
 section[class*="option"] .top a {
-  color: #fff;
   text-decoration: none;
   font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
-section[class*="option"] .top a:hover {
+section[class*="option"] .top a i{
+  font-size: 24px;
+}
+
+section[class*="option"] .top a:hover span{
   text-decoration: underline;
 }
+
 
 section[class*="option"] .bottom {
   width: 100%;
