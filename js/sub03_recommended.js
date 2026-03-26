@@ -144,8 +144,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     buildTrigger?.addEventListener("click", () => {
         const activeSection = sections[state.activeIndex];
-        if (!activeSection || activeSection.id !== "telluride_outdoor") return;
+        if (!canOpenSelectionModal(activeSection)) return;
         openSelectionModal(modal, state);
+    });
+
+    sections.forEach((section) => {
+        const mobileBuildButton = section.querySelector(".mobile_build");
+
+        mobileBuildButton?.addEventListener("click", () => {
+            if (!canOpenSelectionModal(section)) return;
+            openSelectionModal(modal, state);
+        });
     });
 
     modalCloseButton?.addEventListener("click", () => {
@@ -367,7 +376,23 @@ function enhanceMobileCards(sections) {
             }
         }
 
+        if (section.id === "telluride_outdoor" && !section.querySelector(".mobile_build")) {
+            const mobileBuildButton = document.createElement("button");
+            mobileBuildButton.type = "button";
+            mobileBuildButton.className = "mobile_build";
+            mobileBuildButton.textContent = "Build It";
+
+            const topArea = section.querySelector(".top");
+            if (topArea) {
+                topArea.append(mobileBuildButton);
+            }
+        }
+
     });
+}
+
+function canOpenSelectionModal(section) {
+    return Boolean(section && section.id === "telluride_outdoor");
 }
 
 function applyScrollLayout(recco, totalSections) {
@@ -524,10 +549,8 @@ function syncMobileGroup(state, sections, carAll, buttons, title) {
         title.textContent = recommendationTitles[currentSection.id] || "Recommended";
     }
 
-    window.requestAnimationFrame(() => {
-        const currentHeight = currentSection.offsetHeight;
-        carAll.style.height = `${currentHeight}px`;
-    });
+    // Let the container grow with the current card so tablet widths do not collapse to 0px.
+    carAll.style.height = "auto";
 }
 
 function resetMobileState(sections, carAll) {
