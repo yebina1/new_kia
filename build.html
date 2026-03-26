@@ -6,16 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>kia</title>
 
-    <!-- 내 css -->
-    <link rel="stylesheet" href="css/reset.css">
-    <link rel="stylesheet" href="css/common.css">
-    <link rel="stylesheet" href="css/sub01_build.css">
-    <!-- media css -->
-    <link rel="stylesheet" href="css/common_media.css">
-    <link rel="stylesheet" href="css/sub01_build_media.css">
-    <!-- 가져온 js -->
-
-
+    <!-- 가져온 css -->
     <!-- Basic Icons -->
     <link href="https://cdn.boxicons.com/3.0.8/fonts/basic/boxicons.min.css" rel="stylesheet">
     <!-- Filled Icons -->
@@ -25,18 +16,27 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
+    <!-- 내 css -->
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/sub01_build.css">
+    <link rel="stylesheet" href="css/common_media.css">
+    <link rel="stylesheet" href="css/sub01_build_media.css">
+
+    <!-- 가져온 js -->
     <script src="js/common.js" defer></script>
     <script src="js/sub01_build.js" defer></script>
 </head>
 
 <body>
     <div class="wrap build_wrap" style="--build-page-bg: url('./img/sub01_build/build_bg.png');">
+        <!-- Header -->
         <header>
             <div class="inner">
                 <h1>KIA</h1>
                 <nav class="glass_bg2">
                     <ul class="gnb">
-                        <li class="">
+                        <li>
                             <a href="">company</a>
                             <ul class="sub trans_origin2">
                                 <li><a href="">why kia</a></li>
@@ -45,7 +45,7 @@
                                 <li><a href="">event</a></li>
                             </ul>
                         </li>
-                        <li class="">
+                        <li>
                             <a href="">vehicles</a>
                             <ul class="sub trans_origin2">
                                 <li><a href="">EV</a></li>
@@ -81,15 +81,13 @@
                         <li>
                             <a href="">owners page</a>
                         </li>
-                    </ul> <!-- //.gnb -->
-                    <div class="icons">
-
-                    </div> <!-- //.icons -->
+                    </ul>
+                    <div class="icons"></div>
                 </nav>
-            </div> <!-- //.inner -->
+            </div>
         </header>
 
-        <!-- -->
+        <!-- Build Hero -->
         <section class="hero" id="heroSection" data-default-bg="./img/sub01_build/build_bg.png">
             <div class="hero_bg" aria-hidden="true">
                 <img id="heroBgImage" src="./img/sub01_build/build_bg.png" alt="" />
@@ -98,12 +96,14 @@
             <div class="hero_header_space"></div>
 
             <div class="hero_visual" id="heroVisual">
+
+                <!-- Shared Stage Header -->
                 <div class="hero_trim_header" id="heroTrimHeader" aria-hidden="true">
                     <div class="hero_trim_header_logo" aria-hidden="true"></div>
                     <div class="hero_trim_header_nav" aria-hidden="true"></div>
                 </div>
 
-                <!-- 상단 tab 카테고리 영역 -->
+                <!-- Model Category Tabs -->
                 <div class="hero_top_tabs" id="heroTopTabs" role="tablist" aria-label="Vehicle categories">
                     <button type="button" class="active" data-category="ev" role="tab" aria-selected="true">EV</button>
                     <button type="button" data-category="suv" role="tab" aria-selected="false">Sedans</button>
@@ -111,7 +111,7 @@
                     <button type="button" data-category="sedans" role="tab" aria-selected="false">CUV</button>
                 </div>
 
-                <!-- model 모델명 및 카드 이미지 영역 -->
+                <!-- Hidden Catalog Data -->
                 <div class="hero_catalog" id="heroCatalog" aria-hidden="true">
                     <section class="hero_category_panel" data-category="suv">
                         <ul class="hero_car_list">
@@ -157,13 +157,11 @@
                     </section>
                 </div>
 
-                <!-- 단계바 모델 선택 시 리셋되는 영역 -->
-
+                <!-- 1. Model Stage -->
                 <div class="hero_model_stage" id="heroModelStage">
                     <div class="hero_center">
                         <h2 class="hero_title" id="heroTitle">Sportage</h2>
 
-                        <!-- 차량 사진 옆 좌우 버튼 -->
                         <button class="hero_arrow hero_arrow_left" id="prevCar" type="button" aria-label="이전">
                             &#10094;
                         </button>
@@ -171,13 +169,13 @@
                             &#10095;
                         </button>
 
-                        <!-- 모델 선택 화면용 차량 이미지 -->
                         <div class="hero_car">
                             <img id="heroCarImage" src="./img/sub01_build/trim_light.png" alt="ev9 image" />
                         </div>
                     </div>
                 </div>
 
+                <!-- 2. Trim Stage -->
                 <div class="hero_trim_stage" id="heroTrimStage" aria-hidden="true">
                     <div class="hero_trim_intro">
                         <h2 class="hero_trim_title" id="heroTrimTitle">EV9</h2>
@@ -191,11 +189,9 @@
                     <div class="hero_trim_vehicle">
                         <img id="heroTrimImage" src="./img/sub01_build/trim_light.png" alt="EV9 Light RWD" />
                     </div>
-                    <!-- trim -->
+
                     <section class="hero_trim_panel" aria-label="Trim options">
                         <h3 class="hero_trim_panel_title">Trim</h3>
-
-                        <!--Light RWD + 기본 상태  -->
                         <div class="hero_trim_cards" id="heroTrimCards">
                             <article class="hero_trim_card selected expanded" data-trim-index="0">
                                 <img class="hero_trim_card_asset" src="./img/sub01_build/trim_light.png"
@@ -219,7 +215,7 @@
                                 </div>
                                 <button type="button" class="hero_trim_more_btn" aria-expanded="true">More</button>
                             </article>
-                            <!-- Light Long Range RWD -->
+
                             <article class="hero_trim_card" data-trim-index="1">
                                 <img class="hero_trim_card_asset" src="./img/sub01_build/trim_light.png"
                                     alt="EV9 Light Long Range RWD" />
@@ -242,7 +238,7 @@
                                 </div>
                                 <button type="button" class="hero_trim_more_btn" aria-expanded="false">More</button>
                             </article>
-                            <!--  Wind AWD -->
+
                             <article class="hero_trim_card" data-trim-index="2">
                                 <img class="hero_trim_card_asset" src="./img/sub01_build/trim_wind.png"
                                     alt="EV9 Wind AWD" />
@@ -266,7 +262,7 @@
                                 </div>
                                 <button type="button" class="hero_trim_more_btn" aria-expanded="false">More</button>
                             </article>
-                            <!-- Land AWD -->
+
                             <article class="hero_trim_card" data-trim-index="3">
                                 <img class="hero_trim_card_asset" src="./img/sub01_build/trim_land.png"
                                     alt="EV9 Land AWD" />
@@ -290,7 +286,7 @@
                                 </div>
                                 <button type="button" class="hero_trim_more_btn" aria-expanded="false">More</button>
                             </article>
-                            <!-- GT-Line AWD -->
+
                             <article class="hero_trim_card" data-trim-index="4">
                                 <img class="hero_trim_card_asset" src="./img/sub01_build/trim_gt.png"
                                     alt="EV9 GT-Line AWD" />
@@ -323,6 +319,7 @@
                     </div>
                 </div>
 
+                <!-- 3. Color Stage -->
                 <div class="hero_color_stage" id="heroColorStage" aria-hidden="true">
                     <div class="hero_color_intro">
                         <h2 class="hero_color_title" id="heroColorTitle">EV9</h2>
@@ -434,6 +431,7 @@
                     </div>
                 </div>
 
+                <!-- 4. Packages Stage -->
                 <div class="hero_package_stage" id="heroPackageStage" aria-hidden="true">
                     <div class="hero_package_intro">
                         <h2 class="hero_package_title" id="heroPackageTitle">EV9</h2>
@@ -456,15 +454,14 @@
                                 <div class="hero_package_card_top">
                                     <div class="hero_package_card_heading">
                                         <strong>7-Passenger Package</strong>
-                                        <span>$0</span>
+                                        <span>+$0</span>
                                     </div>
                                     <button type="button" class="hero_package_add_btn" aria-pressed="false">Add
                                         +</button>
                                 </div>
                                 <div class="hero_package_card_details">
                                     <ul>
-                                        <li>2nd-row bench seating for 7 passengers</li>
-                                        <li>Flexible family-oriented cabin layout</li>
+                                        <li>7-Passenger Seating</li>
                                     </ul>
                                 </div>
                                 <button type="button" class="hero_package_more_btn" aria-expanded="false">More</button>
@@ -474,15 +471,23 @@
                                 <div class="hero_package_card_top">
                                     <div class="hero_package_card_heading">
                                         <strong>Nightfall Edition Package</strong>
-                                        <span>$1,500</span>
+                                        <span>+$1,500</span>
                                     </div>
                                     <button type="button" class="hero_package_add_btn" aria-pressed="false">Add
                                         +</button>
                                 </div>
                                 <div class="hero_package_card_details">
                                     <ul>
-                                        <li>Exclusive gloss black exterior accents</li>
-                                        <li>Distinctive dark-finish wheel design</li>
+                                        <li>20-in. Nightfall Exclusive Alloy Wheels w/ Black Finish</li>
+                                        <li>Boost Feature</li>
+                                        <li>Front &amp; Rear Skid Plates, Gloss Black</li>
+                                        <li>Front Grille Trim, Gloss Black</li>
+                                        <li>Lower Window Surrounds, Gloss Black</li>
+                                        <li>Lower Body Side Garnish, Gloss Black</li>
+                                        <li>Gloss Black Side View Mirrors</li>
+                                        <li>Roof Rails, Low Profile Gloss Black</li>
+                                        <li>Exclusive Seat Pattern</li>
+                                        <li>Black Headliner</li>
                                     </ul>
                                 </div>
                                 <button type="button" class="hero_package_more_btn" aria-expanded="false">More</button>
@@ -490,7 +495,7 @@
                         </div>
                     </section>
 
-                    <div class="hero_package_actions">
+                    <div class="hero_stage_actions hero_package_actions">
                         <button type="button" class="hero_trim_action_btn hero_trim_action_btn_back"
                             id="viewColorButton">&lt; View Color</button>
                         <button type="button" class="hero_trim_action_btn" id="nextAccessoriesButton">Next Accessories
@@ -498,6 +503,409 @@
                     </div>
                 </div>
 
+                <!-- 5. Accessories Stage -->
+                <div class="hero_accessory_stage" id="heroAccessoryStage" aria-hidden="true">
+                    <div class="hero_accessory_intro">
+                        <h2 class="hero_accessory_title" id="heroAccessoryTitle">EV9</h2>
+                        <div class="hero_accessory_summary">
+                            <p class="hero_accessory_trim" id="heroAccessoryTrim">Land AWD</p>
+                            <p class="hero_accessory_price" id="heroAccessoryPrice">$68,900 Starting MSRP*</p>
+                            <p class="hero_accessory_lease" id="heroAccessoryLease">$648 / 36 mo est. lease payments*</p>
+                        </div>
+                    </div>
+
+                    <div class="hero_accessory_vehicle" id="heroAccessoryVehicle">
+                        <img id="heroAccessoryImage" src="./img/sub01_build/trim_lightLong.png"
+                            alt="EV9 Land AWD accessory preview" />
+                    </div>
+
+                    <section class="hero_accessory_panel" aria-labelledby="heroAccessoryPanelTitle">
+                        <h3 class="hero_accessory_panel_title" id="heroAccessoryPanelTitle">Selected Accessories</h3>
+                        <div class="hero_accessory_cards" id="heroAccessoryCards">
+                            <article class="hero_accessory_card">
+                                <div class="hero_accessory_card_media">
+                                    <img src="./img/sub01_build/cargoCover.png" alt="Cargo Cover" />
+                                </div>
+                                <div class="hero_accessory_card_body">
+                                    <div class="hero_accessory_card_top">
+                                        <strong>Cargo Cover</strong>
+                                        <span>+$195</span>
+                                        <button type="button" class="hero_accessory_add_btn">Add +</button>
+                                    </div>
+                                    <p class="hero_accessory_card_desc">Safeguard your belongings by keeping them out of sight with this valuable addition to your cargo area.</p>
+                                    <div class="hero_accessory_card_details">
+                                        <p>Safeguard your belongings by keeping them out of sight with this valuable addition to your cargo area.</p>
+                                    </div>
+                                    <button type="button" class="hero_accessory_more_btn" aria-expanded="false">More</button>
+                                </div>
+                            </article>
+
+                            <article class="hero_accessory_card">
+                                <div class="hero_accessory_card_media">
+                                    <img src="./img/sub01_build/cargoNet.png" alt="Cargo Net" />
+                                </div>
+                                <div class="hero_accessory_card_body">
+                                    <div class="hero_accessory_card_top">
+                                        <strong>Cargo Net</strong>
+                                        <span>+$65</span>
+                                        <button type="button" class="hero_accessory_add_btn">Add +</button>
+                                    </div>
+                                    <p class="hero_accessory_card_desc">Helps secure sporting equipment, groceries, and other lightweight cargo.</p>
+                                    <div class="hero_accessory_card_details">
+                                        <p>Helps secure sporting equipment, groceries, and other lightweight cargo.</p>
+                                    </div>
+                                    <button type="button" class="hero_accessory_more_btn" aria-expanded="false">More</button>
+                                </div>
+                            </article>
+
+                            <article class="hero_accessory_card">
+                                <div class="hero_accessory_card_media">
+                                    <img src="./img/sub01_build/cargoTray.png" alt="Cargo Tray" />
+                                </div>
+                                <div class="hero_accessory_card_body">
+                                    <div class="hero_accessory_card_top">
+                                        <strong>Cargo Tray</strong>
+                                        <span>+$145</span>
+                                        <button type="button" class="hero_accessory_add_btn">Add +</button>
+                                    </div>
+                                    <p class="hero_accessory_card_desc">Protect your cargo area from spills and stains with a durable and easy to clean cargo tray.</p>
+                                    <div class="hero_accessory_card_details">
+                                        <p>Protect your cargo area from spills and stains with a durable and easy to clean cargo tray.</p>
+                                    </div>
+                                    <button type="button" class="hero_accessory_more_btn" aria-expanded="false">More</button>
+                                </div>
+                            </article>
+
+                            <article class="hero_accessory_card">
+                                <div class="hero_accessory_card_media">
+                                    <img src="./img/sub01_build/seatProtection.png" alt="Carpeted Cargo Mat with Seatback Protection" />
+                                </div>
+                                <div class="hero_accessory_card_body">
+                                    <div class="hero_accessory_card_top">
+                                        <strong>Carpeted Cargo Mat w/ Seatback Protection</strong>
+                                        <span>+$145</span>
+                                        <button type="button" class="hero_accessory_add_btn">Add +</button>
+                                    </div>
+                                    <p class="hero_accessory_card_desc">Enhance your interior and protect your rear seatbacks with a stylish and practical carpeted cargo mat w/ seatback protection.</p>
+                                    <div class="hero_accessory_card_details">
+                                        <p>Enhance your interior and protect your rear seatbacks with a stylish and practical carpeted cargo mat w/ seatback protection.</p>
+                                    </div>
+                                    <button type="button" class="hero_accessory_more_btn" aria-expanded="false">More</button>
+                                </div>
+                            </article>
+
+                            <article class="hero_accessory_card">
+                                <div class="hero_accessory_card_media">
+                                    <img src="./img/sub01_build/floorMats.png" alt="Carpeted Floor Mats" />
+                                </div>
+                                <div class="hero_accessory_card_body">
+                                    <div class="hero_accessory_card_top">
+                                        <strong>Carpeted Floor Mats</strong>
+                                        <span>+$240</span>
+                                        <button type="button" class="hero_accessory_add_btn">Add +</button>
+                                    </div>
+                                    <p class="hero_accessory_card_desc">Carpeted mats are custom fit and color-coordinated to match your Kia interior.</p>
+                                    <div class="hero_accessory_card_details">
+                                        <p>Carpeted mats are custom fit and color-coordinated to match your Kia interior.</p>
+                                    </div>
+                                    <button type="button" class="hero_accessory_more_btn" aria-expanded="false">More</button>
+                                </div>
+                            </article>
+
+                            <article class="hero_accessory_card">
+                                <div class="hero_accessory_card_media">
+                                    <img src="./img/sub01_build/aid_kit.png" alt="First Aid Kit, Small" />
+                                </div>
+                                <div class="hero_accessory_card_body">
+                                    <div class="hero_accessory_card_top">
+                                        <strong>First Aid Kit, Small</strong>
+                                        <span>+$45</span>
+                                        <button type="button" class="hero_accessory_add_btn">Add +</button>
+                                    </div>
+                                    <p class="hero_accessory_card_desc">This durable zippered case includes adhesive strips, sterile pads, gauze, gloves, tools, and other roadside first aid essentials.</p>
+                                    <div class="hero_accessory_card_details">
+                                        <p>This durable zippered case includes 10 plastic adhesive strips (3/4-in.), 10 butterfly strips, 6 sterile non-woven pads (4-in.), 6 sting relief pads, 6 insect repellent packets, 4 extra-large adhesive strips, 3 cleansing towelettes, 2 sterile stretch gauze rolls (2-in.), 1 maxi pad, 1 latex-free tape, 1 triangular bandage with 2 pins, 1 pair of latex-free gloves, 1 elastic bandage with clips (2-in.), 1 BloodSTOP hemostatic gauze, 1 First Aid Quick Guide, plus tweezers/magnifier and scissors.</p>
+                                    </div>
+                                    <button type="button" class="hero_accessory_more_btn" aria-expanded="false">More</button>
+                                </div>
+                            </article>
+
+                            <article class="hero_accessory_card">
+                                <div class="hero_accessory_card_media">
+                                    <img src="./img/sub01_build/mudGuards.png" alt="Mud Guards" />
+                                </div>
+                                <div class="hero_accessory_card_body">
+                                    <div class="hero_accessory_card_top">
+                                        <strong>Mud Guards</strong>
+                                        <span>+$160</span>
+                                        <button type="button" class="hero_accessory_add_btn">Add +</button>
+                                    </div>
+                                    <p class="hero_accessory_card_desc">Help protect your new Kia from the chips and blemishes that can come from road debris with these specially designed, custom fitted-molded thermoplastic Mud Guards.</p>
+                                    <div class="hero_accessory_card_details">
+                                        <p>Help protect your new Kia from the chips and blemishes that can come from road debris with these specially designed, custom fitted-molded thermoplastic Mud Guards.</p>
+                                    </div>
+                                    <button type="button" class="hero_accessory_more_btn" aria-expanded="false">More</button>
+                                </div>
+                            </article>
+
+                            <article class="hero_accessory_card">
+                                <div class="hero_accessory_card_media">
+                                    <img src="./img/sub01_build/kit.png" alt="NACS Charge Port DC Adapter" />
+                                </div>
+                                <div class="hero_accessory_card_body">
+                                    <div class="hero_accessory_card_top">
+                                        <strong>NACS Charge Port DC Adapter</strong>
+                                        <span>+$0</span>
+                                        <button type="button" class="hero_accessory_add_btn">Add +</button>
+                                    </div>
+                                    <p class="hero_accessory_card_desc">Included in ZEV states only.</p>
+                                    <div class="hero_accessory_card_details">
+                                        <p>Included in ZEV states only.</p>
+                                    </div>
+                                    <button type="button" class="hero_accessory_more_btn" aria-expanded="false">More</button>
+                                </div>
+                            </article>
+
+                            <article class="hero_accessory_card">
+                                <div class="hero_accessory_card_media">
+                                    <img src="./img/sub01_build/entertainment.png" alt="Rear Seat Entertainment" />
+                                </div>
+                                <div class="hero_accessory_card_body">
+                                    <div class="hero_accessory_card_top">
+                                        <strong>Rear Seat Entertainment</strong>
+                                        <span>+$1,500</span>
+                                        <button type="button" class="hero_accessory_add_btn">Add +</button>
+                                    </div>
+                                    <p class="hero_accessory_card_desc">Keep your rear seat passengers entertained with this dual headrest entertainment system featuring two monitors, two remotes, and USB ports.</p>
+                                    <div class="hero_accessory_card_details">
+                                        <p>Keep your rear seat passengers entertained when you're on the road with this dual headrest entertainment system. Two monitors and two remotes. Provides USB ports. Headphones not included.</p>
+                                    </div>
+                                    <button type="button" class="hero_accessory_more_btn" aria-expanded="false">More</button>
+                                </div>
+                            </article>
+
+                            <article class="hero_accessory_card">
+                                <div class="hero_accessory_card_media">
+                                    <img src="./img/sub01_build/kit.png" alt="Roadside Assistance Kit" />
+                                </div>
+                                <div class="hero_accessory_card_body">
+                                    <div class="hero_accessory_card_top">
+                                        <strong>Roadside Assistance Kit</strong>
+                                        <span>+$75</span>
+                                        <button type="button" class="hero_accessory_add_btn">Add +</button>
+                                    </div>
+                                    <p class="hero_accessory_card_desc">Be prepared for the unexpected with a carrying bag packed with cables, tools, safety gear, adhesive bandages, and antiseptic wipes.</p>
+                                    <div class="hero_accessory_card_details">
+                                        <p>Be prepared for the unexpected with a carrying bag packed with a set of booster cables, 7 cable ties (12-in.), 1 roll hose tape, 1 Phillips screwdriver, 1 flathead screwdriver, 1 shop towel, 1 poncho, 1 pair of work gloves, 1 emergency blanket, 1 flashlight, 1 accident report form, 1 bungee cord, 1 lightstick, 1 pair slip joint pliers, 1 hazard triangle with instructions (12-in.), plus 10 adhesive bandages (3/4-in.) and 6 antiseptic wipes.</p>
+                                    </div>
+                                    <button type="button" class="hero_accessory_more_btn" aria-expanded="false">More</button>
+                                </div>
+                            </article>
+
+                            <article class="hero_accessory_card">
+                                <div class="hero_accessory_card_media">
+                                    <img src="./img/sub01_build/stepBar.png" alt="Side Step Bars, Black" />
+                                </div>
+                                <div class="hero_accessory_card_body">
+                                    <div class="hero_accessory_card_top">
+                                        <strong>Side Step Bars, Black</strong>
+                                        <span>+$740</span>
+                                        <button type="button" class="hero_accessory_add_btn">Add +</button>
+                                    </div>
+                                    <p class="hero_accessory_card_desc">Black Side Step Bars can make it easier to get in and out of your vehicle while enhancing its rugged appearance.</p>
+                                    <div class="hero_accessory_card_details">
+                                        <p>Black Side Step Bars can make it easier to get in and out of your vehicle while enhancing its rugged appearance.</p>
+                                    </div>
+                                    <button type="button" class="hero_accessory_more_btn" aria-expanded="false">More</button>
+                                </div>
+                            </article>
+
+                            <article class="hero_accessory_card">
+                                <div class="hero_accessory_card_media">
+                                    <img src="./img/sub01_build/towHitch.png" alt="Tow Hitch" />
+                                </div>
+                                <div class="hero_accessory_card_body">
+                                    <div class="hero_accessory_card_top">
+                                        <strong>Tow Hitch</strong>
+                                        <span>+$765</span>
+                                        <button type="button" class="hero_accessory_add_btn">Add +</button>
+                                    </div>
+                                    <p class="hero_accessory_card_desc">Custom designed, this tow hitch mounts directly to the vehicle frame for a reliable towing connection. Additional equipment may be required.</p>
+                                    <div class="hero_accessory_card_details">
+                                        <p>Custom designed, this tow hitch mounts directly to the vehicle frame, offering a reliable way to attach and tow your additional equipment to the specified capacity of your vehicle. Towing requires additional equipment. See Owner's Manual for towing instructions. Always use caution while towing.</p>
+                                    </div>
+                                    <button type="button" class="hero_accessory_more_btn" aria-expanded="false">More</button>
+                                </div>
+                            </article>
+
+                            <article class="hero_accessory_card">
+                                <div class="hero_accessory_card_media">
+                                    <img src="./img/sub01_build/locks.png" alt="Wheel Locks" />
+                                </div>
+                                <div class="hero_accessory_card_body">
+                                    <div class="hero_accessory_card_top">
+                                        <strong>Wheel Locks</strong>
+                                        <span>+$90</span>
+                                        <button type="button" class="hero_accessory_add_btn">Add +</button>
+                                    </div>
+                                    <p class="hero_accessory_card_desc">Wheel locks are designed to secure the wheels to your vehicle and help prevent theft.</p>
+                                    <div class="hero_accessory_card_details">
+                                        <p>Wheel locks are designed to secure the wheels to your vehicle and help prevent theft.</p>
+                                    </div>
+                                    <button type="button" class="hero_accessory_more_btn" aria-expanded="false">More</button>
+                                </div>
+                            </article>
+                        </div>
+                    </section>
+
+                    <div class="hero_stage_actions hero_accessory_actions">
+                        <button type="button" class="hero_trim_action_btn hero_trim_action_btn_back"
+                            id="viewPackagesButton">&lt; View Packages</button>
+                        <button type="button" class="hero_trim_action_btn" id="nextPlanButton">Next Plan &gt;</button>
+                    </div>
+                </div>
+
+                <!-- 6. Maintenance Plan Stage -->
+                <div class="hero_plan_stage" id="heroPlanStage" aria-hidden="true">
+                    <div class="hero_plan_intro">
+                        <h2 class="hero_plan_title" id="heroPlanTitle">EV9</h2>
+                        <div class="hero_plan_summary">
+                            <p class="hero_plan_trim" id="heroPlanTrim">Land AWD</p>
+                            <p class="hero_plan_price" id="heroPlanPrice">$68,900 Starting MSRP*</p>
+                            <p class="hero_plan_lease" id="heroPlanLease">$648 / 36 mo est. lease payments*</p>
+                        </div>
+                    </div>
+
+                    <div class="hero_plan_vehicle" id="heroPlanVehicle">
+                        <img id="heroPlanImage" src="./img/sub01_build/trim_lightLong.png"
+                            alt="EV9 Land AWD maintenance plan preview" />
+                    </div>
+
+                    <section class="hero_plan_panel" aria-labelledby="heroPlanPanelTitle">
+                        <h3 class="hero_plan_panel_title" id="heroPlanPanelTitle">Kia Connect Plan</h3>
+                        <div class="hero_plan_cards" id="heroPlanCards">
+                            <article class="hero_plan_card">
+                                <div class="hero_plan_card_body">
+                                    <div class="hero_plan_card_top">
+                                        <strong>Lite</strong>
+                                        <span>Complimentary for up to 5 years</span>
+                                        <button type="button" class="hero_plan_add_btn">Add +</button>
+                                    </div>
+                                    <div class="hero_plan_card_details">
+                                        <p>Essential Kia Connect features for everyday convenience and connected vehicle access.</p>
+                                    </div>
+                                    <button type="button" class="hero_plan_more_btn" aria-expanded="false">More</button>
+                                </div>
+                            </article>
+
+                            <article class="hero_plan_card">
+                                <div class="hero_plan_card_body">
+                                    <div class="hero_plan_card_top">
+                                        <strong>Care</strong>
+                                        <span>Complimentary for up to 5 years</span>
+                                        <button type="button" class="hero_plan_add_btn">Add +</button>
+                                    </div>
+                                    <div class="hero_plan_card_details">
+                                        <p>Care-focused connected services to help monitor and support your vehicle ownership experience.</p>
+                                    </div>
+                                    <button type="button" class="hero_plan_more_btn" aria-expanded="false">More</button>
+                                </div>
+                            </article>
+
+                            <article class="hero_plan_card">
+                                <div class="hero_plan_card_body">
+                                    <div class="hero_plan_card_top">
+                                        <strong>Plus</strong>
+                                        <span>Complimentary for up to 5 years</span>
+                                        <button type="button" class="hero_plan_add_btn">Add +</button>
+                                    </div>
+                                    <div class="hero_plan_card_details">
+                                        <p>Expanded connected features with added convenience tools for a more flexible ownership experience.</p>
+                                    </div>
+                                    <button type="button" class="hero_plan_more_btn" aria-expanded="false">More</button>
+                                </div>
+                            </article>
+
+                            <article class="hero_plan_card">
+                                <div class="hero_plan_card_body">
+                                    <div class="hero_plan_card_top">
+                                        <strong>Lite</strong>
+                                        <span>Complimentary for up to 5 years</span>
+                                        <button type="button" class="hero_plan_add_btn">Add +</button>
+                                    </div>
+                                    <div class="hero_plan_card_details">
+                                        <p>Essential Kia Connect features for everyday convenience and connected vehicle access.</p>
+                                    </div>
+                                    <button type="button" class="hero_plan_more_btn" aria-expanded="false">More</button>
+                                </div>
+                            </article>
+                        </div>
+                    </section>
+
+                    <div class="hero_stage_actions hero_plan_actions">
+                        <button type="button" class="hero_trim_action_btn hero_trim_action_btn_back"
+                            id="viewAccessoriesButton">&lt; View Accessories</button>
+                        <button type="button" class="hero_trim_action_btn" id="nextSummaryButton">Next Summary &gt;</button>
+                    </div>
+                </div>
+
+                <!-- 7. Summary Stage -->
+                <div class="hero_summary_stage" id="heroSummaryStage" aria-hidden="true">
+                    <div class="hero_summary_intro">
+                        <h2 class="hero_summary_title" id="heroSummaryTitle">EV9</h2>
+                        <div class="hero_summary_summary">
+                            <p class="hero_summary_trim" id="heroSummaryTrim">Land AWD</p>
+                            <p class="hero_summary_price" id="heroSummaryPrice">$68,900 Starting MSRP*</p>
+                            <p class="hero_summary_lease" id="heroSummaryLease">$648 / 36 mo est. lease payments*</p>
+                        </div>
+                    </div>
+
+                    <div class="hero_summary_vehicle" id="heroSummaryVehicle">
+                        <img id="heroSummaryImage" src="./img/sub01_build/trim_lightLong.png"
+                            alt="EV9 Land AWD summary preview" />
+                    </div>
+
+                    <section class="hero_summary_panel" aria-labelledby="heroSummaryPanelTitle">
+                        <h3 class="hero_summary_panel_title" id="heroSummaryPanelTitle">Price Breakdown</h3>
+                        <div class="hero_summary_breakdown" id="heroSummaryBreakdown">
+                            <div class="hero_summary_row">
+                                <span class="hero_summary_row_label" id="summaryRowTrim">Land AWD</span>
+                                <span class="hero_summary_row_price" id="summaryRowTrimPrice">$68,900</span>
+                            </div>
+                            <div class="hero_summary_row">
+                                <span class="hero_summary_row_label" id="summaryRowExterior">Panthera Metal</span>
+                                <span class="hero_summary_row_price" id="summaryRowExteriorPrice">$0</span>
+                            </div>
+                            <div class="hero_summary_row">
+                                <span class="hero_summary_row_label" id="summaryRowInterior">Black &amp; Dark Gray Quilted Stripes SynTex Seat Trim</span>
+                                <span class="hero_summary_row_price" id="summaryRowInteriorPrice">$0</span>
+                            </div>
+                            <div class="hero_summary_selected" id="heroSummarySelectedItems"></div>
+                            <div class="hero_summary_divider"></div>
+                            <div class="hero_summary_row">
+                                <span class="hero_summary_row_label">Destination Fee</span>
+                                <span class="hero_summary_row_price" id="summaryDestinationFee">$1,645</span>
+                            </div>
+                            <div class="hero_summary_row hero_summary_row_total">
+                                <span class="hero_summary_row_label">Build Total*</span>
+                                <span class="hero_summary_row_price" id="summaryBuildTotal">$70,545</span>
+                            </div>
+                        </div>
+                        <div class="hero_summary_cta">
+                            <button type="button" class="hero_summary_cta_btn">View Inventory</button>
+                            <button type="button" class="hero_summary_cta_btn">Share Build</button>
+                            <button type="button" class="hero_summary_cta_btn">Request a Quote</button>
+                        </div>
+                    </section>
+
+                    <div class="hero_stage_actions hero_summary_actions">
+                        <button type="button" class="hero_trim_action_btn hero_trim_action_btn_back"
+                            id="viewPlanButton">&lt; View Plan</button>
+                        <button type="button" class="hero_trim_action_btn" id="sendBuildButton">Send</button>
+                    </div>
+                </div>
+
+                <!-- Start / Progress -->
                 <button type="button" class="hero_start_btn dark_origin" id="startStepButton">Start</button>
 
                 <div class="hero_bottom_steps" id="heroBottomSteps">
@@ -519,5 +927,7 @@
                 </div>
             </div>
         </section>
-    </div> <!-- //.wrap -->
+    </div>
 </body>
+
+</html>
