@@ -19,6 +19,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const heroColorLease = document.getElementById("heroColorLease");
   const heroColorImage = document.getElementById("heroColorImage");
   const heroSeatPreview = document.getElementById("heroSeatPreview");
+  const heroPackageStage = document.getElementById("heroPackageStage");
+  const heroPackageTitle = document.getElementById("heroPackageTitle");
+  const heroPackageTrim = document.getElementById("heroPackageTrim");
+  const heroPackagePrice = document.getElementById("heroPackagePrice");
+  const heroPackageLease = document.getElementById("heroPackageLease");
+  const heroPackageImage = document.getElementById("heroPackageImage");
+  const heroPackageCards = document.getElementById("heroPackageCards");
   const heroExteriorName = document.getElementById("heroExteriorName");
   const heroExteriorPrice = document.getElementById("heroExteriorPrice");
   const heroInteriorName = document.getElementById("heroInteriorName");
@@ -30,6 +37,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const nextColorButton = document.getElementById("nextColorButton");
   const viewTrimButton = document.getElementById("viewTrimButton");
   const nextPackagesButton = document.getElementById("nextPackagesButton");
+  const viewColorButton = document.getElementById("viewColorButton");
+  const nextAccessoriesButton = document.getElementById("nextAccessoriesButton");
   const topTabButtons = Array.from(
     document.querySelectorAll(".hero_top_tabs button")
   );
@@ -43,6 +52,26 @@ document.addEventListener("DOMContentLoaded", () => {
   const categoryOrder = topTabButtons.map((button) => button.dataset.category);
   const defaultBackgroundImage =
     heroSection?.dataset.defaultBg || "./img/sub01_build/build_bg.png";
+  const packageStageData = {
+    EV9: [
+      {
+        name: "7-Passenger Package",
+        price: "$0",
+        details: [
+          "2nd-row bench seating for 7 passengers",
+          "Flexible family-oriented cabin layout"
+        ]
+      },
+      {
+        name: "Nightfall Edition Package",
+        price: "$1,500",
+        details: [
+          "Exclusive gloss black exterior accents",
+          "Distinctive dark-finish wheel design"
+        ]
+      }
+    ]
+  };
 
   const trimStageData = {
     Sportage: {
@@ -381,6 +410,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let selectedTrimIndex = null;
   let selectedExteriorIndex = 0;
   let selectedInteriorIndex = 0;
+  let selectedPackages = new Set();
 
   function isEv9Selected() {
     return getCurrentCar()?.title === "EV9";
@@ -450,6 +480,10 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
+  function getCurrentPackages(title) {
+    return packageStageData[title] || packageStageData.EV9 || [];
+  }
+
   function applySelectedTrim(title) {
     if (!heroTrimTitle || !heroTrimImage) {
       return;
@@ -489,6 +523,21 @@ document.addEventListener("DOMContentLoaded", () => {
       heroColorLease.textContent = selectedTrim?.lease || trimData.lease;
       heroColorImage.src = selectedTrim?.image || "./img/sub01_build/trim_light.png";
       heroColorImage.alt = selectedTrim?.alt || title;
+    }
+
+    if (heroPackageTitle && heroPackageImage) {
+      heroPackageTitle.innerHTML = formatCarTitleMarkup(title);
+      heroPackageTitle.className = "hero_package_title";
+
+      if (titleKey) {
+        heroPackageTitle.classList.add(`hero_title_${titleKey}`);
+      }
+
+      heroPackageTrim.textContent = selectedTrim?.name || trimData.grade;
+      heroPackagePrice.textContent = selectedTrim?.price || trimData.price;
+      heroPackageLease.textContent = selectedTrim?.lease || trimData.lease;
+      heroPackageImage.src = selectedTrim?.image || "./img/sub01_build/trim_light.png";
+      heroPackageImage.alt = selectedTrim?.alt || title;
     }
   }
 
@@ -562,6 +611,39 @@ document.addEventListener("DOMContentLoaded", () => {
             <button type="button" class="hero_trim_more_btn" aria-expanded="${index === 0 ? "true" : "false"}">
               More
             </button>
+          </article>
+        `
+      )
+      .join("");
+  }
+
+  function renderPackageCards(title) {
+    if (!heroPackageCards) {
+      return;
+    }
+
+    const packages = getCurrentPackages(title);
+    heroPackageCards.innerHTML = packages
+      .map(
+        (packageItem, index) => `
+          <article class="hero_package_card" data-package-index="${index}">
+            <div class="hero_package_card_top">
+              <div class="hero_package_card_heading">
+                <strong>${escapeHtml(packageItem.name)}</strong>
+                <span>${escapeHtml(packageItem.price)}</span>
+              </div>
+              <button type="button" class="hero_package_add_btn" aria-pressed="${selectedPackages.has(index) ? "true" : "false"}">
+                ${selectedPackages.has(index) ? "Added" : "Add +"}
+              </button>
+            </div>
+            <div class="hero_package_card_details">
+              <ul>
+                ${packageItem.details
+                  .map((detail) => `<li>${escapeHtml(detail)}</li>`)
+                  .join("")}
+              </ul>
+            </div>
+            <button type="button" class="hero_package_more_btn" aria-expanded="false">More</button>
           </article>
         `
       )
@@ -657,6 +739,8 @@ document.addEventListener("DOMContentLoaded", () => {
       renderTrimCards(currentCar.title);
       applySelectedTrim(currentCar.title);
     }
+
+    renderPackageCards(currentCar.title);
   }
 
   function syncProgressPosition() {
@@ -708,16 +792,22 @@ document.addEventListener("DOMContentLoaded", () => {
       );
     }
 
-    if (heroModelStage && heroTrimStage && heroColorStage) {
+    if (heroModelStage && heroTrimStage && heroColorStage && heroPackageStage) {
       const isModelStage = currentStep === 0;
       const isTrimStage = currentStep === 1;
-      const isColorStage = currentStep >= 2;
+      const isColorStage = currentStep === 2;
+      const isPackageStage = currentStep >= 3;
 
       heroModelStage.classList.toggle("is-hidden", !isModelStage);
       heroTrimStage.classList.toggle("is-visible", isTrimStage);
       heroTrimStage.setAttribute("aria-hidden", isTrimStage ? "false" : "true");
       heroColorStage.classList.toggle("is-visible", isColorStage);
       heroColorStage.setAttribute("aria-hidden", isColorStage ? "false" : "true");
+      heroPackageStage.classList.toggle("is-visible", isPackageStage);
+      heroPackageStage.setAttribute(
+        "aria-hidden",
+        isPackageStage ? "false" : "true"
+      );
       startStepButton?.classList.toggle("is-hidden", !isModelStage);
       heroTopTabs?.classList.toggle("is-hidden", !isModelStage);
     }
@@ -741,6 +831,7 @@ document.addEventListener("DOMContentLoaded", () => {
     selectedTrimIndex = null;
     selectedExteriorIndex = 0;
     selectedInteriorIndex = 0;
+    selectedPackages = new Set();
 
     topTabButtons.forEach((button) => {
       const isActive = button.dataset.category === currentCategory;
@@ -815,6 +906,7 @@ document.addEventListener("DOMContentLoaded", () => {
             selectedTrimIndex = null;
             selectedExteriorIndex = 0;
             selectedInteriorIndex = 0;
+            selectedPackages = new Set();
 
             topTabButtons.forEach((button) => {
               const isActive = button.dataset.category === currentCategory;
@@ -826,6 +918,7 @@ document.addEventListener("DOMContentLoaded", () => {
             selectedTrimIndex = null;
             selectedExteriorIndex = 0;
             selectedInteriorIndex = 0;
+            selectedPackages = new Set();
           }
         }
       } else if (currentIndex > 0) {
@@ -833,6 +926,7 @@ document.addEventListener("DOMContentLoaded", () => {
         selectedTrimIndex = null;
         selectedExteriorIndex = 0;
         selectedInteriorIndex = 0;
+        selectedPackages = new Set();
       } else {
         const previousCategoryKey = getAdjacentCategory("prev");
 
@@ -843,6 +937,7 @@ document.addEventListener("DOMContentLoaded", () => {
           selectedTrimIndex = null;
           selectedExteriorIndex = 0;
           selectedInteriorIndex = 0;
+          selectedPackages = new Set();
 
           topTabButtons.forEach((button) => {
             const isActive = button.dataset.category === currentCategory;
@@ -854,6 +949,7 @@ document.addEventListener("DOMContentLoaded", () => {
           selectedTrimIndex = null;
           selectedExteriorIndex = 0;
           selectedInteriorIndex = 0;
+          selectedPackages = new Set();
         }
       }
 
@@ -920,6 +1016,14 @@ document.addEventListener("DOMContentLoaded", () => {
     updateSteps(Math.min(3, stepButtons.length - 1));
   });
 
+  viewColorButton?.addEventListener("click", () => {
+    updateSteps(2);
+  });
+
+  nextAccessoriesButton?.addEventListener("click", () => {
+    updateSteps(Math.min(4, stepButtons.length - 1));
+  });
+
   heroTrimCards?.addEventListener("click", (event) => {
     const selectTrigger = event.target.closest(".hero_trim_select_btn");
     const moreTrigger = event.target.closest(".hero_trim_more_btn");
@@ -974,12 +1078,41 @@ document.addEventListener("DOMContentLoaded", () => {
     syncColorStageSelections();
   });
 
+  heroPackageCards?.addEventListener("click", (event) => {
+    const addTrigger = event.target.closest(".hero_package_add_btn");
+    const moreTrigger = event.target.closest(".hero_package_more_btn");
+    const card = event.target.closest(".hero_package_card");
+    const packageIndex = Number(card?.dataset.packageIndex);
+
+    if (Number.isNaN(packageIndex)) {
+      return;
+    }
+
+    if (addTrigger) {
+      if (selectedPackages.has(packageIndex)) {
+        selectedPackages.delete(packageIndex);
+      } else {
+        selectedPackages.add(packageIndex);
+      }
+
+      renderPackageCards(getCurrentCar()?.title || "EV9");
+      return;
+    }
+
+    if (moreTrigger) {
+      const willExpand = !card.classList.contains("expanded");
+      card.classList.toggle("expanded", willExpand);
+      moreTrigger.setAttribute("aria-expanded", willExpand ? "true" : "false");
+    }
+  });
+
   window.addEventListener("resize", () => {
     syncProgressPosition();
   });
 
   hydrateEv9TrimDataFromHtml();
   setCategory(currentCategory);
+  renderPackageCards(getCurrentCar()?.title || "EV9");
   syncColorStageSelections();
   syncEv9OnlyState();
   updateSteps(currentStep);
