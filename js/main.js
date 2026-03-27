@@ -214,11 +214,12 @@ function setupOptionScroll() {
 
   optionsArr.forEach(($sec, index) => {
     const isLastCard = index === optionsArr.length - 1;
+    const nextSection = optionsArr[index + 1];
     ScrollTrigger.create({
       trigger: $sec,
       start: 'top top',
       end: isLastCard ? '+=100vh' : 'top top',
-      endTrigger: isLastCard ? null : optionsArr[optionsArr.length - 1],
+      endTrigger: isLastCard ? null : nextSection,
       pin: true,
       pinSpacing: isLastCard,
     });
@@ -245,6 +246,59 @@ function setupOptionScroll() {
 initLenis();
 setupIntroScroll();
 setupOptionScroll();
+
+function setupMatchCursor() {
+  const $cards = document.querySelectorAll('.match section[class*="option"] .bottom>ul.cars>li');
+  const canUseCustomCursor = window.matchMedia('(pointer: fine)').matches;
+
+  if (!$cards.length || !canUseCustomCursor) return;
+
+  const $cursor = document.createElement('div');
+  const $label = document.createElement('span');
+
+  $cursor.className = 'match-cursor';
+  $label.textContent = 'Explore';
+  $cursor.appendChild($label);
+  document.body.appendChild($cursor);
+
+  function moveCursor(event) {
+    $cursor.style.left = `${event.clientX}px`;
+    $cursor.style.top = `${event.clientY}px`;
+  }
+
+  function showCursor(event) {
+    moveCursor(event);
+    $cursor.classList.add('is-visible');
+  }
+
+  function hideCursor() {
+    $cursor.classList.remove('is-visible');
+    $cursor.classList.remove('is-active');
+  }
+
+  function activateCursor() {
+    $cursor.classList.add('is-active');
+  }
+
+  function deactivateCursor() {
+    $cursor.classList.remove('is-active');
+  }
+
+  $cards.forEach(($card) => {
+    $card.addEventListener('pointerenter', showCursor);
+    $card.addEventListener('pointermove', moveCursor);
+    $card.addEventListener('pointerleave', hideCursor);
+    $card.addEventListener('pointerdown', activateCursor);
+    $card.addEventListener('pointerup', deactivateCursor);
+    $card.addEventListener('pointercancel', deactivateCursor);
+  });
+
+  window.addEventListener('blur', hideCursor);
+  window.addEventListener('scroll', hideCursor, { passive: true });
+  window.addEventListener('pointerup', deactivateCursor);
+}
+
+setupMatchCursor();
 
 function setupRailWidth() {
     const $stage = document.querySelector(".belt_stage");

@@ -261,13 +261,15 @@ section[class*="option"] {
 
 section[class*="option"] .inner {
   width: 100%;
+  min-height: 916px;
   height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
 section[class*="option"] .top {
-  flex: 1;
+  flex: 0 0 116px;
+  height: 116px;
   width: 100%;
   padding: 32px 64px;
   display: flex;
@@ -305,7 +307,8 @@ section[class*="option"] .top a:hover span {
 
 section[class*="option"] .bottom {
   width: 100%;
-  height: 800px;
+  flex: 1 1 auto;
+  min-height: 800px;
 }
 
 section[class*="option"] .bottom>ul.cars,
@@ -323,7 +326,7 @@ section[class*="option"] .bottom>ul.cars>li {
   height: 100%;
   overflow: hidden;
   cursor: pointer;
-  padding: 64px;
+  padding: 64px 64px 160px;
   background-size: cover;
   background-position: center;
   align-content: flex-end;
@@ -379,21 +382,37 @@ section.option04 .bottom>ul.cars>li:nth-child(3) {
 
 section[class*="option"] .bottom>ul.cars>li>h2 {
   z-index: 2;
-  transition: opacity 0.4s ease;
+  transform: translateY(0);
+  transition:
+    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.4s ease;
+  line-height: 1;
 }
 
 section[class*="option"] .bottom>ul.cars>li h2 span {
-  font-size: 45px;
-  line-height: 0.8;
+  font-size: 58px;
   text-align: center;
+  display: inline-block;
+  transform: translateY(-16px);
+  color: var(--kia-white1);
+  line-height: 1;
 }
 
-section[class*="option"] .bottom>ul.cars>li strong {
+section.option02 .bottom>ul.cars>li h2 span {
+  font-size: 64px;
+  transform: translateY(-12px);
+}
+
+section[class*="option"] .bottom>ul.cars>li>strong {
+  display: block;
   font-style: normal;
   font-weight: 400;
   color: var(--kia-white2);
   z-index: 2;
-  transition: opacity 0.4s ease;
+  transform: translateY(0);
+  transition:
+    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.4s ease;
 }
 
 section[class*="option"] .bottom>ul.cars>li .info_con {
@@ -408,27 +427,67 @@ section[class*="option"] .bottom>ul.cars>li .info_con {
   flex-direction: column;
   justify-content: center;
   gap: 16px;
-  opacity: 0;
-  visibility: hidden;
   padding: 64px;
-  transition: opacity 0.4s ease, visibility 0.4s ease;
+  opacity: 0;
+  pointer-events: none;
+  will-change: opacity;
+  transition: opacity 0.45s ease;
+}
+
+section[class*="option"] .bottom>ul.cars>li .info_con .tit {
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 0;
+  padding: 0 0 8px;
+  text-align: left;
+  flex-direction: column-reverse;
+  opacity: 0;
+  transform: translateY(28px);
+  will-change: transform, opacity;
+  transition:
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.45s ease;
+}
+
+section[class*="option"] .bottom>ul.cars>li .info_con .tit h2 {
+  width: 100%;
+  font-size: 64px;
+  font-weight: 500;
+}
+
+section[class*="option"] .bottom>ul.cars>li .info_con .tit strong {
+  font-style: normal;
+  font-weight: 400;
+  color: var(--kia-white2);
 }
 
 section[class*="option"] .bottom>ul.cars>li:hover .info_con {
   opacity: 1;
-  visibility: visible;
+  pointer-events: auto;
 }
 
 section[class*="option"] .bottom>ul.cars>li .info_con>p {
   padding-block: 16px;
   line-height: 1.3;
   color: var(--kia-white1);
+  opacity: 0;
+  transform: translateY(24px);
+  will-change: transform, opacity;
+  transition:
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.45s ease;
 }
 
 section[class*="option"] .bottom>ul.cars>li .info_con>ul.info {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  opacity: 0;
+  transform: translateY(24px);
+  will-change: transform, opacity;
+  transition:
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.45s ease;
 }
 
 section[class*="option"] .bottom>ul.cars>li .info_con>ul.info>li {
@@ -451,13 +510,80 @@ section[class*="option"] .bottom>ul.cars>li .info_con>ul.info>li>p {
   color: var(--kia-white2);
   font-size: 16px;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 130%
 }
 
 section[class*="option"] .bottom>ul.cars>li:hover>h2,
 section[class*="option"] .bottom>ul.cars>li:hover>strong {
   opacity: 0;
+  transform: translateY(-28px);
+}
+
+section[class*="option"] .bottom>ul.cars>li:hover .info_con .tit,
+section[class*="option"] .bottom>ul.cars>li:hover .info_con>p,
+section[class*="option"] .bottom>ul.cars>li:hover .info_con>ul.info {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+section[class*="option"] .bottom>ul.cars>li:hover .info_con>p {
+  transition-delay: 0.08s;
+}
+
+section[class*="option"] .bottom>ul.cars>li:hover .info_con>ul.info {
+  transition-delay: 0.14s;
+}
+
+.match-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px 50px 50px 50px;
+  background: rgba(251, 246, 239, 0.12);
+  border: 1px solid rgba(251, 246, 239, 0.28);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 12px 32px rgba(0, 0, 0, 0.24);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.88);
+  transform-origin: center;
+  transition:
+    opacity 0.2s ease,
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 1200;
+}
+
+.match-cursor span {
+  color: var(--kia-white1);
+  font-family: var(--font-outfit);
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.match-cursor.is-visible {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.match-cursor.is-active {
+  border: 1px solid var(--kia-white1);
+}
+
+@media (pointer: fine) {
+
+  .match section[class*="option"] .bottom>ul.cars>li,
+  .match section[class*="option"] .bottom>ul.cars>li * {
+    cursor: none;
+  }
 }
 
 /* section.partnership */
