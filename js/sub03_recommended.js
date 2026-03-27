@@ -32,15 +32,15 @@ const MOBILE_HERO_IMAGES = {
     telluride_outdoor: { src: "img/sub02_recommended/outdoor_adventure/telluride_1.png", alt: "Telluride" },
     sorento_outdoor: { src: "img/sub02_recommended/outdoor_adventure/Sorento1.png", alt: "Sorento" },
     sportage_outdoo: { src: "img/sub02_recommended/outdoor_adventure/Sportage1.png", alt: "Sportage" },
-    ev9_family: { src: "img/sub02_recommended/family & roadtrips/ev9.png", alt: "EV9" },
-    telluride_family: { src: "img/sub02_recommended/family & roadtrips/Telluride1.png", alt: "Telluride" },
-    carnival_family: { src: "img/sub02_recommended/family & roadtrips/Carnival1.png", alt: "Carnival" },
-    k4_urban: { src: "img/sub02_recommended/city & commute/k41.png", alt: "K4" },
-    seltos_urban: { src: "img/sub02_recommended/city & commute/Seltos1.png", alt: "Seltos" },
-    niro_hybrid_urban: { src: "img/sub02_recommended/city & commute/Niro Hybrid1.png", alt: "Niro Hybrid" },
-    ev9_electric: { src: "img/sub02_recommended/electric & eco/eV91.png", alt: "EV9" },
-    ev6_electric: { src: "img/sub02_recommended/electric & eco/EV6.png", alt: "EV6" },
-    niro_ev_electric: { src: "img/sub02_recommended/electric & eco/Niro EV1.png", alt: "Niro EV" }
+    ev9_family: { src: "img/sub02_recommended/family_roadtrips/ev9.png", alt: "EV9" },
+    telluride_family: { src: "img/sub02_recommended/family_roadtrips/Telluride1.png", alt: "Telluride" },
+    carnival_family: { src: "img/sub02_recommended/family_roadtrips/Carnival1.png", alt: "Carnival" },
+    k4_urban: { src: "img/sub02_recommended/city_commute/k41.png", alt: "K4" },
+    seltos_urban: { src: "img/sub02_recommended/city_commute/Seltos1.png", alt: "Seltos" },
+    niro_hybrid_urban: { src: "img/sub02_recommended/city_commute/Niro Hybrid1.png", alt: "Niro Hybrid" },
+    ev9_electric: { src: "img/sub02_recommended/electric_eco/eV91.png", alt: "EV9" },
+    ev6_electric: { src: "img/sub02_recommended/electric_eco/EV6.png", alt: "EV6" },
+    niro_ev_electric: { src: "img/sub02_recommended/electric_eco/Niro EV1.png", alt: "Niro EV" }
 };
 
 const MOBILE_LAYOUT_BREAKPOINT = 820;
@@ -49,6 +49,48 @@ const DESKTOP_TAB_FRAME_PATHS = {
     family: "img/sub02_recommended/tap/tab2.svg",
     urban: "img/sub02_recommended/tap/tab3.svg",
     electric: "img/sub02_recommended/tap/tab4.svg"
+};
+const DESKTOP_GROUP_HERO_IMAGES = {
+    outdoor: {
+        images: [
+            "img/sub02_recommended/outdoor/outdoor1.png",
+            "img/sub02_recommended/outdoor/outdoor2.png",
+            "img/sub02_recommended/outdoor/outdoor3.png",
+            "img/sub02_recommended/outdoor/outdoor4.png",
+            "img/sub02_recommended/outdoor/outdoor5.png"
+        ],
+        alt: "Outdoor visual"
+    },
+    family: {
+        images: [
+            "img/sub02_recommended/family/family1.png",
+            "img/sub02_recommended/family/family2.png",
+            "img/sub02_recommended/family/family3.png",
+            "img/sub02_recommended/family/family4.png",
+            "img/sub02_recommended/family/family5.png"
+        ],
+        alt: "Family visual"
+    },
+    urban: {
+        images: [
+            "img/sub02_recommended/electric/city1.png",
+            "img/sub02_recommended/electric/city2.png",
+            "img/sub02_recommended/electric/city3.png",
+            "img/sub02_recommended/electric/city4.png",
+            "img/sub02_recommended/electric/city5.png"
+        ],
+        alt: "Urban visual"
+    },
+    electric: {
+        images: [
+            "img/sub02_recommended/electric/city1.png",
+            "img/sub02_recommended/electric/city2.png",
+            "img/sub02_recommended/electric/city3.png",
+            "img/sub02_recommended/electric/city4.png",
+            "img/sub02_recommended/electric/city5.png"
+        ],
+        alt: "Electric visual"
+    }
 };
 const DESKTOP_TAB_POINT_CENTERS = {
     outdoor: 54,
@@ -60,6 +102,7 @@ const MODAL_TRANSITION_MS = 420;
 const MOBILE_SWIPE_THRESHOLD = 40;
 const DESKTOP_SCROLL_LOCK_MS = 1100;
 const MOBILE_DRAG_MAX_OFFSET = 72;
+const DESKTOP_HERO_ROTATE_MS = 1900;
 
 function isMobileViewport() {
     return window.innerWidth <= MOBILE_LAYOUT_BREAKPOINT;
@@ -72,6 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const mobileTabs = [...document.querySelectorAll(".mobile_tabs button")];
     const sections = [...document.querySelectorAll(".car_all section")];
     const carAll = document.querySelector(".car_all");
+    const desktopVisual = document.querySelector(".vid");
     const modal = document.querySelector(".selection_modal");
     const modalCloseButton = document.querySelector(".selection_modal_close");
     const buildTrigger = document.querySelector(".build_trigger");
@@ -94,14 +138,19 @@ document.addEventListener("DOMContentLoaded", () => {
         touchDeltaY: 0,
         touchTracking: false,
         activePointerId: null,
-        modalCloseTimer: 0
+        modalCloseTimer: 0,
+        desktopHeroTimer: 0,
+        desktopHeroGroup: "",
+        desktopHeroImageIndex: 0,
+        desktopHeroVisibleLayer: 0
     };
 
     normalizeFeatureBullets(sections);
     enhanceMobileCards(sections);
+    initializeDesktopHeroVisual(desktopVisual);
 
     applyScrollLayout(recco, sections.length);
-    renderSections(state.activeIndex, sections, title, recco, experimentalMode);
+    renderSections(state.activeIndex, sections, title, recco, experimentalMode, desktopVisual, state);
     syncMobileGroup(state, sections, carAll, mobileTabs, title);
 
     window.addEventListener("resize", () => {
@@ -113,7 +162,7 @@ document.addEventListener("DOMContentLoaded", () => {
             window.clearTimeout(state.releaseTimer);
             state.isAnimating = false;
             resetMobileState(sections, carAll);
-            renderSections(state.activeIndex, sections, title, recco, experimentalMode);
+            renderSections(state.activeIndex, sections, title, recco, experimentalMode, desktopVisual, state);
             updateDesktopTabVisual(getMobileGroup(sections[state.activeIndex].id));
         }
     });
@@ -133,7 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             if (targetIndex === state.activeIndex || isDesktopScrollLocked(state)) return;
-            navigateDesktopToIndex(targetIndex, state, recco, sections, title, experimentalMode);
+            navigateDesktopToIndex(targetIndex, state, recco, sections, title, experimentalMode, desktopVisual);
         });
     });
 
@@ -231,57 +280,13 @@ document.addEventListener("DOMContentLoaded", () => {
         clearMobileSwipeVisual(sections);
     }, { passive: true });
 
-    window.addEventListener("wheel", (event) => {
+    // Use native page scrolling on desktop and derive the visible card from scroll position.
+    // This is more reliable than locking the wheel event, especially in IDE preview panes.
+    window.addEventListener("wheel", () => {
         if (isMobileViewport()) return;
-
-        const stage = getStageRange(recco, sections.length);
-        const currentScroll = window.scrollY;
-        const direction = Math.sign(event.deltaY);
-        const isInsideStage = currentScroll >= stage.start && currentScroll <= stage.end;
-        const isNearStage = currentScroll >= stage.start - 48 && currentScroll <= stage.end + 48;
-        const isLeavingUpFromFirst =
-            state.activeIndex === 0 && direction < 0 && currentScroll <= stage.start + 4;
-        const isLeavingDownFromLast =
-            state.activeIndex === sections.length - 1 &&
-            direction > 0 &&
-            currentScroll >= stage.end - 4;
-
-        if (!isNearStage || direction === 0) return;
-
-        if (isLeavingUpFromFirst || isLeavingDownFromLast) {
-            window.clearTimeout(state.releaseTimer);
-            state.isAnimating = false;
-            return;
-        }
-
-        event.preventDefault();
-
-        if (isDesktopScrollLocked(state)) {
-            return;
-        }
-
-        if (!isInsideStage) {
-            if (currentScroll < stage.start && direction > 0) {
-                navigateDesktopToIndex(0, state, recco, sections, title, experimentalMode);
-            } else if (currentScroll > stage.end && direction < 0) {
-                navigateDesktopToIndex(sections.length - 1, state, recco, sections, title, experimentalMode);
-            }
-            return;
-        }
-
-        if (state.isAnimating) {
-            event.preventDefault();
-            return;
-        }
-
-        const nextIndex = clamp(state.activeIndex + direction, 0, sections.length - 1);
-
-        if (nextIndex === state.activeIndex) {
-            return;
-        }
-
-        navigateDesktopToIndex(nextIndex, state, recco, sections, title, experimentalMode);
-    }, { passive: false });
+        window.clearTimeout(state.releaseTimer);
+        state.isAnimating = false;
+    }, { passive: true });
 
     window.addEventListener("scroll", () => {
         if (isMobileViewport() || isDesktopScrollLocked(state)) return;
@@ -299,7 +304,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (nextIndex !== state.activeIndex) {
             state.activeIndex = nextIndex;
-            renderSections(state.activeIndex, sections, title, recco, experimentalMode);
+            renderSections(state.activeIndex, sections, title, recco, experimentalMode, desktopVisual, state);
         }
     }, { passive: true });
 });
@@ -563,14 +568,14 @@ function isDesktopScrollLocked(state) {
     return state.isAnimating || Date.now() - state.lastDesktopNavigationAt < DESKTOP_SCROLL_LOCK_MS;
 }
 
-function navigateDesktopToIndex(targetIndex, state, recco, sections, title, experimentalMode) {
+function navigateDesktopToIndex(targetIndex, state, recco, sections, title, experimentalMode, desktopVisual) {
     const safeIndex = clamp(targetIndex, 0, sections.length - 1);
     const stage = getStageRange(recco, sections.length);
 
     state.isAnimating = true;
     state.lastDesktopNavigationAt = Date.now();
     state.activeIndex = safeIndex;
-    renderSections(state.activeIndex, sections, title, recco, experimentalMode);
+    renderSections(state.activeIndex, sections, title, recco, experimentalMode, desktopVisual, state);
 
     window.scrollTo({
         top: stage.start + state.activeIndex * window.innerHeight,
@@ -589,7 +594,7 @@ function getStageRange(recco, totalSections) {
     return { start, end };
 }
 
-function renderSections(activeIndex, sections, title, recco, experimentalMode) {
+function renderSections(activeIndex, sections, title, recco, experimentalMode, desktopVisual, state) {
     sections.forEach((section, index) => {
         section.classList.toggle("is-past", index < activeIndex);
         section.classList.toggle("is-active", index === activeIndex);
@@ -602,10 +607,122 @@ function renderSections(activeIndex, sections, title, recco, experimentalMode) {
     }
 
     updateDesktopTabVisual(getMobileGroup(activeSection.id));
+    updateDesktopHeroVisual(getMobileGroup(activeSection.id), desktopVisual, state);
 
     if (recco) {
         updateExperimentalState(activeIndex, sections, title, recco, experimentalMode);
     }
+}
+
+function initializeDesktopHeroVisual(desktopVisual) {
+    if (!desktopVisual || desktopVisual.querySelector(".vid_hero_image")) return;
+
+    for (let index = 0; index < 2; index += 1) {
+        const heroImage = document.createElement("img");
+        heroImage.className = `vid_hero_image ${index === 0 ? "is-base" : "is-overlay"}`;
+        heroImage.alt = "";
+        heroImage.loading = "eager";
+        heroImage.decoding = "async";
+        desktopVisual.append(heroImage);
+    }
+}
+
+function updateDesktopHeroVisual(group, desktopVisual, state) {
+    if (!desktopVisual || !state) return;
+
+    const heroImages = [...desktopVisual.querySelectorAll(".vid_hero_image")];
+    if (!heroImages.length) return;
+
+    const heroConfig = DESKTOP_GROUP_HERO_IMAGES[group];
+
+    if (!heroConfig?.images?.length) {
+        stopDesktopHeroRotation(state);
+        state.desktopHeroGroup = "";
+        state.desktopHeroImageIndex = 0;
+        heroImages.forEach((image) => {
+            image.classList.remove("is-visible");
+            image.removeAttribute("src");
+            image.alt = "";
+        });
+        desktopVisual.classList.remove("has-hero-image");
+        return;
+    }
+
+    if (state.desktopHeroGroup !== group) {
+        state.desktopHeroGroup = group;
+        state.desktopHeroImageIndex = 0;
+        state.desktopHeroVisibleLayer = 0;
+
+        heroImages.forEach((image, index) => {
+            image.classList.toggle("is-visible", index === 0);
+            image.alt = heroConfig.alt;
+        });
+
+        setDesktopHeroImage(heroImages[0], heroConfig.images[0], heroConfig.alt, desktopVisual);
+
+        if (heroImages[1]) {
+            heroImages[1].classList.remove("is-visible");
+            heroImages[1].removeAttribute("src");
+            heroImages[1].alt = heroConfig.alt;
+        }
+
+        if (heroConfig.images.length > 1) {
+            startDesktopHeroRotation(desktopVisual, state, heroConfig);
+        }
+        return;
+    }
+
+    if (!state.desktopHeroTimer && heroConfig.images.length > 1) {
+        startDesktopHeroRotation(desktopVisual, state, heroConfig);
+    }
+}
+
+function setDesktopHeroImage(targetImage, src, alt, desktopVisual) {
+    if (!targetImage || !src) return;
+
+    targetImage.onload = () => {
+        desktopVisual?.classList.add("has-hero-image");
+    };
+
+    targetImage.onerror = () => {
+        targetImage.classList.remove("is-visible");
+    };
+
+    targetImage.alt = alt;
+    targetImage.src = src;
+}
+
+function startDesktopHeroRotation(desktopVisual, state, heroConfig) {
+    stopDesktopHeroRotation(state);
+
+    state.desktopHeroTimer = window.setInterval(() => {
+        rotateDesktopHeroImage(desktopVisual, state, heroConfig);
+    }, DESKTOP_HERO_ROTATE_MS);
+}
+
+function stopDesktopHeroRotation(state) {
+    if (!state?.desktopHeroTimer) return;
+
+    window.clearInterval(state.desktopHeroTimer);
+    state.desktopHeroTimer = 0;
+}
+
+function rotateDesktopHeroImage(desktopVisual, state, heroConfig) {
+    const heroImages = [...desktopVisual.querySelectorAll(".vid_hero_image")];
+    if (heroImages.length < 2 || !heroConfig?.images?.length) return;
+
+    const nextIndex = (state.desktopHeroImageIndex + 1) % heroConfig.images.length;
+    const nextLayer = state.desktopHeroVisibleLayer === 0 ? 1 : 0;
+    const currentLayer = state.desktopHeroVisibleLayer;
+    const incomingImage = heroImages[nextLayer];
+    const outgoingImage = heroImages[currentLayer];
+
+    setDesktopHeroImage(incomingImage, heroConfig.images[nextIndex], heroConfig.alt, desktopVisual);
+    incomingImage.classList.add("is-visible");
+    outgoingImage.classList.remove("is-visible");
+
+    state.desktopHeroImageIndex = nextIndex;
+    state.desktopHeroVisibleLayer = nextLayer;
 }
 
 function clamp(value, min, max) {
