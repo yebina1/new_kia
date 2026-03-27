@@ -471,6 +471,26 @@ document.addEventListener("DOMContentLoaded", () => {
     return `${formatCurrencyValue(adjustedPrice)} Starting MSRP*`;
   }
 
+  function formatPriceMarkup(priceLabel) {
+    const trimmedLabel = String(priceLabel || "").trim();
+    const match = trimmedLabel.match(/^(\$[\d,]+)(.*)$/);
+
+    if (!match) {
+      return escapeHtml(trimmedLabel);
+    }
+
+    const [, amount, suffix] = match;
+    const trimmedSuffix = suffix.trim();
+
+    if (!trimmedSuffix) {
+      return `<span class="hero_price_value">${escapeHtml(amount)}</span>`;
+    }
+
+    return `<span class="hero_price_value">${escapeHtml(amount)}</span> <span class="hero_price_suffix">${escapeHtml(
+      trimmedSuffix
+    )}</span>`;
+  }
+
   function formatSummaryLinePrice(value) {
     return value > 0 ? formatCurrencyValue(value) : "$0";
   }
@@ -623,29 +643,6 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
-  function getMoreButtonMarkup(isExpanded) {
-    return `<span class="hero_more_label">More</span><i class="bx ${isExpanded ? "bx-chevron-up" : "bx-chevron-down"} hero_more_icon" aria-hidden="true"></i>`;
-  }
-
-  function syncMoreButtonIcon(button) {
-    if (!button) {
-      return;
-    }
-
-    const isExpanded = button.getAttribute("aria-expanded") === "true";
-    button.innerHTML = getMoreButtonMarkup(isExpanded);
-  }
-
-  function syncAllMoreButtonIcons(root = document) {
-    root
-      .querySelectorAll(
-        ".hero_trim_more_btn, .hero_package_more_btn, .hero_accessory_more_btn, .hero_plan_more_btn"
-      )
-      .forEach((button) => {
-        syncMoreButtonIcon(button);
-      });
-  }
-
   function getCurrentPackages(title) {
     return packageStageData[title] || packageStageData.EV9 || [];
   }
@@ -671,9 +668,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     heroTrimGrade.textContent = selectedTrim?.name || trimData.grade;
-    heroTrimPrice.textContent = getAdjustedPriceLabel(
+    heroTrimPrice.innerHTML = formatPriceMarkup(getAdjustedPriceLabel(
       selectedTrim?.price || trimData.price
-    );
+    ));
     heroTrimLease.textContent = selectedTrim?.lease || trimData.lease;
     heroTrimImage.src = selectedTrim?.image || "./img/sub01_build/trim_light.png";
     heroTrimImage.alt = selectedTrim?.alt || title;
@@ -687,9 +684,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       heroColorTrim.textContent = selectedTrim?.name || trimData.grade;
-      heroColorPrice.textContent = getAdjustedPriceLabel(
+      heroColorPrice.innerHTML = formatPriceMarkup(getAdjustedPriceLabel(
         selectedTrim?.price || trimData.price
-      );
+      ));
       heroColorLease.textContent = selectedTrim?.lease || trimData.lease;
       heroColorImage.src = selectedTrim?.image || "./img/sub01_build/trim_light.png";
       heroColorImage.alt = selectedTrim?.alt || title;
@@ -704,9 +701,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       heroPackageTrim.textContent = selectedTrim?.name || trimData.grade;
-      heroPackagePrice.textContent = getAdjustedPriceLabel(
+      heroPackagePrice.innerHTML = formatPriceMarkup(getAdjustedPriceLabel(
         selectedTrim?.price || trimData.price
-      );
+      ));
       heroPackageLease.textContent = selectedTrim?.lease || trimData.lease;
       heroPackageImage.src = selectedTrim?.image || "./img/sub01_build/trim_light.png";
       heroPackageImage.alt = selectedTrim?.alt || title;
@@ -721,9 +718,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       heroAccessoryTrim.textContent = selectedTrim?.name || trimData.grade;
-      heroAccessoryPrice.textContent = getAdjustedPriceLabel(
+      heroAccessoryPrice.innerHTML = formatPriceMarkup(getAdjustedPriceLabel(
         selectedTrim?.price || trimData.price
-      );
+      ));
       heroAccessoryLease.textContent = selectedTrim?.lease || trimData.lease;
       heroAccessoryImage.src = selectedTrim?.image || "./img/sub01_build/trim_light.png";
       heroAccessoryImage.alt = selectedTrim?.alt || title;
@@ -738,9 +735,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       heroPlanTrim.textContent = selectedTrim?.name || trimData.grade;
-      heroPlanPrice.textContent = getAdjustedPriceLabel(
+      heroPlanPrice.innerHTML = formatPriceMarkup(getAdjustedPriceLabel(
         selectedTrim?.price || trimData.price
-      );
+      ));
       heroPlanLease.textContent = selectedTrim?.lease || trimData.lease;
       heroPlanImage.src = selectedTrim?.image || "./img/sub01_build/trim_light.png";
       heroPlanImage.alt = selectedTrim?.alt || title;
@@ -755,9 +752,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       heroSummaryTrim.textContent = selectedTrim?.name || trimData.grade;
-      heroSummaryPrice.textContent = getAdjustedPriceLabel(
+      heroSummaryPrice.innerHTML = formatPriceMarkup(getAdjustedPriceLabel(
         selectedTrim?.price || trimData.price
-      );
+      ));
       heroSummaryLease.textContent = selectedTrim?.lease || trimData.lease;
       heroSummaryImage.src = selectedTrim?.image || "./img/sub01_build/trim_light.png";
       heroSummaryImage.alt = selectedTrim?.alt || title;
@@ -883,7 +880,10 @@ document.addEventListener("DOMContentLoaded", () => {
                   .join("")}
               </ul>
             </div>
-            <button type="button" class="hero_trim_more_btn" aria-expanded="${index === 0 ? "true" : "false"}">${getMoreButtonMarkup(index === 0)}</button>
+            <button type="button" class="hero_trim_more_btn" aria-expanded="${index === 0 ? "true" : "false"}">
+              <span class="hero_more_label">More</span>
+              <i class="bx bx-chevron-down hero_more_icon" aria-hidden="true"></i>
+            </button>
           </article>
         `
       )
@@ -906,7 +906,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <span>${escapeHtml(packageItem.price)}</span>
               </div>
               <button type="button" class="hero_package_add_btn" aria-pressed="${selectedPackages.has(index) ? "true" : "false"}">
-                ${selectedPackages.has(index) ? "Added" : "Add +"}
+                ${selectedPackages.has(index) ? "Remove -" : "Add +"}
               </button>
             </div>
             <div class="hero_package_card_details">
@@ -916,7 +916,10 @@ document.addEventListener("DOMContentLoaded", () => {
                   .join("")}
               </ul>
             </div>
-            <button type="button" class="hero_package_more_btn" aria-expanded="false">${getMoreButtonMarkup(false)}</button>
+            <button type="button" class="hero_package_more_btn" aria-expanded="false">
+              <span class="hero_more_label">More</span>
+              <i class="bx bx-chevron-down hero_more_icon" aria-hidden="true"></i>
+            </button>
           </article>
         `
       )
@@ -1425,7 +1428,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const willExpand = !card.classList.contains("expanded");
       card.classList.toggle("expanded", willExpand);
       moreTrigger.setAttribute("aria-expanded", willExpand ? "true" : "false");
-      syncMoreButtonIcon(moreTrigger);
     }
   });
 
@@ -1449,7 +1451,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (moreButton) {
         moreButton.setAttribute("aria-expanded", willSelect ? "true" : "false");
-        syncMoreButtonIcon(moreButton);
       }
 
       updateSummaryPanel(heroSummaryPrice?.textContent || trimStageData.EV9.price);
@@ -1464,7 +1465,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const willExpand = !card.classList.contains("expanded");
     card.classList.toggle("expanded", willExpand);
     moreTrigger.setAttribute("aria-expanded", willExpand ? "true" : "false");
-    syncMoreButtonIcon(moreTrigger);
   });
 
   document.getElementById("heroPlanCards")?.addEventListener("click", (event) => {
@@ -1487,7 +1487,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (moreButton) {
         moreButton.setAttribute("aria-expanded", willSelect ? "true" : "false");
-        syncMoreButtonIcon(moreButton);
       }
 
       return;
@@ -1500,7 +1499,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const willExpand = !card.classList.contains("expanded");
     card.classList.toggle("expanded", willExpand);
     moreTrigger.setAttribute("aria-expanded", willExpand ? "true" : "false");
-    syncMoreButtonIcon(moreTrigger);
   });
 
   window.addEventListener("resize", () => {
@@ -1510,7 +1508,6 @@ document.addEventListener("DOMContentLoaded", () => {
   hydrateEv9TrimDataFromHtml();
   setCategory(currentCategory);
   renderPackageCards(getCurrentCar()?.title || "EV9");
-  syncAllMoreButtonIcons();
   syncColorStageSelections();
   syncEv9OnlyState();
   updateSteps(currentStep);
