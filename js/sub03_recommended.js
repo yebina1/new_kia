@@ -521,12 +521,9 @@ function populateSelectionModal(section, modal) {
     const modalTitle = modal.querySelector("#selection-modal-title");
     const modalDescription = modal.querySelector(".selection_modal_desc p:last-child");
     const modalSpecs = modal.querySelector(".selection_modal_specs ul");
-    const modalImage = modal.querySelector(".selection_modal_visual img");
     const subtitle = section.querySelector(".title p")?.textContent?.trim();
     const heading = section.querySelector(".title h2")?.textContent?.trim();
     const description = section.querySelector(".top > p")?.textContent?.replace(/\s+/g, " ").trim();
-    const heroImage = MOBILE_HERO_IMAGES[section.id];
-    const firstImage = section.querySelector("ul li img");
 
     if (modalTitle) {
         modalTitle.textContent = subtitle && heading ? `${heading} (${subtitle})` : (heading || "Recommended");
@@ -549,10 +546,6 @@ function populateSelectionModal(section, modal) {
         });
     }
 
-    if (modalImage) {
-        modalImage.src = heroImage?.src || firstImage?.getAttribute("src") || modalImage.src;
-        modalImage.alt = heroImage?.alt || heading || modalImage.alt;
-    }
 }
 
 function applyScrollLayout(recco, totalSections) {
