@@ -1,25 +1,25 @@
 @charset "utf-8";
 
 :root {
-    --belt-speed: 110;
-    --belt-stage-width: 100vw;
+  --belt-speed: 110;
+  --belt-stage-width: 100vw;
 }
 
 /* main_visual */
-.main_visual{
-    width: 100%;
+.main_visual {
+  width: 100%;
 }
 
-.main_visual .inner{
-    width: 100%;
-    height: 100vh;
+.main_visual .inner {
+  width: 100%;
+  height: 100vh;
 }
 
-.main_visual video{
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+.main_visual video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 /* section.ev6 */
@@ -189,11 +189,11 @@
 }
 
 /* section.brand */
-.brand{
+.brand {
   width: 100%;
 }
 
-.brand .inner{
+.brand .inner {
   width: 100%;
   padding-block: 240px;
   text-align: center;
@@ -202,7 +202,7 @@
   gap: 16px;
 }
 
-.brand strong{
+.brand strong {
   font-size: 64px;
   line-height: 1.3;
   font-style: normal;
@@ -290,11 +290,15 @@ section[class*="option"] .top a {
   gap: 8px;
 }
 
-section[class*="option"] .top a i{
+section[class*="option"] .top a i {
   font-size: 24px;
 }
 
-section[class*="option"] .top a:hover span{
+section[class*="option"] .top a span {
+  font-size: 1.1rem;
+}
+
+section[class*="option"] .top a:hover span {
   text-decoration: underline;
 }
 
@@ -325,47 +329,51 @@ section[class*="option"] .bottom>ul.cars>li {
   align-content: flex-end;
 }
 
-section.option01 .bottom>ul.cars>li:nth-child(1){
+section.option01 .bottom>ul.cars>li:nth-child(1) {
   background-image: url("../img/main/match/Outdoor_Adventure_01_Telluride_img.jpg");
 }
 
-section.option01 .bottom>ul.cars>li:nth-child(2){
+section.option01 .bottom>ul.cars>li:nth-child(2) {
   background-image: url("../img/main/match/Outdoor_Adventure_02_Sportage_img.jpg");
 }
-section.option01 .bottom>ul.cars>li:nth-child(3){
+
+section.option01 .bottom>ul.cars>li:nth-child(3) {
   background-image: url("../img/main/match/Outdoor_Adventure_03_Sorento_img.jpg");
 }
 
-section.option02 .bottom>ul.cars>li:nth-child(1){
+section.option02 .bottom>ul.cars>li:nth-child(1) {
   background-image: url("../img/main/match/City_Commute_01_Seltos_img.jpg");
 }
 
-section.option02 .bottom>ul.cars>li:nth-child(2){
+section.option02 .bottom>ul.cars>li:nth-child(2) {
   background-image: url("../img/main/match/City_Commute_02_K4_img.jpg");
 }
-section.option02 .bottom>ul.cars>li:nth-child(3){
+
+section.option02 .bottom>ul.cars>li:nth-child(3) {
   background-image: url("../img/main/match/City_Commute_03_Niro_Hybrid_img.jpg");
 }
 
-section.option03 .bottom>ul.cars>li:nth-child(1){
+section.option03 .bottom>ul.cars>li:nth-child(1) {
   background-image: url("../img/main/match/Family_Roadtrips_01_EV9_img.jpg");
 }
 
-section.option03 .bottom>ul.cars>li:nth-child(2){
+section.option03 .bottom>ul.cars>li:nth-child(2) {
   background-image: url("../img/main/match/Family_Roadtrips_02_Telluride_img.jpg");
 }
-section.option03 .bottom>ul.cars>li:nth-child(3){
+
+section.option03 .bottom>ul.cars>li:nth-child(3) {
   background-image: url("../img/main/match/Family_Roadtrips_03_Carnival_img.jpg");
 }
 
-section.option04 .bottom>ul.cars>li:nth-child(1){
+section.option04 .bottom>ul.cars>li:nth-child(1) {
   background-image: url("../img/main/match/Electric_Eco_01_Niro_EV_img.jpg");
 }
 
-section.option04 .bottom>ul.cars>li:nth-child(2){
+section.option04 .bottom>ul.cars>li:nth-child(2) {
   background-image: url("../img/main/match/Electric_Eco_02_EV6_img.jpg");
 }
-section.option04 .bottom>ul.cars>li:nth-child(3){
+
+section.option04 .bottom>ul.cars>li:nth-child(3) {
   background-image: url("../img/main/match/Electric_Eco_03_EV9_img.jpg");
 }
 
@@ -374,13 +382,13 @@ section[class*="option"] .bottom>ul.cars>li>h2 {
   transition: opacity 0.4s ease;
 }
 
-section[class*="option"] .bottom>ul.cars>li h2 span{
+section[class*="option"] .bottom>ul.cars>li h2 span {
   font-size: 45px;
   line-height: 0.8;
   text-align: center;
 }
 
-section[class*="option"] .bottom>ul.cars>li strong{
+section[class*="option"] .bottom>ul.cars>li strong {
   font-style: normal;
   font-weight: 400;
   color: var(--kia-white2);
@@ -411,19 +419,19 @@ section[class*="option"] .bottom>ul.cars>li:hover .info_con {
   visibility: visible;
 }
 
-section[class*="option"] .bottom>ul.cars>li .info_con>p{
+section[class*="option"] .bottom>ul.cars>li .info_con>p {
   padding-block: 16px;
   line-height: 1.3;
   color: var(--kia-white1);
 }
 
-section[class*="option"] .bottom>ul.cars>li .info_con>ul.info{
+section[class*="option"] .bottom>ul.cars>li .info_con>ul.info {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-section[class*="option"] .bottom>ul.cars>li .info_con>ul.info>li{
+section[class*="option"] .bottom>ul.cars>li .info_con>ul.info>li {
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -431,7 +439,7 @@ section[class*="option"] .bottom>ul.cars>li .info_con>ul.info>li{
   padding-inline: 16px;
 }
 
-section[class*="option"] .bottom>ul.cars>li .info_con>ul.info>li>b{
+section[class*="option"] .bottom>ul.cars>li .info_con>ul.info>li>b {
   color: var(--kia-white1);
   font-size: 18px;
   font-style: normal;
@@ -439,7 +447,7 @@ section[class*="option"] .bottom>ul.cars>li .info_con>ul.info>li>b{
   line-height: 130%;
 }
 
-section[class*="option"] .bottom>ul.cars>li .info_con>ul.info>li>p{
+section[class*="option"] .bottom>ul.cars>li .info_con>ul.info>li>p {
   color: var(--kia-white2);
   font-size: 16px;
   font-style: normal;
@@ -454,368 +462,368 @@ section[class*="option"] .bottom>ul.cars>li:hover>strong {
 
 /* section.partnership */
 .partnership {
-    width: 100%;
-    height: 100vh;
-    overflow: hidden;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .partnership .inner {
-    width: 100%;
-    height: 100vh;
-    margin: 0 auto;
-    padding: 72px 0 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    gap: 32px;
-    overflow: hidden;
+  width: 100%;
+  height: 100vh;
+  margin: 0 auto;
+  padding: 72px 0 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 32px;
+  overflow: hidden;
 }
 
 .tit {
-    text-align: center;
+  text-align: center;
 }
 
 .tit p {
-    margin-top: 24px;
-    font-size: clamp(16px, 1.8vw, 24px);
-    color: var(--kia-white2);
+  margin-top: 24px;
+  font-size: clamp(16px, 1.8vw, 24px);
+  color: var(--kia-white2);
 }
 
 .par_visual {
-    position: relative;
-    flex: 1 1 auto;
-    min-height: 0;
-    width: 100%;
-    display: flex;
-    align-items: flex-end;
-    justify-content: flex-start;
-    overflow: hidden;
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  overflow: hidden;
 }
 
 .belt_stage {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 2048 / 921;
-    overflow: hidden;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2048 / 921;
+  overflow: hidden;
 }
 
 .belt_motion_view {
-    position: absolute;
-    inset: 0;
+  position: absolute;
+  inset: 0;
 }
 
 .belt_track_window {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 100%;
-    overflow: hidden;
-    z-index: 2;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  overflow: hidden;
+  z-index: 2;
 }
 
 .rail_lane {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    overflow: hidden;
-    z-index: 2;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  overflow: hidden;
+  z-index: 2;
 }
 
 .rail_track {
-    display: flex;
-    width: max-content;
-    will-change: transform;
-    position: relative;
-    z-index: 2;
-    transform: translate3d(0, 0, 0);
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  position: relative;
+  z-index: 2;
+  transform: translate3d(0, 0, 0);
 }
 
 .rail_item {
-    flex: 0 0 auto;
-    width: 100%;
+  flex: 0 0 auto;
+  width: 100%;
 }
 
 .rail_item img {
-    display: block;
-    width: 100%;
-    height: auto;
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .car_lane {
-    position: absolute;
-    left: 0;
-    width: 86.6%;
-    bottom: 20%;
-    overflow: hidden;
-    z-index: 3;
+  position: absolute;
+  left: 0;
+  width: 86.6%;
+  bottom: 20%;
+  overflow: hidden;
+  z-index: 3;
 }
 
 .car_lane_track {
-    z-index: 3;
+  z-index: 3;
 }
 
 .car_track {
-    display: flex;
-    align-items: flex-end;
-    width: max-content;
-    gap: clamp(84px, 6vw, 148px);
-    position: relative;
-    z-index: 3;
-    will-change: transform;
-    transform: translate3d(0, 0, 0);
+  display: flex;
+  align-items: flex-end;
+  width: max-content;
+  gap: clamp(84px, 6vw, 148px);
+  position: relative;
+  z-index: 3;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
 }
 
 .car_item {
-    flex: 0 0 auto;
-    height: clamp(152px, 15vw, 300px);
-    width: auto;
-    display: flex;
-    align-items: flex-end;
+  flex: 0 0 auto;
+  height: clamp(152px, 15vw, 300px);
+  width: auto;
+  display: flex;
+  align-items: flex-end;
 }
 
 .car_item img {
-    display: block;
-    width: auto;
-    height: 100%;
+  display: block;
+  width: auto;
+  height: 100%;
 }
 
 .belt_machine {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    pointer-events: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
 }
 
 .belt_machine_base {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    height: auto;
-    z-index: 1;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: auto;
+  z-index: 1;
 }
 
 .belt_machine_body {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    height: auto;
-    z-index: 4;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: auto;
+  z-index: 4;
 }
 
 /* section.review */
 html.review_locked,
 body.review_locked {
-    overflow: hidden;
-    overscroll-behavior: none;
+  overflow: hidden;
+  overscroll-behavior: none;
 }
 
 .review {
-    position: relative;
-    width: 100%;
-    min-height: 100vh;
-    overflow: hidden;
-    overscroll-behavior: contain;
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  overscroll-behavior: contain;
 }
 
 .review .inner {
-    max-width: 1440px;
-    height: 100vh;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    padding-block: 60px;
-    box-sizing: border-box;
+  max-width: 1440px;
+  height: 100vh;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  padding-block: 60px;
+  box-sizing: border-box;
 }
 
 .review .tit {
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    gap: 16px;
-    z-index: 20;
-    padding-bottom: 64px;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  gap: 16px;
+  z-index: 20;
+  padding-bottom: 64px;
+  width: 100%;
 }
 
-.review .tit p{
-    font-size: 24px;
-    line-height: 1.3;
+.review .tit p {
+  font-size: 24px;
+  line-height: 1.3;
 }
 
 .review .review_con {
-    display: flex;
-    justify-content: center;
-    gap: 60px;
-    height: 530px;
-    overflow: hidden;
-    align-items: flex-start;
-    padding-top: 115px;
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  height: 530px;
+  overflow: hidden;
+  align-items: flex-start;
+  padding-top: 115px;
 }
 
-.review .review_con::before{
-    content: '';
-    width: 130px;
-    height: 1300px;
-    position: absolute;
-    right: 750px;
-    bottom: -130px;
-    transform: rotate(90deg);
-    background: linear-gradient(270deg, rgba(12, 17, 21, 0.00) 40.39%, #0C1115 102.93%);
-    z-index: 10;
+.review .review_con::before {
+  content: '';
+  width: 130px;
+  height: 1300px;
+  position: absolute;
+  right: 750px;
+  bottom: -130px;
+  transform: rotate(90deg);
+  background: linear-gradient(270deg, rgba(12, 17, 21, 0.00) 40.39%, #0C1115 102.93%);
+  z-index: 10;
 }
 
-.review .review_con::after{
-    content: '';
-    width: 100%;
-    height: 130px;
-    position: absolute;
-    left: 0.5px;
-    bottom: 60px;
-    background: linear-gradient(180deg, rgba(12, 17, 21, 0.00) 40.39%, #0C1115 91.98%);
+.review .review_con::after {
+  content: '';
+  width: 100%;
+  height: 130px;
+  position: absolute;
+  left: 0.5px;
+  bottom: 60px;
+  background: linear-gradient(180deg, rgba(12, 17, 21, 0.00) 40.39%, #0C1115 91.98%);
 }
 
 .review .review_con ul.re_left,
 .review .review_con ul.re_right {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-    will-change: transform;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  will-change: transform;
 }
 
-.review .review_con ul > li {
-    border-radius: 32px;
-    transition: all 0.3s ease;
-    flex-shrink: 0;
-    display: flex;
-    margin-top: -12px;
-    backdrop-filter: blur(8px);
-    z-index: 1;
-} 
-
-.review .review_con ul > li:first-child {
-    margin-top: 0;
+.review .review_con ul>li {
+  border-radius: 32px;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  display: flex;
+  margin-top: -12px;
+  backdrop-filter: blur(8px);
+  z-index: 1;
 }
 
-.review .review_con ul > li.on {
-    opacity: 1;
-    z-index: 10;
+.review .review_con ul>li:first-child {
+  margin-top: 0;
 }
 
-.review .review_con ul.re_left > li.on {
-    transform: translateX(64px);
+.review .review_con ul>li.on {
+  opacity: 1;
+  z-index: 10;
 }
 
-.review .review_con ul.re_right > li.on {
-    transform: translateX(-64px);
+.review .review_con ul.re_left>li.on {
+  transform: translateX(64px);
 }
 
-.review .review_con ul > li:not(.on) {
-    /* opacity: 0.3; */
-    z-index: 1;
+.review .review_con ul.re_right>li.on {
+  transform: translateX(-64px);
 }
 
-.review .review_con ul > li > a {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 32px 48px;
-    width: 500px;
-    height: 300px;
-    box-sizing: border-box;
+.review .review_con ul>li:not(.on) {
+  /* opacity: 0.3; */
+  z-index: 1;
 }
 
-.review .review_con ul > li > a b {
-    font-size: 20px;
-    font-weight: 500;
-    line-height: 1.4;
-    color: #fff;
-    display: block;
+.review .review_con ul>li>a {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 32px 48px;
+  width: 500px;
+  height: 300px;
+  box-sizing: border-box;
 }
 
-.review .review_con ul > li.on > a b {
-    font-style: italic;
+.review .review_con ul>li>a b {
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: #fff;
+  display: block;
 }
 
-.review .review_con ul > li > a p {
-    font-size: 16px;
-    line-height: 1.3;
-    color: #ccc;
+.review .review_con ul>li.on>a b {
+  font-style: italic;
 }
 
-.review .review_con ul > li > a > .star {
-    display: flex;
-    gap: 4px;
-    min-height: 14px;
-    flex-shrink: 0;
+.review .review_con ul>li>a p {
+  font-size: 16px;
+  line-height: 1.3;
+  color: #ccc;
 }
 
-.review .review_con ul > li > a > .star i {
-    color: #A7BAC8;
-    font-size: 14px;
-    display: block;
+.review .review_con ul>li>a>.star {
+  display: flex;
+  gap: 4px;
+  min-height: 14px;
+  flex-shrink: 0;
+}
+
+.review .review_con ul>li>a>.star i {
+  color: #A7BAC8;
+  font-size: 14px;
+  display: block;
 }
 
 .modal {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    z-index: 10;
-    display: none;
-    opacity: 0;
-    transition: opacity 0.3s;
-    pointer-events: auto;
-    justify-content: center;
-    align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 10;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: auto;
+  justify-content: center;
+  align-items: center;
 }
 
 .modal.show {
-    display: flex;
-    opacity: 1;
+  display: flex;
+  opacity: 1;
 }
 
-.modal a{
-    padding: 16px 32px;
-    border-radius: 55px;
-    font-size: 20px;
-    font-weight: 600;
-    display: flex;
-    gap: 12px;
-    font-family: "Outfit", sans-serif;
+.modal a {
+  padding: 16px 32px;
+  border-radius: 55px;
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  gap: 12px;
+  font-family: "Outfit", sans-serif;
 }
 
-.modal a:hover{
+.modal a:hover {
   transform: translateY(-4px);
 }
 
 /* section.map */
-.map{
+.map {
   background: url("../img/main/map_bg_img.jpg") center/cover;
 }
 
-.map .inner{
+.map .inner {
   width: 100%;
   height: 600px;
   padding-block: 240px;
   position: relative;
 }
 
-.map .bg1{
+.map .bg1 {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -824,7 +832,7 @@ body.review_locked {
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, #0C1115 75.6%);
 }
 
-.map .txt_box{
+.map .txt_box {
   position: absolute;
   top: 0;
   left: 0;
@@ -838,23 +846,21 @@ body.review_locked {
   gap: 16px;
 }
 
-.map p{
+.map p {
   font-size: 24px;
   padding-bottom: 32px;
 }
 
-.map button{
+.map button {
   position: relative;
   min-width: 170px;
   height: 56px;
   padding-inline: 28px;
   border: 1px solid rgba(255, 255, 255, 0.32);
   border-radius: 999px;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.34),
-    rgba(255, 255, 255, 0.14)
-  );
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.34),
+      rgba(255, 255, 255, 0.14));
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.35),
     0 10px 30px rgba(0, 0, 0, 0.16);
@@ -866,23 +872,21 @@ body.review_locked {
     background-color 0.25s ease,
     box-shadow 0.25s ease,
     border-color 0.25s ease;
-    
+
 }
 
-.map button::before{
+.map button::before {
   content: "";
   position: absolute;
   inset: 2px;
   border-radius: inherit;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.28),
-    rgba(255, 255, 255, 0.05)
-  );
+  background: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.28),
+      rgba(255, 255, 255, 0.05));
   pointer-events: none;
 }
 
-.map button:hover{
+.map button:hover {
   transform: translateY(-2px);
   border-color: rgba(255, 255, 255, 0.45);
   box-shadow:
