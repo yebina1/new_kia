@@ -1,173 +1,158 @@
 /* section.ev6 */
-const $segments = [
-  { type: "hold", duration: 0.5 },
-  { type: "overlap", duration: 1 },
-  { type: "hold", duration: 0.3 },
-  { type: "overlap", duration: 1 },
-  { type: "hold", duration: 0.3 },
-  { type: "photo", duration: 0.8, photo: 0 },
-  { type: "overlap", duration: 1 },
-  { type: "hold", duration: 0.3 },
-  { type: "photo", duration: 0.8, photo: 1 },
-  { type: "overlap", duration: 1 },
-  { type: "hold", duration: 0.3 },
-  { type: "photo", duration: 0.8, photo: 2 },
-  { type: "overlap", duration: 1 },
-  { type: "hold", duration: 0.3 },
-  { type: "photo", duration: 0.8, photo: 3 },
-  { type: "hold", duration: 0.5 },
-];
+const clamp = (v, min = 0, max = 1) => Math.min(max, Math.max(min, v));
+    const mix = (a, b, t) => a + (b - a) * t;
+    const sstep = (a, b, v) => {
+      const t = clamp((v - a) / (b - a));
+      return t * t * (3 - 2 * t);
+    };
 
-const $totalDuration = $segments.reduce((sum, seg) => sum + seg.duration, 0);
+    const section = document.getElementById('scrollScene');
+    const bgTrack = document.getElementById('bgTrack');
+    const stickyScene = document.getElementById('scene');
+    const bg1Img = document.getElementById('bg1Img');
+    const bg2Img = document.getElementById('bg2Img');
+    const carWrap = document.getElementById('carWrap');
+    const solidCar = document.getElementById('solidCar');
+    const xrayCar = document.getElementById('xrayCar');
+    const dashMask = document.getElementById('dashMask');
+    const luggageMask = document.getElementById('luggageMask');
+    const seatingMask = document.getElementById('seatingMask');
+    const carpetsMask = document.getElementById('carpetsMask');
+    const detailsLayer = document.getElementById('detailsLayer');
+    const dashPhotoCard = document.getElementById('dashPhotoCard');
+    const luggagePhotoCard = document.getElementById('luggagePhotoCard');
+    const seatingPhotoCard = document.getElementById('seatingPhotoCard');
+    const carpetsPhotoCard = document.getElementById('carpetsPhotoCard');
+    const root = document.documentElement;
 
-const $segmentStarts = [];
-let $cum = 0;
-for (const $seg of $segments) {
-  $segmentStarts.push($cum);
-  $cum += $seg.duration;
-}
+    function render() {
+      const total = Math.max(section.offsetHeight - window.innerHeight, 1);
+      const passed = clamp(-section.getBoundingClientRect().top, 0, total);
+      const p = passed / total;
+      const vh = window.innerHeight;
 
-const $overlapIndices = $segments
-  .map((seg, i) => (seg.type === "overlap" ? i : -1))
-  .filter((i) => i >= 0);
+      const baseEnd = 0.49;
+      const baseP = clamp(p / baseEnd);
 
-const $container = document.getElementById("scroll_container");
-const $mainLayers = [
-  document.getElementById("layer_1"),
-  document.getElementById("layer_2"),
-  document.getElementById("layer_3"),
-  document.getElementById("layer_4"),
-  document.getElementById("layer_5"),
-  document.getElementById("layer_6"),
-];
-const $photoLayers = [
-  document.getElementById("photo_1"),
-  document.getElementById("photo_2"),
-  document.getElementById("photo_3"),
-  document.getElementById("photo_4"),
-];
-const $scrollIndicator = document.getElementById("scroll_indicator");
+      const enterP = sstep(0.03, 0.24, baseP);
+      const cruiseP = sstep(0.24, 0.46, baseP);
+      const panelPushP = sstep(0.46, 0.68, baseP);
+      const morphP = sstep(0.72, 0.84, baseP);
 
-const $layerOverlapMap = [-1, 0, 1, 2, 3, 4];
+      const trackY = Math.round(mix(0, -vh, panelPushP));
+      bgTrack.style.transform = `translate3d(0, ${trackY}px, 0)`;
 
-let $progress = 0;
-let $rafId = null;
-let $scrollTimeout = null;
+      const bg1InnerY = mix(0, -vh * 0.03, sstep(0.06, 0.46, baseP));
+      const bg2InnerY = mix(vh * 0.035, 0, panelPushP);
+      const bg1Scale = mix(1.02, 1.0, panelPushP);
+      const bg2Scale = mix(1.04, 1.0, panelPushP);
 
-function getMainLayerClip(overlapIdx) {
-  if (overlapIdx < 0) return "inset(0% 0% 0% 0%)";
+      if (bg1Img) bg1Img.style.transform = `translate3d(0, ${Math.round(bg1InnerY)}px, 0) scale(${bg1Scale * 1.002})`; 
+      bg2Img.style.transform = `translate3d(0, ${Math.round(bg2InnerY)}px, 0) scale(${bg2Scale * 1.002})`;
 
-  const $segIdx = $overlapIndices[overlapIdx];
-  if ($segIdx === undefined) return "inset(0% 100% 0% 0%)";
+      const carHeight = carWrap.offsetHeight;
+      const startY = carHeight * 1.18 + vh * 0.18;
+      const enterY = mix(startY, -vh * 0.04, enterP);
+      const cruiseY = mix(0, -vh * 0.04, cruiseP);
+      const settleY = mix(0, -vh * 0.08, panelPushP);
+      const y = enterY + cruiseY + settleY;
 
-  const $start = $segmentStarts[$segIdx];
-  const $dur = $segments[$segIdx].duration;
-  const $localP = Math.max(0, Math.min(1, ($progress - $start) / $dur));
-  const $rightInset = (1 - $localP) * 100;
+      const approachScale = mix(1.12, 1.0, enterP);
+      const shrinkScale = mix(1.0, 0.5, panelPushP);
+      const holdScale = approachScale * shrinkScale;
+      carWrap.style.transform = `translate(-50%, -100%) translate3d(0, ${y}px, 0) scale(${holdScale})`;
 
-  return `inset(0% ${$rightInset}% 0% 0%)`;
-}
+      const solidVisibleP = sstep(0.05, 0.14, baseP);
+      const solidOpacity = solidVisibleP * (1 - morphP);
+      const solidBlur = mix(18, 0, solidVisibleP);
+      const solidShadowY = mix(84, 32, panelPushP);
+      const solidShadowBlur = mix(120, 56, panelPushP);
+      solidCar.style.opacity = String(solidOpacity);
+      solidCar.style.filter = `drop-shadow(0 ${solidShadowY}px ${solidShadowBlur}px rgba(0,0,0,0.45)) blur(${solidBlur}px)`;
 
-function getMainLayerOpacity(layerIndex) {
-  if (layerIndex < 2) return 1;
+      const xrayOpacity = morphP;
+      const xrayBlur = mix(8, 0.6, morphP);
+      const xrayGlow = mix(8, 26, morphP);
+      const xrayBrightness = mix(1.0, 1.08, morphP);
+      xrayCar.style.opacity = String(xrayOpacity);
+      xrayCar.style.filter = `drop-shadow(0 0 ${xrayGlow}px rgba(255,255,255,0.16)) blur(${xrayBlur}px) brightness(${xrayBrightness})`;
 
-  const currentOverlapIdx = $layerOverlapMap[layerIndex];
-  const nextOverlapIdx = currentOverlapIdx + 1;
-  const nextSegIdx = $overlapIndices[nextOverlapIdx];
+      const bodyBlend = sstep(0.56, 0.74, baseP);
+      const sceneBg = bodyBlend < 0.5 ? '#000000' : '#252941';
+      section.style.backgroundColor = sceneBg;
+      if (stickyScene) stickyScene.style.backgroundColor = sceneBg;
 
-  if (nextSegIdx !== undefined) {
-    const nextStart = $segmentStarts[nextSegIdx];
-    if ($progress >= nextStart) {
-      const fadeDur = 0.4;
-      if ($progress < nextStart + fadeDur) {
-        return 1 - (($progress - nextStart) / fadeDur);
-      }
-      return 0;
+      const bg2StageP = clamp((p - baseEnd) / (1 - baseEnd));
+
+      const dashReveal = sstep(0.05, 0.15, bg2StageP);
+      const dashFadeOut = sstep(0.22, 0.26, bg2StageP);
+      const dashVisible = dashReveal > 0.001 ? (1 - dashFadeOut) : 0;
+      dashMask.style.opacity = String(dashVisible);
+      dashMask.style.clipPath = `inset(${(1 - dashReveal) * 100}% 0 0 0)`;
+
+      const luggageReveal = sstep(0.31, 0.40, bg2StageP);
+      const luggageFadeOut = sstep(0.47, 0.51, bg2StageP);
+      const seatReveal = sstep(0.56, 0.65, bg2StageP);
+      const seatFadeOut = sstep(0.72, 0.76, bg2StageP);
+      const carpetReveal = sstep(0.81, 0.90, bg2StageP);
+
+      const luggageVisible = luggageReveal > 0.001 ? (1 - luggageFadeOut) : 0;
+      luggageMask.style.opacity = String(luggageVisible);
+      luggageMask.style.clipPath = `inset(${(1 - luggageReveal) * 100}% 0 0 0)`;
+
+      const seatVisible = seatReveal > 0.001 ? (1 - seatFadeOut) : 0;
+      seatingMask.style.opacity = String(seatVisible);
+      seatingMask.style.clipPath = `inset(${(1 - seatReveal) * 100}% 0 0 0)`;
+
+      const carpetVisible = carpetReveal > 0.001 ? carpetReveal : 0;
+      carpetsMask.style.opacity = String(carpetVisible);
+      carpetsMask.style.clipPath = `inset(${(1 - carpetReveal) * 100}% 0 0 0)`;
+
+      const anyDetailsOn = bg2StageP >= 0.11;
+      detailsLayer.style.opacity = anyDetailsOn ? '1' : '0';
+      detailsLayer.style.transform = anyDetailsOn ? 'translate3d(0, 0, 0)' : 'translate3d(0, 18px, 0)';
+
+      const dashPhotoOpacity = sstep(0.11, 0.16, bg2StageP) * (1 - sstep(0.22, 0.26, bg2StageP));
+      const nextPhotoOpacity = sstep(0.37, 0.42, bg2StageP) * (1 - sstep(0.47, 0.51, bg2StageP));
+      const seatPhotoOpacity = sstep(0.62, 0.67, bg2StageP) * (1 - sstep(0.72, 0.76, bg2StageP));
+      const carpetPhotoOpacity = sstep(0.87, 0.92, bg2StageP);
+
+      dashPhotoCard.style.opacity = String(dashPhotoOpacity);
+      dashPhotoCard.style.transform = `translate3d(0, ${dashPhotoOpacity > 0 ? 0 : 18}px, 0) scale(${dashPhotoOpacity > 0 ? 1 : 0.76})`;
+      luggagePhotoCard.style.opacity = String(nextPhotoOpacity);
+      luggagePhotoCard.style.transform = `translate3d(0, ${nextPhotoOpacity > 0 ? 0 : 18}px, 0) scale(${nextPhotoOpacity > 0 ? 1 : 0.76})`;
+      seatingPhotoCard.style.opacity = String(seatPhotoOpacity);
+      seatingPhotoCard.style.transform = `translate3d(0, ${seatPhotoOpacity > 0 ? 0 : 18}px, 0) scale(${seatPhotoOpacity > 0 ? 1 : 0.76})`;
+      carpetsPhotoCard.style.opacity = String(carpetPhotoOpacity);
+      carpetsPhotoCard.style.transform = `translate3d(0, ${carpetPhotoOpacity > 0 ? 0 : 18}px, 0) scale(${carpetPhotoOpacity > 0 ? 1 : 0.76})`;
+
+      const dashFocusOn = bg2StageP >= 0.11 && bg2StageP < 0.22;
+      const luggageFocusOn = bg2StageP >= 0.37 && bg2StageP < 0.47;
+      const seatingFocusOn = bg2StageP >= 0.62 && bg2StageP < 0.72;
+      const carpetFocusOn = bg2StageP >= 0.87;
+
+      root.style.setProperty('--dash-grow', dashFocusOn ? '1' : '0');
+      root.style.setProperty('--luggage-grow', luggageFocusOn ? '1' : '0');
+      root.style.setProperty('--seating-grow', seatingFocusOn ? '1' : '0');
+      root.style.setProperty('--carpet-grow', carpetFocusOn ? '1' : '0');
+      root.style.setProperty('--photo-scale', '1');
+      root.style.setProperty('--photo-opacity', '1');
+      root.style.setProperty('--photo-y', '0px');
     }
-  } else if (layerIndex === 5) {
-    const lastPhotoIdx = 3;
-    const pSeg = $segments.find((s) => s.type === "photo" && s.photo === lastPhotoIdx);
-    
-    if (pSeg) {
-      const pSegIdx = $segments.indexOf(pSeg);
-      const pStart = $segmentStarts[pSegIdx];
-      const pEnd = pStart + pSeg.duration;
-      
-      const holdMargin = 0.2; 
-      const fadeOutDur = 0.3; 
-      
-      if ($progress > pEnd + holdMargin) {
-        if ($progress < pEnd + holdMargin + fadeOutDur) {
-          return 1 - (($progress - (pEnd + holdMargin)) / fadeOutDur);
-        }
-        return 0;
-      }
-    }
-  }
-  return 1;
-}
 
-function getPhotoOpacity(photoIdx) {
-  const $seg = $segments.find((s) => s.type === "photo" && s.photo === photoIdx);
-  if (!$seg) return 0;
+    let rafId = null;
+    const requestRender = () => {
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        render();
+        rafId = null;
+      });
+    };
 
-  const $segIdx = $segments.indexOf($seg);
-  const $start = $segmentStarts[$segIdx];
-  const $end = $start + $seg.duration;
-
-  const holdMargin = 0.2;
-  const fadeOutDur = 0.3;
-
-  if ($progress >= $start + 0.01 && $progress <= $end + holdMargin) return 1;
-  if ($progress >= $start && $progress < $start + 0.01) {
-    return ($progress - $start) / 0.01;
-  }
-
-  if ($progress > $end + holdMargin && $progress < $end + holdMargin + fadeOutDur) {
-    return 1 - (($progress - ($end + holdMargin)) / fadeOutDur);
-  }
-
-  return 0;
-}
-
-function updateLayers() {
-  for (let $i = 0; $i < $mainLayers.length; $i++) {
-    const $clip = getMainLayerClip($layerOverlapMap[$i]);
-    $mainLayers[$i].style.clipPath = $clip;
-    
-    const $opacity = getMainLayerOpacity($i);
-    $mainLayers[$i].style.opacity = $opacity;
-  }
-
-  for (let $i = 0; $i < $photoLayers.length; $i++) {
-    const $opacity = getPhotoOpacity($i);
-    $photoLayers[$i].style.opacity = $opacity;
-    $photoLayers[$i].style.pointerEvents = $opacity > 0 ? "auto" : "none";
-  }
-
-  $scrollIndicator.style.opacity = $progress < 0.3 ? 1 : 0;
-}
-
-function handleScroll() {
-  const $containerTop = $container.offsetTop;
-  const $containerHeight = $container.offsetHeight;
-  const $scrollable = $containerHeight - window.innerHeight;
-  const $scrolled = window.scrollY - $containerTop;
-  const $p = Math.max(0, Math.min(1, $scrolled / $scrollable));
-  $progress = $p * $totalDuration;
-
-  if ($rafId) cancelAnimationFrame($rafId);
-  $rafId = requestAnimationFrame(() => {
-    updateLayers();
-    $rafId = null;
-  });
-  
-}
-
-window.addEventListener("scroll", handleScroll, { passive: true });
-window.addEventListener("resize", handleScroll, { passive: true });
-handleScroll();
-
+    window.addEventListener('scroll', requestRender, { passive: true });
+    window.addEventListener('resize', requestRender);
+    window.addEventListener('load', requestRender);
+    requestRender();
 
 /* section.match */
 function handleScroll() {

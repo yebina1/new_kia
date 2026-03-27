@@ -14,6 +14,9 @@
   <link href="https://cdn.boxicons.com/3.0.8/fonts/brands/boxicons-brands.min.css" rel="stylesheet">
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baskervville:ital@0;1&family=Cormorant+Garamond:wght@400;600&family=Inter:wght@400;600;700&family=Outfit:wght@400&display=swap" rel="stylesheet">
   <!-- 내 css -->
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/common.css">
@@ -98,58 +101,97 @@
         </video>
       </div> <!-- //.inner -->
     </div> <!-- //.main_visual -->
-    <div class="ev6" id="scroll_container">
-      <!-- 고정 뷰포트 -->
-      <div class="inner" id="pinned_viewport">
+    <div class="ev6">
+      <section class="scroll_scene" id="scrollScene">
+    <div class="sticky_scene" id="scene">
+      <div class="bg_viewport">
+        <div class="bg_track" id="bgTrack">
+          <div class="bg_panel bg1_panel">
+            <div class="bg1_copy_stage" aria-hidden="true">
+              <div class="bg1_copy_left">
+                <div class="title_row">
+                  <span class="num">111</span>
+                  <span class="word">Bottles</span>
+                </div>
+                <div class="copy">Sustainable solutions<br>that move with you</div>
+              </div>
 
-        <!-- 상단 타이틀 영역 -->
-        <div class="tit">
-          <h2>111 Bottles, 1 Vision, in EV6</h2>
-          <p>Sustainable future</p>
-        </div>
+              <div class="bg1_copy_right">
+                <div class="title">in One Vision</div>
+                <div class="sub">Sustainable future</div>
+                <div class="line"></div>
+                <div class="desc">Our commitment to the Earth is woven into every fiber of the EV6.<br>Kia’s innovative engineering transforms recycled plastics into premium, sustainable materials.</div>
+              </div>
+            </div>
+          </div>
+          <div class="bg_panel bg2_panel">
+            <div class="bg_surface bg2_surface" id="bg2Img" aria-hidden="true">
+              <div class="bg2_copy_stage">
+                <div class="bg2_copy_left">
+                  <div class="title">Eco-friendly<br>Innovation</div>
+                  <div class="desc">A true machine for a sustainable future.<br>We’ve repurposed 111 plastic water bottles into the luxurious fabrics of the EV6 cabin, proving that high-end design and environmental responsibility can coexist perfectly.</div>
+                </div>
 
-        <!-- 메인 레이어 (clip-path 오버랩 전환) -->
-        <div class="main_layer" id="layer_1">
-          <img src="img/main/ev6/real.png" alt="" draggable="false">
-        </div>
-        <div class="main_layer" id="layer_2">
-          <img src="img/main/ev6/x-ray.png" alt="" draggable="false">
-        </div>
-        <div class="main_layer" id="layer_3">
-          <img src="img/main/ev6/car_seat_light.png" alt="" draggable="false">
-        </div>
-        <div class="main_layer" id="layer_4">
-          <img src="img/main/ev6/car_carpet_light.png" alt="" draggable="false">
-        </div>
-        <div class="main_layer" id="layer_5">
-          <img src="img/main/ev6/car_dashboard.png" alt="" draggable="false">
-        </div>
-        <div class="main_layer" id="layer_6">
-          <img src="img/main/ev6/car_luggage-board.png" alt="" draggable="false">
-        </div>
+                <div class="bg2_copy_right">
+                  <div class="title">in EV6</div>
+                </div>
 
-        <!-- 포토 레이어 (opacity 즉시 등장) -->
-        <div class="photo_layer" id="photo_1">
-          <img src="img/main/ev6/seat_info_img.png" alt="" draggable="false">
+                <div class="bg2_features">
+                  <div class="bg2_feature_dashboard">
+                    <div class="bg2_feature_title">Dashboard</div>
+                    <div class="bg2_feature_copy bg2_feature_copy_dashboard"><span>Plant-derived plastics</span><br><span>and bio-paints</span></div>
+                  </div>
+                  <div class="bg2_feature_luggage">
+                    <div class="bg2_feature_title">Luggage</div>
+                    <div class="bg2_feature_copy">bio-based materials<br>and recycled waste</div>
+                  </div>
+                  <div class="bg2_feature_seating">
+                    <div class="bg2_feature_title">Seating</div>
+                    <div class="bg2_feature_copy">Premium Vegan Leather</div>
+                  </div>
+                  <div class="bg2_feature_carpets">
+                    <div class="bg2_feature_title">Carpets and Mats</div>
+                    <div class="bg2_feature_copy">Recycled Plastics &amp; Yarn</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="photo_layer" id="photo_2">
-          <img src="img/main/ev6/carpet_info_img.png" alt="" draggable="false">
-        </div>
-        <div class="photo_layer" id="photo_3">
-          <img src="img/main/ev6/dashboard_info_img.png" alt="" draggable="false">
-        </div>
-        <div class="photo_layer" id="photo_4">
-          <img src="img/main/ev6/luggage_board_info_img.png" alt="" draggable="false">
-        </div>
-
-        <!-- 스크롤 인디케이터 -->
-        <div id="scroll_indicator">
-          <div class="scroll_line"></div>
-          <span class="scroll_text">Scroll</span>
-        </div>
-
       </div>
-    </div> <!-- //.ev6 -->
+
+      <div class="car_wrap" id="carWrap">
+        <img class="car solid" id="solidCar" src="./img/main/ev6/solid-car.png" alt="Solid EV car" />
+        <img class="car xray" id="xrayCar" src="./img/main/ev6/xray-car.png" alt="X-ray EV car" />
+        <img class="car dash_mask" id="dashMask" src="./img/main/ev6/Dashboard.png" alt="Dashboard highlight" />
+        <img class="car luggage_mask" id="luggageMask" src="./img/main/ev6/Luggage.png" alt="Luggage highlight" />
+        <img class="car seating_mask" id="seatingMask" src="./img/main/ev6/Seating.png" alt="Seating highlight" />
+        <img class="car carpets_mask" id="carpetsMask" src="./img/main/ev6/Carpets.png" alt="Carpets and Mats highlight" />
+      </div>
+
+      <div class="materials_layer details_layer" id="detailsLayer">
+        <div class="details_right photo_only_right">
+          <div class="photo_card" id="dashPhotoCard">
+            <img src="./img/main/ev6/recycled.png" alt="Dashboard trim detail">
+          </div>
+          <div class="photo_card is_hidden" id="luggagePhotoCard" style="position:absolute; inset:0 auto auto 0;">
+            <img src="./img/main/ev6/recycled1.png" alt="Next recycled material detail">
+          </div>
+          <div class="photo_card is_hidden" id="seatingPhotoCard" style="position:absolute; inset:0 auto auto 0;">
+            <img src="./img/main/ev6/recycled2.png" alt="Seating recycled material detail">
+          </div>
+          <div class="photo_card is_hidden" id="carpetsPhotoCard" style="position:absolute; inset:0 auto auto 0;">
+            <img src="./img/main/ev6/recycled3.png" alt="Carpets and Mats recycled material detail">
+          </div>
+        </div>
+      </div>
+
+      <div class="depth_overlay"></div>
+      <div class="top_fade"></div>
+      <div class="bottom_fade"></div>
+    </div>
+  </section>
+    </div>
     <div class="brand">
       <div class="inner">
         <h2>KIA’s innovative solutions, for a sustainable Nature</h2>
