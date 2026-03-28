@@ -549,7 +549,7 @@
                     </div>
 
                     <div class="hero_accessory_vehicle" id="heroAccessoryVehicle">
-                        <img id="heroAccessoryImage" src="./img/sub01_build/trim_lightLong.png"
+                        <img id="heroAccessoryImage" src="./img/sub01_build/trim_land.png"
                             alt="EV9 Land AWD accessory preview" />
                     </div>
 
@@ -667,6 +667,27 @@
                                 </div>
                             </article>
 
+                             <article class="hero_accessory_card">
+                                <div class="hero_accessory_card_media">
+                                    <img src="./img/sub01_build/crossBars.png" alt="Cross Bars" />
+                                </div>
+                                <div class="hero_accessory_card_body">
+                                    <div class="hero_accessory_card_top">
+                                        <strong>Cross Bars</strong>
+                                        <span>+$380</span>
+                                        <button type="button" class="hero_accessory_add_btn">Add +</button>
+                                    </div>
+                                    <p class="hero_accessory_card_desc">Carpeted mats are custom fit and
+                                        color-coordinated to match your Kia interior.</p>
+                                    <div class="hero_accessory_card_details">
+                                        <p>These versatile cross bars create a secure base for all roof attachments enabling you to easily attach compatible equipment such as bicycle racks and ski and snowboard holders.</p>
+                                    </div>
+                                    <button type="button" class="hero_accessory_more_btn" aria-expanded="false"><span
+                                            class="hero_more_label">More</span><i
+                                            class="bx bx-chevron-down hero_more_icon" aria-hidden="true"></i></button>
+                                </div>
+                            </article>
+
                             <article class="hero_accessory_card">
                                 <div class="hero_accessory_card_media">
                                     <img src="./img/sub01_build/aid_kit.png" alt="First Aid Kit, Small" />
@@ -721,7 +742,7 @@
 
                             <article class="hero_accessory_card">
                                 <div class="hero_accessory_card_media">
-                                    <img src="./img/sub01_build/kit.png" alt="NACS Charge Port DC Adapter" />
+                                    <img src="./img/sub01_build/.png" alt="NACS Charge Port DC Adapter" />
                                 </div>
                                 <div class="hero_accessory_card_body">
                                     <div class="hero_accessory_card_top">
@@ -892,18 +913,30 @@
                     <section class="hero_plan_panel" aria-labelledby="heroPlanPanelTitle">
                         <h3 class="hero_plan_panel_title" id="heroPlanPanelTitle">Kia Connect Plan</h3>
                         <div class="hero_plan_cards" id="heroPlanCards">
-                            <article class="hero_plan_card">
+                            <article class="hero_plan_card is-selected expanded">
                                 <div class="hero_plan_card_body">
                                     <div class="hero_plan_card_top">
                                         <strong>Lite</strong>
                                         <span>Complimentary for up to 5 years</span>
-                                        <button type="button" class="hero_plan_add_btn">Add +</button>
+                                        <button type="button" class="hero_plan_add_btn"
+                                            aria-pressed="true">Select</button>
                                     </div>
                                     <div class="hero_plan_card_details">
-                                        <p>Essential Kia Connect features for everyday convenience and connected vehicle
-                                            access.</p>
+                                        <p class="hero_plan_card_section_title">Free basic vehicle management</p>
+                                        <ul class="hero_plan_card_list">
+                                            <li>Monitor trip information and vehicle health</li>
+                                            <li>Access your car with Digital Key</li>
+                                            <li>Check vehicle status and basic remote features</li>
+                                            <li>Receive maintenance reminders and emergency support</li>
+                                        </ul>
+                                        <div class="hero_plan_card_divider"></div>
+                                        <p class="hero_plan_card_section_title"><i class="bx bx-leaf" aria-hidden="true"></i> EV Charging</p>
+                                        <ul class="hero_plan_card_list">
+                                            <li>Check charging status</li>
+                                            <li>Manage basic charging settings</li>
+                                        </ul>
                                     </div>
-                                    <button type="button" class="hero_plan_more_btn" aria-expanded="false"><span
+                                    <button type="button" class="hero_plan_more_btn" aria-expanded="true"><span
                                             class="hero_more_label">More</span><i
                                             class="bx bx-chevron-down hero_more_icon" aria-hidden="true"></i></button>
                                 </div>
@@ -913,12 +946,25 @@
                                 <div class="hero_plan_card_body">
                                     <div class="hero_plan_card_top">
                                         <strong>Care</strong>
-                                        <span>Complimentary for up to 5 years</span>
-                                        <button type="button" class="hero_plan_add_btn">Add +</button>
+                                        <span>$5.99 monthly $59 annually</span>
+                                        <button type="button" class="hero_plan_add_btn"
+                                            aria-pressed="false">Select</button>
                                     </div>
                                     <div class="hero_plan_card_details">
-                                        <p>Care-focused connected services to help monitor and support your vehicle
-                                            ownership experience.</p>
+                                        <p class="hero_plan_card_section_title">Enhanced safety and vehicle care</p>
+                                        <ul class="hero_plan_card_list">
+                                            <li>Includes all Lite features</li>
+                                            <li>Get roadside assistance when needed</li>
+                                            <li>Automatic emergency connection (911)</li>
+                                            <li>Track and locate your vehicle</li>
+                                            <li>Receive safety alerts (geofence, speed, diagnostics)</li>
+                                        </ul>
+                                        <div class="hero_plan_card_divider"></div>
+                                        <p class="hero_plan_card_section_title"><i class="bx bx-leaf" aria-hidden="true"></i> EV Charging</p>
+                                        <ul class="hero_plan_card_list">
+                                            <li>Charging status monitoring</li>
+                                            <li>Basic charging management</li>
+                                        </ul>
                                     </div>
                                     <button type="button" class="hero_plan_more_btn" aria-expanded="false"><span
                                             class="hero_more_label">More</span><i
@@ -930,12 +976,26 @@
                                 <div class="hero_plan_card_body">
                                     <div class="hero_plan_card_top">
                                         <strong>Plus</strong>
-                                        <span>Complimentary for up to 5 years</span>
-                                        <button type="button" class="hero_plan_add_btn">Add +</button>
+                                        <span>$14.99 monthly $149 annually</span>
+                                        <button type="button" class="hero_plan_add_btn"
+                                            aria-pressed="false">Select</button>
                                     </div>
                                     <div class="hero_plan_card_details">
-                                        <p>Expanded connected features with added convenience tools for a more flexible
-                                            ownership experience.</p>
+                                        <p class="hero_plan_card_section_title">Advanced remote control and convenience</p>
+                                        <ul class="hero_plan_card_list">
+                                            <li>Includes all Care features</li>
+                                            <li>Remotely start your vehicle and control climate</li>
+                                            <li>Lock or unlock doors from anywhere</li>
+                                            <li>Control seats and ventilation remotely</li>
+                                            <li>View surroundings with 360° camera</li>
+                                            <li>Access full alert system</li>
+                                        </ul>
+                                        <div class="hero_plan_card_divider"></div>
+                                        <p class="hero_plan_card_section_title"><i class="bx bx-leaf" aria-hidden="true"></i> EV Charging</p>
+                                        <ul class="hero_plan_card_list">
+                                            <li>Start or stop charging remotely</li>
+                                            <li>Schedule charging times</li>
+                                        </ul>
                                     </div>
                                     <button type="button" class="hero_plan_more_btn" aria-expanded="false"><span
                                             class="hero_more_label">More</span><i
@@ -946,13 +1006,27 @@
                             <article class="hero_plan_card">
                                 <div class="hero_plan_card_body">
                                     <div class="hero_plan_card_top">
-                                        <strong>Lite</strong>
-                                        <span>Complimentary for up to 5 years</span>
-                                        <button type="button" class="hero_plan_add_btn">Add +</button>
+                                        <strong>Ultimate</strong>
+                                        <span>$19.99 monthly $199 annually</span>
+                                        <button type="button" class="hero_plan_add_btn"
+                                            aria-pressed="false">Select</button>
                                     </div>
                                     <div class="hero_plan_card_details">
-                                        <p>Essential Kia Connect features for everyday convenience and connected vehicle
-                                            access.</p>
+                                        <p class="hero_plan_card_section_title">Full connected car experience</p>
+                                        <ul class="hero_plan_card_list">
+                                            <li>Includes all Plus features</li>
+                                            <li>Send destinations directly to your vehicle</li>
+                                            <li>Real-time navigation and traffic updates</li>
+                                            <li>Over-the-air (OTA) updates</li>
+                                            <li>Voice assistant integration (Alexa)</li>
+                                            <li>Access connected services like weather and info</li>
+                                        </ul>
+                                        <div class="hero_plan_card_divider"></div>
+                                        <p class="hero_plan_card_section_title"><i class="bx bx-leaf" aria-hidden="true"></i> EV Charging</p>
+                                        <ul class="hero_plan_card_list">
+                                            <li>Smart charging with connected navigation</li>
+                                            <li>Fully integrated EV and route planning</li>
+                                        </ul>
                                     </div>
                                     <button type="button" class="hero_plan_more_btn" aria-expanded="false"><span
                                             class="hero_more_label">More</span><i
@@ -988,39 +1062,183 @@
                             alt="EV9 Land AWD summary preview" />
                     </div>
 
-                    <section class="hero_summary_panel" aria-labelledby="heroSummaryPanelTitle">
-                        <h3 class="hero_summary_panel_title" id="heroSummaryPanelTitle">Price Breakdown</h3>
-                        <div class="hero_summary_breakdown" id="heroSummaryBreakdown">
-                            <div class="hero_summary_row">
-                                <span class="hero_summary_row_label" id="summaryRowTrim">Land AWD</span>
-                                <span class="hero_summary_row_price" id="summaryRowTrimPrice">$68,900</span>
+                    <div class="hero_summary_side">
+                        <section class="hero_summary_panel" aria-labelledby="heroSummaryPanelTitle">
+                            <h3 class="hero_summary_panel_title" id="heroSummaryPanelTitle">Price Breakdown</h3>
+                            <div class="hero_summary_breakdown" id="heroSummaryBreakdown">
+                                <div class="hero_summary_items">
+                                    <div class="hero_summary_row">
+                                        <span class="hero_summary_row_label" id="summaryRowTrim">Land AWD</span>
+                                        <span class="hero_summary_row_price" id="summaryRowTrimPrice">$68,900</span>
+                                    </div>
+                                    <div class="hero_summary_row">
+                                        <span class="hero_summary_row_label" id="summaryRowExterior">Panthera Metal</span>
+                                        <span class="hero_summary_row_price" id="summaryRowExteriorPrice">$0</span>
+                                    </div>
+                                    <div class="hero_summary_row">
+                                        <span class="hero_summary_row_label" id="summaryRowInterior">Black &amp; Dark Gray
+                                            Quilted Stripes SynTex Seat Trim</span>
+                                        <span class="hero_summary_row_price" id="summaryRowInteriorPrice">$0</span>
+                                    </div>
+                                    <div class="hero_summary_row">
+                                        <span class="hero_summary_row_label" id="summaryRowPlan">Lite</span>
+                                        <span class="hero_summary_row_price" id="summaryRowPlanPrice">$5</span>
+                                    </div>
+                                    <div class="hero_summary_selected" id="heroSummarySelectedItems"></div>
+                                </div>
+                                <div class="hero_summary_divider"></div>
+                                <div class="hero_summary_row hero_summary_row_fee">
+                                    <span class="hero_summary_row_label">Destination Fee</span>
+                                    <span class="hero_summary_row_price" id="summaryDestinationFee">$1,645</span>
+                                </div>
+                                <div class="hero_summary_row hero_summary_row_total">
+                                    <span class="hero_summary_row_label">Build Total*</span>
+                                    <span class="hero_summary_row_price" id="summaryBuildTotal">$70,545</span>
+                                </div>
                             </div>
-                            <div class="hero_summary_row">
-                                <span class="hero_summary_row_label" id="summaryRowExterior">Panthera Metal</span>
-                                <span class="hero_summary_row_price" id="summaryRowExteriorPrice">$0</span>
+                            <div class="hero_summary_cta">
+                                <button type="button" class="hero_summary_cta_btn">View Inventory</button>
+                                <button type="button" class="hero_summary_cta_btn">Share Build</button>
+                                <button type="button" class="hero_summary_cta_btn" id="requestQuoteButton"
+                                    aria-expanded="false">Request a Quote</button>
                             </div>
-                            <div class="hero_summary_row">
-                                <span class="hero_summary_row_label" id="summaryRowInterior">Black &amp; Dark Gray
-                                    Quilted Stripes SynTex Seat Trim</span>
-                                <span class="hero_summary_row_price" id="summaryRowInteriorPrice">$0</span>
+                        </section>
+                        <div class="hero_quote_panel" id="heroQuotePanel" hidden>
+                            <div class="hero_quote_intro">
+                                <h4 class="hero_quote_title">Request a Quote</h4>
                             </div>
-                            <div class="hero_summary_selected" id="heroSummarySelectedItems"></div>
-                            <div class="hero_summary_divider"></div>
-                            <div class="hero_summary_row">
-                                <span class="hero_summary_row_label">Destination Fee</span>
-                                <span class="hero_summary_row_price" id="summaryDestinationFee">$1,645</span>
-                            </div>
-                            <div class="hero_summary_row hero_summary_row_total">
-                                <span class="hero_summary_row_label">Build Total*</span>
-                                <span class="hero_summary_row_price" id="summaryBuildTotal">$70,545</span>
+                            <div class="hero_quote_panel_body">
+                                <div class="hero_quote_group">
+                                    <p class="hero_quote_label">Contact Method: *</p>
+                                    <div class="hero_quote_method_tabs">
+                                        <button type="button" class="hero_quote_method_btn" aria-pressed="false">
+                                            <span class="hero_quote_check"><i class="bx bx-check"
+                                                    aria-hidden="true"></i></span>
+                                            <span>Email</span>
+                                        </button>
+                                        <button type="button" class="hero_quote_method_btn" aria-pressed="false">
+                                            <span class="hero_quote_check"><i class="bx bx-check"
+                                                    aria-hidden="true"></i></span>
+                                            <span>Text</span>
+                                        </button>
+                                        <button type="button" class="hero_quote_method_btn" aria-pressed="false">
+                                            <span class="hero_quote_check"><i class="bx bx-check"
+                                                    aria-hidden="true"></i></span>
+                                            <span>Call</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="hero_quote_fields">
+                                    <label class="hero_quote_field">
+                                        <span class="hero_quote_field_shell">
+                                            <span class="hero_quote_field_label">First name</span>
+                                            <input type="text" id="quoteFirstName" placeholder="First name" />
+                                        </span>
+                                        <span class="hero_quote_error" id="quoteFirstNameError" hidden>First Name is Required</span>
+                                    </label>
+                                    <label class="hero_quote_field">
+                                        <span class="hero_quote_field_shell">
+                                            <span class="hero_quote_field_label">Last name</span>
+                                            <input type="text" id="quoteLastName" placeholder="Last name" />
+                                        </span>
+                                        <span class="hero_quote_error" id="quoteLastNameError" hidden>Last Name is Required</span>
+                                    </label>
+                                    <label class="hero_quote_field hero_quote_field_full">
+                                        <span class="hero_quote_field_shell">
+                                            <span class="hero_quote_field_label">Phone</span>
+                                            <input type="tel" id="quotePhone" placeholder="phone" />
+                                        </span>
+                                        <span class="hero_quote_error" id="quotePhoneError" hidden>Phone is Required</span>
+                                    </label>
+                                    <label class="hero_quote_field hero_quote_field_full">
+                                        <span class="hero_quote_field_shell">
+                                            <span class="hero_quote_field_label">Email</span>
+                                            <input type="email" id="quoteEmail" placeholder="email" />
+                                        </span>
+                                        <span class="hero_quote_error" id="quoteEmailError" hidden>Email is Required</span>
+                                    </label>
+                                    <label class="hero_quote_field hero_quote_field_full">
+                                        <span class="hero_quote_field_shell">
+                                            <span class="hero_quote_field_label">Address</span>
+                                            <input type="text" id="quoteAddress" placeholder="address" />
+                                        </span>
+                                        <span class="hero_quote_error" id="quoteAddressError" hidden>Address is Required</span>
+                                    </label>
+                                    <label class="hero_quote_field hero_quote_field_full">
+                                        <span class="hero_quote_field_shell hero_quote_field_shell_selected_model">
+                                            <span class="hero_quote_field_label">Selected Model</span>
+                                            <span id="quoteSelectedModel" class="hero_quote_selected_model_input"></span>
+                                        </span>
+                                    </label>
+                                </div>
+
+                                <div class="hero_quote_group hero_quote_group_payment">
+                                    <p class="hero_quote_label">Payment Method: *</p>
+                                    <div class="hero_quote_method_tabs">
+                                        <button type="button" class="hero_quote_payment_btn" aria-pressed="false">
+                                            <span class="hero_quote_check"><i class="bx bx-check"
+                                                    aria-hidden="true"></i></span>
+                                            <span>Cash</span>
+                                        </button>
+                                        <button type="button" class="hero_quote_payment_btn" aria-pressed="false">
+                                            <span class="hero_quote_check"><i class="bx bx-check"
+                                                    aria-hidden="true"></i></span>
+                                            <span>Lease</span>
+                                        </button>
+                                        <button type="button" class="hero_quote_payment_btn" aria-pressed="false">
+                                            <span class="hero_quote_check"><i class="bx bx-check"
+                                                    aria-hidden="true"></i></span>
+                                            <span>Finance</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <section class="hero_quote_dealer_section" aria-labelledby="heroQuoteDealerTitle">
+                                    <div class="hero_quote_dealer_header">
+                                        <h5 class="hero_quote_dealer_title" id="heroQuoteDealerTitle">Select Dealer</h5>
+                                        <p class="hero_quote_dealer_copy">Please note, dealer might not have the exact vehicle you built, but they will work with you to find your ideal Kia vehicle.</p>
+                                    </div>
+                                    <div class="hero_quote_dealer_meta">
+                                        <p class="hero_quote_dealer_hint">(Select all that apply)</p>
+                                        <div class="hero_quote_zip_editor">
+                                            <span class="hero_quote_zip_btn">Showing dealers within 25 miles of <span id="quoteZipDisplay">12345</span></span>
+                                            <button type="button" class="hero_quote_zip_edit_btn" id="quoteZipEditButton" aria-label="Edit zip code"><i class="bx bx-edit-alt" aria-hidden="true"></i></button>
+                                            <input type="text" class="hero_quote_zip_input" id="quoteZipInput" value="12345" inputmode="numeric" hidden />
+                                        </div>
+                                    </div>
+                                    <div class="hero_quote_dealer_cards">
+                                        <button type="button" class="hero_quote_dealer_card" aria-pressed="false">
+                                            <span class="hero_quote_dealer_check"><i class="bx bx-check" aria-hidden="true"></i></span>
+                                            <span class="hero_quote_dealer_copy_block">
+                                                <strong class="hero_quote_dealer_name">Matthews Kia of Schenectady</strong>
+                                                <span class="hero_quote_dealer_distance">(4.3mi)</span>
+                                            </span>
+                                        </button>
+                                        <button type="button" class="hero_quote_dealer_card" aria-pressed="false">
+                                            <span class="hero_quote_dealer_check"><i class="bx bx-check" aria-hidden="true"></i></span>
+                                            <span class="hero_quote_dealer_copy_block">
+                                                <strong class="hero_quote_dealer_name">Destination Kia</strong>
+                                                <span class="hero_quote_dealer_distance">(12.4mi)</span>
+                                            </span>
+                                        </button>
+                                    </div>
+                                    <div class="hero_quote_optin">
+                                        <label class="hero_quote_optin_row">
+                                            <input type="checkbox" />
+                                            <span>I would like to be contacted by Kia America, Inc. (Kia) and by local Kia dealers and receive text messages (via automated technology), voice calls (including pre-recorded messages) and emails for marketing and other purposes that include receiving information and updat...</span>
+                                        </label>
+                                        <button type="button" class="hero_quote_more_link">See More <i class="bx bx-chevron-down" aria-hidden="true"></i></button>
+                                    </div>
+                                </section>
+
+                                <div class="hero_quote_actions">
+                                    <button type="button" class="hero_quote_back_btn" id="quoteBackButton">Back</button>
+                                    <button type="button" class="hero_quote_send_btn" id="quoteSendButton">Send</button>
+                                </div>
                             </div>
                         </div>
-                        <div class="hero_summary_cta">
-                            <button type="button" class="hero_summary_cta_btn">View Inventory</button>
-                            <button type="button" class="hero_summary_cta_btn">Share Build</button>
-                            <button type="button" class="hero_summary_cta_btn">Request a Quote</button>
-                        </div>
-                    </section>
+                    </div>
 
                     <div class="hero_stage_actions hero_summary_actions">
                         <button type="button" class="hero_trim_action_btn hero_trim_action_btn_back"

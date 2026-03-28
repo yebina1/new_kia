@@ -47,6 +47,21 @@ document.addEventListener("DOMContentLoaded", () => {
   const heroSummaryImage = document.getElementById("heroSummaryImage");
   const requestQuoteButton = document.getElementById("requestQuoteButton");
   const heroQuotePanel = document.getElementById("heroQuotePanel");
+  const quoteBackButton = document.getElementById("quoteBackButton");
+  const quoteSendButton = document.getElementById("quoteSendButton");
+  const quoteZipDisplay = document.getElementById("quoteZipDisplay");
+  const quoteZipEditButton = document.getElementById("quoteZipEditButton");
+  const quoteZipInput = document.getElementById("quoteZipInput");
+  const quoteFirstName = document.getElementById("quoteFirstName");
+  const quoteLastName = document.getElementById("quoteLastName");
+  const quotePhone = document.getElementById("quotePhone");
+  const quoteEmail = document.getElementById("quoteEmail");
+  const quoteAddress = document.getElementById("quoteAddress");
+  const quoteFirstNameError = document.getElementById("quoteFirstNameError");
+  const quoteLastNameError = document.getElementById("quoteLastNameError");
+  const quotePhoneError = document.getElementById("quotePhoneError");
+  const quoteEmailError = document.getElementById("quoteEmailError");
+  const quoteAddressError = document.getElementById("quoteAddressError");
   const quoteSelectedModel = document.getElementById("quoteSelectedModel");
   const summaryRowTrim = document.getElementById("summaryRowTrim");
   const summaryRowTrimPrice = document.getElementById("summaryRowTrimPrice");
@@ -83,6 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const prevBtn = document.getElementById("prevCar");
   const nextBtn = document.getElementById("nextCar");
   const startStepButton = document.getElementById("startStepButton");
+  const heroCarStageSurface = document.querySelector("#heroModelStage .hero_car");
   const progressFill = document.getElementById("heroProgressFill");
   const stepButtons = Array.from(
     document.querySelectorAll(".hero_bottom_tabs button")
@@ -448,10 +464,12 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentCars = catalog[currentCategory] || [];
   let currentIndex = 0;
   let isAnimating = false;
+  let heroCarSwipeState = null;
   let currentStep = 0;
   let selectedTrimIndex = null;
   let selectedExteriorIndex = 0;
   let selectedInteriorIndex = 0;
+  let selectedPlanIndex = 0;
   let selectedPackages = new Set();
   function parseCurrencyValue(value) {
     const numericValue = Number(String(value || "").replace(/[^0-9.-]/g, ""));
@@ -574,14 +592,17 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function getSelectedPlanItem() {
+    const planCards = Array.from(document.querySelectorAll("#heroPlanCards .hero_plan_card"));
     const selectedCard =
+      planCards[selectedPlanIndex] ||
       document.querySelector("#heroPlanCards .hero_plan_card.is-selected") ||
       document.querySelector("#heroPlanCards .hero_plan_card");
 
     if (!selectedCard) {
       return {
         name: "Lite",
-        price: 0
+        price: 0,
+        displayPrice: "Complimentary for up to 5 years"
       };
     }
 
@@ -592,7 +613,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     return {
       name,
-      price: parseCurrencyValue(priceText)
+      price: parseCurrencyValue(priceText),
+      displayPrice: priceText
     };
   }
 
@@ -647,7 +669,7 @@ document.addEventListener("DOMContentLoaded", () => {
     summaryRowPlan.innerHTML = formatSummaryLabel(selectedPlan.name, "bx bx-edit-alt", {
       actionStep: "5"
     });
-    summaryRowPlanPrice.textContent = formatSummaryLinePrice(selectedPlan.price);
+    summaryRowPlanPrice.textContent = selectedPlan.displayPrice;
 
     heroSummarySelectedItems.innerHTML = [...packageItems, ...accessoryItems]
       .map(
@@ -669,6 +691,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function isEv9Selected() {
     return getCurrentCar()?.title === "EV9";
+  }
+
+  function hasSelectedTrim() {
+    return selectedTrimIndex !== null;
+  }
+
+  function syncTrimSelectionGate() {
+    if (!nextColorButton) {
+      return;
+    }
+
+    const canProceed = hasSelectedTrim();
+    nextColorButton.disabled = !canProceed;
+    nextColorButton.setAttribute("aria-disabled", canProceed ? "false" : "true");
   }
 
   function getAllowedStep(stepIndex) {
@@ -779,7 +815,64 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const modelName = heroSummaryTitle?.textContent?.trim() || getCurrentCar()?.title || "EV9";
     const trimName = heroSummaryTrim?.textContent?.trim() || "Land AWD";
-    quoteSelectedModel.value = `${modelName} ${trimName}`.trim();
+    const exteriorName = getSelectedExteriorSwatch()?.dataset.name?.trim() || "";
+    const interiorName = getSelectedInteriorSwatch()?.dataset.name?.trim() || "";
+    const planName = getSelectedPlanItem()?.name?.trim() || "";
+    const packageNames = getSelectedPackageItems()
+      .map((item) => item.name?.trim())
+      .filter(Boolean);
+    const accessoryNames = getSelectedAccessoryItems()
+      .map((item) => item.name?.trim())
+      .filter(Boolean);
+
+    const summaryParts = [
+      `${modelName} ${trimName}`.trim(),
+      exteriorName,
+      interiorName,
+      planName ? `Plan: ${planName}` : "",
+      packageNames.length ? `Pkg: ${packageNames.join(", ")}` : "",
+      accessoryNames.length ? `Acc: ${accessoryNames.join(", ")}` : ""
+    ].filter(Boolean);
+
+    quoteSelectedModel.textContent = summaryParts.join(" / ");
+  }
+
+  function toggleQuoteError(input, errorElement, isVisible) {
+    if (!input || !errorElement) {
+      return;
+    }
+
+    errorElement.hidden = !isVisible;
+    input.setAttribute("aria-invalid", isVisible ? "true" : "false");
+  }
+
+  function validateQuoteField(input, errorElement) {
+    const isEmpty = !input || !input.value.trim();
+    toggleQuoteError(input, errorElement, isEmpty);
+    return !isEmpty;
+  }
+
+  function validateQuoteForm() {
+    const firstNameValid = validateQuoteField(quoteFirstName, quoteFirstNameError);
+    const lastNameValid = validateQuoteField(quoteLastName, quoteLastNameError);
+    const phoneValid = validateQuoteField(quotePhone, quotePhoneError);
+    const emailValid = validateQuoteField(quoteEmail, quoteEmailError);
+    const addressValid = validateQuoteField(quoteAddress, quoteAddressError);
+
+    return firstNameValid && lastNameValid && phoneValid && emailValid && addressValid;
+  }
+
+  function commitQuoteZip() {
+    if (!quoteZipDisplay || !quoteZipInput || !quoteZipEditButton) {
+      return;
+    }
+
+    const nextZip = quoteZipInput.value.trim() || "12345";
+    quoteZipDisplay.textContent = nextZip;
+    quoteZipInput.value = nextZip;
+    quoteZipInput.hidden = true;
+    quoteZipDisplay.parentElement?.removeAttribute("hidden");
+    quoteZipEditButton.hidden = false;
   }
 
   function applySelectedTrim(title) {
@@ -884,6 +977,7 @@ document.addEventListener("DOMContentLoaded", () => {
       heroPlanLease.textContent = selectedTrim?.lease || trimData.lease;
       heroPlanImage.src = selectedTrim?.image || "./img/sub01_build/trim_light.png";
       heroPlanImage.alt = selectedTrim?.alt || title;
+      setSelectedPlanCard(selectedPlanIndex);
     }
 
     if (heroSummaryTitle && heroSummaryImage) {
@@ -1102,6 +1196,41 @@ document.addEventListener("DOMContentLoaded", () => {
       applySelectedTrim(currentCar.title);
       syncColorStageSelections();
     }
+
+    syncTrimSelectionGate();
+  }
+
+  function setSelectedPlanCard(targetIndex) {
+    if (!heroPlanCards) {
+      return;
+    }
+
+    const planCards = Array.from(heroPlanCards.querySelectorAll(".hero_plan_card"));
+
+    if (!planCards.length) {
+      return;
+    }
+
+    selectedPlanIndex = Math.max(0, Math.min(targetIndex, planCards.length - 1));
+
+    planCards.forEach((card, index) => {
+      const isSelected = index === selectedPlanIndex;
+      card.classList.toggle("is-selected", isSelected);
+      card.classList.toggle("expanded", isSelected);
+
+      const selectButton = card.querySelector(".hero_plan_add_btn");
+      if (selectButton) {
+        selectButton.textContent = "Select";
+        selectButton.setAttribute("aria-pressed", isSelected ? "true" : "false");
+      }
+
+      const moreButton = card.querySelector(".hero_plan_more_btn");
+      if (moreButton) {
+        moreButton.setAttribute("aria-expanded", isSelected ? "true" : "false");
+      }
+    });
+
+    updateSummaryPanel(getCurrentBasePrice());
   }
 
   function toggleTrimDetails(targetIndex) {
@@ -1201,7 +1330,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function updateSteps(stepIndex) {
-    currentStep = getAllowedStep(stepIndex);
+    const allowedStep = getAllowedStep(stepIndex);
+    currentStep =
+      currentStep === 1 && allowedStep > 1 && !hasSelectedTrim() ? 1 : allowedStep;
 
     stepButtons.forEach((button, index) => {
       const isActive = index === currentStep;
@@ -1270,6 +1401,8 @@ document.addEventListener("DOMContentLoaded", () => {
       startStepButton.textContent =
         currentStep === stepButtons.length - 1 ? "Send" : "Start";
     }
+
+    syncTrimSelectionGate();
   }
 
   function setCategory(categoryKey) {
@@ -1285,6 +1418,7 @@ document.addEventListener("DOMContentLoaded", () => {
     selectedTrimIndex = null;
     selectedExteriorIndex = 0;
     selectedInteriorIndex = 0;
+    selectedPlanIndex = 0;
     selectedPackages = new Set();
     topTabButtons.forEach((button) => {
       const isActive = button.dataset.category === currentCategory;
@@ -1296,6 +1430,7 @@ document.addEventListener("DOMContentLoaded", () => {
     syncArrowState();
     syncEv9OnlyState();
     syncColorStageSelections();
+    syncTrimSelectionGate();
   }
 
   function getAdjacentCategory(direction) {
@@ -1359,6 +1494,7 @@ document.addEventListener("DOMContentLoaded", () => {
             selectedTrimIndex = null;
             selectedExteriorIndex = 0;
             selectedInteriorIndex = 0;
+            selectedPlanIndex = 0;
             selectedPackages = new Set();
             topTabButtons.forEach((button) => {
               const isActive = button.dataset.category === currentCategory;
@@ -1370,6 +1506,7 @@ document.addEventListener("DOMContentLoaded", () => {
             selectedTrimIndex = null;
             selectedExteriorIndex = 0;
             selectedInteriorIndex = 0;
+            selectedPlanIndex = 0;
             selectedPackages = new Set();
           }
         }
@@ -1378,6 +1515,7 @@ document.addEventListener("DOMContentLoaded", () => {
         selectedTrimIndex = null;
         selectedExteriorIndex = 0;
         selectedInteriorIndex = 0;
+        selectedPlanIndex = 0;
         selectedPackages = new Set();
       } else {
         const previousCategoryKey = getAdjacentCategory("prev");
@@ -1389,6 +1527,7 @@ document.addEventListener("DOMContentLoaded", () => {
           selectedTrimIndex = null;
           selectedExteriorIndex = 0;
           selectedInteriorIndex = 0;
+          selectedPlanIndex = 0;
           selectedPackages = new Set();
           topTabButtons.forEach((button) => {
             const isActive = button.dataset.category === currentCategory;
@@ -1400,6 +1539,7 @@ document.addEventListener("DOMContentLoaded", () => {
           selectedTrimIndex = null;
           selectedExteriorIndex = 0;
           selectedInteriorIndex = 0;
+          selectedPlanIndex = 0;
           selectedPackages = new Set();
         }
       }
@@ -1431,6 +1571,56 @@ document.addEventListener("DOMContentLoaded", () => {
 
   nextBtn.addEventListener("click", () => {
     changeCar("next");
+  });
+
+  if (heroCarImage) {
+    heroCarImage.draggable = false;
+  }
+
+  heroCarStageSurface?.addEventListener("pointerdown", (event) => {
+    if (currentStep !== 0 || event.button > 0) {
+      return;
+    }
+
+    event.preventDefault();
+    heroCarSwipeState = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY
+    };
+
+    heroCarStageSurface.setPointerCapture?.(event.pointerId);
+  });
+
+  heroCarStageSurface?.addEventListener("pointerup", (event) => {
+    if (!heroCarSwipeState || heroCarSwipeState.pointerId !== event.pointerId) {
+      return;
+    }
+
+    const deltaX = event.clientX - heroCarSwipeState.startX;
+    const deltaY = event.clientY - heroCarSwipeState.startY;
+    const hasHorizontalSwipe =
+      Math.abs(deltaX) >= 60 && Math.abs(deltaX) > Math.abs(deltaY);
+
+    heroCarStageSurface.releasePointerCapture?.(event.pointerId);
+    heroCarSwipeState = null;
+
+    if (hasHorizontalSwipe) {
+      changeCar(deltaX > 0 ? "next" : "prev");
+    }
+  });
+
+  heroCarStageSurface?.addEventListener("pointercancel", (event) => {
+    if (!heroCarSwipeState || heroCarSwipeState.pointerId !== event.pointerId) {
+      return;
+    }
+
+    heroCarStageSurface.releasePointerCapture?.(event.pointerId);
+    heroCarSwipeState = null;
+  });
+
+  heroCarStageSurface?.addEventListener("dragstart", (event) => {
+    event.preventDefault();
   });
 
   stepButtons.forEach((button, index) => {
@@ -1486,26 +1676,87 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   requestQuoteButton?.addEventListener("click", () => {
-    if (!heroQuotePanel) {
+    if (!heroQuotePanel || !heroSummaryStage) {
       return;
     }
 
     syncQuoteSelectedModel();
-    const shouldOpen = heroQuotePanel.hasAttribute("hidden");
-    heroQuotePanel.toggleAttribute("hidden", !shouldOpen);
-    requestQuoteButton.setAttribute("aria-expanded", shouldOpen ? "true" : "false");
+    const summarySide = heroQuotePanel.closest(".hero_summary_side");
+    heroQuotePanel.hidden = false;
+    summarySide?.classList.add("is-quote-mode");
+    requestQuoteButton.setAttribute("aria-expanded", "true");
+  });
+
+  quoteBackButton?.addEventListener("click", () => {
+    if (!heroQuotePanel) {
+      return;
+    }
+
+    const summarySide = heroQuotePanel.closest(".hero_summary_side");
+    heroQuotePanel.hidden = true;
+    summarySide?.classList.remove("is-quote-mode");
+    requestQuoteButton?.setAttribute("aria-expanded", "false");
+  });
+
+  quoteZipEditButton?.addEventListener("click", () => {
+    if (!quoteZipInput || !quoteZipDisplay) {
+      return;
+    }
+
+    quoteZipDisplay.parentElement?.setAttribute("hidden", "true");
+    quoteZipEditButton.hidden = true;
+    quoteZipInput.hidden = false;
+    quoteZipInput.focus();
+    quoteZipInput.select();
+  });
+
+  quoteZipInput?.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      commitQuoteZip();
+    }
+  });
+
+  quoteZipInput?.addEventListener("blur", () => {
+    commitQuoteZip();
+  });
+
+  [quoteFirstName, quoteLastName, quotePhone, quoteEmail, quoteAddress].forEach((input) => {
+    input?.addEventListener("input", () => {
+      if (input === quoteFirstName) {
+        validateQuoteField(quoteFirstName, quoteFirstNameError);
+      }
+
+      if (input === quoteLastName) {
+        validateQuoteField(quoteLastName, quoteLastNameError);
+      }
+
+      if (input === quotePhone) {
+        validateQuoteField(quotePhone, quotePhoneError);
+      }
+
+      if (input === quoteEmail) {
+        validateQuoteField(quoteEmail, quoteEmailError);
+      }
+
+      if (input === quoteAddress) {
+        validateQuoteField(quoteAddress, quoteAddressError);
+      }
+    });
+  });
+
+  quoteSendButton?.addEventListener("click", () => {
+    validateQuoteForm();
   });
 
   heroQuotePanel?.addEventListener("click", (event) => {
     const methodButton = event.target.closest(".hero_quote_method_btn");
     const paymentButton = event.target.closest(".hero_quote_payment_btn");
+    const dealerCard = event.target.closest(".hero_quote_dealer_card");
 
     if (methodButton) {
-      heroQuotePanel.querySelectorAll(".hero_quote_method_btn").forEach((button) => {
-        const isActive = button === methodButton;
-        button.classList.toggle("is-active", isActive);
-        button.setAttribute("aria-pressed", isActive ? "true" : "false");
-      });
+      const isActive = methodButton.classList.contains("is-active");
+      methodButton.classList.toggle("is-active", !isActive);
+      methodButton.setAttribute("aria-pressed", !isActive ? "true" : "false");
     }
 
     if (paymentButton) {
@@ -1513,6 +1764,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const isActive = button === paymentButton;
         button.classList.toggle("is-active", isActive);
         button.setAttribute("aria-pressed", isActive ? "true" : "false");
+      });
+    }
+
+    if (dealerCard) {
+      heroQuotePanel.querySelectorAll(".hero_quote_dealer_card").forEach((card) => {
+        const isActive = card === dealerCard;
+        card.classList.toggle("is-selected", isActive);
+        card.setAttribute("aria-pressed", isActive ? "true" : "false");
       });
     }
   });
@@ -1576,6 +1835,8 @@ document.addEventListener("DOMContentLoaded", () => {
   sendBuildButton?.addEventListener("click", () => {
     updateSteps(6);
   });
+
+  setSelectedPlanCard(selectedPlanIndex);
 
   heroTrimCards?.addEventListener("click", (event) => {
     const selectTrigger = event.target.closest(".hero_trim_select_btn");
@@ -1702,25 +1963,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const addTrigger = event.target.closest(".hero_plan_add_btn");
     const moreTrigger = event.target.closest(".hero_plan_more_btn");
     const card = event.target.closest(".hero_plan_card");
+    const planCards = heroPlanCards
+      ? Array.from(heroPlanCards.querySelectorAll(".hero_plan_card"))
+      : [];
+    const planIndex = planCards.indexOf(card);
 
     if (!card) {
       return;
     }
 
     if (addTrigger) {
-      const willSelect = !card.classList.contains("is-selected");
-      const moreButton = card.querySelector(".hero_plan_more_btn");
-
-      card.classList.toggle("is-selected", willSelect);
-      card.classList.toggle("expanded", willSelect);
-      addTrigger.textContent = willSelect ? "Remove -" : "Add +";
-      addTrigger.setAttribute("aria-pressed", willSelect ? "true" : "false");
-
-      if (moreButton) {
-        moreButton.setAttribute("aria-expanded", willSelect ? "true" : "false");
+      if (planIndex !== -1) {
+        setSelectedPlanCard(planIndex);
       }
-
-      updateSummaryPanel(getCurrentBasePrice());
       return;
     }
 
