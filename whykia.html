@@ -4,34 +4,373 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>kia</title>
-    <!-- 가져온 css -->
-    <!-- Basic Icons -->
-    <link href="https://cdn.boxicons.com/3.0.8/fonts/basic/boxicons.min.css" rel="stylesheet">
-    <!-- Filled Icons -->
-    <link href="https://cdn.boxicons.com/3.0.8/fonts/filled/boxicons-filled.min.css" rel="stylesheet">
-    <!-- Brand Icons -->
-    <link href="https://cdn.boxicons.com/3.0.8/fonts/brands/boxicons-brands.min.css" rel="stylesheet">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <!-- 내 css -->
+    <title>Why Kia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&family=Inter:wght@400;500;600&family=Outfit:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/common.css">
     <link rel="stylesheet" href="css/sub04_whykia.css">
-    <!-- media css -->
     <link rel="stylesheet" href="css/common_media.css">
     <link rel="stylesheet" href="css/sub04_whykia_media.css">
-    <!-- 가져온 js -->
-
-    <!-- 내 script -->
-    <script src="js/common.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
     <script src="js/sub04_whykia.js" defer></script>
 </head>
 
 <body>
-    <div class="wrap">
+    <div class="page">
+        <header class="site_header">
+            <a href="#" class="logo">KIA</a>
+            <div class="nav_shell">
+                <nav class="site_nav" aria-label="주요 메뉴">
+                    <a href="#">Company</a>
+                    <a href="#">Vehicles</a>
+                    <a href="#" class="is_active">Shopping Assistant</a>
+                    <a href="#">Inventory</a>
+                    <a href="#">Center</a>
+                    <a href="#">Owners Page</a>
+                </nav>
+                <div class="header_icons" aria-hidden="true">
+                    <button class="icon_button" type="button">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <path d="M4 13V11C4 6.58 7.58 3 12 3C16.42 3 20 6.58 20 11V13" stroke="currentColor"
+                                stroke-width="1.5" stroke-linecap="round"></path>
+                            <path d="M6 13H5C4.45 13 4 13.45 4 14V17C4 17.55 4.45 18 5 18H6V13Z" stroke="currentColor"
+                                stroke-width="1.5"></path>
+                            <path d="M18 13H19C19.55 13 20 13.45 20 14V17C20 17.55 19.55 18 19 18H18V13Z"
+                                stroke="currentColor" stroke-width="1.5"></path>
+                            <path d="M12 21C13.66 21 15 19.66 15 18H12" stroke="currentColor" stroke-width="1.5"
+                                stroke-linecap="round"></path>
+                        </svg>
+                    </button>
+                    <button class="icon_button" type="button">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.5"></circle>
+                            <path d="M16 16L21 21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                            </path>
+                        </svg>
+                    </button>
+                    <button class="icon_button" type="button">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.5"></circle>
+                            <path d="M4 12H20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                            <path d="M12 4C14.2 6.19 15.45 9.07 15.5 12C15.45 14.93 14.2 17.81 12 20"
+                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                            <path d="M12 4C9.8 6.19 8.55 9.07 8.5 12C8.55 14.93 9.8 17.81 12 20" stroke="currentColor"
+                                stroke-width="1.5" stroke-linecap="round"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </header>
 
-    </div> <!-- //.wrap -->
+        <main>
+            <section class="hero_section">
+                <canvas class="hero_canvas" id="heroCanvas" aria-hidden="true"></canvas>
+                <div class="hero_inner">
+                    <strong class="hero_title">Movement that inspires</strong>
+                </div>
+                <a href="#storyHistory" class="scroll_down_button">
+                    <span aria-hidden="true"></span>
+                    Scroll
+                </a>
+            </section><!-- //.hero_section -->
+
+            <!-- sticky 스크롤 구간 -->
+            <section class="story_history" id="storyHistory">
+                <div class="story_frame">
+                    <div class="story_inner">
+
+                        <!-- 링 확대 레이어 -->
+
+                        <!-- 텍스트 스테이지 -->
+                        <div class="circle_stage" aria-hidden="true">
+                            <span class="intro_circle" id="introCircle"></span>
+                        </div>
+                        <div class="txt_stage">
+                            <p class="txt_history1" id="txtHistory1">
+                                Beginning with two wheels in 1944, Kia's 80-year journey has evolved into a powerful
+                                movement connecting people and cities.
+                            </p>
+                            <p class="txt_history2" id="txtHistory2">
+                                To us, movement is more than just a change in location. It is the catalyst for progress,
+                                where
+                                <strong>new perspectives, fresh ideas, and unexpected inspirations come to
+                                    life.</strong>
+                            </p>
+                        </div>
+
+                        <!-- Movement 씬 -->
+                        <div class="movement_stage" id="movementStage">
+                            <strong class="vision_title">Movement.</strong>
+                            <p class="vision_txt">It is the reason for our existence and our unchanging essence.
+                            </p>
+                        </div>
+                        <div class="needs_stage" id="needsStage">
+                            <p class="needs_txt">
+                                <span class="needs_line">Kia is moving beyond manufacturing to become a mobility
+                                    brand</span>
+                                <span class="needs_line">that designs your lifestyle. We provide products that</span>
+                                <span class="needs_line">deeply understand your mobility needs, and solutions
+                                    that</span>
+                                <span class="needs_line">make your most precious asset-time-truly valuable.</span>
+                            </p>
+                        </div>
+                        <!-- 진행바
+                        <div class="progress_rail" aria-hidden="true">
+                            <div class="progress_bar" id="progressBar"></div>
+                        </div>
+                        <div class="scene_tag" id="sceneTag">01 / 05</div> -->
+                    </div>
+                </div>
+            </section>
+
+
+
+            <!-- solution -->
+            <section class="solution_section" id="solutionSection">
+                <div class="solution_inner">
+                    <div class="solution_tit">
+                        <h2 class="solution_title">Sustainable Movement</h2>
+                        <p class="solution_sub">
+                            A responsible step for humanity and the planet—Kia’s sustainable journey.
+                        </p>
+                    </div><!-- //.solution_tit -->
+                    <div class="container">
+                        <div class="con"></div>
+                        <ul class="solution_list">
+                            <li><img src="img/sub04_whykia/solution/solution1.png" alt="">
+                                <div class="tex_box"><strong>Bio Fabrication</strong>
+                                    <p>As a pioneering study for natural material development,
+                                        we are producing and processing bio-materials based on mycelium to redefine the
+                                        foundations of future mobility.</p>
+                                </div>
+                            </li>
+                            <li><img src="img/sub04_whykia/solution/solution2.png" alt="">
+                                <div class="tex_box"><strong>Movement for the Ocean</strong>
+                                    <p>Supporting advanced technologies to intercept marine plastic, we are establishing
+                                        a
+                                        'Circular Economy' that transforms recovered waste into premium automotive
+                                        resources.
+                                    </p>
+                                </div>
+                            </li>
+                            <li><img src="img/sub04_whykia/solution/solution3.png" alt="">
+                                <div class="tex_box"><strong>10 Must-have Items</strong>
+                                    <p>To phase out animal leather, we have defined 10 essential material solutions
+                                        derived
+                                        from recycled and bio-based sources, integrating them into our entire new
+                                        vehicle
+                                        lineup.</p>
+                                </div>
+                            </li>
+                            <li><img src="img/sub04_whykia/solution/solution4.png" alt="">
+                                <div class="tex_box"><strong>Sustainable Milestones</strong>
+                                    <p>Beyond achieving 20% recycled plastic use by 2030,
+                                        we aim for a 100% vehicle recycling rate by 2045, leading the way toward a fully
+                                        circular future.</p>
+                                </div>
+                            </li>
+                            <li><img src="img/sub04_whykia/solution/solution5.png" alt="">
+                                <div class="tex_box"><strong>Energy Transition</strong>
+                                    <p>By implementing solar power and direct PPA, we will complete the transition to
+                                        renewable energy at all global sites by 2040, ensuring a carbon-free production
+                                        ecosystem.</p>
+                                </div>
+                            </li>
+                            <li><img src="img/sub04_whykia/solution/solution6.png" alt="">
+                                <div class="tex_box"><strong>10-year warranty</strong>
+                                    <p>Adding peace of mind to every journey with our industry-leading 10-year warranty.
+                                        Ensuring your driving experience remains as enduring and reliable as our
+                                        movement.
+                                    </p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div><!-- //.solution_inner -->
+            </section>
+
+            <section class="partner_section" id="partnerSection">
+                <div class="partner_sticky">
+                    <div class="partner_inner">
+                        <h2 class="partner_heading">Partnerships</h2>
+
+                        <div class="partner_cards">
+                            <div class="partner_cards_container">
+                                <article class="partner_card" id="partnerCard1">
+                                    <div class="partner_card_wrapper">
+                                        <div class="partner_tilt_shell">
+                                            <div class="partner_flip_inner">
+                                                <div class="partner_face partner_face_back">
+                                                    <img src="img/sub04_whykia/partner/partner3.png" alt="">
+                                                </div>
+                                                <div class="partner_face partner_face_front">
+                                                    <img src="img/sub04_whykia/partner/partner3_1.png" alt="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <span class="partner_label">Uber</span>
+                                        <div class="partner_copy">
+                                            <p>Kia Signs MoU to Offer Ride Hailing PBVs to Drivers on the Uber Platform
+                                            </p>
+                                            <span>2024.01.11</span>
+                                        </div>
+                                    </div>
+                                </article>
+
+                                <article class="partner_card" id="partnerCard2">
+                                    <div class="partner_card_wrapper">
+                                        <div class="partner_tilt_shell">
+                                            <div class="partner_flip_inner">
+                                                <div class="partner_face partner_face_back">
+                                                    <img src="img/sub04_whykia/partner/partner2.png" alt="">
+                                                </div>
+                                                <div class="partner_face partner_face_front">
+                                                    <img src="img/sub04_whykia/partner/partner2_1.png" alt="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <span class="partner_label">Google</span>
+                                        <div class="partner_copy">
+                                            <p>KIA Group and Google Collaborate on Software Capability for
+                                                Future Mobility Innovation</p>
+                                            <span>2024.12.11</span>
+                                        </div>
+                                    </div>
+                                </article>
+
+                                <article class="partner_card" id="partnerCard3">
+                                    <div class="partner_card_wrapper">
+                                        <div class="partner_tilt_shell">
+                                            <div class="partner_flip_inner">
+                                                <div class="partner_face partner_face_back">
+                                                    <img src="img/sub04_whykia/partner/partner1.png" alt="">
+                                                </div>
+                                                <div class="partner_face partner_face_front">
+                                                    <img src="img/sub04_whykia/partner/partner1_1.png" alt="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <span class="partner_label">NVIDIA</span>
+                                        <div class="partner_copy">
+                                            <p>Partners with The Ocean Cleanup on Global Plastic Circularity</p>
+                                            <span>2025.01.09</span>
+                                        </div>
+                                    </div>
+                                </article>
+                            </div>
+                        </div>
+                        <button class="scroll_down_button partner_scroll_down_button" id="partnerScrollDownButton"
+                            type="button" aria-label="Scroll down in partnerships section">
+                            <span aria-hidden="true"></span>
+                            Scroll
+                        </button>
+                    </div>
+                </div>
+            </section><!-- //.partner_section -->
+
+            <section class="awards">
+                <div class="awards_inner">
+                    <div class="awards_viewport">
+                        <div class="awards_blur awards_blur_left" aria-hidden="true">
+                            <div style="--index: 0;"></div>
+                            <div style="--index: 1;"></div>
+                            <div style="--index: 2;"></div>
+                            <div style="--index: 3;"></div>
+                            <div style="--index: 4;"></div>
+                            <div style="--index: 5;"></div>
+                        </div>
+                        <div class="awards_blur awards_blur_right" aria-hidden="true">
+                            <div style="--index: 0;"></div>
+                            <div style="--index: 1;"></div>
+                            <div style="--index: 2;"></div>
+                            <div style="--index: 3;"></div>
+                            <div style="--index: 4;"></div>
+                            <div style="--index: 5;"></div>
+                        </div>
+                        <div class="awards_marquee">
+                            <ul class="awards_track">
+                                <li class="awards_item"><img src="img/sub04_whykia/awards/awards1.png" alt="">
+                                    <p>1st Place in NCSI(National Customer Satisfaction Index)</p>
+                                </li>
+                                <li class="awards_item"><img src="img/sub04_whykia/awards/awards2.png" alt="">
+                                    <p>KSQI Certified 'Excellent Call Center'</p>
+                                </li>
+                                <li class="awards_item"><img src="img/sub04_whykia/awards/awards3.png" alt="">
+                                    <p>1st Place in KSQI (Automotive A/S Sector)</p>
+                                </li>
+                                <li class="awards_item"><img src="img/sub04_whykia/awards/awards4.png" alt="">
+                                    <p>1st Place in KS-SQI (Automotive Sales Service Sector)</p>
+                                </li>
+                                <li class="awards_item"><img src="img/sub04_whykia/awards/awards5.png" alt="">
+                                    <p>Grand Prize in Korea National Brand Awards (Automotive Membership Sector)</p>
+                                </li>
+                                <li class="awards_item"><img src="img/sub04_whykia/awards/awards6.png" alt="">
+                                    <p>Web Accessibility Quality Certification</p>
+                                </li>
+                                <li class="awards_item"><img src="img/sub04_whykia/awards/awards7.png" alt="">
+                                    <p>Grand Prize at THE ESG AWARDS (2024)</p>
+                                </li>
+                                <li class="awards_item"><img src="img/sub04_whykia/awards/awards8.png" alt="">
+                                    <p>Climate Change Carbon Management Sector Honors (2024)</p>
+                                </li>
+                                <li class="awards_item"><img src="img/sub04_whykia/awards/awards9.png" alt="">
+                                    <p>Excellence Award in Water Resource Management (2024)</p>
+                                </li>
+                                <li class="awards_item"><img src="img/sub04_whykia/awards/awards10.png" alt="">
+                                    <p>Included in DJSI World Index for 3 Consecutive Years (2024)</p>
+                                </li>
+                                <li class="awards_item"><img src="img/sub04_whykia/awards/awards11.png" alt="">
+                                    <p>Global Standard Management Awards Sustainability Report Grand Prize(2023)</p>
+                                </li>
+                            </ul>
+                            <ul class="awards_track" aria-hidden="true">
+                                <li class="awards_item"><img src="img/sub04_whykia/awards/awards1.png" alt="">
+                                    <p>1st Place in NCSI(National Customer Satisfaction Index)</p>
+                                </li>
+                                <li class="awards_item"><img src="img/sub04_whykia/awards/awards2.png" alt="">
+                                    <p>KSQI Certified 'Excellent Call Center'</p>
+                                </li>
+                                <li class="awards_item"><img src="img/sub04_whykia/awards/awards3.png" alt="">
+                                    <p>1st Place in KSQI (Automotive A/S Sector)</p>
+                                </li>
+                                <li class="awards_item"><img src="img/sub04_whykia/awards/awards4.png" alt="">
+                                    <p>1st Place in KS-SQI (Automotive Sales Service Sector)</p>
+                                </li>
+                                <li class="awards_item"><img src="img/sub04_whykia/awards/awards5.png" alt="">
+                                    <p>Grand Prize in Korea National Brand Awards (Automotive Membership Sector)</p>
+                                </li>
+                                <li class="awards_item"><img src="img/sub04_whykia/awards/awards6.png" alt="">
+                                    <p>Web Accessibility Quality Certification</p>
+                                </li>
+                                <li class="awards_item"><img src="img/sub04_whykia/awards/awards7.png" alt="">
+                                    <p>Grand Prize at THE ESG AWARDS (2024)</p>
+                                </li>
+                                <li class="awards_item"><img src="img/sub04_whykia/awards/awards8.png" alt="">
+                                    <p>Climate Change Carbon Management Sector Honors (2024)</p>
+                                </li>
+                                <li class="awards_item"><img src="img/sub04_whykia/awards/awards9.png" alt="">
+                                    <p>Excellence Award in Water Resource Management (2024)</p>
+                                </li>
+                                <li class="awards_item"><img src="img/sub04_whykia/awards/awards10.png" alt="">
+                                    <p>Included in DJSI World Index for 3 Consecutive Years (2024)</p>
+                                </li>
+                                <li class="awards_item"><img src="img/sub04_whykia/awards/awards11.png" alt="">
+                                    <p>Global Standard Management Awards Sustainability Report Grand Prize(2023)</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div><!-- //.page -->
+
 </body>
 
 </html>
