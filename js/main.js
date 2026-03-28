@@ -98,6 +98,12 @@ let $currentIndex = 0;
 let $isAnimating = false;
 let $delayTimer = null;
 let $hasActivatedSpecCount = false;
+let $isBestCaptured = false;
+let $bestCaptureUntil = 0;
+
+const BEST_CAPTURE_TOLERANCE = 120;
+const BEST_CAPTURE_DURATION = 900;
+const BEST_CAPTURE_COOLDOWN = 900;
 
 if (window.gsap && window.ScrollTrigger) {
     gsap.registerPlugin(ScrollTrigger);
@@ -378,6 +384,69 @@ function handleCardClick(event) {
     animateTransition($slot);
 }
 
+function getBestScrollTop() {
+    if (!$bestSection) {
+        return 0;
+    }
+
+    const $sectionRect = $bestSection.getBoundingClientRect();
+    return Math.round(window.scrollY + $sectionRect.top);
+}
+
+function isBestInCaptureZone() {
+    if (!$bestSection) {
+        return false;
+    }
+
+    const $sectionRect = $bestSection.getBoundingClientRect();
+
+    return $sectionRect.top <= BEST_CAPTURE_TOLERANCE && $sectionRect.bottom > window.innerHeight * 0.55;
+}
+
+function releaseBestCapture() {
+    const $bestTop = getBestScrollTop();
+
+    $isBestCaptured = false;
+    $bestCaptureUntil = Date.now() + BEST_CAPTURE_COOLDOWN;
+    unlockPageScroll($bestTop + 2);
+}
+
+function captureBestSection() {
+    const $bestTop = getBestScrollTop();
+
+    if (Math.abs(window.scrollY - $bestTop) > 1) {
+        window.scrollTo({ top: $bestTop, behavior: "auto" });
+    }
+
+    $isBestCaptured = true;
+    lockPageScroll($bestTop);
+
+    window.setTimeout(() => {
+        releaseBestCapture();
+    }, BEST_CAPTURE_DURATION);
+}
+
+function handleBestWheel(event) {
+    if (!$bestSection || $isBestCaptured || Date.now() < $bestCaptureUntil) {
+        if ($isBestCaptured) {
+            event.preventDefault();
+        }
+        return;
+    }
+
+    const $wheelDelta = Math.abs(event.deltaY);
+    const $isDown = event.deltaY > 0;
+    const $bestTop = getBestScrollTop();
+    const $hasReachedBest = window.scrollY >= $bestTop - BEST_CAPTURE_TOLERANCE;
+
+    if ($wheelDelta < 30 || !$isDown || !$hasReachedBest || !isBestInCaptureZone()) {
+        return;
+    }
+
+    event.preventDefault();
+    captureBestSection();
+}
+
 if ($showcase && $backText && $backTextGlass && $cards.length === 3 && $specValues.length) {
     renderState($currentIndex);
     $cards.forEach((card) => {
@@ -405,6 +474,8 @@ if ($showcase && $backText && $backTextGlass && $cards.length === 3 && $specValu
         });
     }
 }
+
+window.addEventListener("wheel", handleBestWheel, { passive: false });
 
 /* section.ev6 */
 const clamp = (v, min = 0, max = 1) => Math.min(max, Math.max(min, v));
