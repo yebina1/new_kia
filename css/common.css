@@ -773,34 +773,6 @@ header .header_bottom .sub_nav li a:hover {
     transform: translateX(0);
   }
 
-
-@media (max-width: 560px) {
-  header .m_nav {
-    width: min(328px, calc(100vw - 24px));
-    padding: 16px 32px;
-  }
-
-  header .m_top {
-    margin-bottom: 22px;
-  }
-
-  header .m_left {
-    gap: 12px;
-  }
-
-  header .m_gnb > li > a,
-  header .m_gnb > li > button,
-  header .m_on {
-    min-height: 52px;
-    font-size: 18px;
-  }
-
-  header .m_sub a {
-    font-size: 16px;
-    padding: 9px 16px;
-  }
-}
-
 footer {
   width: 100%;
 }

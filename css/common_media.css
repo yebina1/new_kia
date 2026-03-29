@@ -202,6 +202,11 @@
   header nav .icons a:nth-child(3) {
     display: none;
   }
+
+  header .m_nav {
+    width: min(328px, calc(100vw - 24px));
+    padding: 16px 32px;
+  }
 }
 
 @media (max-width: 480px) {
