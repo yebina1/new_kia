@@ -871,7 +871,6 @@ function initEv6Scene() {
     }
 
     const bg2StageP = clamp((p - baseEnd) / (1 - baseEnd));
-
     const dashReveal = sstep(0.05, 0.15, bg2StageP);
     const dashFadeOut = sstep(0.22, 0.26, bg2StageP);
     const dashVisible = dashReveal > 0.001 ? 1 - dashFadeOut : 0;
