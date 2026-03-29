@@ -32,60 +32,65 @@
     <div class="wrap build_wrap" style="--build-page-bg: url('./img/sub01_build/build_bg.png');">
         <!-- Header -->
         <header>
-            <div class="inner">
-                <h1>KIA</h1>
-                <nav class="glass_bg2">
-                    <ul class="gnb">
-                        <li>
-                            <a href="">company</a>
-                            <ul class="sub trans_origin2">
-                                <li><a href="">why kia</a></li>
-                                <li><a href="">safety</a></li>
-                                <li><a href="">kia media</a></li>
-                                <li><a href="">event</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="">vehicles</a>
-                            <ul class="sub trans_origin2">
-                                <li><a href="">EV</a></li>
-                                <li><a href="">sedan</a></li>
-                                <li><a href="">Hybrid</a></li>
-                                <li><a href="">CUV</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="">shopping assistant</a>
-                            <ul class="sub trans_origin2">
-                                <li><a href="">build my kia</a></li>
-                                <li><a href="">kia recommended</a></li>
-                                <li><a href="">payment calculater</a></li>
-                                <li><a href="">traid in</a></li>
-                                <li><a href="">easy buy</a></li>
-                                <li><a href="">certified pre-owned</a></li>
-                                <li><a href="">sub shop</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="">inventory</a>
-                        </li>
-                        <li>
-                            <a href="">center</a>
-                            <ul class="sub trans_origin2">
-                                <li><a href="">map</a></li>
-                                <li><a href="">kia connect</a></li>
-                                <li><a href="">consultation</a></li>
-                                <li><a href="">FAQ </a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="">owners page</a>
-                        </li>
-                    </ul>
-                    <div class="icons"></div>
-                </nav>
-            </div>
-        </header>
+      <div class="inner">
+        <h1><a href="index.html"><img src="img/logo.svg" alt="kia"></a></h1>
+        <nav>
+          <ul class="gnb">
+            <li class="#">
+              <a href="#">company</a>
+              <ul class="sub trans_origin2">
+                <li><a href="#">why kia</a></li>
+                <li><a href="#">safety</a></li>
+                <li><a href="#">kia media</a></li>
+                <li><a href="#">event</a></li>
+              </ul>
+            </li>
+            <li class="">
+              <a href="list.html">vehicles</a>
+              <ul class="sub trans_origin2">
+                <li><a href="#">EV</a></li>
+                <li><a href="#">SUV / CUV / MPV</a></li>
+                <li><a href="#">Hybrid</a></li>
+                <li><a href="#">sedan</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="">shopping assistant</a>
+              <ul class="sub trans_origin2">
+                <li><a href="build.html">build my kia</a></li>
+                <li><a href="recommended.html">kia recommended</a></li>
+                <li><a href="">payment calculater</a></li>
+                <li><a href="">traid in</a></li>
+                <li><a href="">easy buy</a></li>
+                <li><a href="">certified pre-owned</a></li>
+                <li><a href="">sub shop</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#">inventory</a>
+            </li>
+            <li>
+              <a href="#">center</a>
+              <ul class="sub trans_origin2">
+                <li><a href="#">map</a></li>
+                <li><a href="#">kia connect</a></li>
+                <li><a href="#">consultation</a></li>
+                <li><a href="#">FAQ </a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#">owners page<i class="bx bx-arrow-up-right-stroke"></i></a>
+            </li>
+          </ul> <!-- //.gnb -->
+          <div class="icons">
+            <a href="#"><img src="img/main/header/headphone.svg" alt=""></a>
+            <a href="#"><i class="bx bx-search-big"></i></a>
+            <a href="#"><i class="bx bx-globe-alt"></i></a>
+            <a href="#"><i class="bx bx-menu"></i></a>
+          </div> <!-- //.icons -->
+        </nav>
+      </div> <!-- //.inner -->
+    </header>
 
         <!-- Build Hero -->
         <section class="hero" id="heroSection" data-default-bg="./img/sub01_build/build_bg.png">
@@ -106,10 +111,11 @@
                 <!-- Model Category Tabs -->
                 <div class="hero_top_tabs" id="heroTopTabs" role="tablist" aria-label="Vehicle categories">
                     <button type="button" class="active" data-category="ev" role="tab" aria-selected="true">EV</button>
-                    <button type="button" data-category="suv" role="tab" aria-selected="false">Sedans</button>
                     <button type="button" data-category="hybrids" role="tab" aria-selected="false">Hybrids</button>
-                    <button type="button" data-category="sedans" role="tab" aria-selected="false">CUV</button>
+                    <button type="button" data-category="suv" role="tab" aria-selected="false">SUV / CUV / MPV</button>
+                    <button type="button" data-category="sedans" role="tab" aria-selected="false">Sedans</button>
                 </div>
+                <span class="hero_top_tabs_indicator" id="heroTopTabsIndicator" aria-hidden="true"></span>
 
                 <!-- Hidden Catalog Data -->
                 <div class="hero_catalog" id="heroCatalog" aria-hidden="true">
@@ -1106,6 +1112,9 @@
                         <div class="hero_quote_panel" id="heroQuotePanel" hidden>
                             <div class="hero_quote_intro">
                                 <h4 class="hero_quote_title">Request a Quote</h4>
+                                <button type="button" class="hero_quote_title_icon_btn" id="quoteCloseButton" aria-label="Back to price breakdown">
+                                    <i class="bx bx-arrow-out-left-square-half hero_quote_title_icon" aria-hidden="true"></i>
+                                </button>
                             </div>
                             <div class="hero_quote_panel_body">
                                 <div class="hero_quote_group">

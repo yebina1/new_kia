@@ -152,27 +152,58 @@ button {
 
 .hero_top_tabs {
   position: absolute;
-  top: 96px;
+  --hero-top-tabs-notch-width: 40px;
+  --hero-top-tabs-notch-height: 20px;
+  --hero-top-tabs-indicator-center-x: calc(var(--hero-top-tabs-indicator-x, 18px) + 9px);
+  top: 116px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 4;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 8px 16px;
+  justify-content: center;
+  width: 685px;
+  height: 58px;
+  gap: 10px;
+  padding: 0 30px 10px;
   border-radius: 999px;
-  background: rgba(251, 246, 239, 0.25);
+  background: rgba(251, 246, 239, 0.22);
   backdrop-filter: blur(3px);
   -webkit-backdrop-filter: blur(3px);
-  /* Highlight */
   box-shadow:
-    inset 1px 2px 2px rgba(255, 255, 255, 0.117),
-    inset -1px -1.5px 2px rgba(0, 0, 0, 0.2),
-    inset 0 0 10px rgba(255, 255, 255, 0),
-    1px 2px 4px rgba(0, 0, 0, 0.6);
-  outline: 1px solid rgba(255, 255, 255, 0.2);
-  outline-offset: -1px;
-  overflow: hidden;
+    inset 1px 1.5px 1.5px rgba(255, 255, 255, 0.5),
+    inset -1px -1.5px 2px rgba(0, 0, 0, 0.08),
+    inset 0 0 10px rgba(255, 255, 255, 0.08),
+    1px 2px 4px rgba(0, 0, 0, 0.45);
+  outline: 0.5px solid rgba(255, 255, 255, 0.2);
+  outline-offset: -0.5px;
+  -webkit-mask: radial-gradient(circle calc(var(--hero-top-tabs-notch-width) / 2) at var(--hero-top-tabs-indicator-center-x) calc(100% + 1px), transparent 98%, #000 101%);
+  mask: radial-gradient(circle calc(var(--hero-top-tabs-notch-width) / 2) at var(--hero-top-tabs-indicator-center-x) calc(100% + 1px), transparent 98%, #000 101%);
+  overflow: visible;
+}
+
+.hero_top_tabs::before {
+  content: none;
+}
+
+.hero_top_tabs::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  width: var(--hero-top-tabs-notch-width);
+  height: var(--hero-top-tabs-notch-height);
+  transform: translateX(calc(var(--hero-top-tabs-indicator-center-x) - (var(--hero-top-tabs-notch-width) / 2)));
+  border: 0.5px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 0;
+  box-shadow:
+    inset 1px 1.5px 1.5px rgba(255, 255, 255, 0.24),
+    inset -1px -1.5px 2px rgba(0, 0, 0, 0.05);
+  border-top-left-radius: 999px;
+  border-top-right-radius: 999px;
+  box-sizing: border-box;
+  z-index: 1;
+  pointer-events: none;
 }
 
 
@@ -1134,6 +1165,10 @@ button {
 }
 
 .hero_quote_intro {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
   margin: 0 0 18px;
 }
 
@@ -1144,6 +1179,24 @@ button {
   font-size: 40px;
   font-weight: 700;
   line-height: 1.2;
+}
+
+.hero_quote_title_icon_btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.hero_quote_title_icon {
+  flex: 0 0 auto;
+  margin-right: 12px;
+  color: #fbf6ef;
+  font-size: 40px;
+  line-height: 1;
 }
 
 .hero_quote_group {
@@ -1255,7 +1308,7 @@ button {
   min-height: 56px;
   padding: 0 22px;
   border-radius: 999px;
-  background: rgba(251, 246, 239, 0.16);
+  background: rgba(12, 17, 21, 0.72);
   border: 1px solid rgba(251, 246, 239, 0.22);
 }
 
@@ -1266,11 +1319,17 @@ button {
   gap: 6px;
   min-height: 72px;
   padding: 12px 22px;
+  border-radius: 32px;
+  background: rgba(12, 17, 21, 0.72);
+}
+
+.hero_quote_field_shell_selected_model .hero_quote_field_label {
+  color: var(--kia-white1);
 }
 
 .hero_quote_field_label {
   flex: 0 0 auto;
-  color: #1d1d1d;
+  color: rgba(251, 246, 239, 0.56);
   font-family: "Inter", sans-serif;
   font-size: 18px;
   font-weight: 500;
@@ -1286,7 +1345,7 @@ button {
   border-radius: 0;
   border: 0;
   background: transparent;
-  color: #fbf6ef;
+  color: var(--kia-white1);
   font-family: "Inter", sans-serif;
   font-size: 18px;
   outline: none;
@@ -1295,7 +1354,6 @@ button {
 
 .hero_quote_selected_model_input {
   display: -webkit-box;
-  color: var(--kia-white2);
   font-family: "Inter", sans-serif;
   font-size: 18px;
   font-weight: 300;
@@ -1307,8 +1365,18 @@ button {
   -webkit-line-clamp: 2;
 }
 
+.hero_quote_selected_model_main {
+  color: var(--kia-white2);
+  font-weight: 300;
+}
+
+.hero_quote_selected_model_meta {
+  color: var(--kia-white2);
+  font-weight: 300;
+}
+
 .hero_quote_field input::placeholder {
-  color: rgba(251, 246, 239, 0.36);
+  color: rgba(221, 216, 209, 0.44);
 }
 
 .hero_quote_field_full {
@@ -1427,8 +1495,8 @@ button {
   padding: 24px 22px;
   display: flex;
   flex-direction: row;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start;
+  justify-content: flex-start;
   gap: 16px;
   text-align: left;
   border-radius: 24px;
@@ -1451,7 +1519,9 @@ button {
 .hero_quote_dealer_copy_block {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  justify-content: space-between;
+  align-self: stretch;
+  min-height: 68px;
 }
 
 .hero_quote_dealer_name {
@@ -1534,11 +1604,11 @@ button {
   border-radius: 999px;
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.75) 0%,
-    rgba(255, 255, 255, 0.34) 54%,
-    rgba(200, 200, 200, 0.42) 100%
+    rgba(255, 255, 255, 0.62) 0%,
+    rgba(255, 255, 255, 0.26) 54%,
+    rgba(200, 200, 200, 0.34) 100%
   );
-  border: 2px solid rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.78);
   color: var(--kia-black);
   font-family: "Outfit", sans-serif;
   font-size: 14px;
@@ -1601,11 +1671,11 @@ button {
   border-radius: 999px;
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.7) 0%,
-    rgba(255, 255, 255, 0.3) 50%,
-    rgba(200, 200, 200, 0.4) 100%
+    rgba(255, 255, 255, 0.58) 0%,
+    rgba(255, 255, 255, 0.22) 50%,
+    rgba(200, 200, 200, 0.32) 100%
   );
-  border: 2.5px solid rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.8);
   color: var(--kia-black);
   font-family: "Outfit", sans-serif;
   font-size: 14px;
@@ -1856,9 +1926,9 @@ button {
   border-radius: 999px;
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.7) 0%,
-    rgba(255, 255, 255, 0.3) 50%,
-    rgba(200, 200, 200, 0.4) 100%
+    rgba(255, 255, 255, 0.58) 0%,
+    rgba(255, 255, 255, 0.22) 50%,
+    rgba(200, 200, 200, 0.32) 100%
   );
   border: 0;
   color: var(--kia-black);
@@ -1879,7 +1949,7 @@ button {
     inset 0 5px 10px rgba(255, 255, 255, 0.5),
     inset 0 -3px 5px rgba(0, 0, 0, 0.05),
     0 10px 20px rgba(0, 0, 0, 0.15);
-  border: 2.5px solid rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.8);
 }
 
 .hero_plan_add_btn {
@@ -1893,9 +1963,9 @@ button {
   border-radius: 999px;
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.7) 0%,
-    rgba(255, 255, 255, 0.3) 50%,
-    rgba(200, 200, 200, 0.4) 100%
+    rgba(255, 255, 255, 0.58) 0%,
+    rgba(255, 255, 255, 0.22) 50%,
+    rgba(200, 200, 200, 0.32) 100%
   );
   color: var(--kia-black);
   font-family: "Outfit", sans-serif;
@@ -1915,7 +1985,7 @@ button {
     inset 0 5px 10px rgba(255, 255, 255, 0.5),
     inset 0 -3px 5px rgba(0, 0, 0, 0.05),
     0 10px 20px rgba(0, 0, 0, 0.15);
-  border: 2.5px solid rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.8);
 }
 
 .hero_accessory_card.is-selected .hero_accessory_add_btn {
@@ -2258,9 +2328,9 @@ button {
   border-radius: 999px;
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.7) 0%,
-    rgba(255, 255, 255, 0.3) 50%,
-    rgba(200, 200, 200, 0.4) 100%
+    rgba(255, 255, 255, 0.58) 0%,
+    rgba(255, 255, 255, 0.22) 50%,
+    rgba(200, 200, 200, 0.32) 100%
   );
   border: 0;
   color: var(--kia-black);
@@ -2280,7 +2350,7 @@ button {
     inset 0 5px 10px rgba(255, 255, 255, 0.5),
     inset 0 -3px 5px rgba(0, 0, 0, 0.05),
     0 10px 20px rgba(0, 0, 0, 0.15);
-  border: 2.5px solid rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.8);
 }
 
 .hero_package_add_btn[aria-pressed="true"] {
@@ -2489,9 +2559,9 @@ button {
   border-radius: 999px;
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.7) 0%,
-    rgba(255, 255, 255, 0.3) 50%,
-    rgba(200, 200, 200, 0.4) 100%
+    rgba(255, 255, 255, 0.58) 0%,
+    rgba(255, 255, 255, 0.22) 50%,
+    rgba(200, 200, 200, 0.32) 100%
   );
   color: var(--kia-black);
   font-family: "Outfit", sans-serif;
@@ -2500,7 +2570,7 @@ button {
   line-height: 1;
   white-space: nowrap;
   text-align: center;
-  border: 2.5px solid rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.8);
   box-shadow:
     inset 0 5px 10px rgba(255, 255, 255, 0.5),
     inset 0 -3px 5px rgba(0, 0, 0, 0.05),
@@ -2797,47 +2867,62 @@ button {
 
 
 .hero_top_tabs button {
+  position: relative;
+  z-index: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 94px;
+  min-width: auto;
   height: auto;
-  padding: 8px 16px;
-  border-radius: 999px;
+  padding: 4px 16px;
+  border-radius: 0;
   color: rgba(255, 255, 255, 0.78);
   font-family: "Outfit", sans-serif;
   font-size: 20px;
   line-height: 130%;
   font-weight: 300;
+  letter-spacing: 0.04em;
+  transform: translateY(0);
   text-align: center;
   white-space: nowrap;
   transition:
-    background 0.3s ease,
     color 0.3s ease,
     font-weight 0.3s ease,
-    box-shadow 0.3s ease,
-    outline-color 0.3s ease;
+    opacity 0.3s ease;
 }
 
 .hero_top_tabs button.active,
 .hero_top_tabs button:hover {
-  background: rgba(251, 246, 239, 0.25);
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
-  /* Highlight */
-  box-shadow:
-    inset 1px 2px 2px rgba(255, 255, 255, 0.117),
-    inset -1px -1.5px 2px rgba(0, 0, 0, 0.2),
-    inset 0 0 10px rgba(255, 255, 255, 0),
-    1px 2px 4px rgba(0, 0, 0, 0.6);
-  outline: 0.5px solid rgba(255, 255, 255, 0.2);
-  outline-offset: -0.5px;
-  overflow: hidden;
-  border-radius: 55px;
-  color: #fff;
-  align-items: center;
-  padding: 4px 16px;
+  color: var(--kia-white1);
+  opacity: 1;
   font-weight: 400;
+  transform: translateY(-4px);
+}
+
+.hero_top_tabs_indicator {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, rgba(237, 255, 253, 0.98) 0 32%, rgba(161, 255, 243, 0.92) 48%, rgba(139, 255, 238, 0.32) 74%, rgba(139, 255, 238, 0) 100%);
+  box-shadow:
+    0 0 0 2px rgba(239, 255, 254, 0.24),
+    0 0 16px rgba(138, 255, 239, 0.85),
+    0 0 28px rgba(138, 255, 239, 0.42);
+  transform: none;
+  transition:
+    left 0.35s ease,
+    top 0.35s ease,
+    opacity 0.2s ease;
+  pointer-events: none;
+  z-index: 5;
+  opacity: 1;
+}
+
+.hero_top_tabs_indicator.is-hidden {
+  opacity: 0;
 }
 
 .hero_bottom_tabs button:disabled,
@@ -2942,7 +3027,7 @@ button {
 .hero_summary_title .hero_title_suffix_ev_9 {
   line-height: 80%;
   letter-spacing: -1px;
-  transform: translateY(-15px);
+  transform: translateY(1px);
 }
 
 .hero_catalog,
@@ -3374,25 +3459,36 @@ button {
   }
 
   .hero_top_tabs {
-    top: 92px;
-    width: 490px;
-    height: 58px;
+    --hero-top-tabs-notch-width: 36px;
+    --hero-top-tabs-notch-height: 18px;
+    top: 108px;
+    width: 685px;
+    max-width: calc(100vw - 48px);
+    min-height: 56px;
     justify-content: center;
-    gap: 4px;
-    padding: 8px 16px;
+    gap: 8px;
+    padding: 0 24px 10px;
   }
 
   .hero_top_tabs button {
     min-width: auto;
-    height: 42px;
-    padding: 8px 14px;
+    height: auto;
+    padding: 4px 16px;
     font-size: 16px;
     line-height: 1;
+    letter-spacing: 0.035em;
+    transform: translateY(0);
   }
 
-  .hero_top_tabs button.active {
-    height: 34px;
-    padding: 4px 14px;
+  .hero_top_tabs_indicator {
+    width: 16px;
+    height: 16px;
+    bottom: -12px;
+  }
+
+  .hero_top_tabs button.active,
+  .hero_top_tabs button:hover {
+    transform: translateY(-3px);
   }
 
   .hero_arrow_left {
@@ -3677,27 +3773,38 @@ button {
   }
 
   .hero_top_tabs {
-    top: 72px;
-    width: 336px;
-    height: 44px;
+    --hero-top-tabs-notch-width: 30px;
+    --hero-top-tabs-notch-height: 16px;
+    top: 84px;
+    width: calc(100vw - 32px);
+    max-width: 685px;
+    min-height: 54px;
     justify-content: center;
     flex-wrap: nowrap;
     gap: 4px;
-    padding: 4px 8px;
+    padding: 0 14px 9px;
     border-radius: 24px;
   }
 
   .hero_top_tabs button {
     min-width: auto;
-    height: 28px;
-    padding: 4px 6px;
+    height: auto;
+    padding: 4px 16px;
     font-size: 12px;
     line-height: 1;
+    letter-spacing: 0.03em;
+    transform: translateY(0);
   }
 
-  .hero_top_tabs button.active {
-    height: 28px;
-    padding: 4px 6px;
+  .hero_top_tabs_indicator {
+    width: 14px;
+    height: 14px;
+    bottom: -10px;
+  }
+
+  .hero_top_tabs button.active,
+  .hero_top_tabs button:hover {
+    transform: translateY(-2px);
   }
 
   .hero_title {

@@ -48,6 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const requestQuoteButton = document.getElementById("requestQuoteButton");
   const heroQuotePanel = document.getElementById("heroQuotePanel");
   const quoteBackButton = document.getElementById("quoteBackButton");
+  const quoteCloseButton = document.getElementById("quoteCloseButton");
   const quoteSendButton = document.getElementById("quoteSendButton");
   const quoteZipDisplay = document.getElementById("quoteZipDisplay");
   const quoteZipEditButton = document.getElementById("quoteZipEditButton");
@@ -80,6 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const heroInteriorSwatches = document.getElementById("heroInteriorSwatches");
   const heroTrimCards = document.getElementById("heroTrimCards");
   const heroTopTabs = document.getElementById("heroTopTabs");
+  const heroTopTabsIndicator = document.getElementById("heroTopTabsIndicator");
   const viewModelButton = document.getElementById("viewModelButton");
   const nextColorButton = document.getElementById("nextColorButton");
   const viewTrimButton = document.getElementById("viewTrimButton");
@@ -777,6 +779,25 @@ document.addEventListener("DOMContentLoaded", () => {
     return document.getElementById(assetId);
   }
 
+  function getSelectedExteriorMedia(fallbackSrc, fallbackAlt) {
+    const selectedExteriorAsset = getExteriorAssetFromSwatch(getSelectedExteriorSwatch());
+
+    return {
+      src: selectedExteriorAsset?.getAttribute("src") || fallbackSrc,
+      alt: selectedExteriorAsset?.getAttribute("alt") || fallbackAlt
+    };
+  }
+
+  function setVehicleStageImage(imageElement, fallbackSrc, fallbackAlt) {
+    if (!imageElement) {
+      return;
+    }
+
+    const selectedExteriorMedia = getSelectedExteriorMedia(fallbackSrc, fallbackAlt);
+    imageElement.src = selectedExteriorMedia.src;
+    imageElement.alt = selectedExteriorMedia.alt;
+  }
+
   function getCurrentTrimItems(title) {
     const trimData = getTrimDataForTitle(title);
     const currentCar = getCurrentCar();
@@ -825,8 +846,8 @@ document.addEventListener("DOMContentLoaded", () => {
       .map((item) => item.name?.trim())
       .filter(Boolean);
 
-    const summaryParts = [
-      `${modelName} ${trimName}`.trim(),
+    const mainText = `${modelName} ${trimName}`.trim();
+    const metaParts = [
       exteriorName,
       interiorName,
       planName ? `Plan: ${planName}` : "",
@@ -834,7 +855,14 @@ document.addEventListener("DOMContentLoaded", () => {
       accessoryNames.length ? `Acc: ${accessoryNames.join(", ")}` : ""
     ].filter(Boolean);
 
-    quoteSelectedModel.textContent = summaryParts.join(" / ");
+    const metaText = metaParts.join(" / ");
+
+    quoteSelectedModel.innerHTML = [
+      `<span class="hero_quote_selected_model_main">${escapeHtml(mainText)}</span>`,
+      metaText
+        ? `<span class="hero_quote_selected_model_meta"> / ${escapeHtml(metaText)}</span>`
+        : ""
+    ].join("");
   }
 
   function toggleQuoteError(input, errorElement, isVisible) {
@@ -873,6 +901,30 @@ document.addEventListener("DOMContentLoaded", () => {
     quoteZipInput.hidden = true;
     quoteZipDisplay.parentElement?.removeAttribute("hidden");
     quoteZipEditButton.hidden = false;
+  }
+
+  function setExclusiveActiveButton(buttons, targetButton) {
+    const shouldActivate = !targetButton?.classList.contains("is-active");
+
+    buttons.forEach((button) => {
+      const isActive = shouldActivate && button === targetButton;
+      button.classList.toggle("is-active", isActive);
+      button.setAttribute("aria-pressed", isActive ? "true" : "false");
+    });
+  }
+
+  function initializeQuoteSelections() {
+    if (!heroQuotePanel) {
+      return;
+    }
+
+    [
+      ...heroQuotePanel.querySelectorAll(".hero_quote_method_btn"),
+      ...heroQuotePanel.querySelectorAll(".hero_quote_payment_btn")
+    ].forEach((button) => {
+      button.classList.remove("is-active");
+      button.setAttribute("aria-pressed", "false");
+    });
   }
 
   function applySelectedTrim(title) {
@@ -916,8 +968,11 @@ document.addEventListener("DOMContentLoaded", () => {
         selectedTrim?.price || trimData.price
       ));
       heroColorLease.textContent = selectedTrim?.lease || trimData.lease;
-      heroColorImage.src = selectedTrim?.image || "./img/sub01_build/trim_light.png";
-      heroColorImage.alt = selectedTrim?.alt || title;
+      setVehicleStageImage(
+        heroColorImage,
+        selectedTrim?.image || "./img/sub01_build/trim_light.png",
+        selectedTrim?.alt || title
+      );
     }
 
     if (heroPackageTitle && heroPackageImage) {
@@ -935,8 +990,11 @@ document.addEventListener("DOMContentLoaded", () => {
         })
       );
       heroPackageLease.textContent = selectedTrim?.lease || trimData.lease;
-      heroPackageImage.src = selectedTrim?.image || "./img/sub01_build/trim_light.png";
-      heroPackageImage.alt = selectedTrim?.alt || title;
+      setVehicleStageImage(
+        heroPackageImage,
+        selectedTrim?.image || "./img/sub01_build/trim_light.png",
+        selectedTrim?.alt || title
+      );
     }
 
     if (heroAccessoryTitle && heroAccessoryImage) {
@@ -955,8 +1013,11 @@ document.addEventListener("DOMContentLoaded", () => {
         })
       );
       heroAccessoryLease.textContent = selectedTrim?.lease || trimData.lease;
-      heroAccessoryImage.src = selectedTrim?.image || "./img/sub01_build/trim_light.png";
-      heroAccessoryImage.alt = selectedTrim?.alt || title;
+      setVehicleStageImage(
+        heroAccessoryImage,
+        selectedTrim?.image || "./img/sub01_build/trim_light.png",
+        selectedTrim?.alt || title
+      );
     }
 
     if (heroPlanTitle && heroPlanImage) {
@@ -975,8 +1036,11 @@ document.addEventListener("DOMContentLoaded", () => {
         })
       );
       heroPlanLease.textContent = selectedTrim?.lease || trimData.lease;
-      heroPlanImage.src = selectedTrim?.image || "./img/sub01_build/trim_light.png";
-      heroPlanImage.alt = selectedTrim?.alt || title;
+      setVehicleStageImage(
+        heroPlanImage,
+        selectedTrim?.image || "./img/sub01_build/trim_light.png",
+        selectedTrim?.alt || title
+      );
       setSelectedPlanCard(selectedPlanIndex);
     }
 
@@ -996,8 +1060,11 @@ document.addEventListener("DOMContentLoaded", () => {
         })
       );
       heroSummaryLease.textContent = selectedTrim?.lease || trimData.lease;
-      heroSummaryImage.src = selectedTrim?.image || "./img/sub01_build/trim_light.png";
-      heroSummaryImage.alt = selectedTrim?.alt || title;
+      setVehicleStageImage(
+        heroSummaryImage,
+        selectedTrim?.image || "./img/sub01_build/trim_light.png",
+        selectedTrim?.alt || title
+      );
       updateSummaryPanel(selectedTrim?.price || trimData.price);
       syncQuoteSelectedModel();
     }
@@ -1057,40 +1124,11 @@ document.addEventListener("DOMContentLoaded", () => {
         selectedInteriorAsset.getAttribute("alt") || heroSeatPreviewImage.alt;
     }
 
-    const selectedExteriorAsset = getExteriorAssetFromSwatch(selectedExterior);
-
-    if (selectedExteriorAsset && heroColorImage) {
-      heroColorImage.src = selectedExteriorAsset.getAttribute("src") || heroColorImage.src;
-      heroColorImage.alt = selectedExteriorAsset.getAttribute("alt") || heroColorImage.alt;
-    }
-
-    if (selectedExteriorAsset && heroPackageImage) {
-      heroPackageImage.src =
-        selectedExteriorAsset.getAttribute("src") || heroPackageImage.src;
-      heroPackageImage.alt =
-        selectedExteriorAsset.getAttribute("alt") || heroPackageImage.alt;
-    }
-
-    if (selectedExteriorAsset && heroAccessoryImage) {
-      heroAccessoryImage.src =
-        selectedExteriorAsset.getAttribute("src") || heroAccessoryImage.src;
-      heroAccessoryImage.alt =
-        selectedExteriorAsset.getAttribute("alt") || heroAccessoryImage.alt;
-    }
-
-    if (selectedExteriorAsset && heroPlanImage) {
-      heroPlanImage.src =
-        selectedExteriorAsset.getAttribute("src") || heroPlanImage.src;
-      heroPlanImage.alt =
-        selectedExteriorAsset.getAttribute("alt") || heroPlanImage.alt;
-    }
-
-    if (selectedExteriorAsset && heroSummaryImage) {
-      heroSummaryImage.src =
-        selectedExteriorAsset.getAttribute("src") || heroSummaryImage.src;
-      heroSummaryImage.alt =
-        selectedExteriorAsset.getAttribute("alt") || heroSummaryImage.alt;
-    }
+    setVehicleStageImage(heroColorImage, heroColorImage?.src, heroColorImage?.alt);
+    setVehicleStageImage(heroPackageImage, heroPackageImage?.src, heroPackageImage?.alt);
+    setVehicleStageImage(heroAccessoryImage, heroAccessoryImage?.src, heroAccessoryImage?.alt);
+    setVehicleStageImage(heroPlanImage, heroPlanImage?.src, heroPlanImage?.alt);
+    setVehicleStageImage(heroSummaryImage, heroSummaryImage?.src, heroSummaryImage?.alt);
 
     updateSummaryPanel(getCurrentBasePrice());
 
@@ -1395,6 +1433,7 @@ document.addEventListener("DOMContentLoaded", () => {
       );
       startStepButton?.classList.toggle("is-hidden", !isModelStage);
       heroTopTabs?.classList.toggle("is-hidden", !isModelStage);
+      heroTopTabsIndicator?.classList.toggle("is-hidden", !isModelStage);
     }
 
     if (startStepButton) {
@@ -1403,6 +1442,28 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     syncTrimSelectionGate();
+  }
+
+  function syncTopTabsIndicator() {
+    if (!heroTopTabs || !heroTopTabsIndicator) {
+      return;
+    }
+
+    const activeButton = topTabButtons.find((button) => button.classList.contains("active"));
+
+    if (!activeButton) {
+      return;
+    }
+
+    const tabsRect = heroTopTabs.getBoundingClientRect();
+    const buttonRect = activeButton.getBoundingClientRect();
+    const indicatorWidth = heroTopTabsIndicator.getBoundingClientRect().width || 18;
+    const nextX =
+      buttonRect.left - tabsRect.left + (buttonRect.width / 2) - (indicatorWidth / 2);
+
+    heroTopTabs.style.setProperty("--hero-top-tabs-indicator-x", `${nextX}px`);
+    heroTopTabsIndicator.style.left = `${tabsRect.left + nextX}px`;
+    heroTopTabsIndicator.style.top = `${tabsRect.bottom - (indicatorWidth / 2)}px`;
   }
 
   function setCategory(categoryKey) {
@@ -1425,6 +1486,7 @@ document.addEventListener("DOMContentLoaded", () => {
       button.classList.toggle("active", isActive);
       button.setAttribute("aria-selected", isActive ? "true" : "false");
     });
+    syncTopTabsIndicator();
 
     renderCar(currentIndex);
     syncArrowState();
@@ -1501,6 +1563,7 @@ document.addEventListener("DOMContentLoaded", () => {
               button.classList.toggle("active", isActive);
               button.setAttribute("aria-selected", isActive ? "true" : "false");
             });
+            syncTopTabsIndicator();
           } else {
             currentIndex = 0;
             selectedTrimIndex = null;
@@ -1534,6 +1597,7 @@ document.addEventListener("DOMContentLoaded", () => {
             button.classList.toggle("active", isActive);
             button.setAttribute("aria-selected", isActive ? "true" : "false");
           });
+          syncTopTabsIndicator();
         } else {
           currentIndex = Math.max(currentCars.length - 1, 0);
           selectedTrimIndex = null;
@@ -1681,13 +1745,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     syncQuoteSelectedModel();
+    initializeQuoteSelections();
     const summarySide = heroQuotePanel.closest(".hero_summary_side");
     heroQuotePanel.hidden = false;
     summarySide?.classList.add("is-quote-mode");
     requestQuoteButton.setAttribute("aria-expanded", "true");
   });
 
-  quoteBackButton?.addEventListener("click", () => {
+  function closeQuotePanel() {
     if (!heroQuotePanel) {
       return;
     }
@@ -1696,7 +1761,10 @@ document.addEventListener("DOMContentLoaded", () => {
     heroQuotePanel.hidden = true;
     summarySide?.classList.remove("is-quote-mode");
     requestQuoteButton?.setAttribute("aria-expanded", "false");
-  });
+  }
+
+  quoteBackButton?.addEventListener("click", closeQuotePanel);
+  quoteCloseButton?.addEventListener("click", closeQuotePanel);
 
   quoteZipEditButton?.addEventListener("click", () => {
     if (!quoteZipInput || !quoteZipDisplay) {
@@ -1760,11 +1828,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (paymentButton) {
-      heroQuotePanel.querySelectorAll(".hero_quote_payment_btn").forEach((button) => {
-        const isActive = button === paymentButton;
-        button.classList.toggle("is-active", isActive);
-        button.setAttribute("aria-pressed", isActive ? "true" : "false");
-      });
+      const paymentButtons = Array.from(
+        heroQuotePanel.querySelectorAll(".hero_quote_payment_btn")
+      );
+      setExclusiveActiveButton(paymentButtons, paymentButton);
     }
 
     if (dealerCard) {
@@ -1775,6 +1842,8 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
   });
+
+  initializeQuoteSelections();
 
   if (startStepButton) {
     startStepButton.addEventListener("click", () => {
@@ -1990,15 +2059,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
   window.addEventListener("resize", () => {
     syncProgressPosition();
+    syncTopTabsIndicator();
   });
 
   window.addEventListener("load", () => {
     syncProgressPosition();
+    syncTopTabsIndicator();
   });
 
   if (document.fonts?.ready) {
     document.fonts.ready.then(() => {
       syncProgressPosition();
+      syncTopTabsIndicator();
     });
   }
 
@@ -2008,4 +2080,5 @@ document.addEventListener("DOMContentLoaded", () => {
   syncColorStageSelections();
   syncEv9OnlyState();
   updateSteps(currentStep);
+  syncTopTabsIndicator();
 });
