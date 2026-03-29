@@ -1361,7 +1361,7 @@ h2 {
 .awards_blur div {
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg,
+    /* background: linear-gradient(90deg,
             rgba(0, 0, 0, 0.24) 0%,
             rgba(0, 0, 0, 0.16) 18%,
             rgba(0, 0, 0, 0.08) 36%,
@@ -1376,7 +1376,8 @@ h2 {
             #000 calc((var(--index) + 1) * 12%),
             #000 calc((var(--index) + 2) * 12%),
             transparent calc((var(--index) + 3) * 12%));
-    backdrop-filter: blur(calc((var(--index) + 1) * 2.2px));
+    backdrop-filter: blur(calc((var(--index) + 1) * 2.2px)); */
+    background: #0c1115;
 }
 
 .awards_viewport:has(.awards_item:hover) .awards_marquee {
