@@ -304,6 +304,160 @@ a {
     color: rgba(255, 255, 255, 0.82);
 }
 
+.wheels_story {
+    width: 100%;
+    background: #0c1115;
+}
+
+.wheels_story .wheels_story_pin {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    min-height: 760px;
+    overflow: hidden;
+}
+
+.wheels_story .wheels_story_title {
+    position: absolute;
+    top: 96px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    color: #fbf6ef;
+}
+
+.wheels_story .wheels_story_canvas_wrap {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.wheels_story .wheels_story_canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.wheels_story .wheels_story_copy {
+    position: absolute;
+    inset: 0;
+    width: min(1440px, calc(100% - 120px));
+    margin: 0 auto;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.wheels_story .wheel_story_block {
+    position: absolute;
+    /* wheel center line and text center line alignment */
+    top: var(--wheel-text-y, 50%);
+    width: min(760px, 46vw);
+    opacity: 0;
+    transform: translateY(-50%);
+    transition: opacity 0.24s ease;
+}
+
+.wheels_story .wheel_story_block_19,
+.wheels_story .wheel_story_block_21 {
+    /* text gap from wheel edge: 72px */
+    left: calc(50% - 28vw + min(360px, 20vw, 34vh) / 2 + 72px);
+    text-align: left;
+}
+
+.wheels_story .wheel_story_block_20 {
+    /* text gap from wheel edge: 72px */
+    right: calc(50% - 31vw + min(360px, 20vw, 34vh) / 2 + 72px);
+    text-align: right;
+}
+
+.wheels_story .wheel_story_title {
+    font-family: "Outfit", sans-serif;
+    font-size: 40px;
+    font-weight: 500;
+    line-height: 1.3;
+    color: #fbf6ef;
+}
+
+.wheels_story .wheel_story_size {
+    font-size: 64px;
+    line-height: 1.3;
+}
+
+.wheels_story .wheel_story_trim {
+    margin-top: 4px;
+    font-family: "Inter", sans-serif;
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 1.3;
+    color: #ddd8d1;
+}
+
+.wheels_story .wheel_story_desc {
+    margin-top: 8px;
+    font-family: "Inter", sans-serif;
+    font-size: 24px;
+    font-weight: 300;
+    line-height: 1.3;
+    color: #fbf6ef;
+}
+
+.wheels_story .wheel_story_desc em {
+    background: rgba(50, 176, 180, 0.44);
+    font-style: italic;
+    font-weight: 500;
+}
+
+@media (max-width: 1500px) {
+    .wheels_story .wheels_story_copy {
+        width: min(1320px, calc(100% - 80px));
+    }
+
+    .wheels_story .wheel_story_block {
+        width: min(650px, 48vw);
+    }
+
+    .wheels_story .wheel_story_title {
+        font-size: 34px;
+    }
+
+    .wheels_story .wheel_story_size {
+        font-size: 54px;
+    }
+
+    .wheels_story .wheel_story_trim {
+        font-size: 26px;
+    }
+
+    .wheels_story .wheel_story_desc {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .wheels_story .wheels_story_title {
+        top: 72px;
+    }
+
+    .wheels_story .wheels_story_copy {
+        width: min(900px, calc(100% - 48px));
+    }
+
+    .wheels_story .wheel_story_block {
+        top: 66%;
+        width: min(560px, 88vw);
+    }
+
+    .wheels_story .wheel_story_block_19,
+.wheels_story .wheel_story_block_20,
+.wheels_story .wheel_story_block_21 {
+        left: 50%;
+        right: auto;
+        transform: translate(-50%, -50%);
+        text-align: center;
+    }
+}
+
 .trim_selector {
     width: 100%;
     height: 1108px;
