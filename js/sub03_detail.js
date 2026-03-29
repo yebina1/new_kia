@@ -7,7 +7,7 @@ const trimInfo = document.querySelector('.trim_selector .trim_info');
 
 const trimData = {
   'light-rwd': {
-    image: 'img/sub03_detail/trim_visual_base.png',
+    image: './img/sub03_detail/trim_visual_base.png',
     name: 'Light RWD',
     price: '$54,900',
     chips: ['230 Miles w', '800V Charging', '76.1 kWh Battery', '7-Passenger Seating'],
@@ -31,7 +31,7 @@ const trimData = {
     ]
   },
   'light-long-range-rwd': {
-    image: 'img/sub03_detail/trim_visual_1_photo.png',
+    image: './img/sub03_detail/trim_visual_1_photo.png',
     name: 'Light Long Range RWD',
     price: '$59,900',
     chips: ['304 miles w', 'Rear-Wheel Drive', '99.8 kWh Battery', 'Heat pump'],
@@ -55,7 +55,7 @@ const trimData = {
     ]
   },
   'wind-awd': {
-    image: 'img/sub03_detail/trim_visual_2_photo.png',
+    image: './img/sub03_detail/trim_visual_2_photo.png',
     name: 'Wind AWD',
     price: '$63,900',
     chips: ['280 miles w', 'Dual Motor AWD', '99.8 kWh Battery', 'Towing prep'],
@@ -79,7 +79,7 @@ const trimData = {
     ]
   },
   'land-awd': {
-    image: 'img/sub03_detail/trim_visual_3_photo.png',
+    image: './img/sub03_detail/trim_visual_3_photo.png',
     name: 'Land AWD',
     price: '$69,900',
     chips: ['280 miles w', 'Dual Motor AWD', '19-in+ features', 'Boosted comfort'],
@@ -103,7 +103,7 @@ const trimData = {
     ]
   },
   'gt-line-awd': {
-    image: 'img/sub03_detail/trim_visual_4_photo.png',
+    image: './img/sub03_detail/trim_visual_4_photo.png',
     name: 'GT-Line AWD',
     price: '$71,900',
     chips: ['270 miles w', 'Dual Motor AWD', '21-in wheels', 'Turbo comfort'],
@@ -158,10 +158,11 @@ const setTrim = (trimKey) => {
   trimTabs.forEach((tab) => {
     const isActive = tab.dataset.trim === trimKey;
     tab.classList.toggle('on', isActive);
+    tab.classList.toggle('is_active', isActive);
     tab.setAttribute('aria-selected', isActive);
   });
 
-  trimVisual.style.setProperty('--trim-bg', `url('${currentTrim.image}')`);
+  trimVisual.style.backgroundImage = `url('${currentTrim.image}')`;
   trimName.textContent = currentTrim.name;
 
   if (currentTrim.price) {
@@ -191,23 +192,23 @@ const interiorPanelClose = document.querySelector('.interior .interior_panel_clo
 
 const interiorData = {
   'spacious-3-row': {
-    image: 'img/sub03_detail/but1.png',
+    image: './img/sub03_detail/but1.png',
     alt: 'Spacious 3-Row Room for everyone panel'
   },
   'meridian-audio': {
-    image: 'img/sub03_detail/but2.png',
+    image: './img/sub03_detail/but2.png',
     alt: 'Meridian Audio Premium sound panel'
   },
   'panoramic-display-rear': {
-    image: 'img/sub03_detail/but3.png',
+    image: './img/sub03_detail/but3.png',
     alt: 'Panoramic Display Dual 12.3-in screens panel'
   },
   'power-front-seats': {
-    image: 'img/sub03_detail/but4.png',
+    image: './img/sub03_detail/but4.png',
     alt: 'Power Front Seats Easy seat adjustment panel'
   },
   'panoramic-display-front': {
-    image: 'img/sub03_detail/but5.png',
+    image: './img/sub03_detail/but5.png',
     alt: 'Panoramic Display Wide intuitive view panel'
   }
 };

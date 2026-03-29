@@ -1,12 +1,6 @@
 @charset "utf-8";
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap');
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 html,
 body {
     width: 100%;
@@ -14,7 +8,6 @@ body {
 
 body {
     width: 100%;
-    min-width: 0;
     background: #06111b;
     color: #fff;
     overflow-x: hidden;
@@ -86,10 +79,11 @@ a {
     content: "";
     position: absolute;
     left: 0;
-    right: 0;
     bottom: 0;
-    height: 42%;
-    background: linear-gradient(180deg, rgba(2, 8, 18, 0) 0%, rgba(2, 8, 18, 0.24) 28%, rgba(2, 8, 18, 0.92) 100%);
+    width: 100%;
+    height: 120px;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(12, 17, 21, 0) 0%, rgba(12, 17, 21, 0.55) 41%, rgba(12, 17, 21, 1) 100%);
 }
 
 .main_visual .visual_bottom {
@@ -118,6 +112,13 @@ a {
     font-weight: 500;
     line-height: 0.9;
     letter-spacing: -0.02em;
+}
+
+.main_visual .visual_title .ev9_digit {
+    display: inline-block;
+    line-height: 180%;
+    position: relative;
+    top: -0.2em;
 }
 
 .main_visual .visual_sub_title {
@@ -215,11 +216,9 @@ a {
 
 .size_it_up {
     width: 100%;
-    min-height: 948px;
-    height: auto;
+    height: 874px;
     padding-top: 240px;
-    padding-bottom: 120px;
-    background: #06111b;
+    background: #0C1115;
 }
 
 .size_it_up .inner {
@@ -235,7 +234,6 @@ a {
 .size_it_up .img_box {
     width: min(1440px, calc(100% - 120px));
     height: 290px;
-    flex-shrink: 0;
 }
 
 .size_it_up .img_box img {
@@ -247,17 +245,15 @@ a {
 .size_it_up .size_info_box {
     width: min(812px, calc(100% - 120px));
     height: 214px;
-    flex-shrink: 0;
 }
 
 .size_it_up .size_info_list {
     width: 100%;
     height: 100%;
-    margin: 0;
     position: relative;
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    grid-template-rows: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
 }
 
 .size_it_up .size_info_list::before {
@@ -272,19 +268,12 @@ a {
 }
 
 .size_it_up .size_info_item {
-    min-width: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    gap: 4px;
-    padding: 0 20px 22px;
-}
-
-.size_it_up .size_info_item:nth-child(n + 4) {
-    padding-top: 22px;
-    padding-bottom: 0;
+    gap: 6px;
 }
 
 .size_it_up .size_info_code,
@@ -462,7 +451,7 @@ a {
     width: 100%;
     height: 1108px;
     padding-top: 158px;
-    background: #06111b;
+    background: #0C1115;
 }
 
 .trim_selector .inner {
@@ -479,25 +468,24 @@ a {
 }
 
 .trim_selector .trim_tab_box {
-    width: min(1097px, calc(100% - 120px));
+    width: 100%;
+    max-width: 1097px;
     height: 63px;
+    margin: 0 auto;
     padding: 8px 16px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 7px;
-
-    border-radius: 999px;
+    justify-content: space-between;
+    gap: 0;
+    border-radius: 55px;
     background: rgba(12, 17, 21, 0.5);
     border: 1px solid rgba(178, 221, 222, 0.3);
-    backdrop-filter: blur(20px);
+    backdrop-filter: blur(12px);
 }
 
 .trim_selector .trim_tab {
-    min-width: fit-content;
     height: 47px;
     padding: 0 24px;
-    margin: 0 auto;
     border-radius: 999px;
     display: inline-flex;
     align-items: center;
@@ -509,23 +497,24 @@ a {
     font-weight: 500;
     line-height: 1.05;
     letter-spacing: -0.02em;
-    color: #ddd8d1;
-    transition: color 0.25s ease, font-weight 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+    color: rgba(255, 253, 251, 0.85);
+    background: transparent;
+    border: 1px solid transparent;
+    transition: color 0.2s ease, font-weight 0.2s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .trim_selector .trim_tab:hover {
-    color: #fffdfb;
+    color: rgba(255, 253, 251, 0.95);
     font-weight: 600;
 }
 
-.trim_selector .trim_tab.on {
+.trim_selector .trim_tab.on,
+.trim_selector .trim_tab.is_active {
     color: #fffdfb;
     font-weight: 600;
-    background:
-        linear-gradient(rgba(78, 99, 106, 0.3), rgba(78, 99, 106, 0.3)) padding-box,
-        linear-gradient(180deg, rgba(178, 221, 222, 0.95), rgba(255, 253, 251, 0.85)) border-box;
-    border: 1px solid transparent;
-    box-shadow: inset 0 0 0 1px rgba(178, 221, 222, 0.24), 0 0 0 1px rgba(255, 253, 251, 0.24), 0 6px 18px rgba(0, 0, 0, 0.18);
+    background: rgba(251, 246, 239, 0.05);
+    border-color: rgba(178, 221, 222, 0.55);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.16);
 }
 
 .trim_selector .trim_stage {
@@ -685,8 +674,8 @@ a {
 
 .interior {
     width: 100%;
-    height: 1014px;
-    background: #232534;
+    height: 1382px;
+    background: #0C1115;
 }
 
 .interior .inner {
@@ -704,15 +693,15 @@ a {
 }
 
 .interior .interior_stage {
-    width: 100%;
-    max-width: 1920px;
+    width: 100vw;
+    max-width: 100vw;
     height: 1014px;
     position: relative;
     overflow: hidden;
 }
 
 .interior .interior_main_img {
-    width: 100%;
+    width: 100vw;
     height: 100%;
     object-fit: cover;
 }
@@ -721,6 +710,14 @@ a {
     position: absolute;
     width: 50px;
     height: 50px;
+    min-width: 50px;
+    min-height: 50px;
+    padding: 0;
+    display: inline-block;
+    flex: none;
+    aspect-ratio: 1 / 1;
+    line-height: 0;
+    box-sizing: border-box;
     border-radius: 50%;
     transform: translate(-50%, -50%);
     background: rgba(129, 129, 129, 0.72);
@@ -782,7 +779,8 @@ a {
 }
 
 .interior .interior_panel {
-    width: 793px;
+    width: 35%;
+    max-width: 35%;
     height: 100%;
     position: absolute;
     top: 0;
@@ -791,6 +789,9 @@ a {
     z-index: 4;
     opacity: 0;
     transform: translateX(24px);
+    border: 0;
+    border-radius: 0;
+    box-shadow: -24px 0 48px rgba(0, 0, 0, 0.28);
     transition: transform 0.28s ease, opacity 0.28s ease;
 }
 
@@ -807,18 +808,66 @@ a {
 
 .interior .interior_panel_close {
     position: absolute;
-    top: 20px;
-    right: 40px;
+    top: 24px;
+    right: 24px;
     width: 50px;
     height: 50px;
+    min-width: 50px;
+    min-height: 50px;
+    padding: 0;
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1 / 1;
+    line-height: 0;
+    box-sizing: border-box;
     border-radius: 50%;
+    position: absolute;
+    overflow: hidden;
+    background: rgba(12, 17, 21, 0.42);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
     z-index: 5;
+}
+
+.interior .interior_panel_close::before,
+.interior .interior_panel_close::after {
+    content: "";
+    position: absolute;
+    inset: 50% auto auto 50%;
+    width: 20px;
+    height: 2px;
+    background: #fff;
+    border-radius: 999px;
+    transform-origin: center;
+}
+
+.interior .interior_panel_close::before {
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.interior .interior_panel_close::after {
+    transform: translate(-50%, -50%) rotate(-45deg);
 }
 
 .ev_features {
     width: 100%;
     height: 796px;
+    position: relative;
     background: #232534;
+}
+
+.ev_features::before {
+    content: "";
+    position: absolute;
+    top: -140px;
+    left: 0;
+    width: 100%;
+    height: 140px;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(35, 37, 52, 0) 0%, rgba(35, 37, 52, 0.45) 35%, rgba(35, 37, 52, 0.82) 70%, rgba(35, 37, 52, 1) 100%);
 }
 
 .ev_features .inner {
@@ -950,7 +999,7 @@ a {
 }
 
 .driver_assist .driver_assist_video_box {
-    width: min(856px, calc(100% - 120px));
+    width: 856px;
     height: 450px;
     margin-top: 64px;
     overflow: hidden;
@@ -1024,4 +1073,203 @@ a {
     line-height: 1.5;
     letter-spacing: -0.01em;
     color: #fffdfb;
+}
+
+/* =========================
+   Customer Reviews
+========================= */
+.customer_reviews {
+    width: 100%;
+    min-height: 1200px;
+    padding: 120px 0;
+    position: relative;
+    background:
+        radial-gradient(60% 42% at 54% 78%, rgba(196, 206, 219, 0.18) 0%, rgba(196, 206, 219, 0.08) 16%, rgba(6, 17, 27, 0) 42%),
+        linear-gradient(180deg, #06111b 0%, #06111b 100%);
+    overflow: hidden;
+}
+
+.customer_reviews::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 120px;
+    z-index: 5;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(35, 37, 52, 1) 0%, rgba(35, 37, 52, 0.55) 45%, rgba(35, 37, 52, 0) 100%);
+}
+
+.customer_reviews .inner {
+    width: min(1440px, calc(100% - 120px));
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 200px;
+}
+
+.customer_reviews .review_intro {
+    width: 412px;
+    flex-shrink: 0;
+}
+
+.customer_reviews .review_title {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 64px;
+    font-weight: 400;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    color: #fffdfb;
+}
+
+.customer_reviews .review_title strong {
+    font-weight: 600;
+}
+
+.customer_reviews .review_desc {
+    margin-top: 24px;
+    font-family: "Inter", sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.45;
+    color: rgba(255, 253, 251, 0.92);
+}
+
+.customer_reviews .review_btn {
+    min-width: 200px;
+    height: 68px;
+    margin-top: 38px;
+    padding: 0 34px;
+    border-radius: 999px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(191, 188, 183, 0.9);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 10px 26px rgba(0, 0, 0, 0.18);
+    font-family: "Outfit", sans-serif;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1;
+    color: #fffdfb;
+}
+
+.customer_reviews .review_stage {
+    width: 828px;
+    height: 872px;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.customer_reviews .review_stage::before,
+.customer_reviews .review_stage::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 132px;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.customer_reviews .review_stage::before {
+    top: 0;
+    background: linear-gradient(180deg, #06111b 0%, rgba(6, 17, 27, 0) 100%);
+}
+
+.customer_reviews .review_stage::after {
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(6, 17, 27, 0) 0%, #06111b 100%);
+}
+
+.customer_reviews .review_column {
+    width: 400px;
+    height: 872px;
+    overflow: hidden;
+}
+
+.customer_reviews .review_track {
+    --card-height: 392px;
+    --card-gap: 28px;
+    --loop-distance: 1260px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--card-gap);
+    will-change: transform;
+}
+
+.customer_reviews .review_column.left .review_track {
+    transform: translateY(calc(-1 * var(--loop-distance)));
+    animation: reviewColumnDown 24s linear infinite;
+}
+
+.customer_reviews .review_column.right .review_track {
+    animation: reviewColumnUp 24s linear infinite;
+}
+
+.customer_reviews .review_column:hover .review_track {
+    animation-play-state: paused;
+}
+
+.customer_reviews .review_card {
+    width: 400px;
+    height: 392px;
+    padding: 40px;
+    border-radius: 32px;
+    background: linear-gradient(180deg, rgba(160, 163, 162, 0.9) 0%, rgba(152, 154, 153, 0.9) 100%);
+    border: 1px solid rgba(255, 253, 251, 0.14);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 18px 42px rgba(0, 0, 0, 0.16);
+    color: #fffdfb;
+}
+
+.customer_reviews .review_star {
+    font-family: "Outfit", sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.22em;
+    color: #bfd0df;
+}
+
+.customer_reviews .review_quote {
+    margin-top: 28px;
+    font-family: "Outfit", sans-serif;
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.42;
+    letter-spacing: -0.02em;
+    color: #fffdfb;
+}
+
+.customer_reviews .review_owner {
+    margin-top: 28px;
+    font-family: "Outfit", sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+    color: #fffdfb;
+}
+
+@keyframes reviewColumnUp {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(calc(-1 * var(--loop-distance)));
+    }
+}
+
+@keyframes reviewColumnDown {
+    from {
+        transform: translateY(calc(-1 * var(--loop-distance)));
+    }
+
+    to {
+        transform: translateY(0);
+    }
 }
