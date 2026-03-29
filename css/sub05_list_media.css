@@ -83,29 +83,6 @@
     font-size: 28px;
   }
 
-  footer .inner {
-    padding: 72px 32px;
-    flex-direction: column;
-    gap: 48px;
-  }
-
-  footer .f_right {
-    width: 100%;
-    gap: 40px;
-  }
-
-  footer .f_right .f_memu {
-    flex-wrap: wrap;
-    gap: 24px;
-  }
-
-  footer .f_right .f_memu article {
-    min-width: 220px;
-  }
-
-  footer .f_right .f_copy {
-    text-align: left;
-  }
 }
 
 @media screen and (max-width: 900px) {
@@ -166,19 +143,4 @@
     justify-content: center;
   }
 
-  footer .inner {
-    padding: 56px 20px;
-  }
-
-  footer .f_logo {
-    font-size: 40px;
-  }
-
-  footer .f_left {
-    gap: 36px;
-  }
-
-  footer .f_right .f_memu article strong {
-    font-size: 20px;
-  }
 }

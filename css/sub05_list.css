@@ -348,38 +348,3 @@ header .inner h1 a {
   font-size: 20px;
 }
 
-footer {
-  margin-top: 40px;
-}
-
-footer .f_logo {
-  font-family: "Outfit", sans-serif;
-  color: var(--kia-white1);
-  font-size: 52px;
-  line-height: 1;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-footer .f_sns {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-footer .f_sns li a {
-  display: block;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: rgba(251, 246, 239, 0.18);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-footer .f_sns li a i {
-  color: var(--kia-white2);
-  font-size: 18px;
-}

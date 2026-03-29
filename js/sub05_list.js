@@ -2,7 +2,6 @@
   const filterButtons = Array.from(document.querySelectorAll('.filter_nav button[data-target]'));
   const sections = Array.from(document.querySelectorAll('.vehicle_group[data-filter]'));
   const openCompareButton = document.querySelector('.open_compare');
-  const familyToggle = document.querySelector('footer .f_fam > strong');
 
   if (!filterButtons.length || !sections.length) {
     return;
@@ -62,11 +61,4 @@
     });
   }
 
-  if (familyToggle) {
-    familyToggle.addEventListener('click', () => {
-      const container = familyToggle.closest('.f_fam');
-      if (!container) return;
-      container.classList.toggle('on');
-    });
-  }
 })();
