@@ -1,5 +1,11 @@
 @charset "utf-8";
 
+@media (max-width: 1500px) {
+    :root {
+        --header_height: 80px;
+    }
+}
+
 @media (max-width: 1200px) {
     .site_header {
         padding: 16px 20px;

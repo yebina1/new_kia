@@ -72,7 +72,7 @@ a {
     height: 100vh;
     position: relative;
     overflow: hidden;
-    background: no-repeat center center / cover url('./main_visual.png');
+    background: no-repeat center center / cover url('../img/sub03_detail/main_visual.png');
 }
 
 .main_visual::before {
@@ -392,7 +392,7 @@ a {
     flex-shrink: 0;
     overflow: hidden;
     border-radius: 32px 0 0 32px;
-    background: no-repeat center center / cover var(--trim-bg, url('./trim_visual_base.png'));
+    background: no-repeat center center / cover var(--trim-bg, url('../img/sub03_detail/trim_visual_base.png'));
 }
 
 .trim_selector .trim_visual::before {

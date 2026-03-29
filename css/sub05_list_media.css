@@ -1,5 +1,11 @@
 @charset "utf-8";
 
+@media screen and (max-width: 1500px) {
+  .list_page {
+    padding-top: 114px;
+  }
+}
+
 @media screen and (max-width: 1440px) {
   .list_page {
     padding-inline: 64px;

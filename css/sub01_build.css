@@ -1803,6 +1803,10 @@ button {
   width: 160px;
   background: rgba(255, 255, 255, 0.08);
   align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
 
 .hero_accessory_card_media img {
@@ -1810,6 +1814,14 @@ button {
   height: 100%;
   object-fit: cover;
   object-position: center;
+}
+
+.hero_accessory_card_media.hero_accessory_card_media_contain {
+  padding: 6px;
+}
+
+.hero_accessory_card_media.hero_accessory_card_media_contain img {
+  object-fit: contain;
 }
 
 .hero_accessory_card_body {
