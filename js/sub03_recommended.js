@@ -615,6 +615,11 @@ function renderSections(activeIndex, sections, title, recco, experimentalMode, d
         title.textContent = recommendationTitles[activeSection.id] || "Recommended";
     }
 
+    const tellurideBoundaryScroll = document.getElementById("tellurideBoundaryScroll");
+    if (tellurideBoundaryScroll) {
+        tellurideBoundaryScroll.style.display = activeSection.id === "telluride_outdoor" ? "inline-block" : "none";
+    }
+
     updateDesktopTabVisual(getMobileGroup(activeSection.id));
     updateDesktopHeroVisual(getMobileGroup(activeSection.id), desktopVisual, state);
     state.lastRenderedDesktopIndex = activeIndex;
