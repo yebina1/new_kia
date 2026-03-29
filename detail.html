@@ -1,343 +1,498 @@
-<!DOCTYPE html>
-<html lang="ko">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>kia</title>
-    <!-- 가져온 css -->
+    <!-- 揶쎛?紐꾩궔 css -->
     <!-- Basic Icons -->
-    <link href="https://cdn.boxicons.com/3.0.8/fonts/basic/boxicons.min.css" rel="stylesheet">
+    <link
+      href="https://cdn.boxicons.com/3.0.8/fonts/basic/boxicons.min.css"
+      rel="stylesheet"
+    />
     <!-- Filled Icons -->
-    <link href="https://cdn.boxicons.com/3.0.8/fonts/filled/boxicons-filled.min.css" rel="stylesheet">
+    <link
+      href="https://cdn.boxicons.com/3.0.8/fonts/filled/boxicons-filled.min.css"
+      rel="stylesheet"
+    />
     <!-- Brand Icons -->
-    <link href="https://cdn.boxicons.com/3.0.8/fonts/brands/boxicons-brands.min.css" rel="stylesheet">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <!-- 내 css -->
-    <link rel="stylesheet" href="css/reset.css">
-    <link rel="stylesheet" href="css/common.css">
-    <link rel="stylesheet" href="css/sub03_detail.css">
+    <link
+      href="https://cdn.boxicons.com/3.0.8/fonts/brands/boxicons-brands.min.css"
+      rel="stylesheet"
+    />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+    <!-- ??css -->
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/sub03_detail.css" />
     <!-- media css -->
-    <link rel="stylesheet" href="css/common_media.css">
-    <link rel="stylesheet" href="css/sub03_detail_media.css">
-    <!-- 가져온 js -->
+    <link rel="stylesheet" href="css/common_media.css" />
+    <link rel="stylesheet" href="css/sub03_detail_media.css" />
+    <!-- 揶쎛?紐꾩궔 js -->
 
-    <!-- 내 script -->
+    <!-- ??script -->
     <script src="js/common.js" defer></script>
     <script src="js/sub03_detail.js" defer></script>
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="wrap">
+      <header>
+        <div class="inner">
+          <div class="header_top">
+            <h1>
+              <a href="index.html"><img src="img/logo.svg" alt="kia" /></a>
+            </h1>
+            <nav class="glass_bg2">
+              <ul class="gnb">
+                <li>
+                  <a href="whykia.html">company</a>
+                </li>
+                <li>
+                  <a href="list.html">vehicles</a>
+                </li>
+                <li>
+                  <a href="recommended.html">shopping assistant</a>
+                </li>
+                <li><a href="detail.html">inventory</a></li>
+                <li>
+                  <a href="index.html#map">center</a>
+                </li>
+                <li>
+                  <a href="#"
+                    >owners page<i class="bx bx-arrow-up-right-stroke"></i
+                  ></a>
+                </li>
+              </ul>
+              <div class="icons">
+                <a href="#" aria-label="customer support"
+                  ><img
+                    src="img/main/header/headphone.svg"
+                    alt="customer support"
+                /></a>
+                <a href="#" aria-label="search"
+                  ><i class="bx bx-search-big"></i
+                ></a>
+                <a href="#" aria-label="language"
+                  ><i class="bx bx-globe-alt"></i
+                ></a>
+                <a href="#" class="icon_menu" aria-label="menu"
+                  ><i class="bx bx-menu"></i
+                ></a>
+              </div>
+            </nav>
+          </div>
+          <div class="header_bottom">
+            <ul class="sub_nav">
+              <li><a href="build.html">build my kia</a></li>
+              <li><a href="recommended.html">kia recommended</a></li>
+              <li><a href="#">payment calculator</a></li>
+              <li><a href="#">trade in</a></li>
+              <li><a href="#">easy buy</a></li>
+              <li><a href="#">certified pre-owned</a></li>
+              <li><a href="#">sub shop</a></li>
+            </ul>
+          </div>
+        </div>
+      </header>
 
-        <section class="main_visual">
-            <div class="visual_bottom">
-                <div class="visual_left">
-                    <h2 class="visual_title">EV9</h2>
-                    <strong class="visual_sub_title">Bold for Nature</strong>
-                    <p class="visual_desc">Make your Movement that Inspires</p>
+      <section class="main_visual">
+        <div class="visual_bottom">
+          <div class="visual_left">
+            <h2 class="visual_title">EV9</h2>
+            <strong class="visual_sub_title">Bold for Nature</strong>
+            <p class="visual_desc">Make your Movement that Inspires</p>
 
-                    <div class="btn_wrap">
-                        <a href="#" class="btn primary">Build Your EV9</a>
-                        <a href="#" class="btn">See Inventory</a>
-                    </div>
-                </div>
-
-                <ul class="spec_list">
-                    <li class="spec_item">
-                        <img src="./icon1.png" alt="Fast charging icon" />
-                        <div class="spec_text">
-                            <p class="spec_value">35,000 <span>DC</span></p>
-                            <p class="spec_desc">Fast charging</p>
-                        </div>
-                    </li>
-
-                    <li class="spec_item">
-                        <img src="./icon2.png" alt="Acceleration icon" />
-                        <div class="spec_text">
-                            <p class="spec_value">0-60 <span>mph</span></p>
-                            <p class="spec_desc">sec : 5.0s</p>
-                        </div>
-                    </li>
-
-                    <li class="spec_item">
-                        <img src="./icon3.png" alt="Horsepower icon" />
-                        <div class="spec_text">
-                            <p class="spec_desc">Up to</p>
-                            <p class="spec_value">379 <span>hp</span></p>
-                        </div>
-                    </li>
-
-                    <li class="spec_item">
-                        <img src="./icon4.png" alt="Range icon" />
-                        <div class="spec_text">
-                            <p class="spec_desc">Up to</p>
-                            <p class="spec_value">305 <span>mil range</span></p>
-                        </div>
-                    </li>
-                </ul>
+            <div class="btn_wrap">
+              <a href="#" class="btn primary">Build Your EV9</a>
+              <a href="#" class="btn">See Inventory</a>
             </div>
-        </section>
+          </div>
 
-        <section class="size_it_up">
-            <div class="inner">
-                <h2 class="section_title">Size It Up</h2>
+          <ul class="spec_list">
+            <li class="spec_item">
+              <img src="./icon1.png" alt="Fast charging icon" />
+              <div class="spec_text">
+                <p class="spec_value">35,000 <span>DC</span></p>
+                <p class="spec_desc">Fast charging</p>
+              </div>
+            </li>
 
-                <div class="img_box">
-                    <img src="./IMG_BOX.png" alt="EV9 size drawing" />
+            <li class="spec_item">
+              <img src="./icon2.png" alt="Acceleration icon" />
+              <div class="spec_text">
+                <p class="spec_value">0-60 <span>mph</span></p>
+                <p class="spec_desc">sec : 5.0s</p>
+              </div>
+            </li>
+
+            <li class="spec_item">
+              <img src="./icon3.png" alt="Horsepower icon" />
+              <div class="spec_text">
+                <p class="spec_desc">Up to</p>
+                <p class="spec_value">379 <span>hp</span></p>
+              </div>
+            </li>
+
+            <li class="spec_item">
+              <img src="./icon4.png" alt="Range icon" />
+              <div class="spec_text">
+                <p class="spec_desc">Up to</p>
+                <p class="spec_value">305 <span>mil range</span></p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="size_it_up">
+        <div class="inner">
+          <h2 class="section_title">Size It Up</h2>
+
+          <div class="img_box">
+            <img src="./IMG_BOX.png" alt="EV9 size drawing" />
+          </div>
+
+          <div class="size_info_box">
+            <ul class="size_info_list">
+              <li class="size_info_item">
+                <p class="size_info_code">A, C</p>
+                <p class="size_info_desc">Max height (with antenna)</p>
+                <p class="size_info_value">68.9 in</p>
+              </li>
+
+              <li class="size_info_item">
+                <p class="size_info_code">B, D</p>
+                <p class="size_info_desc">Width (side mirrors folded)</p>
+                <p class="size_info_value">78 in</p>
+              </li>
+
+              <li class="size_info_item">
+                <p class="size_info_code">E</p>
+                <p class="size_info_desc">Wheelbase</p>
+                <p class="size_info_value">122.0 in</p>
+              </li>
+
+              <li class="size_info_item">
+                <p class="size_info_code">F</p>
+                <p class="size_info_desc">Length</p>
+                <p class="size_info_value">197.2 in</p>
+              </li>
+
+              <li class="size_info_item">
+                <p class="size_info_code">G</p>
+                <p class="size_info_desc">Approach angle</p>
+                <p class="size_info_value">20.0吏?/p></p>
+              </li>
+
+              <li class="size_info_item">
+                <p class="size_info_code">H</p>
+                <p class="size_info_desc">Departure angle</p>
+                <p class="size_info_value">22.8吏?/p></p>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="trim_selector">
+        <div class="inner">
+          <h2 class="section_title">Trim Selector</h2>
+
+          <div
+            class="trim_tab_box"
+            role="tablist"
+            aria-label="EV9 Trim Selector"
+          >
+            <button
+              type="button"
+              class="trim_tab on"
+              data-trim="light-rwd"
+              aria-selected="true"
+            >
+              Light RWD
+            </button>
+            <button
+              type="button"
+              class="trim_tab"
+              data-trim="light-long-range-rwd"
+              aria-selected="false"
+            >
+              Light LongRange RWD
+            </button>
+            <button
+              type="button"
+              class="trim_tab"
+              data-trim="wind-awd"
+              aria-selected="false"
+            >
+              Wind AWD
+            </button>
+            <button
+              type="button"
+              class="trim_tab"
+              data-trim="land-awd"
+              aria-selected="false"
+            >
+              Land AWD
+            </button>
+            <button
+              type="button"
+              class="trim_tab"
+              data-trim="gt-line-awd"
+              aria-selected="false"
+            >
+              GT-Line AWD
+            </button>
+          </div>
+
+          <div class="trim_stage" aria-live="polite">
+            <div class="trim_visual">
+              <div class="trim_visual_inner">
+                <div class="trim_heading">
+                  <h3 class="trim_name">Light RWD</h3>
+                  <p class="trim_price">$54,900</p>
                 </div>
 
-                <div class="size_info_box">
-                    <ul class="size_info_list">
-                        <li class="size_info_item">
-                            <p class="size_info_code">A, C</p>
-                            <p class="size_info_desc">Max height (with antenna)</p>
-                            <p class="size_info_value">68.9 in</p>
-                        </li>
-
-                        <li class="size_info_item">
-                            <p class="size_info_code">B, D</p>
-                            <p class="size_info_desc">Width (side mirrors folded)</p>
-                            <p class="size_info_value">78 in</p>
-                        </li>
-
-                        <li class="size_info_item">
-                            <p class="size_info_code">E</p>
-                            <p class="size_info_desc">Wheelbase</p>
-                            <p class="size_info_value">122.0 in</p>
-                        </li>
-
-                        <li class="size_info_item">
-                            <p class="size_info_code">F</p>
-                            <p class="size_info_desc">Length</p>
-                            <p class="size_info_value">197.2 in</p>
-                        </li>
-
-                        <li class="size_info_item">
-                            <p class="size_info_code">G</p>
-                            <p class="size_info_desc">Approach angle</p>
-                            <p class="size_info_value">20.0°</p>
-                        </li>
-
-                        <li class="size_info_item">
-                            <p class="size_info_code">H</p>
-                            <p class="size_info_desc">Departure angle</p>
-                            <p class="size_info_value">22.8°</p>
-                        </li>
-                    </ul>
-                </div>
+                <ul class="trim_chip_list"></ul>
+              </div>
             </div>
-        </section>
 
-        <section class="trim_selector">
-            <div class="inner">
-                <h2 class="section_title">Trim Selector</h2>
+            <div class="trim_info"></div>
+          </div>
+        </div>
+      </section>
 
-                <div class="trim_tab_box" role="tablist" aria-label="EV9 Trim Selector">
-                    <button type="button" class="trim_tab on" data-trim="light-rwd" aria-selected="true">Light
-                        RWD</button>
-                    <button type="button" class="trim_tab" data-trim="light-long-range-rwd" aria-selected="false">Light
-                        LongRange
-                        RWD</button>
-                    <button type="button" class="trim_tab" data-trim="wind-awd" aria-selected="false">Wind AWD</button>
-                    <button type="button" class="trim_tab" data-trim="land-awd" aria-selected="false">Land AWD</button>
-                    <button type="button" class="trim_tab" data-trim="gt-line-awd" aria-selected="false">GT-Line
-                        AWD</button>
-                </div>
+      <section class="interior">
+        <div class="inner">
+          <h2 class="section_title">Interior</h2>
 
-                <div class="trim_stage" aria-live="polite">
-                    <div class="trim_visual">
-                        <div class="trim_visual_inner">
-                            <div class="trim_heading">
-                                <h3 class="trim_name">Light RWD</h3>
-                                <p class="trim_price">$54,900</p>
-                            </div>
+          <div class="interior_stage">
+            <img
+              class="interior_main_img"
+              src="./interior_inner.png"
+              alt="EV9 interior layout"
+            />
 
-                            <ul class="trim_chip_list"></ul>
-                        </div>
-                    </div>
+            <button
+              type="button"
+              class="interior_hotspot spacious-3-row"
+              data-panel="spacious-3-row"
+              aria-label="Spacious 3-Row"
+            >
+              <span class="blind">Spacious 3-Row</span>
+            </button>
 
-                    <div class="trim_info"></div>
-                </div>
+            <button
+              type="button"
+              class="interior_hotspot meridian-audio"
+              data-panel="meridian-audio"
+              aria-label="Meridian Audio"
+            >
+              <span class="blind">Meridian Audio</span>
+            </button>
+
+            <button
+              type="button"
+              class="interior_hotspot panoramic-display-rear"
+              data-panel="panoramic-display-rear"
+              aria-label="Panoramic Display dual 12.3-inch screens"
+            >
+              <span class="blind">Panoramic Display</span>
+            </button>
+
+            <button
+              type="button"
+              class="interior_hotspot power-front-seats"
+              data-panel="power-front-seats"
+              aria-label="Power Front Seats"
+            >
+              <span class="blind">Power Front Seats</span>
+            </button>
+
+            <button
+              type="button"
+              class="interior_hotspot panoramic-display-front"
+              data-panel="panoramic-display-front"
+              aria-label="Panoramic Display wide intuitive view"
+            >
+              <span class="blind">Panoramic Display</span>
+            </button>
+
+            <div class="interior_panel" hidden>
+              <img class="interior_panel_img" src="" alt="" />
+              <button
+                type="button"
+                class="interior_panel_close"
+                aria-label="??る┛"
+              ></button>
             </div>
-        </section>
+          </div>
+        </div>
+      </section>
 
-        <section class="interior">
-            <div class="inner">
-                <h2 class="section_title">Interior</h2>
+      <section class="ev_features">
+        <div class="inner">
+          <p class="feature_eyebrow">EV FEATURES</p>
+          <h2 class="feature_title">Go further, charge faster.</h2>
+          <p class="feature_desc">
+            The EV9 is designed to make electric driving easy and efficient.
+          </p>
 
-                <div class="interior_stage">
-                    <img class="interior_main_img" src="./interior_inner.png" alt="EV9 interior layout" />
+          <ul class="feature_list">
+            <li class="feature_item">
+              <div class="feature_img_box">
+                <img src="./img01.png" alt="Fast charging illustration" />
+              </div>
 
-                    <button type="button" class="interior_hotspot spacious-3-row" data-panel="spacious-3-row"
-                        aria-label="Spacious 3-Row">
-                        <span class="blind">Spacious 3-Row</span>
-                    </button>
+              <div class="feature_text_box">
+                <h3 class="feature_item_title">Fast Charging</h3>
+                <p class="feature_item_desc">
+                  North American Charging Standard<br />Recharge from 10??0% in
+                  as little as 24 minutes
+                </p>
+              </div>
+            </li>
 
-                    <button type="button" class="interior_hotspot meridian-audio" data-panel="meridian-audio"
-                        aria-label="Meridian Audio">
-                        <span class="blind">Meridian Audio</span>
-                    </button>
+            <li class="feature_item">
+              <div class="feature_img_box">
+                <img src="./img02.png" alt="Range confidence illustration" />
+              </div>
 
-                    <button type="button" class="interior_hotspot panoramic-display-rear"
-                        data-panel="panoramic-display-rear" aria-label="Panoramic Display dual 12.3-inch screens">
-                        <span class="blind">Panoramic Display</span>
-                    </button>
+              <div class="feature_text_box">
+                <h3 class="feature_item_title">Range Confidence</h3>
+                <p class="feature_item_desc">
+                  Over 18,000 DC fast charging locations<br />Access the Tesla
+                  Supercharger network across the country
+                </p>
+              </div>
+            </li>
 
-                    <button type="button" class="interior_hotspot power-front-seats" data-panel="power-front-seats"
-                        aria-label="Power Front Seats">
-                        <span class="blind">Power Front Seats</span>
-                    </button>
+            <li class="feature_item">
+              <div class="feature_img_box is_contain">
+                <img
+                  src="./img03.png"
+                  alt="Versatile utility V2L illustration"
+                />
+              </div>
 
-                    <button type="button" class="interior_hotspot panoramic-display-front"
-                        data-panel="panoramic-display-front" aria-label="Panoramic Display wide intuitive view">
-                        <span class="blind">Panoramic Display</span>
-                    </button>
+              <div class="feature_text_box">
+                <h3 class="feature_item_title">Versatile Utility (V2L)</h3>
+                <p class="feature_item_desc">
+                  Harness your EV9???electric power output<br />Charge tools,
+                  devices, or even power your campsite
+                </p>
+              </div>
+            </li>
 
-                    <div class="interior_panel" hidden>
-                        <img class="interior_panel_img" src="" alt="" />
-                        <button type="button" class="interior_panel_close" aria-label="닫기"></button>
-                    </div>
-                </div>
-            </div>
-        </section>
+            <li class="feature_item">
+              <div class="feature_img_box">
+                <img src="./img04.png" alt="Towing capacity illustration" />
+              </div>
 
+              <div class="feature_text_box">
+                <h3 class="feature_item_title">Towing Capacity</h3>
+                <p class="feature_item_desc">
+                  Haul up to 5,000 lbs of gear<br />Empowering towing capacity
+                  for your adventurous lifestyle
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </section>
 
+      <section class="driver_assist">
+        <div class="inner">
+          <h2 class="section_title">Driver assist</h2>
+          <p class="driver_assist_desc">
+            Confidence-inspiring tech that watches out for you.
+          </p>
 
-        <section class="ev_features">
-            <div class="inner">
-                <p class="feature_eyebrow">EV FEATURES</p>
-                <h2 class="feature_title">Go further, charge faster.</h2>
-                <p class="feature_desc">The EV9 is designed to make electric driving easy and efficient.</p>
+          <div class="driver_assist_video_box">
+            <video
+              class="driver_assist_video"
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="metadata"
+              poster="./driver_assist_poster.jpg"
+              aria-label="Driver assist demonstration video"
+            >
+              <source src="./driver_assist_video.mp4" type="video/mp4" />
+            </video>
+          </div>
 
-                <ul class="feature_list">
-                    <li class="feature_item">
-                        <div class="feature_img_box">
-                            <img src="./img01.png" alt="Fast charging illustration" />
-                        </div>
+          <ul class="driver_assist_list">
+            <li class="driver_assist_item">
+              <div class="driver_assist_thumb">
+                <img src="./p01.png" alt="Forward Collision-Avoidance Assist" />
+              </div>
 
-                        <div class="feature_text_box">
-                            <h3 class="feature_item_title">Fast Charging</h3>
-                            <p class="feature_item_desc">North American Charging Standard<br />Recharge from 10–80% in
-                                as little as 24
-                                minutes</p>
-                        </div>
-                    </li>
+              <div class="driver_assist_text_box">
+                <h3 class="driver_assist_item_title">
+                  Forward Collision-<br />Avoidance Assist
+                </h3>
+                <p class="driver_assist_item_desc">
+                  Detects and automatically<br />brakes to help avoid<br />potential
+                  collisions.
+                </p>
+              </div>
+            </li>
 
-                    <li class="feature_item">
-                        <div class="feature_img_box">
-                            <img src="./img02.png" alt="Range confidence illustration" />
-                        </div>
+            <li class="driver_assist_item">
+              <div class="driver_assist_thumb">
+                <img src="./p02.png" alt="Parking Sensors" />
+              </div>
 
-                        <div class="feature_text_box">
-                            <h3 class="feature_item_title">Range Confidence</h3>
-                            <p class="feature_item_desc">Over 18,000 DC fast charging locations<br />Access the Tesla
-                                Supercharger
-                                network across the country</p>
-                        </div>
-                    </li>
+              <div class="driver_assist_text_box">
+                <h3 class="driver_assist_item_title">Parking Sensors</h3>
+                <p class="driver_assist_item_desc">
+                  Warns you of nearby<br />objects and can even brake<br />for
+                  you to help you park
+                </p>
+              </div>
+            </li>
 
-                    <li class="feature_item">
-                        <div class="feature_img_box is_contain">
-                            <img src="./img03.png" alt="Versatile utility V2L illustration" />
-                        </div>
+            <li class="driver_assist_item">
+              <div class="driver_assist_thumb">
+                <img src="./p03.png" alt="Lane Following Assist 2" />
+              </div>
 
-                        <div class="feature_text_box">
-                            <h3 class="feature_item_title">Versatile Utility (V2L)</h3>
-                            <p class="feature_item_desc">Harness your EV9’s electric power output<br />Charge tools,
-                                devices, or even
-                                power your campsite</p>
-                        </div>
-                    </li>
+              <div class="driver_assist_text_box">
+                <h3 class="driver_assist_item_title">
+                  Lane Following Assist 2
+                </h3>
+                <p class="driver_assist_item_desc">
+                  Keeps your lane and<br />maintains a safe distance<br />from
+                  other cars
+                </p>
+              </div>
+            </li>
 
-                    <li class="feature_item">
-                        <div class="feature_img_box">
-                            <img src="./img04.png" alt="Towing capacity illustration" />
-                        </div>
+            <li class="driver_assist_item">
+              <div class="driver_assist_thumb">
+                <img src="./p04.png" alt="Surround View Monitor" />
+              </div>
 
-                        <div class="feature_text_box">
-                            <h3 class="feature_item_title">Towing Capacity</h3>
-                            <p class="feature_item_desc">Haul up to 5,000 lbs of gear<br />Empowering towing capacity
-                                for your
-                                adventurous lifestyle</p>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </section>
+              <div class="driver_assist_text_box">
+                <h3 class="driver_assist_item_title">Surround View Monitor</h3>
+                <p class="driver_assist_item_desc">
+                  Provides a 360吏?view of<br />your EV9 for confident<br />parking
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </section>
 
-
-        <section class="driver_assist">
-            <div class="inner">
-                <h2 class="section_title">Driver assist</h2>
-                <p class="driver_assist_desc">Confidence-inspiring tech that watches out for you.</p>
-
-                <div class="driver_assist_video_box">
-                    <video class="driver_assist_video" autoplay muted loop playsinline preload="metadata"
-                        poster="./driver_assist_poster.jpg" aria-label="Driver assist demonstration video">
-                        <source src="./driver_assist_video.mp4" type="video/mp4" />
-                    </video>
-                </div>
-
-                <ul class="driver_assist_list">
-                    <li class="driver_assist_item">
-                        <div class="driver_assist_thumb">
-                            <img src="./p01.png" alt="Forward Collision-Avoidance Assist" />
-                        </div>
-
-                        <div class="driver_assist_text_box">
-                            <h3 class="driver_assist_item_title">Forward Collision-<br />Avoidance Assist</h3>
-                            <p class="driver_assist_item_desc">Detects and automatically<br />brakes to help
-                                avoid<br />potential
-                                collisions.</p>
-                        </div>
-                    </li>
-
-                    <li class="driver_assist_item">
-                        <div class="driver_assist_thumb">
-                            <img src="./p02.png" alt="Parking Sensors" />
-                        </div>
-
-                        <div class="driver_assist_text_box">
-                            <h3 class="driver_assist_item_title">Parking Sensors</h3>
-                            <p class="driver_assist_item_desc">Warns you of nearby<br />objects and can even
-                                brake<br />for you to help
-                                you park</p>
-                        </div>
-                    </li>
-
-                    <li class="driver_assist_item">
-                        <div class="driver_assist_thumb">
-                            <img src="./p03.png" alt="Lane Following Assist 2" />
-                        </div>
-
-                        <div class="driver_assist_text_box">
-                            <h3 class="driver_assist_item_title">Lane Following Assist 2</h3>
-                            <p class="driver_assist_item_desc">Keeps your lane and<br />maintains a safe
-                                distance<br />from other cars
-                            </p>
-                        </div>
-                    </li>
-
-                    <li class="driver_assist_item">
-                        <div class="driver_assist_thumb">
-                            <img src="./p04.png" alt="Surround View Monitor" />
-                        </div>
-
-                        <div class="driver_assist_text_box">
-                            <h3 class="driver_assist_item_title">Surround View Monitor</h3>
-                            <p class="driver_assist_item_desc">Provides a 360° view of<br />your EV9 for
-                                confident<br />parking</p>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </section>
-
-        <script src="./ev9_main_sections.js"></script>
-
-    </div> <!-- //.wrap -->
-</body>
-
+      <script src="./ev9_main_sections.js"></script>
+    </div>
+    <!-- //.wrap -->
+  </body>
 </html>

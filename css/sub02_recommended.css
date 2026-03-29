@@ -11,6 +11,16 @@ body {
     scrollbar-gutter: stable;
 }
 
+section.way {
+    padding-top: 170px;
+}
+
+@media (max-width: 1500px) {
+    section.way {
+        padding-top: 120px;
+    }
+}
+
 section.way .inner {
     width: min(100%, 1320px);
     margin: 0 auto;
