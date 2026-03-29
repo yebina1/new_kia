@@ -284,3 +284,438 @@ if (driverAssistVideo) {
     window.addEventListener('load', playDriverAssistVideo, { once: true });
   }
 }
+
+(() => {
+  const section = document.querySelector('.wheels_story');
+  if (!section) return;
+
+  const canvas = section.querySelector('.wheels_story_canvas');
+  const wheelsTitle = section.querySelector('.wheels_story_title');
+  const copyBlocks = Array.from(section.querySelectorAll('.wheel_story_block'));
+  if (!canvas || !copyBlocks.length) return;
+
+  if (!window.gsap || !window.ScrollTrigger) {
+    console.warn('[wheels_story] GSAP/ScrollTrigger is not available.');
+    return;
+  }
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const ctx = canvas.getContext('2d', { alpha: true });
+  if (!ctx) return;
+
+  const WHEEL_TYPES = ['19in', '20in', '21in'];
+  const FRAME_COUNT = 13;
+
+  /*
+    ASSET PATH CONFIG
+    - Current project: flat PNG files in img/sub03_detail/wheels/
+      ex) 19in_01.png ... 19in_13.png
+    - If you switch to requested structure (/images/wheels/19in/00.webp ... 12.webp),
+      change naming to 'folderWebp00' and basePath to '/images/wheels'.
+  */
+  const ASSET_CONFIG = {
+    naming: 'flatPng1Based', // 'flatPng1Based' | 'folderWebp00'
+    basePath: 'img/sub03_detail/wheels',
+  };
+
+  /*
+    WHEEL X POSITIONS (adjust here)
+    - values are viewport-width ratios from canvas center
+  */
+  const WHEEL_X_RATIO = {
+    center: 0,
+    left: -0.28,
+    right: 0.31,
+  };
+
+  /*
+    FRAME MAPPING (adjust here)
+    - each move phase maps local 0~1 to frame 0~12 (one full rotation)
+  */
+  const FRAME_RANGE = {
+    start: 0,
+    end: FRAME_COUNT - 1,
+  };
+
+  /*
+    TEXT TRIGGER TIMING (adjust here)
+    - text appears only after wheel reaches each target position
+  */
+  const PHASE = {
+    move1: [0.0, 0.24],
+    hold1: [0.24, 0.32],
+    move2: [0.32, 0.56],
+    hold2: [0.56, 0.64],
+    move3: [0.64, 0.88],
+    hold3: [0.88, 1.0],
+  };
+
+  const TEXT_TRIGGER = {
+    block1: PHASE.hold1[0],
+    block2: PHASE.hold2[0],
+    block3: PHASE.hold3[0],
+  };
+
+  /*
+    TEXT TRANSITION AROUND MID-MOVE (adjust here)
+    - previous block fully disappears by midpoint
+    - next block starts fading in from midpoint
+  */
+  const TEXT_TRANSITION = {
+    firstInSpan: 0.06,
+    fadeOutSpan: 0.06,
+    fadeInSpan: 0.08,
+  };
+
+  /*
+    WHEEL SWITCH TIMING (adjust here)
+    - wheel set changes around neutral frame for natural transition
+  */
+  const SWITCH_CONFIG = {
+    neutralFrame: 6,
+    blendFrameRange: 1.2,
+  };
+
+  const STORY_SCROLL_DISTANCE = '+=420%';
+  /*
+    WHEEL Y PATH (adjust here)
+    - wheel enters from title+240px, then settles into text-side slot.
+    - text stays fixed; only wheel follows this Y path.
+  */
+  const TITLE_TO_WHEEL_START_PX = 240;
+  const WHEEL_Y_RATIO = {
+    entryStartFallback: 0.22,
+    slot: 0.5,
+  };
+  const MAX_WHEEL_SIZE = 360;
+  const WHEEL_SIZE_VW = 0.2;
+  const WHEEL_SIZE_VH = 0.34;
+
+  const viewport = {
+    width: 0,
+    height: 0,
+    dpr: 1,
+  };
+
+  const animationState = {
+    progress: 0,
+  };
+
+  let frameSets = {};
+  let isReady = false;
+  let rafToken = 0;
+  let lastRenderSignature = '';
+  let wheelEntryStartRatio = WHEEL_Y_RATIO.entryStartFallback;
+
+  const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+  const lerp = (start, end, t) => start + (end - start) * t;
+  const normalize = (value, start, end) => (value - start) / Math.max(end - start, 0.00001);
+  const getWheelSize = () =>
+    Math.min(MAX_WHEEL_SIZE, viewport.width * WHEEL_SIZE_VW, viewport.height * WHEEL_SIZE_VH);
+
+  const updateWheelEntryStartRatio = () => {
+    if (!wheelsTitle) {
+      wheelEntryStartRatio = WHEEL_Y_RATIO.entryStartFallback;
+      return;
+    }
+
+    const sectionRect = section.getBoundingClientRect();
+    const titleRect = wheelsTitle.getBoundingClientRect();
+    const wheelSize = getWheelSize();
+
+    // "title + 240px below" means wheel top starts at title top + 240.
+    const wheelTopFromSection = titleRect.top - sectionRect.top + TITLE_TO_WHEEL_START_PX;
+    const wheelCenterFromSection = wheelTopFromSection + wheelSize * 0.5;
+    wheelEntryStartRatio = clamp(wheelCenterFromSection / Math.max(viewport.height, 1), 0, 1);
+  };
+
+  const buildFramePath = (wheelType, frameIndex) => {
+    if (ASSET_CONFIG.naming === 'folderWebp00') {
+      return `${ASSET_CONFIG.basePath}/${wheelType}/${String(frameIndex).padStart(2, '0')}.webp`;
+    }
+
+    return `${ASSET_CONFIG.basePath}/${wheelType}_${String(frameIndex + 1).padStart(2, '0')}.png`;
+  };
+
+  const preloadFrames = () => {
+    const tasks = [];
+
+    WHEEL_TYPES.forEach((wheelType) => {
+      frameSets[wheelType] = new Array(FRAME_COUNT);
+
+      for (let frame = 0; frame < FRAME_COUNT; frame += 1) {
+        const src = buildFramePath(wheelType, frame);
+
+        tasks.push(
+          new Promise((resolve, reject) => {
+            const image = new Image();
+            image.decoding = 'async';
+            image.onload = () => {
+              frameSets[wheelType][frame] = image;
+              resolve();
+            };
+            image.onerror = () => reject(new Error(`Failed to load wheel frame: ${src}`));
+            image.src = src;
+          })
+        );
+      }
+    });
+
+    return Promise.all(tasks);
+  };
+
+  const getPhaseState = (progress) => {
+    const p = clamp(progress, 0, 1);
+
+    if (p <= PHASE.move1[1]) return { phase: 'move1', local: clamp(normalize(p, ...PHASE.move1), 0, 1) };
+    if (p <= PHASE.hold1[1]) return { phase: 'hold1', local: 1 };
+    if (p <= PHASE.move2[1]) return { phase: 'move2', local: clamp(normalize(p, ...PHASE.move2), 0, 1) };
+    if (p <= PHASE.hold2[1]) return { phase: 'hold2', local: 1 };
+    if (p <= PHASE.move3[1]) return { phase: 'move3', local: clamp(normalize(p, ...PHASE.move3), 0, 1) };
+    return { phase: 'hold3', local: 1 };
+  };
+
+  const getWheelXRatio = (progress) => {
+    const p = clamp(progress, 0, 1);
+
+    if (p <= PHASE.move1[1]) return lerp(WHEEL_X_RATIO.center, WHEEL_X_RATIO.left, normalize(p, ...PHASE.move1));
+    if (p <= PHASE.hold1[1]) return WHEEL_X_RATIO.left;
+    if (p <= PHASE.move2[1]) return lerp(WHEEL_X_RATIO.left, WHEEL_X_RATIO.right, normalize(p, ...PHASE.move2));
+    if (p <= PHASE.hold2[1]) return WHEEL_X_RATIO.right;
+    if (p <= PHASE.move3[1]) return lerp(WHEEL_X_RATIO.right, WHEEL_X_RATIO.left, normalize(p, ...PHASE.move3));
+    return WHEEL_X_RATIO.left;
+  };
+
+  const getWheelYRatio = (progress) => {
+    const p = clamp(progress, 0, 1);
+
+    // Enter diagonally during first movement, then stay on the text slot height.
+    if (p <= PHASE.move1[1]) {
+      return lerp(wheelEntryStartRatio, WHEEL_Y_RATIO.slot, normalize(p, ...PHASE.move1));
+    }
+
+    return WHEEL_Y_RATIO.slot;
+  };
+
+  const getFrameFloat = (phaseState) => {
+    if (!phaseState.phase.startsWith('move')) return FRAME_RANGE.end;
+    return lerp(FRAME_RANGE.start, FRAME_RANGE.end, phaseState.local);
+  };
+
+  const getSwitchBlend = (frameFloat) => {
+    const halfRange = SWITCH_CONFIG.blendFrameRange * 0.5;
+    const start = SWITCH_CONFIG.neutralFrame - halfRange;
+    const end = SWITCH_CONFIG.neutralFrame + halfRange;
+
+    if (frameFloat <= start) return 0;
+    if (frameFloat >= end) return 1;
+    return (frameFloat - start) / (end - start);
+  };
+
+  const getRenderPayload = (progress) => {
+    const phaseState = getPhaseState(progress);
+    const frameFloat = getFrameFloat(phaseState);
+    const frameIndex = clamp(Math.round(frameFloat), FRAME_RANGE.start, FRAME_RANGE.end);
+
+    let fromType = '19in';
+    let toType = null;
+    let blend = 0;
+
+    if (phaseState.phase === 'move1' || phaseState.phase === 'hold1') {
+      fromType = '19in';
+    } else if (phaseState.phase === 'move2') {
+      const transition = getSwitchBlend(frameFloat);
+      if (transition <= 0) {
+        fromType = '19in';
+      } else if (transition >= 1) {
+        fromType = '20in';
+      } else {
+        fromType = '19in';
+        toType = '20in';
+        blend = transition;
+      }
+    } else if (phaseState.phase === 'hold2') {
+      fromType = '20in';
+    } else if (phaseState.phase === 'move3') {
+      const transition = getSwitchBlend(frameFloat);
+      if (transition <= 0) {
+        fromType = '20in';
+      } else if (transition >= 1) {
+        fromType = '21in';
+      } else {
+        fromType = '20in';
+        toType = '21in';
+        blend = transition;
+      }
+    } else {
+      fromType = '21in';
+    }
+
+    return {
+      xRatio: getWheelXRatio(progress),
+      yRatio: getWheelYRatio(progress),
+      frameIndex,
+      fromType,
+      toType,
+      blend,
+    };
+  };
+
+  const drawFrame = (wheelType, frameIndex, centerX, centerY, size, alpha) => {
+    const image = frameSets[wheelType]?.[frameIndex];
+    if (!image) return;
+
+    ctx.save();
+    ctx.globalAlpha = clamp(alpha, 0, 1);
+    ctx.drawImage(image, centerX - size / 2, centerY - size / 2, size, size);
+    ctx.restore();
+  };
+
+  const textOpacityState = copyBlocks.map(() => -1);
+
+  const ramp = (value, start, end) => {
+    if (value <= start) return 0;
+    if (value >= end) return 1;
+    return (value - start) / Math.max(end - start, 0.00001);
+  };
+
+  const inverseRamp = (value, start, end) => 1 - ramp(value, start, end);
+
+  const setTextOpacity = (index, opacity) => {
+    const block = copyBlocks[index];
+    if (!block) return;
+
+    const clamped = clamp(opacity, 0, 1);
+    if (Math.abs(textOpacityState[index] - clamped) < 0.001) return;
+
+    textOpacityState[index] = clamped;
+    block.style.opacity = clamped.toFixed(3);
+  };
+
+  const updateCopyVisibility = (progress) => {
+    const p = clamp(progress, 0, 1);
+    const mid12 = (PHASE.move2[0] + PHASE.move2[1]) * 0.5;
+    const mid23 = (PHASE.move3[0] + PHASE.move3[1]) * 0.5;
+
+    // Block 1: appears at first hold, then fades out and is gone by move2 midpoint.
+    const block1In = ramp(p, TEXT_TRIGGER.block1, TEXT_TRIGGER.block1 + TEXT_TRANSITION.firstInSpan);
+    const block1Out = inverseRamp(p, mid12 - TEXT_TRANSITION.fadeOutSpan, mid12);
+    const opacity1 = Math.min(block1In, block1Out);
+
+    // Block 2: starts fading in from move2 midpoint, then fades out by move3 midpoint.
+    const block2In = ramp(p, mid12, mid12 + TEXT_TRANSITION.fadeInSpan);
+    const block2Out = inverseRamp(p, mid23 - TEXT_TRANSITION.fadeOutSpan, mid23);
+    const opacity2 = Math.min(block2In, block2Out);
+
+    // Block 3: starts fading in from move3 midpoint.
+    const opacity3 = ramp(p, mid23, mid23 + TEXT_TRANSITION.fadeInSpan);
+
+    setTextOpacity(0, opacity1);
+    setTextOpacity(1, opacity2);
+    setTextOpacity(2, opacity3);
+  };
+
+  const render = () => {
+    if (!isReady) return;
+
+    const payload = getRenderPayload(animationState.progress);
+    const wheelX = viewport.width * 0.5 + payload.xRatio * viewport.width;
+    const wheelY = viewport.height * payload.yRatio;
+    const wheelSize = getWheelSize();
+
+    const renderSignature = [
+      Math.round(wheelX),
+      Math.round(wheelY),
+      Math.round(wheelSize),
+      payload.frameIndex,
+      payload.fromType,
+      payload.toType || '-',
+      payload.blend.toFixed(3),
+      viewport.width,
+      viewport.height,
+    ].join('|');
+
+    if (renderSignature === lastRenderSignature) return;
+    lastRenderSignature = renderSignature;
+
+    ctx.setTransform(viewport.dpr, 0, 0, viewport.dpr, 0, 0);
+    ctx.clearRect(0, 0, viewport.width, viewport.height);
+
+    if (payload.toType) {
+      drawFrame(payload.fromType, payload.frameIndex, wheelX, wheelY, wheelSize, 1 - payload.blend);
+      drawFrame(payload.toType, payload.frameIndex, wheelX, wheelY, wheelSize, payload.blend);
+    } else {
+      drawFrame(payload.fromType, payload.frameIndex, wheelX, wheelY, wheelSize, 1);
+    }
+  };
+
+  const scheduleRender = () => {
+    if (rafToken) return;
+    rafToken = requestAnimationFrame(() => {
+      rafToken = 0;
+      render();
+    });
+  };
+
+  const resizeCanvas = () => {
+    const rect = canvas.getBoundingClientRect();
+    viewport.width = Math.max(1, Math.round(rect.width));
+    viewport.height = Math.max(1, Math.round(rect.height));
+    viewport.dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    canvas.width = Math.round(viewport.width * viewport.dpr);
+    canvas.height = Math.round(viewport.height * viewport.dpr);
+
+    updateWheelEntryStartRatio();
+
+    lastRenderSignature = '';
+    scheduleRender();
+  };
+
+  let wheelsTrigger = null;
+
+  const initScroll = () => {
+    // Keep text slot fixed while wheel animates into it.
+    section.style.setProperty('--wheel-text-y', `${(WHEEL_Y_RATIO.slot * 100).toFixed(3)}%`);
+
+    wheelsTrigger = ScrollTrigger.create({
+      trigger: section,
+      start: 'top top',
+      end: STORY_SCROLL_DISTANCE,
+      pin: true,
+      scrub: 1,
+      anticipatePin: 1,
+      invalidateOnRefresh: true,
+      onUpdate: (self) => {
+        animationState.progress = self.progress;
+        updateCopyVisibility(self.progress);
+        scheduleRender();
+      },
+    });
+
+    animationState.progress = 0;
+    updateCopyVisibility(0);
+    scheduleRender();
+  };
+
+  let resizeRaf = 0;
+  const onResize = () => {
+    cancelAnimationFrame(resizeRaf);
+    resizeRaf = requestAnimationFrame(() => {
+      resizeCanvas();
+      if (wheelsTrigger) ScrollTrigger.refresh();
+    });
+  };
+
+  preloadFrames()
+    .then(() => {
+      isReady = true;
+      resizeCanvas();
+      initScroll();
+      window.addEventListener('resize', onResize);
+    })
+    .catch((error) => {
+      console.error('[wheels_story] preload failed:', error);
+    });
+})();
