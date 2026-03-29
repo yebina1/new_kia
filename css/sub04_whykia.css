@@ -685,6 +685,10 @@ h2 {
 }
 
 .solution_section.is_desktop_scroll {
+    --solution-desktop-list-top: 156px;
+    --solution-desktop-gap: 420px;
+    --solution-desktop-line-y: calc(50% + (var(--solution-desktop-list-top) / 2));
+    --solution-surface-bg: #0a0f13;
     padding: 0;
 }
 
@@ -713,21 +717,23 @@ h2 {
     perspective: none;
     transform: none;
     overflow: visible;
+    isolation: isolate;
 }
 
 .solution_section.is_desktop_scroll .container::before {
     content: "";
-    top: 74px;
+    top: var(--solution-desktop-line-y);
     left: 50%;
     width: 100vw;
     height: 2px;
     background: transparent;
     transform: translate(-50%, -50%);
+    z-index: 0;
 }
 
 .solution_section.is_desktop_scroll .container::after {
     content: "";
-    top: 74px;
+    top: var(--solution-desktop-line-y);
     left: 50%;
     width: 24px;
     height: 24px;
@@ -735,17 +741,17 @@ h2 {
     background: var(--solution-track-active);
     box-shadow: 0 0 0 8px rgba(199, 255, 238, 0.12);
     transform: translate(-50%, -50%);
-    z-index: 4;
+    z-index: 0;
 }
 
 .solution_section.is_desktop_scroll .con {
-    top: 74px;
+    top: var(--solution-desktop-line-y);
     left: 50%;
     width: 100vw;
     height: 2px;
     background: transparent;
     transform: translateX(-50%);
-    z-index: 2;
+    z-index: 0;
 }
 
 .solution_section.is_desktop_scroll .con::before,
@@ -773,13 +779,14 @@ h2 {
 }
 
 .solution_section.is_desktop_scroll .solution_list {
-    top: 156px;
+    top: var(--solution-desktop-list-top);
     left: 0;
-    gap: 88px;
-    height: calc(100% - 156px);
+    gap: var(--solution-desktop-gap);
+    height: calc(100% - var(--solution-desktop-list-top));
     cursor: default;
     touch-action: none;
     transform-origin: left center;
+    z-index: 2;
 }
 
 .solution_section.is_desktop_scroll .solution_list>li {
@@ -788,15 +795,23 @@ h2 {
     grid-template-columns: minmax(0, 820px) minmax(320px, 1fr);
     align-items: center;
     column-gap: clamp(48px, 5vw, 96px);
-    opacity: calc(0.32 + (var(--slide-focus, 0) * 0.68));
-    filter: brightness(calc(0.52 + (var(--slide-focus, 0) * 0.48)));
-    transition: opacity 0.24s ease, filter 0.24s ease;
+    padding: 0;
+    box-sizing: border-box;
+    opacity: 1;
+    filter: none;
+    z-index: 1;
 }
 
 .solution_section.is_desktop_scroll .solution_list>li>img {
+    position: relative;
+    z-index: 1;
     width: 100%;
     max-width: none;
     height: min(460px, 58vh);
+    opacity: 1;
+    filter: brightness(calc(0.52 + (var(--slide-focus, 0) * 0.48)));
+    transition: filter 0.24s ease;
+    box-shadow: none;
 }
 
 .solution_section.is_desktop_scroll .solution_media_list .tex_box {
@@ -809,8 +824,27 @@ h2 {
 }
 
 .solution_section.is_desktop_scroll .tex_box {
-    max-width: 100%;
+    position: relative;
+    z-index: 1;
+    width: fit-content;
+    max-width: min(100%, 520px);
     align-self: center;
+    padding: 20px 24px;
+    background: var(--solution-surface-bg);
+    opacity: 1;
+    filter: none;
+    transition: none;
+}
+
+.solution_section.is_desktop_scroll .tex_box::before {
+    content: "";
+    position: absolute;
+    top: -28px;
+    bottom: -28px;
+    left: -148px;
+    right: 0;
+    background: var(--solution-surface-bg);
+    z-index: -1;
 }
 
 .solution_section.is_desktop_scroll .tex_box strong {
@@ -867,6 +901,17 @@ h2 {
 .solution_text_spacer {
     width: 680px;
     height: 400px;
+}
+
+.solution_section.is_desktop_scroll .solution_text_spacer {
+    background: var(--solution-surface-bg);
+    box-shadow: none;
+}
+
+.solution_section.is_desktop_scroll .tex_box strong,
+.solution_section.is_desktop_scroll .tex_box p {
+    opacity: calc(0.32 + (var(--slide-focus, 0) * 0.68));
+    transition: opacity 0.24s ease;
 }
 
 .tex_box strong {
@@ -926,6 +971,18 @@ h2 {
     white-space: nowrap;
     pointer-events: none;
     text-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+}
+
+.partner_heading::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: calc(100% + 240px);
+    height: calc(100% + 140px);
+    background: #0a0f13;
+    transform: translate(-50%, -50%);
+    z-index: -1;
 }
 
 .partner_cards {
