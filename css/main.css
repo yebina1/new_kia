@@ -734,7 +734,7 @@ body.section_transition_lock {
   font-weight: 600;
   letter-spacing: -0.02em;
   color: var(--kia-white1);
-  transition: font-size .18s cubic-bezier(.22,.9,.22,1.08);
+  transition: font-size .18s cubic-bezier(.22,.9,.22,1.08), color .18s cubic-bezier(.22,.9,.22,1.08);
 }
 
 .bg2_feature_copy {
@@ -743,11 +743,12 @@ body.section_transition_lock {
   line-height: 1.28;
   font-weight: 400;
   color: var(--kia-white2);
-  transition: font-size .18s cubic-bezier(.22,.9,.22,1.08);
+  transition: font-size .18s cubic-bezier(.22,.9,.22,1.08), color .18s cubic-bezier(.22,.9,.22,1.08);
 }
 
 .bg2_feature_dashboard .bg2_feature_title {
   font-size: calc(20px + (8px * var(--dash-grow)));
+  color: color-mix(in srgb, var(--kia-white1) calc(100% - (var(--dash-grow) * 100%)), #90E3FF calc(var(--dash-grow) * 100%));
 }
 
 .bg2_feature_dashboard {
@@ -759,15 +760,18 @@ body.section_transition_lock {
 
 .bg2_feature_dashboard .bg2_feature_copy {
   font-size: calc(18px + (6px * var(--dash-grow)));
+  color: color-mix(in srgb, var(--kia-white2), #90E3FF calc(var(--dash-grow) * 100%));
 }
 
 .bg2_feature_copy_dashboard span {
   white-space: nowrap;
   display: inline-block;
+  color: inherit;
 }
 
 .bg2_feature_luggage .bg2_feature_title {
   font-size: calc(20px + (8px * var(--luggage-grow)));
+  color: color-mix(in srgb, var(--kia-white1) calc(100% - (var(--luggage-grow) * 100%)), #90E3FF calc(var(--luggage-grow) * 100%));
 }
 
 .bg2_feature_luggage {
@@ -779,10 +783,12 @@ body.section_transition_lock {
 
 .bg2_feature_luggage .bg2_feature_copy {
   font-size: calc(18px + (6px * var(--luggage-grow)));
+  color: color-mix(in srgb, var(--kia-white2) calc(100% - (var(--luggage-grow) * 100%)), #90E3FF calc(var(--luggage-grow) * 100%));
 }
 
 .bg2_feature_seating .bg2_feature_title {
   font-size: calc(20px + (8px * var(--seating-grow)));
+  color: color-mix(in srgb, var(--kia-white1) calc(100% - (var(--seating-grow) * 100%)), #90E3FF calc(var(--seating-grow) * 100%));
 }
 
 .bg2_feature_seating {
@@ -794,10 +800,12 @@ body.section_transition_lock {
 
 .bg2_feature_seating .bg2_feature_copy {
   font-size: calc(18px + (6px * var(--seating-grow)));
+  color: color-mix(in srgb, var(--kia-white2) calc(100% - (var(--seating-grow) * 100%)), #90E3FF calc(var(--seating-grow) * 100%));
 }
 
 .bg2_feature_carpets .bg2_feature_title {
   font-size: calc(20px + (8px * var(--carpet-grow)));
+  color: color-mix(in srgb, var(--kia-white1) calc(100% - (var(--carpet-grow) * 100%)), #90E3FF calc(var(--carpet-grow) * 100%));
 }
 
 .bg2_feature_carpets {
@@ -809,6 +817,7 @@ body.section_transition_lock {
 
 .bg2_feature_carpets .bg2_feature_copy {
   font-size: calc(18px + (6px * var(--carpet-grow)));
+  color: color-mix(in srgb, var(--kia-white2) calc(100% - (var(--carpet-grow) * 100%)), #90E3FF calc(var(--carpet-grow) * 100%));
 }
 
 .bg_panel img {
@@ -874,14 +883,17 @@ body.section_transition_lock {
 
 .luggage_mask {
   z-index: 4;
+  transform: translateX(calc(-50% - 5px));
 }
 
 .seating_mask {
   z-index: 5;
+  /* transform: translate(-50%, -6px); */
 }
 
 .carpets_mask {
   z-index: 6;
+  /* transform: translate(-50%, -2px); */
 }
 
 .depth_overlay {
@@ -1918,7 +1930,7 @@ body.review_locked {
     background-color 0.25s ease,
     box-shadow 0.25s ease,
     border-color 0.25s ease;
-
+  color: var(--kia-white1);
 }
 
 .map button::before {

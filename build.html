@@ -93,10 +93,11 @@
                 <!-- Model Category Tabs -->
                 <div class="hero_top_tabs" id="heroTopTabs" role="tablist" aria-label="Vehicle categories">
                     <button type="button" class="active" data-category="ev" role="tab" aria-selected="true">EV</button>
-                    <button type="button" data-category="suv" role="tab" aria-selected="false">Sedans</button>
                     <button type="button" data-category="hybrids" role="tab" aria-selected="false">Hybrids</button>
-                    <button type="button" data-category="sedans" role="tab" aria-selected="false">CUV</button>
+                    <button type="button" data-category="suv" role="tab" aria-selected="false">SUV / CUV / MPV</button>
+                    <button type="button" data-category="sedans" role="tab" aria-selected="false">Sedans</button>
                 </div>
+                <span class="hero_top_tabs_indicator" id="heroTopTabsIndicator" aria-hidden="true"></span>
 
                 <!-- Hidden Catalog Data -->
                 <div class="hero_catalog" id="heroCatalog" aria-hidden="true">
@@ -1093,6 +1094,9 @@
                         <div class="hero_quote_panel" id="heroQuotePanel" hidden>
                             <div class="hero_quote_intro">
                                 <h4 class="hero_quote_title">Request a Quote</h4>
+                                <button type="button" class="hero_quote_title_icon_btn" id="quoteCloseButton" aria-label="Back to price breakdown">
+                                    <i class="bx bx-arrow-out-left-square-half hero_quote_title_icon" aria-hidden="true"></i>
+                                </button>
                             </div>
                             <div class="hero_quote_panel_body">
                                 <div class="hero_quote_group">

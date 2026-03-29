@@ -599,7 +599,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 leftLine = clamp(scale, 0, 1);
                 rightLine = clamp(1 - scale, 0, 1);
             } else if (segmentProgress <= 1) {
-                leftLine = clamp(0.06 + (segmentProgress * 0.94), 0, 1);
+                leftLine = clamp(segmentProgress, 0, 1);
                 rightLine = 1;
             } else if (segmentProgress < segmentCount - 1) {
                 leftLine = 1;
@@ -767,7 +767,12 @@ document.addEventListener("DOMContentLoaded", () => {
         state.desktopTrigger = window.ScrollTrigger.create({
             trigger: solutionSection,
             start: "top top",
-            end: () => `+=${window.innerHeight * Math.max(slides.length + 0.55, 2.35)}`,
+            end: () => {
+                updateBounds();
+                const viewportWidth = Math.max(dragArea.clientWidth, 1);
+                const travelScreens = state.maxOffset / viewportWidth;
+                return `+=${window.innerHeight * Math.max(travelScreens + 1.35, slides.length + 0.55, 2.35)}`;
+            },
             pin: solutionInner,
             pinSpacing: true,
             scrub: 1,
@@ -926,24 +931,43 @@ document.addEventListener("DOMContentLoaded", () => {
     const applyPartnerScene = (progress) => {
         const normalizedProgress = window.gsap.utils.clamp(0, 1, progress / (1 - PARTNER_HOLD_PROGRESS));
         const clampedProgress = window.gsap.utils.clamp(0, 1, normalizedProgress);
-        const headingProgress = window.gsap.utils.clamp(0, 1, (clampedProgress - 0.5) / 0.22);
-        const headingEase = smoothStep(headingProgress);
         const shouldShowPartnerScrollButton = clampedProgress > 0.02 && clampedProgress < 0.68;
 
         partnerScrollDownButton?.classList.toggle("is_visible", shouldShowPartnerScrollButton);
 
         if (partnerHeading) {
+            let headingY;
+            let headingOpacity;
+
+            if (clampedProgress < 0.46) {
+                headingY = 760;
+                headingOpacity = 0;
+            } else if (clampedProgress < 0.72) {
+                const stageProgress = (clampedProgress - 0.46) / 0.26;
+                const eased = smoothStep(stageProgress);
+                headingY = window.gsap.utils.interpolate(760, 0, eased);
+                headingOpacity = window.gsap.utils.interpolate(0, 1, eased);
+            } else {
+                headingY = 0;
+                headingOpacity = 1;
+            }
+
             window.gsap.set(partnerHeading, {
-                opacity: headingEase,
+                opacity: headingOpacity,
                 xPercent: -50,
-                y: window.gsap.utils.interpolate(180, 0, headingEase),
+                y: headingY,
+                zIndex: 6,
             });
         }
 
+        if (partnerCardsContainer) {
+            partnerCardsContainer.style.zIndex = clampedProgress >= 0.32 ? "2" : "7";
+        }
+
         cards.forEach((card, index) => {
-            const delay = index * 0.42;
-            const cardStart = 0.22 + (delay * 0.03);
-            const cardDuration = 0.74 - (delay * 0.045);
+            const delay = index * 0.012;
+            const cardStart = delay;
+            const cardDuration = 1 - delay;
             const cardProgress = window.gsap.utils.clamp(
                 0,
                 1,
@@ -953,75 +977,131 @@ document.addEventListener("DOMContentLoaded", () => {
             const innerCard = card.querySelector(".partner_flip_inner");
             const shouldFloat = cardProgress >= 0.98;
             const isInteractive = cardProgress >= 0.98;
+            const gatherX = index === 0 ? 245 : index === 1 ? 0 : -245;
+            const tightGatherX = index === 0 ? 270 : index === 1 ? 0 : -270;
+            const finalX = 0;
+            const spreadPhotoX = index === 0 ? -96 : index === 1 ? 0 : 96;
+            const photoRotate = index === 0 ? -10 : index === 1 ? 0 : 10;
 
             let y;
-            if (cardProgress < 0.62) {
-                const normalizedProgress = cardProgress / 0.62;
-                const eased = smoothStep(normalizedProgress);
-                y = window.gsap.utils.interpolate("0px", "260px", eased);
-            } else if (cardProgress < 0.86) {
-                const normalizedProgress = (cardProgress - 0.62) / 0.24;
-                const eased = smoothStep(normalizedProgress);
-                y = window.gsap.utils.interpolate("260px", "72px", eased);
-            } else if (cardProgress < 1) {
-                const normalizedProgress = (cardProgress - 0.86) / 0.14;
-                const eased = smoothStep(normalizedProgress);
-                y = window.gsap.utils.interpolate("72px", "0px", eased);
+            if (cardProgress < 0.18) {
+                y = "0%";
+            } else if (cardProgress < 0.32) {
+                const stageProgress = (cardProgress - 0.18) / 0.18;
+                y = window.gsap.utils.interpolate("0%", "0%", smoothStep(stageProgress));
+            } else if (cardProgress < 0.56) {
+                const stageProgress = (cardProgress - 0.32) / 0.24;
+                y = window.gsap.utils.interpolate("0%", "34%", smoothStep(stageProgress));
+            } else if (cardProgress < 0.66) {
+                const stageProgress = (cardProgress - 0.56) / 0.1;
+                y = window.gsap.utils.interpolate("34%", "40%", smoothStep(stageProgress));
+            } else if (cardProgress < 0.76) {
+                y = "40%";
+            } else if (cardProgress < 0.9) {
+                const stageProgress = (cardProgress - 0.76) / 0.14;
+                y = window.gsap.utils.interpolate("18%", "0%", smoothStep(stageProgress));
             } else {
-                y = "0px";
+                y = "0%";
             }
 
-            let scale;
-            if (cardProgress < 0.46) {
-                const normalizedProgress = cardProgress / 0.46;
-                const eased = smoothStep(normalizedProgress);
-                scale = window.gsap.utils.interpolate(0.82, 0.72, eased);
-            } else if (cardProgress < 0.72) {
-                const normalizedProgress = (cardProgress - 0.46) / 0.26;
-                const eased = smoothStep(normalizedProgress);
-                scale = window.gsap.utils.interpolate(0.72, 0.94, eased);
-            } else if (cardProgress < 1) {
-                const normalizedProgress = (cardProgress - 0.72) / 0.28;
-                const eased = smoothStep(normalizedProgress);
-                scale = window.gsap.utils.interpolate(1.02, 1.14, eased);
+            let scaleX = 1;
+            let scaleY = 1;
+            if (cardProgress < 0.18) {
+                scaleX = 1;
+                scaleY = 1;
+            } else if (cardProgress < 0.32) {
+                const stageProgress = (cardProgress - 0.18) / 0.14;
+                const eased = smoothStep(stageProgress);
+                scaleX = window.gsap.utils.interpolate(1, 0.54, eased);
+                scaleY = window.gsap.utils.interpolate(1, 0.68, eased);
+            } else if (cardProgress < 0.56) {
+                const stageProgress = (cardProgress - 0.32) / 0.24;
+                const eased = smoothStep(stageProgress);
+                scaleX = window.gsap.utils.interpolate(0.54, 0.3, eased);
+                scaleY = window.gsap.utils.interpolate(0.68, 0.28, eased);
+            } else if (cardProgress < 0.66) {
+                const stageProgress = (cardProgress - 0.56) / 0.1;
+                const eased = smoothStep(stageProgress);
+                scaleX = window.gsap.utils.interpolate(0.3, 0.22, eased);
+                scaleY = window.gsap.utils.interpolate(0.28, 0.06, eased);
+            } else if (cardProgress < 0.76) {
+                scaleX = 0.22;
+                scaleY = 0.06;
+            } else if (cardProgress < 0.84) {
+                const stageProgress = (cardProgress - 0.76) / 0.08;
+                const eased = smoothStep(stageProgress);
+                scaleX = window.gsap.utils.interpolate(0.22, 0.46, eased);
+                scaleY = window.gsap.utils.interpolate(0.06, 0.34, eased);
+            } else if (cardProgress < 0.9) {
+                const stageProgress = (cardProgress - 0.76) / 0.14;
+                const eased = smoothStep(Math.min(stageProgress, 1));
+                scaleX = window.gsap.utils.interpolate(0.46, 1, eased);
+                scaleY = window.gsap.utils.interpolate(0.34, 1, eased);
             } else {
-                scale = 1.14;
+                scaleX = 1;
+                scaleY = 1;
+            }
+
+            let opacity;
+            if (cardProgress < 0.4) {
+                opacity = 1;
+            } else if (cardProgress < 0.54) {
+                const stageProgress = (cardProgress - 0.4) / 0.14;
+                opacity = window.gsap.utils.interpolate(1, 0, smoothStep(stageProgress));
+            } else if (cardProgress < 0.76) {
+                opacity = 0;
+            } else if (cardProgress < 0.9) {
+                const stageProgress = (cardProgress - 0.76) / 0.14;
+                opacity = window.gsap.utils.interpolate(0, 1, smoothStep(stageProgress));
+            } else {
+                opacity = 1;
             }
 
             let x;
             let rotate;
             let rotationY;
 
-            if (cardProgress < 0.62) {
-                x = index === 0 ? "0%" : index === 1 ? "0%" : "0%";
+            if (cardProgress < 0.18) {
+                x = 0;
                 rotate = 0;
                 rotationY = 0;
-            } else if (cardProgress < 1) {
-                const normalizedProgress = (cardProgress - 0.62) / 0.38;
-                const eased = smoothStep(normalizedProgress);
-                x = window.gsap.utils.interpolate(
-                    "0%",
-                    "0%",
-                    eased
-                );
-                rotate = window.gsap.utils.interpolate(
-                    0,
-                    0,
-                    eased
-                );
+            } else if (cardProgress < 0.32) {
+                const stageProgress = (cardProgress - 0.18) / 0.14;
+                x = window.gsap.utils.interpolate(0, gatherX, smoothStep(stageProgress));
+                rotate = 0;
+                rotationY = 0;
+            } else if (cardProgress < 0.6) {
+                const stageProgress = (cardProgress - 0.32) / 0.28;
+                x = window.gsap.utils.interpolate(gatherX, tightGatherX, smoothStep(stageProgress));
+                rotate = 0;
+                rotationY = 0;
+            } else if (cardProgress < 0.76) {
+                x = tightGatherX;
+                rotate = 0;
+                rotationY = 0;
+            } else if (cardProgress < 0.84) {
+                x = window.gsap.utils.interpolate(tightGatherX, 0, smoothStep((cardProgress - 0.76) / 0.08));
+                rotate = 0;
+                rotationY = 0;
+            } else if (cardProgress < 0.9) {
+                const stageProgress = (cardProgress - 0.84) / 0.06;
+                const eased = smoothStep(stageProgress);
+                x = window.gsap.utils.interpolate(0, spreadPhotoX, eased);
+                rotate = window.gsap.utils.interpolate(0, photoRotate, eased);
                 rotationY = eased * 180;
             } else {
-                x = "0%";
-                rotate = 0;
+                x = spreadPhotoX;
+                rotate = photoRotate;
                 rotationY = 180;
             }
 
             window.gsap.set(card, {
-                opacity: 1,
+                opacity: opacity,
                 y: y,
                 x: x,
                 rotate: rotate,
-                scale: scale,
+                scaleX: scaleX,
+                scaleY: scaleY,
             });
 
             window.gsap.set(innerCard, {
