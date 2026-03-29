@@ -50,6 +50,10 @@
         margin-left: auto;
     }
 
+    .solution_section {
+        --solution-list-height: 520px;
+    }
+
     .solution_inner {
         width: calc(100% - 40px);
         min-height: auto;
@@ -58,12 +62,9 @@
 
     .container {
         margin: 44px auto 24px;
-        height: 620px;
     }
 
     .solution_list {
-        top: 78px;
-        height: 520px;
         gap: 40px;
     }
 
@@ -136,6 +137,7 @@
 
 @media (max-width: 640px) {
     .solution_section {
+        --solution-list-height: 460px;
         padding: 40px 0;
     }
 
@@ -146,12 +148,9 @@
 
     .container {
         margin: 36px auto 20px;
-        height: 560px;
     }
 
     .solution_list {
-        top: 78px;
-        height: 460px;
         gap: 24px;
     }
 

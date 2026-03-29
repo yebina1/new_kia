@@ -588,36 +588,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const currentOffset = state.mode === "desktop" ? state.lastOne : state.lastTwo;
         const scale = state.maxOffset > 0 ? currentOffset / state.maxOffset : 0;
         solutionProgress.style.setProperty("--solution-progress-scale", scale.toFixed(4));
-
-        if (state.mode === "desktop") {
-            const segmentCount = Math.max(slides.length - 1, 1);
-            const segmentProgress = scale * segmentCount;
-            let leftLine = 0;
-            let rightLine = 1;
-
-            if (slides.length <= 2) {
-                leftLine = clamp(scale, 0, 1);
-                rightLine = clamp(1 - scale, 0, 1);
-            } else if (segmentProgress <= 1) {
-                leftLine = clamp(segmentProgress, 0, 1);
-                rightLine = 1;
-            } else if (segmentProgress < segmentCount - 1) {
-                leftLine = 1;
-                rightLine = 1;
-            } else {
-                leftLine = 1;
-                rightLine = clamp(segmentCount - segmentProgress, 0, 1);
-            }
-
-            solutionProgress.style.setProperty("--solution-dot-ratio", "0.5");
-            solutionProgress.style.setProperty("--solution-left-line", leftLine.toFixed(4));
-            solutionProgress.style.setProperty("--solution-right-line", rightLine.toFixed(4));
-            return;
-        }
-
-        solutionProgress.style.setProperty("--solution-dot-ratio", "0");
-        solutionProgress.style.setProperty("--solution-left-line", "0");
-        solutionProgress.style.setProperty("--solution-right-line", "1");
+        solutionProgress.style.setProperty("--solution-travel-progress", scale.toFixed(4));
     }
 
     function updateSlideFocus() {
@@ -658,8 +629,15 @@ document.addEventListener("DOMContentLoaded", () => {
         state.current = clamp(state.current, 0, state.maxOffset);
         state.lastOne = clamp(state.lastOne, 0, state.maxOffset);
         state.lastTwo = clamp(state.lastTwo, 0, state.maxOffset);
-        solutionList.style.transform = `translate3d(${(state.sideOffset - state.lastOne).toFixed(2)}px, 0, 0)`;
-        textTrack.style.transform = `translate3d(${(state.sideOffset - state.lastTwo).toFixed(2)}px, 0, 0)`;
+
+        if (state.mode !== "desktop") {
+            solutionList.style.transform = `translate3d(${(state.sideOffset - state.lastOne).toFixed(2)}px, 0, 0)`;
+            textTrack.style.transform = `translate3d(${(state.sideOffset - state.lastTwo).toFixed(2)}px, 0, 0)`;
+        } else {
+            solutionList.style.transform = `translate3d(${(-state.lastOne).toFixed(2)}px, 0, 0)`;
+            textTrack.style.transform = `translate3d(${(-state.lastOne).toFixed(2)}px, 0, 0)`;
+        }
+
         updateProgress();
         updateSlideFocus();
     }
@@ -773,8 +751,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 const travelScreens = state.maxOffset / viewportWidth;
                 return `+=${window.innerHeight * Math.max(travelScreens + 1.35, slides.length + 0.55, 2.35)}`;
             },
-            pin: solutionInner,
+            pin: solutionSection,
             pinSpacing: true,
+            pinType: "fixed",
+            pinReparent: true,
+            anticipatePin: 1,
             scrub: 1,
             invalidateOnRefresh: true,
             onRefresh: (self) => {
