@@ -1312,7 +1312,7 @@ section[class*="option"] .bottom>ul.cars>li>h2 {
   transition:
     transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
     opacity 0.4s ease;
-  line-height: 1;
+  line-height: 1.4;
 }
 
 section[class*="option"] .bottom>ul.cars>li h2 span {
