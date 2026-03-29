@@ -101,7 +101,6 @@ const DESKTOP_TAB_POINT_CENTERS = {
 const MODAL_TRANSITION_MS = 420;
 const MOBILE_SWIPE_THRESHOLD = 40;
 const DESKTOP_SCROLL_LOCK_MS = 1100;
-const DESKTOP_STAGE_HEIGHT = 1080;
 const MOBILE_DRAG_MAX_OFFSET = 72;
 const DESKTOP_HERO_ROTATE_MS = 3200;
 
@@ -301,7 +300,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (currentScroll < stage.start || currentScroll > stage.end) return;
 
         const nextIndex = clamp(
-            Math.round((currentScroll - stage.start) / DESKTOP_STAGE_HEIGHT),
+            Math.round((currentScroll - stage.start) / window.innerHeight),
             0,
             sections.length - 1
         );
@@ -573,7 +572,7 @@ function applyScrollLayout(recco, totalSections) {
         return;
     }
 
-    recco.style.minHeight = `${DESKTOP_STAGE_HEIGHT * totalSections}px`;
+    recco.style.minHeight = `${window.innerHeight * totalSections}px`;
 }
 
 function isDesktopScrollLocked(state) {
@@ -590,7 +589,7 @@ function navigateDesktopToIndex(targetIndex, state, recco, sections, title, expe
     renderSections(state.activeIndex, sections, title, recco, experimentalMode, desktopVisual, state);
 
     window.scrollTo({
-        top: stage.start + state.activeIndex * DESKTOP_STAGE_HEIGHT,
+        top: stage.start + state.activeIndex * window.innerHeight,
         behavior: "smooth"
     });
 
@@ -602,7 +601,7 @@ function navigateDesktopToIndex(targetIndex, state, recco, sections, title, expe
 
 function getStageRange(recco, totalSections) {
     const start = window.scrollY + recco.getBoundingClientRect().top;
-    const end = start + DESKTOP_STAGE_HEIGHT * (totalSections - 1);
+    const end = start + window.innerHeight * (totalSections - 1);
     return { start, end };
 }
 
@@ -640,8 +639,8 @@ function updateRecommendedTitleVisibility(recco, title) {
     const totalSections = sections.length;
     const stage = getStageRange(recco, totalSections);
     const currentScroll = window.scrollY;
-    const fadeStart = stage.end - (DESKTOP_STAGE_HEIGHT * 0.35);
-    const fadeEnd = stage.end - (DESKTOP_STAGE_HEIGHT * 0.12);
+    const fadeStart = stage.end - (window.innerHeight * 0.35);
+    const fadeEnd = stage.end - (window.innerHeight * 0.12);
     let opacity = 1;
 
     if (currentScroll >= fadeStart) {
