@@ -850,6 +850,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const partnerHeading = partnerSection.querySelector(".partner_heading");
     const partnerCardsContainer = partnerSection.querySelector(".partner_cards_container");
     const partnerScrollDownButton = document.getElementById("partnerScrollDownButton");
+    const partnerSticky = partnerSection.querySelector(".partner_sticky");
     const PARTNER_HOLD_PROGRESS = 0.18;
 
     const smoothStep = (progress) => progress * progress * (3 - (2 * progress));
@@ -861,18 +862,18 @@ document.addEventListener("DOMContentLoaded", () => {
             const images = Array.from(card.querySelectorAll(".partner_face img"));
 
             window.gsap.set(card, {
-                opacity: 1,
-                x: "0%",
-                y: "0px",
-                rotate: 0,
-                scale: 1,
+                opacity: 0,
+                x: index === 0 ? "100%" : index === 1 ? "0%" : "-100%",
+                y: "-100%",
+                rotate: index === 0 ? -5 : index === 1 ? 0 : 5,
+                scale: 0.25,
             });
 
             window.gsap.set(innerCard, {
                 rotationY: 0,
             });
 
-            card.classList.remove("is_floating", "is_interactive", "is_open", "is_label_visible");
+            card.classList.remove("is_interactive", "is_open", "is_label_visible");
             wrapper?.classList.remove("is_hovered", "is_open");
 
             if (tiltShell) {
@@ -912,7 +913,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const applyPartnerScene = (progress) => {
         const normalizedProgress = window.gsap.utils.clamp(0, 1, progress / (1 - PARTNER_HOLD_PROGRESS));
         const clampedProgress = window.gsap.utils.clamp(0, 1, normalizedProgress);
-        const shouldShowPartnerScrollButton = clampedProgress > 0.02 && clampedProgress < 0.68;
+        const shouldShowPartnerScrollButton = clampedProgress > 0.08 && clampedProgress < 0.78;
 
         partnerScrollDownButton?.classList.toggle("is_visible", shouldShowPartnerScrollButton);
 
@@ -920,13 +921,10 @@ document.addEventListener("DOMContentLoaded", () => {
             let headingY;
             let headingOpacity;
 
-            if (clampedProgress < 0.46) {
-                headingY = 760;
-                headingOpacity = 0;
-            } else if (clampedProgress < 0.72) {
-                const stageProgress = (clampedProgress - 0.46) / 0.26;
+            if (clampedProgress < 0.32) {
+                const stageProgress = clampedProgress / 0.32;
                 const eased = smoothStep(stageProgress);
-                headingY = window.gsap.utils.interpolate(760, 0, eased);
+                headingY = window.gsap.utils.interpolate(320, 0, eased);
                 headingOpacity = window.gsap.utils.interpolate(0, 1, eased);
             } else {
                 headingY = 0;
@@ -942,13 +940,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (partnerCardsContainer) {
-            partnerCardsContainer.style.zIndex = clampedProgress >= 0.32 ? "2" : "7";
+            partnerCardsContainer.style.zIndex = clampedProgress >= 0.14 ? "2" : "7";
         }
 
         cards.forEach((card, index) => {
-            const delay = index * 0.012;
+            const delay = index * 0.05;
             const cardStart = delay;
-            const cardDuration = 1 - delay;
+            const cardDuration = Math.max(0.9 - (delay * 0.1), 0.68);
             const cardProgress = window.gsap.utils.clamp(
                 0,
                 1,
@@ -956,84 +954,38 @@ document.addEventListener("DOMContentLoaded", () => {
             );
 
             const innerCard = card.querySelector(".partner_flip_inner");
-            const shouldFloat = cardProgress >= 0.98;
             const isInteractive = cardProgress >= 0.98;
-            const gatherX = index === 0 ? 245 : index === 1 ? 0 : -245;
-            const tightGatherX = index === 0 ? 270 : index === 1 ? 0 : -270;
-            const finalX = 0;
-            const spreadPhotoX = index === 0 ? -96 : index === 1 ? 0 : 96;
-            const photoRotate = 0;
+            const startX = index === 0 ? "100%" : index === 1 ? "0%" : "-100%";
+            const startRotate = index === 0 ? -5 : index === 1 ? 0 : 5;
 
             let y;
-            if (cardProgress < 0.18) {
-                y = "0%";
-            } else if (cardProgress < 0.32) {
-                const stageProgress = (cardProgress - 0.18) / 0.18;
-                y = window.gsap.utils.interpolate("0%", "0%", smoothStep(stageProgress));
-            } else if (cardProgress < 0.56) {
-                const stageProgress = (cardProgress - 0.32) / 0.24;
-                y = window.gsap.utils.interpolate("0%", "34%", smoothStep(stageProgress));
-            } else if (cardProgress < 0.66) {
-                const stageProgress = (cardProgress - 0.56) / 0.1;
-                y = window.gsap.utils.interpolate("34%", "40%", smoothStep(stageProgress));
-            } else if (cardProgress < 0.76) {
-                y = "40%";
-            } else if (cardProgress < 0.9) {
-                const stageProgress = (cardProgress - 0.76) / 0.14;
-                y = window.gsap.utils.interpolate("18%", "0%", smoothStep(stageProgress));
+            if (cardProgress < 0.4) {
+                const stageProgress = cardProgress / 0.4;
+                y = window.gsap.utils.interpolate("-100%", "50%", smoothStep(stageProgress));
+            } else if (cardProgress < 0.6) {
+                const stageProgress = (cardProgress - 0.4) / 0.2;
+                y = window.gsap.utils.interpolate("50%", "0%", smoothStep(stageProgress));
             } else {
                 y = "0%";
             }
 
-            let scaleX = 1;
-            let scaleY = 1;
-            if (cardProgress < 0.18) {
-                scaleX = 1;
-                scaleY = 1;
-            } else if (cardProgress < 0.32) {
-                const stageProgress = (cardProgress - 0.18) / 0.14;
+            let scale = 1;
+            if (cardProgress < 0.4) {
+                const stageProgress = cardProgress / 0.4;
                 const eased = smoothStep(stageProgress);
-                scaleX = window.gsap.utils.interpolate(1, 0.54, eased);
-                scaleY = window.gsap.utils.interpolate(1, 0.68, eased);
-            } else if (cardProgress < 0.56) {
-                const stageProgress = (cardProgress - 0.32) / 0.24;
+                scale = window.gsap.utils.interpolate(0.25, 0.75, eased);
+            } else if (cardProgress < 0.6) {
+                const stageProgress = (cardProgress - 0.4) / 0.2;
                 const eased = smoothStep(stageProgress);
-                scaleX = window.gsap.utils.interpolate(0.54, 0.3, eased);
-                scaleY = window.gsap.utils.interpolate(0.68, 0.28, eased);
-            } else if (cardProgress < 0.66) {
-                const stageProgress = (cardProgress - 0.56) / 0.1;
-                const eased = smoothStep(stageProgress);
-                scaleX = window.gsap.utils.interpolate(0.3, 0.22, eased);
-                scaleY = window.gsap.utils.interpolate(0.28, 0.06, eased);
-            } else if (cardProgress < 0.76) {
-                scaleX = 0.22;
-                scaleY = 0.06;
-            } else if (cardProgress < 0.84) {
-                const stageProgress = (cardProgress - 0.76) / 0.08;
-                const eased = smoothStep(stageProgress);
-                scaleX = window.gsap.utils.interpolate(0.22, 0.46, eased);
-                scaleY = window.gsap.utils.interpolate(0.06, 0.34, eased);
-            } else if (cardProgress < 0.9) {
-                const stageProgress = (cardProgress - 0.76) / 0.14;
-                const eased = smoothStep(Math.min(stageProgress, 1));
-                scaleX = window.gsap.utils.interpolate(0.46, 1, eased);
-                scaleY = window.gsap.utils.interpolate(0.34, 1, eased);
+                scale = window.gsap.utils.interpolate(0.75, 1, eased);
             } else {
-                scaleX = 1;
-                scaleY = 1;
+                scale = 1;
             }
 
             let opacity;
-            if (cardProgress < 0.4) {
-                opacity = 1;
-            } else if (cardProgress < 0.54) {
-                const stageProgress = (cardProgress - 0.4) / 0.14;
-                opacity = window.gsap.utils.interpolate(1, 0, smoothStep(stageProgress));
-            } else if (cardProgress < 0.76) {
-                opacity = 0;
-            } else if (cardProgress < 0.9) {
-                const stageProgress = (cardProgress - 0.76) / 0.14;
-                opacity = window.gsap.utils.interpolate(0, 1, smoothStep(stageProgress));
+            if (cardProgress < 0.2) {
+                const stageProgress = cardProgress / 0.2;
+                opacity = smoothStep(stageProgress);
             } else {
                 opacity = 1;
             }
@@ -1042,37 +994,19 @@ document.addEventListener("DOMContentLoaded", () => {
             let rotate;
             let rotationY;
 
-            if (cardProgress < 0.18) {
-                x = 0;
-                rotate = 0;
+            if (cardProgress < 0.6) {
+                x = startX;
+                rotate = startRotate;
                 rotationY = 0;
-            } else if (cardProgress < 0.32) {
-                const stageProgress = (cardProgress - 0.18) / 0.14;
-                x = window.gsap.utils.interpolate(0, gatherX, smoothStep(stageProgress));
-                rotate = 0;
-                rotationY = 0;
-            } else if (cardProgress < 0.6) {
-                const stageProgress = (cardProgress - 0.32) / 0.28;
-                x = window.gsap.utils.interpolate(gatherX, tightGatherX, smoothStep(stageProgress));
-                rotate = 0;
-                rotationY = 0;
-            } else if (cardProgress < 0.76) {
-                x = tightGatherX;
-                rotate = 0;
-                rotationY = 0;
-            } else if (cardProgress < 0.84) {
-                x = window.gsap.utils.interpolate(tightGatherX, 0, smoothStep((cardProgress - 0.76) / 0.08));
-                rotate = 0;
-                rotationY = 0;
-            } else if (cardProgress < 0.9) {
-                const stageProgress = (cardProgress - 0.84) / 0.06;
+            } else if (cardProgress < 1) {
+                const stageProgress = (cardProgress - 0.6) / 0.4;
                 const eased = smoothStep(stageProgress);
-                x = window.gsap.utils.interpolate(0, spreadPhotoX, eased);
-                rotate = window.gsap.utils.interpolate(0, photoRotate, eased);
+                x = window.gsap.utils.interpolate(startX, "0%", eased);
+                rotate = window.gsap.utils.interpolate(startRotate, 0, eased);
                 rotationY = eased * 180;
             } else {
-                x = spreadPhotoX;
-                rotate = photoRotate;
+                x = "0%";
+                rotate = 0;
                 rotationY = 180;
             }
 
@@ -1081,15 +1015,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 y: y,
                 x: x,
                 rotate: rotate,
-                scaleX: scaleX,
-                scaleY: scaleY,
+                scale: scale,
             });
 
             window.gsap.set(innerCard, {
                 rotationY: rotationY,
             });
 
-            card.classList.toggle("is_floating", shouldFloat);
             card.classList.toggle("is_interactive", isInteractive);
             card.classList.toggle("is_label_visible", cardProgress >= 0.98 && !card.classList.contains("is_open"));
 
@@ -1118,8 +1050,8 @@ document.addEventListener("DOMContentLoaded", () => {
     window.ScrollTrigger.create({
         trigger: partnerSection,
         start: "top top",
-        end: () => `+=${window.innerHeight * 5.1}`,
-        pin: partnerSection.querySelector(".partner_sticky"),
+        end: () => `+=${window.innerHeight * 3.8}`,
+        pin: partnerSticky,
         pinSpacing: true,
         scrub: 1,
         invalidateOnRefresh: true,
@@ -1139,6 +1071,7 @@ document.addEventListener("DOMContentLoaded", () => {
         onUpdate: (self) => applyPartnerScene(self.progress),
     });
 
+    setPartnerCardsToInitialState();
     applyPartnerScene(0);
 
     const partnerWrappers = Array.from(partnerSection.querySelectorAll(".partner_card_wrapper"));

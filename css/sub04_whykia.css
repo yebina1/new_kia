@@ -987,7 +987,7 @@ h2 {
 
 .partner_heading {
     position: absolute;
-    top: 240px;
+    top: 130px;
     left: 50%;
     z-index: 6;
     font-family: "Cormorant Garamond", serif;
@@ -1020,7 +1020,7 @@ h2 {
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    margin-top: 410px;
+    margin-top: 260px;
 }
 
 .partner_cards_container {
@@ -1045,6 +1045,8 @@ h2 {
     will-change: transform, opacity;
     transition: filter 0.35s ease, opacity 0.35s ease;
     position: relative;
+    transform-origin: center top;
+    backface-visibility: hidden;
 }
 
 .partner_card_wrapper {
