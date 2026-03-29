@@ -544,6 +544,263 @@ header .header_bottom .sub_nav li a:hover {
   font-weight: 500;
 }
 
+
+  header .header_bottom {
+    display: none;
+  }
+
+  header .m_panel {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 8, 12, 0.26);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+      opacity 0.28s ease,
+      visibility 0.28s ease;
+    z-index: 1090;
+  }
+
+  header .m_nav {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: min(390px, calc(100vw - 48px));
+    height: 100vh;
+    padding: 16px 32px;
+    display: flex;
+    flex-direction: column;
+    background:
+      linear-gradient(180deg, rgba(11, 18, 24, 0.96) 0%, rgba(10, 15, 19, 0.98) 100%);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow:
+      inset 1px 0 0 rgba(255, 255, 255, 0.08),
+      -18px 0 32px rgba(0, 0, 0, 0.35);
+    border-radius: 0;
+    transform: translateX(100%);
+    transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1);
+    overflow-y: auto;
+  }
+
+  header .m_top {
+    width: 100%;
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+  }
+
+  header .m_left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  header .m_left a{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--kia-white1);
+  }
+
+  header .m_left img {
+    width: 24px;
+    height: 24px;
+  }
+
+  header .m_left i {
+    font-size: 26px;
+    color: var(--kia-white1);
+  }
+
+  header .close {
+    flex-shrink: 0;
+    border: 0;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    gap: 0;
+    border-radius: 555px;
+    background: rgba(255, 255, 255, 0.16);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.22),
+      0 4px 16px rgba(0, 0, 0, 0.22);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  header .close i {
+    font-size: 24px;
+    color: var(--kia-white2);
+  }
+
+  header .m_gnb {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    width: 100%;
+  }
+
+  header .m_gnb > li {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  header .m_gnb > li > a,
+  header .m_gnb > li > button,
+  header .m_on {
+    width: 100%;
+    min-height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    font-family: var(--font-outfit);
+    font-size: 24px;
+    font-weight: 300;
+    text-transform: capitalize;
+    color: var(--kia-white2);
+    text-align: left;
+  }
+
+  header .m_gnb > li:last-child > a {
+    justify-content: flex-start;
+    gap: 0;
+  }
+
+  header .m_gnb > li > a:hover,
+  header .m_gnb > li > button:hover,
+  header .m_gnb > li > a:hover i,
+  header .m_gnb > li > button:hover i,
+  header .m_on:hover,
+  header .m_on:hover i {
+    font-weight: 500;
+    color: var(--kia-white1);
+  }
+
+  header .m_gnb > li > a i,
+  header .m_gnb > li > button i,
+  header .m_on i {
+    font-size: 32px;
+    color: rgba(251, 246, 239, 0.92);
+    transition: transform 0.24s ease;
+  }
+
+  header .m_gnb > li:last-child > a i {
+    margin-left: 6px;
+    font-size: 28px;
+  }
+
+  header .m_gnb > li.on > button{
+    color: var(--kia-white1);
+    font-weight: 500;
+  }
+
+  header .m_gnb > li.on > button i,
+  header .m_gnb > li.on .m_on i {
+    transform: rotate(180deg);
+  }
+
+  header .m_sub {
+    width: calc(100% - 12px);
+    margin: 0;
+    padding: 0;
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 0 solid rgba(255, 255, 255, 0.09);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      0 14px 24px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-8px);
+    transition:
+      max-height 0.32s ease,
+      opacity 0.24s ease,
+      transform 0.24s ease,
+      margin 0.24s ease;
+  }
+
+  header .m_gnb > li.on .m_sub {
+    margin: 0 0 14px 0;
+    padding: 10px 0;
+    border-width: 1px;
+    max-height: 360px;
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  header .m_sub a {
+    display: block;
+    padding: 10px 18px;
+    font-family: var(--font-outfit);
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 1.25;
+    text-transform: capitalize;
+    color: var(--kia-white2);
+  }
+
+  header .m_sub a:hover {
+    font-weight: 400;
+    color: var(--kia-white1);
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .mobile_ham_open {
+    overflow: hidden;
+  }
+
+  .mobile_ham_open header {
+    transform: translateY(0);
+  }
+
+  .mobile_ham_open header .m_panel {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .mobile_ham_open header .m_nav {
+    transform: translateX(0);
+  }
+
+
+@media (max-width: 560px) {
+  header .m_nav {
+    width: min(328px, calc(100vw - 24px));
+    padding: 16px 32px;
+  }
+
+  header .m_top {
+    margin-bottom: 22px;
+  }
+
+  header .m_left {
+    gap: 12px;
+  }
+
+  header .m_gnb > li > a,
+  header .m_gnb > li > button,
+  header .m_on {
+    min-height: 52px;
+    font-size: 18px;
+  }
+
+  header .m_sub a {
+    font-size: 16px;
+    padding: 9px 16px;
+  }
+}
+
 footer {
   width: 100%;
 }

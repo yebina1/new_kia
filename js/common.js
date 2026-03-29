@@ -1,21 +1,22 @@
+// Naming rule: const/let variables use $camelCase, function names and parameters use camelCase.
 const $gnbItems = Array.from(document.querySelectorAll('header nav ul.gnb > li'));
 const $gnbList = document.querySelector('header nav ul.gnb');
 const $headerNav = document.querySelector('header nav.glass_bg2');
 const $headerInner = document.querySelector('header .inner');
 const $headerBottom = document.querySelector('header .header_bottom');
 const $subNav = document.querySelector('header .header_bottom .sub_nav');
-const SUB_MENU_GAP = 8;
-const GNB_PILL_PADDING_X = 16;
-const GNB_PILL_PADDING_Y = 8;
-const PILL_BOUNCE_MS = 420;
-let getPrimaryActiveItem = () => null;
-let isHoveringSubMenu = false;
-let hoverLeaveTimer = null;
+const $subMenuGap = 8;
+const $gnbPillPaddingX = 16;
+const $gnbPillPaddingY = 8;
+const $pillBounceMs = 420;
+let $getPrimaryActiveItem = () => null;
+let $isHoveringSubMenu = false;
+let $hoverLeaveTimer = null;
 let $gnbActiveBg = null;
 let $gnbHoverBg = null;
-let hoveredGnbItem = null;
+let $hoveredGnbItem = null;
 
-const resolveMenuKey = (item) => {
+const $resolveMenuKey = (item) => {
   const link = item?.querySelector('a');
   if (!link) return '';
 
@@ -32,7 +33,7 @@ const resolveMenuKey = (item) => {
   return '';
 };
 
-const subMenuMap = {
+const $subMenuMap = {
   company: [
     { label: 'why kia', href: 'whykia.html' },
     { label: 'safety', href: '#' },
@@ -63,7 +64,7 @@ const subMenuMap = {
   ],
 };
 
-const setSubMenuAnchor = (menuItem) => {
+const $setSubMenuAnchor = (menuItem) => {
   if (!$headerInner || !$headerBottom || !menuItem) return;
 
   const innerRect = $headerInner.getBoundingClientRect();
@@ -71,16 +72,16 @@ const setSubMenuAnchor = (menuItem) => {
   const navRect = $headerNav?.getBoundingClientRect();
   const navBottom = navRect ? navRect.bottom : itemRect.bottom;
   const centerX = itemRect.left + itemRect.width / 2 - innerRect.left;
-  const topY = navBottom - innerRect.top + SUB_MENU_GAP;
+  const topY = navBottom - innerRect.top + $subMenuGap;
 
   $headerBottom.style.left = `${centerX}px`;
   $headerBottom.style.top = `${topY}px`;
 };
 
-const renderSubMenu = (menuKey, menuItem) => {
+const $renderSubMenu = (menuKey, menuItem) => {
   if (!$headerBottom || !$subNav) return;
 
-  const subMenus = subMenuMap[menuKey];
+  const subMenus = $subMenuMap[menuKey];
 
   if (!subMenus || subMenus.length === 0) {
     $headerBottom.classList.add('is-hidden');
@@ -89,7 +90,7 @@ const renderSubMenu = (menuKey, menuItem) => {
   }
 
   $headerBottom.classList.remove('is-hidden');
-  setSubMenuAnchor(menuItem);
+  $setSubMenuAnchor(menuItem);
 
   $subNav.innerHTML = subMenus
     .map(({ label, href }) => {
@@ -98,7 +99,7 @@ const renderSubMenu = (menuKey, menuItem) => {
     .join('');
 };
 
-const ensureGnbPillLayers = () => {
+const $ensureGnbPillLayers = () => {
   if (!$gnbList) return;
 
   if (!$gnbActiveBg) {
@@ -114,7 +115,7 @@ const ensureGnbPillLayers = () => {
   }
 };
 
-const triggerPillBounce = (pill) => {
+const $triggerPillBounce = (pill) => {
   if (!pill) return;
 
   pill.classList.remove('is-bounce');
@@ -123,20 +124,20 @@ const triggerPillBounce = (pill) => {
 
   window.setTimeout(() => {
     pill.classList.remove('is-bounce');
-  }, PILL_BOUNCE_MS);
+  }, $pillBounceMs);
 };
 
-const setGnbPillPosition = (item, pill, options = {}) => {
+const $setGnbPillPosition = (item, pill, options = {}) => {
   if (!$gnbList || !pill || !item) return;
   const { bounce = true } = options;
 
   const $anchor = item.querySelector('a');
   const targetRect = ($anchor || item).getBoundingClientRect();
   const listRect = $gnbList.getBoundingClientRect();
-  const x = Math.round(targetRect.left - listRect.left - GNB_PILL_PADDING_X);
-  const y = Math.round(targetRect.top - listRect.top - GNB_PILL_PADDING_Y);
-  const width = Math.round(targetRect.width + GNB_PILL_PADDING_X * 2);
-  const height = Math.round(targetRect.height + GNB_PILL_PADDING_Y * 2);
+  const x = Math.round(targetRect.left - listRect.left - $gnbPillPaddingX);
+  const y = Math.round(targetRect.top - listRect.top - $gnbPillPaddingY);
+  const width = Math.round(targetRect.width + $gnbPillPaddingX * 2);
+  const height = Math.round(targetRect.height + $gnbPillPaddingY * 2);
 
   const prevX = Number(pill.dataset.x ?? NaN);
   const prevY = Number(pill.dataset.y ?? NaN);
@@ -155,90 +156,90 @@ const setGnbPillPosition = (item, pill, options = {}) => {
   pill.dataset.h = String(height);
 
   if (bounce && moved) {
-    triggerPillBounce(pill);
+    $triggerPillBounce(pill);
   }
 };
 
-const setGnbActiveBg = (item, options = {}) => {
+const $setGnbActiveBg = (item, options = {}) => {
   if (!$gnbActiveBg || !item) return;
-  setGnbPillPosition(item, $gnbActiveBg, options);
+  $setGnbPillPosition(item, $gnbActiveBg, options);
 };
 
-const hideGnbActiveBg = () => {
+const $hideGnbActiveBg = () => {
   if (!$gnbActiveBg) return;
   $gnbActiveBg.classList.remove('is-bounce');
   $gnbActiveBg.style.opacity = '0';
 };
 
-const setGnbHoverBg = (item, options = {}) => {
+const $setGnbHoverBg = (item, options = {}) => {
   if (!$gnbHoverBg || !item) return;
   if (item.classList.contains('on')) {
-    hideGnbHoverBg();
+    $hideGnbHoverBg();
     return;
   }
 
-  setGnbPillPosition(item, $gnbHoverBg, options);
+  $setGnbPillPosition(item, $gnbHoverBg, options);
 };
 
-const hideGnbHoverBg = () => {
+const $hideGnbHoverBg = () => {
   if (!$gnbHoverBg) return;
   $gnbHoverBg.classList.remove('is-bounce');
   $gnbHoverBg.style.opacity = '0';
 };
 
 if ($gnbItems.length > 0) {
-  ensureGnbPillLayers();
+  $ensureGnbPillLayers();
 
   const clearPrimaryActive = () => {
     $gnbItems.forEach((li) => {
       li.classList.remove('on');
     });
-    hideGnbActiveBg();
+    $hideGnbActiveBg();
   };
 
   const setPrimaryActive = (target) => {
     clearPrimaryActive();
     target.classList.add('on');
-    setGnbActiveBg(target);
+    $setGnbActiveBg(target);
   };
 
   const getPrimaryActive = () => $gnbItems.find((item) => item.classList.contains('on')) || null;
-  getPrimaryActiveItem = getPrimaryActive;
+  $getPrimaryActiveItem = getPrimaryActive;
 
   $gnbItems.forEach((item) => {
     item.addEventListener('mouseenter', () => {
-      hoveredGnbItem = item;
-      setGnbHoverBg(item);
-      renderSubMenu(resolveMenuKey(item), item);
+      $hoveredGnbItem = item;
+      $setGnbHoverBg(item);
+      $renderSubMenu($resolveMenuKey(item), item);
     });
 
     item.addEventListener('focusin', () => {
-      hoveredGnbItem = item;
-      setGnbHoverBg(item);
-      renderSubMenu(resolveMenuKey(item), item);
+      $hoveredGnbItem = item;
+      $setGnbHoverBg(item);
+      $renderSubMenu($resolveMenuKey(item), item);
     });
 
     item.addEventListener('click', () => {
       setPrimaryActive(item);
-      hoveredGnbItem = item;
-      setGnbHoverBg(item);
-      renderSubMenu(resolveMenuKey(item), item);
+      $hoveredGnbItem = item;
+      $setGnbHoverBg(item);
+      $renderSubMenu($resolveMenuKey(item), item);
     });
   });
 
   const resetSubMenuToActive = () => {
     const activeItem = getPrimaryActive();
     if (!activeItem) {
-      renderSubMenu('', null);
+      $renderSubMenu('', null);
       return;
     }
-    renderSubMenu(resolveMenuKey(activeItem), activeItem);
+    $renderSubMenu($resolveMenuKey(activeItem), activeItem);
   };
 
   const clearHoverLeaveTimer = () => {
-    if (!hoverLeaveTimer) return;
-    clearTimeout(hoverLeaveTimer);
-    hoverLeaveTimer = null;
+    if (!$hoverLeaveTimer) return;
+    clearTimeout($hoverLeaveTimer);
+    $hoverLeaveTimer = null;
   };
 
   $gnbList?.addEventListener('mouseenter', () => {
@@ -246,43 +247,43 @@ if ($gnbItems.length > 0) {
   });
 
   $gnbList?.addEventListener('mouseleave', () => {
-    hoveredGnbItem = null;
-    hideGnbHoverBg();
+    $hoveredGnbItem = null;
+    $hideGnbHoverBg();
     clearHoverLeaveTimer();
-    hoverLeaveTimer = window.setTimeout(() => {
-      if (isHoveringSubMenu) return;
+    $hoverLeaveTimer = window.setTimeout(() => {
+      if ($isHoveringSubMenu) return;
       resetSubMenuToActive();
     }, 120);
   });
 
   clearPrimaryActive();
-  renderSubMenu('', null);
+  $renderSubMenu('', null);
 
   $headerBottom?.addEventListener('mouseenter', () => {
-    isHoveringSubMenu = true;
+    $isHoveringSubMenu = true;
     clearHoverLeaveTimer();
   });
 
   $headerBottom?.addEventListener('mouseleave', () => {
-    isHoveringSubMenu = false;
+    $isHoveringSubMenu = false;
     resetSubMenuToActive();
   });
 }
 
 window.addEventListener('resize', () => {
-  const activeItem = getPrimaryActiveItem();
+  const activeItem = $getPrimaryActiveItem();
   if (activeItem) {
-    setGnbActiveBg(activeItem, { bounce: false });
+    $setGnbActiveBg(activeItem, { bounce: false });
   } else {
-    hideGnbActiveBg();
+    $hideGnbActiveBg();
   }
 
-  if (hoveredGnbItem) {
-    setGnbHoverBg(hoveredGnbItem, { bounce: false });
+  if ($hoveredGnbItem) {
+    $setGnbHoverBg($hoveredGnbItem, { bounce: false });
   }
 
   if (!activeItem || !$headerBottom || $headerBottom.classList.contains('is-hidden')) return;
-  setSubMenuAnchor(activeItem);
+  $setSubMenuAnchor(activeItem);
 });
 
 $subNav?.addEventListener('click', (event) => {
@@ -300,9 +301,102 @@ $subNav?.addEventListener('click', (event) => {
 
 const $header = document.querySelector('header');
 let $lastScrollY = window.scrollY;
+const $mobileHam = document.querySelector('header .m_panel');
+const $mobileHamOpen = document.querySelector('header .icon_menu');
+const $mobileHamClose = document.querySelector('header .close');
+const $mobileHamItems = Array.from(document.querySelectorAll('header .m_gnb > li'));
+const $mobileHamBreakpoint = 1500;
+
+function closeMobileHam() {
+  if (!$mobileHam) return;
+  document.body.classList.remove('mobile_ham_open');
+  $mobileHam.setAttribute('aria-hidden', 'true');
+  $mobileHamOpen?.setAttribute('aria-expanded', 'false');
+}
+
+function openMobileHam() {
+  if (!$mobileHam || window.innerWidth > $mobileHamBreakpoint) return;
+  document.body.classList.add('mobile_ham_open');
+  $header?.classList.remove('hide');
+  $mobileHam.setAttribute('aria-hidden', 'false');
+  $mobileHamOpen?.setAttribute('aria-expanded', 'true');
+}
+
+function syncMobileHamAccordion(item, isOpen) {
+  const $button = item?.querySelector(':scope > button');
+  if (!item || !$button) return;
+  item.classList.toggle('on', isOpen);
+  $button.setAttribute('aria-expanded', String(isOpen));
+}
+
+if ($mobileHam && $mobileHamOpen) {
+  $mobileHamOpen.setAttribute('aria-expanded', 'false');
+  $mobileHamItems.forEach((item) => {
+    const $button = item.querySelector(':scope > button');
+    const $submenu = item.querySelector(':scope > .m_sub');
+    if (!$button || !$submenu) return;
+    syncMobileHamAccordion(item, false);
+  });
+
+  $mobileHamOpen.addEventListener('click', (event) => {
+    if (window.innerWidth > $mobileHamBreakpoint) return;
+    event.preventDefault();
+
+    if (document.body.classList.contains('mobile_ham_open')) {
+      closeMobileHam();
+      return;
+    }
+
+    openMobileHam();
+  });
+
+  $mobileHamClose?.addEventListener('click', closeMobileHam);
+
+  $mobileHam.addEventListener('click', (event) => {
+    if (event.target === $mobileHam) {
+      closeMobileHam();
+    }
+  });
+
+  $mobileHamItems.forEach((item) => {
+    const $button = item.querySelector(':scope > button');
+    const $submenu = item.querySelector(':scope > .m_sub');
+    if (!$button || !$submenu) return;
+
+    $button.addEventListener('click', () => {
+      const $nextState = !item.classList.contains('on');
+
+      $mobileHamItems.forEach((otherItem) => {
+        const $otherSubmenu = otherItem.querySelector(':scope > .m_sub');
+        if (!$otherSubmenu) return;
+        syncMobileHamAccordion(otherItem, false);
+      });
+
+      syncMobileHamAccordion(item, $nextState);
+    });
+  });
+
+  $mobileHam.querySelectorAll('a').forEach((anchor) => {
+    anchor.addEventListener('click', () => {
+      closeMobileHam();
+    });
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      closeMobileHam();
+    }
+  });
+}
 
 window.addEventListener('scroll', () => {
   const $currentScrollY = window.scrollY;
+
+  if (document.body.classList.contains('mobile_ham_open')) {
+    $header.classList.remove('hide');
+    $lastScrollY = $currentScrollY;
+    return;
+  }
 
   if ($currentScrollY > 100 && $currentScrollY > $lastScrollY) {
     $header.classList.add('hide');
@@ -311,6 +405,12 @@ window.addEventListener('scroll', () => {
   }
 
   $lastScrollY = $currentScrollY;
+});
+
+window.addEventListener('resize', () => {
+  if (window.innerWidth > $mobileHamBreakpoint) {
+    closeMobileHam();
+  }
 });
 
 const $familySite = document.querySelector('footer .f_fam');

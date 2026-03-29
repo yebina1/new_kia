@@ -1,3 +1,4 @@
+// Naming rule: const/let variables use $camelCase, function names and parameters use camelCase.
 /* section.best */
 const $vehicles = [
     {
