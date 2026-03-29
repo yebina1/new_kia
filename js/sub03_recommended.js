@@ -100,6 +100,7 @@ const DESKTOP_TAB_POINT_CENTERS = {
 };
 const MODAL_TRANSITION_MS = 420;
 const MOBILE_SWIPE_THRESHOLD = 40;
+const MOBILE_SWIPE_TRANSITION_MS = 240;
 const DESKTOP_SCROLL_LOCK_MS = 1100;
 const MOBILE_DRAG_MAX_OFFSET = 72;
 const DESKTOP_HERO_ROTATE_MS = 3200;
@@ -138,6 +139,8 @@ document.addEventListener("DOMContentLoaded", () => {
         touchDeltaY: 0,
         touchTracking: false,
         activePointerId: null,
+        isMobileTransitioning: false,
+        mobileSwipeTimer: 0,
         modalCloseTimer: 0,
         desktopHeroTimer: 0,
         desktopHeroGroup: "",
@@ -334,6 +337,7 @@ function closeSelectionModal(modal, state) {
 
 function handleMobileSwipeEnd(state, sections, carAll, mobileTabs, title) {
     if (!isMobileViewport()) return;
+    if (state.isMobileTransitioning) return;
 
     const isHorizontalSwipe = Math.abs(state.touchDeltaX) > Math.abs(state.touchDeltaY);
 
@@ -354,15 +358,31 @@ function handleMobileSwipeEnd(state, sections, carAll, mobileTabs, title) {
     }
 
     const direction = state.touchDeltaX < 0 ? 1 : -1;
-    state.currentMobileIndex = clamp(
+    const nextIndex = clamp(
         state.currentMobileIndex + direction,
         0,
         visibleSections.length - 1
     );
+    const currentSection = visibleSections[state.currentMobileIndex];
 
     resetMobileSwipeTracking(state);
-    animateMobileSwipeBack(sections);
-    syncMobileGroup(state, sections, carAll, mobileTabs, title);
+
+    if (nextIndex === state.currentMobileIndex || !currentSection) {
+        animateMobileSwipeBack(sections);
+        return;
+    }
+
+    animateMobileSwipeTransition(
+        state,
+        currentSection,
+        visibleSections[nextIndex],
+        direction,
+        sections,
+        carAll,
+        mobileTabs,
+        title,
+        nextIndex
+    );
 }
 
 function beginMobileSwipeTracking(state, startX, startY) {
@@ -426,10 +446,60 @@ function animateMobileSwipeBack(sections) {
     });
 }
 
+function animateMobileSwipeTransition(state, currentSection, nextSection, direction, sections, carAll, mobileTabs, title, nextIndex) {
+    if (!currentSection || !nextSection || !carAll) {
+        state.currentMobileIndex = nextIndex;
+        syncMobileGroup(state, sections, carAll, mobileTabs, title);
+        return;
+    }
+
+    state.isMobileTransitioning = true;
+    window.clearTimeout(state.mobileSwipeTimer);
+
+    const outgoingOffset = direction > 0 ? -72 : 72;
+    const incomingOffset = direction > 0 ? 72 : -72;
+    const transitionHeight = Math.max(currentSection.offsetHeight, nextSection.offsetHeight);
+
+    carAll.style.height = transitionHeight ? `${transitionHeight}px` : carAll.style.height;
+    carAll.style.minHeight = transitionHeight ? `${transitionHeight}px` : carAll.style.minHeight;
+
+    currentSection.classList.remove("is-dragging", "is-drag-resetting");
+    nextSection.classList.remove("is-dragging", "is-drag-resetting");
+    currentSection.classList.add("is-mobile-leaving");
+    nextSection.classList.add("is-mobile-entering");
+
+    nextSection.style.display = "flex";
+    nextSection.style.pointerEvents = "none";
+    nextSection.style.transform = `translateX(${incomingOffset}px)`;
+    nextSection.style.opacity = "0.72";
+
+    window.requestAnimationFrame(() => {
+        currentSection.style.transform = `translateX(${outgoingOffset}px)`;
+        currentSection.style.opacity = "0";
+        nextSection.style.transform = "translateX(0)";
+        nextSection.style.opacity = "1";
+    });
+
+    state.mobileSwipeTimer = window.setTimeout(() => {
+        currentSection.classList.remove("is-mobile-leaving");
+        nextSection.classList.remove("is-mobile-entering");
+        currentSection.style.transform = "";
+        currentSection.style.opacity = "";
+        nextSection.style.transform = "";
+        nextSection.style.opacity = "";
+        nextSection.style.pointerEvents = "";
+        state.currentMobileIndex = nextIndex;
+        state.isMobileTransitioning = false;
+        syncMobileGroup(state, sections, carAll, mobileTabs, title);
+    }, MOBILE_SWIPE_TRANSITION_MS);
+}
+
 function clearMobileSwipeVisual(sections) {
     sections.forEach((section) => {
         section.classList.remove("is-dragging");
         section.classList.remove("is-drag-resetting");
+        section.classList.remove("is-mobile-entering");
+        section.classList.remove("is-mobile-leaving");
         section.style.transform = "";
         section.style.opacity = "";
     });
@@ -837,6 +907,7 @@ function syncMobileGroup(state, sections, carAll, buttons, title) {
 
     if (!visibleSections.length) {
         carAll.style.height = "";
+        carAll.style.minHeight = "";
         return;
     }
 
@@ -845,7 +916,7 @@ function syncMobileGroup(state, sections, carAll, buttons, title) {
     visibleSections.forEach((section, index) => {
         const isCurrent = index === safeIndex;
         section.classList.toggle("is-mobile-current", isCurrent);
-        section.classList.remove("is-dragging", "is-drag-resetting");
+        section.classList.remove("is-dragging", "is-drag-resetting", "is-mobile-entering", "is-mobile-leaving");
         section.style.display = isCurrent ? "flex" : "none";
         section.style.pointerEvents = isCurrent ? "auto" : "none";
         section.style.transform = "";
@@ -860,20 +931,26 @@ function syncMobileGroup(state, sections, carAll, buttons, title) {
         title.textContent = recommendationTitles[currentSection.id] || "Recommended";
     }
 
-    // Let the container grow with the current card so tablet widths do not collapse to 0px.
-    carAll.style.height = "auto";
+    window.requestAnimationFrame(() => {
+        const currentHeight = currentSection.offsetHeight;
+        carAll.style.height = currentHeight ? `${currentHeight}px` : "auto";
+        carAll.style.minHeight = currentHeight ? `${currentHeight}px` : "";
+    });
 }
 
 function resetMobileState(sections, carAll) {
     sections.forEach((section) => {
-        section.classList.remove("is-mobile-hidden", "is-mobile-visible", "is-mobile-current");
+        section.classList.remove("is-mobile-hidden", "is-mobile-visible", "is-mobile-current", "is-mobile-entering", "is-mobile-leaving");
         section.style.display = "";
         section.style.pointerEvents = "";
         section.style.minHeight = "";
+        section.style.transform = "";
+        section.style.opacity = "";
     });
 
     if (carAll) {
         carAll.style.height = "";
+        carAll.style.minHeight = "";
     }
 }
 
