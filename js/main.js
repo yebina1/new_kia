@@ -112,10 +112,17 @@ let $mainVisualSnapReleaseTimer = null;
 let $isEv6Snapping = false;
 let $ev6SnapLockedUntil = 0;
 let $ev6SnapReleaseTimer = null;
+let $currentUpperSnapIndex = 0;
+let $isUpperSnapping = false;
+let $upperWheelLockedUntil = 0;
+let $upperSnapReleaseTimer = null;
+let $upperLenisResumeTimer = null;
 
 const BEST_SNAP_TOLERANCE = 120;
-const BEST_SNAP_LOCK = 500;
+const BEST_SNAP_LOCK = 320;
 const BEST_SNAP_DURATION = 15;
+const UPPER_WHEEL_THRESHOLD = 6;
+const UPPER_ALIGN_TOLERANCE = 6;
 
 if (window.gsap && window.ScrollTrigger) {
     gsap.registerPlugin(ScrollTrigger);
@@ -457,6 +464,7 @@ function snapBestSection() {
         return;
     }
 
+    $currentUpperSnapIndex = 1;
     $isBestSnapping = true;
 
     if ($bestSnapReleaseTimer) {
@@ -558,6 +566,7 @@ function snapMainVisualSection() {
         return;
     }
 
+    $currentUpperSnapIndex = 0;
     $isMainVisualSnapping = true;
 
     if ($mainVisualSnapReleaseTimer) {
@@ -653,6 +662,7 @@ function snapEv6Section() {
         return;
     }
 
+    $currentUpperSnapIndex = 2;
     $isEv6Snapping = true;
 
     if ($ev6SnapReleaseTimer) {
@@ -723,6 +733,247 @@ function handleEv6Wheel(event) {
     snapEv6Section();
 }
 
+function getUpperSectionTops() {
+    return [
+        getMainVisualScrollTop(),
+        getBestScrollTop(),
+        getEv6ScrollTop(),
+    ];
+}
+
+function getSettledUpperSectionIndex() {
+    const $tops = getUpperSectionTops();
+    const $currentY = window.scrollY;
+    let $nearestIndex = 0;
+    let $nearestDistance = Math.abs($tops[0] - $currentY);
+
+    $tops.forEach(($top, index) => {
+        const $distance = Math.abs($top - $currentY);
+
+        if ($distance < $nearestDistance) {
+            $nearestDistance = $distance;
+            $nearestIndex = index;
+        }
+    });
+
+    return $nearestIndex;
+}
+
+function syncCurrentUpperSnapIndex() {
+    $currentUpperSnapIndex = getSettledUpperSectionIndex();
+}
+
+function snapUpperSectionTo(index) {
+    const $clampedIndex = Math.max(0, Math.min(index, 2));
+
+    if ($clampedIndex === 0) {
+        snapMainVisualSection();
+        return;
+    }
+
+    if ($clampedIndex === 1) {
+        snapBestSection();
+        return;
+    }
+
+    snapEv6Section();
+}
+
+function clearUpperSnapRuntimeState() {
+    $isUpperSnapping = false;
+    $upperWheelLockedUntil = 0;
+
+    if ($upperSnapReleaseTimer) {
+        window.clearTimeout($upperSnapReleaseTimer);
+        $upperSnapReleaseTimer = null;
+    }
+
+    if ($upperLenisResumeTimer) {
+        window.clearTimeout($upperLenisResumeTimer);
+        $upperLenisResumeTimer = null;
+    }
+}
+
+function scrollUpperSectionTo(index) {
+    const $tops = getUpperSectionTops();
+    const $clampedIndex = Math.max(0, Math.min(index, $tops.length - 1));
+    const $target = $tops[$clampedIndex];
+
+    if (typeof $target !== "number") {
+        return;
+    }
+
+    $currentUpperSnapIndex = $clampedIndex;
+    $isUpperSnapping = true;
+
+    if ($upperSnapReleaseTimer) {
+        window.clearTimeout($upperSnapReleaseTimer);
+        $upperSnapReleaseTimer = null;
+    }
+    if ($upperLenisResumeTimer) {
+        window.clearTimeout($upperLenisResumeTimer);
+        $upperLenisResumeTimer = null;
+    }
+
+    if (window.$mainLenis && typeof window.$mainLenis.scrollTo === "function") {
+        window.$mainLenis.scrollTo(window.scrollY, {
+            immediate: true,
+        });
+        if (typeof window.$mainLenis.start === "function") {
+            window.$mainLenis.start();
+        }
+        window.$mainLenis.scrollTo($target, {
+            duration: BEST_SNAP_DURATION,
+            lock: true,
+            immediate: false,
+            easing: (t) => 1 - Math.pow(1 - t, 3),
+            onComplete: () => {
+                $currentUpperSnapIndex = $clampedIndex;
+                $upperWheelLockedUntil = Date.now() + BEST_SNAP_LOCK;
+                if (typeof window.$mainLenis.stop === "function" && typeof window.$mainLenis.start === "function") {
+                    window.$mainLenis.stop();
+                    $upperLenisResumeTimer = window.setTimeout(() => {
+                        window.$mainLenis.start();
+                        $upperLenisResumeTimer = null;
+                    }, BEST_SNAP_LOCK);
+                }
+                $upperSnapReleaseTimer = window.setTimeout(() => {
+                    $isUpperSnapping = false;
+                }, BEST_SNAP_LOCK);
+            }
+        });
+        return;
+    }
+
+    window.scrollTo({ top: $target, behavior: "smooth" });
+    $upperSnapReleaseTimer = window.setTimeout(() => {
+        $currentUpperSnapIndex = $clampedIndex;
+        $upperWheelLockedUntil = Date.now() + BEST_SNAP_LOCK;
+        $isUpperSnapping = false;
+    }, 1200);
+}
+
+function handleUpperSectionWheel(event) {
+    if (!$mainVisualSection || !$bestSection || !$ev6Section) {
+        return;
+    }
+
+    const $now = Date.now();
+    const $wheelDelta = Math.abs(event.deltaY);
+
+    if ($wheelDelta < UPPER_WHEEL_THRESHOLD) {
+        return;
+    }
+
+    const $tops = getUpperSectionTops();
+
+    if ($tops.some(($top) => typeof $top !== "number")) {
+        return;
+    }
+
+    const $currentY = window.scrollY;
+    const $corridorPadding = Math.round(window.innerHeight * 0.4);
+    const $firstTop = $tops[0];
+    const $ev6Top = $tops[$tops.length - 1];
+    const $ev6EntryLimit = $ev6Top + Math.round(window.innerHeight * 0.12);
+    const $isDown = event.deltaY > 0;
+    const $isUp = event.deltaY < 0;
+
+    if ($currentY < $firstTop - $corridorPadding || $currentY > $ev6EntryLimit) {
+        return;
+    }
+
+    if ($currentY >= $ev6Top - UPPER_ALIGN_TOLERANCE && $isDown) {
+        return;
+    }
+
+    if ($isUpperSnapping || $now < $upperWheelLockedUntil) {
+        event.preventDefault();
+        return;
+    }
+
+    const $nearestIndex = getSettledUpperSectionIndex();
+    const $nearestTop = $tops[$nearestIndex];
+
+    if (typeof $nearestTop === "number" && Math.abs($currentY - $nearestTop) <= UPPER_ALIGN_TOLERANCE) {
+        $currentUpperSnapIndex = $nearestIndex;
+    }
+
+    const $currentIndex = $currentUpperSnapIndex;
+    const $currentTop = $tops[$currentIndex];
+
+    if (typeof $currentTop !== "number") {
+        return;
+    }
+
+    const $isMisaligned = Math.abs($currentY - $currentTop) > UPPER_ALIGN_TOLERANCE;
+
+    if ($currentIndex === 2 && !$isMisaligned && $isDown) {
+        return;
+    }
+
+    event.preventDefault();
+
+    if ($isMisaligned) {
+        if ($isDown && $currentY > $currentTop + UPPER_ALIGN_TOLERANCE) {
+            const $targetIndex = Math.min($currentIndex + 1, $tops.length - 1);
+
+            if ($targetIndex !== $currentIndex) {
+                $currentUpperSnapIndex = $targetIndex;
+                scrollUpperSectionTo($targetIndex);
+                return;
+            }
+        }
+
+        if ($isUp && $currentY < $currentTop - UPPER_ALIGN_TOLERANCE) {
+            const $targetIndex = Math.max($currentIndex - 1, 0);
+
+            if ($targetIndex !== $currentIndex) {
+                $currentUpperSnapIndex = $targetIndex;
+                scrollUpperSectionTo($targetIndex);
+                return;
+            }
+        }
+    }
+
+    if ($isMisaligned) {
+        $currentUpperSnapIndex = $currentIndex;
+        scrollUpperSectionTo($currentIndex);
+        return;
+    }
+
+    if ($isDown) {
+        const $targetIndex = Math.min($currentIndex + 1, 2);
+
+        if ($targetIndex !== $currentIndex) {
+            scrollUpperSectionTo($targetIndex);
+            return;
+        }
+        return;
+    }
+
+    if ($isUp) {
+        const $targetIndex = Math.max($currentIndex - 1, 0);
+
+        if ($targetIndex !== $currentIndex) {
+            scrollUpperSectionTo($targetIndex);
+            return;
+        }
+    }
+}
+
+function syncSectionSnapIndicesOnScroll() {
+    const $now = Date.now();
+
+    if (!$isUpperSnapping && $now >= $upperWheelLockedUntil) {
+        syncCurrentUpperSnapIndex();
+    }
+
+    if (!$isMatchSnapping && $now >= $matchWheelLockedUntil) {
+        syncCurrentMatchSnapIndex();
+    }
+}
+
 if ($showcase && $backText && $backTextGlass && $cards.length === 3 && $specValues.length) {
     renderState($currentIndex);
     $cards.forEach((card) => {
@@ -751,9 +1002,12 @@ if ($showcase && $backText && $backTextGlass && $cards.length === 3 && $specValu
     }
 }
 
-window.addEventListener("wheel", handleBestWheel, { passive: false });
-window.addEventListener("wheel", handleMainVisualWheel, { passive: false });
-window.addEventListener("wheel", handleEv6Wheel, { passive: false });
+window.addEventListener("wheel", handleUpperSectionWheel, { passive: false });
+window.addEventListener("scroll", syncSectionSnapIndicesOnScroll, { passive: true });
+window.addEventListener("resize", () => {
+    clearUpperSnapRuntimeState();
+    syncCurrentUpperSnapIndex();
+}, { passive: true });
 
 /* section.ev6 */
 const clamp = (v, min = 0, max = 1) => Math.min(max, Math.max(min, v));
@@ -994,6 +1248,10 @@ let $matchSnapReleaseTimer = null;
 let $matchLenisResumeTimer = null;
 let $currentMatchSnapIndex = 0;
 let $partnershipMatchLockedUntil = 0;
+let $partnershipToMatchIntentUntil = 0;
+let $partnershipReentryUntil = 0;
+let $partnershipWheelIntentDirection = 0;
+let $partnershipWheelIntentUntil = 0;
 
 const MATCH_WHEEL_DOWN_THRESHOLD = 10;
 const MATCH_WHEEL_UP_THRESHOLD = 8;
@@ -1003,6 +1261,14 @@ const MATCH_WHEEL_DOWN_COOLDOWN = 520;
 const MATCH_WHEEL_UP_COOLDOWN = 440;
 const MATCH_SECTION_SWITCH_VIEWPORT = 0.51;
 const MATCH_POST_SNAP_LOCK = 500;
+const PARTNERSHIP_TO_MATCH_POST_SNAP_LOCK = 1050;
+const PARTNERSHIP_TO_MATCH_DURATION = 3.2;
+const PARTNERSHIP_MATCH_INTENT_WINDOW = 260;
+const PARTNERSHIP_REENTRY_GRACE = 1200;
+const PARTNERSHIP_MATCH_REENTRY_INTENT_WINDOW = 1600;
+const PARTNERSHIP_WHEEL_INTENT_WINDOW = 900;
+const REVIEW_TO_PARTNERSHIP_LOCK = 2000;
+const REVIEW_TO_PARTNERSHIP_DURATION = 22;
 
 function initLenis() {
   const $lenis = new Lenis();
@@ -1104,6 +1370,41 @@ function getMatchSectionSnapTop(section, index) {
   return Math.round(window.scrollY + section.getBoundingClientRect().top);
 }
 
+function getMatchSectionPinRange(section, index) {
+  if (!section) {
+    return null;
+  }
+
+  if (window.ScrollTrigger && typeof window.ScrollTrigger.getAll === 'function') {
+    const $pinTrigger = window.ScrollTrigger.getAll().find(($trigger) => (
+      $trigger.trigger === section && $trigger.pin
+    ));
+
+    if ($pinTrigger) {
+      const $start = typeof $pinTrigger.start === 'number' ? Math.round($pinTrigger.start) : null;
+      const $end = typeof $pinTrigger.end === 'number' ? Math.round($pinTrigger.end) : null;
+
+      if (typeof $start === 'number' || typeof $end === 'number') {
+        return {
+          start: typeof $start === 'number' ? $start : getMatchSectionSnapTop(section, index),
+          end: typeof $end === 'number' ? $end : getMatchSectionSnapTop(section, index),
+        };
+      }
+    }
+  }
+
+  const $top = getMatchSectionSnapTop(section, index);
+
+  if (typeof $top !== 'number') {
+    return null;
+  }
+
+  return {
+    start: $top,
+    end: $top,
+  };
+}
+
 function getMatchSectionTops() {
   return $matchSections.map(($section, index) => getMatchSectionSnapTop($section, index));
 }
@@ -1127,8 +1428,22 @@ function getSettledMatchSectionIndex() {
     return -1;
   }
 
-  const $tops = getMatchSectionTops();
   const $currentY = window.scrollY;
+  const $ranges = $matchSections.map(($section, index) => getMatchSectionPinRange($section, index));
+
+  for (let index = 0; index < $ranges.length; index += 1) {
+    const $range = $ranges[index];
+
+    if (!$range) {
+      continue;
+    }
+
+    if ($currentY >= $range.start - 4 && $currentY <= $range.end + 4) {
+      return index;
+    }
+  }
+
+  const $tops = getMatchSectionTops();
   let $nearestIndex = 0;
   let $nearestDistance = Math.abs($tops[0] - $currentY);
 
@@ -1152,7 +1467,7 @@ function syncCurrentMatchSnapIndex() {
   }
 }
 
-function scrollMatchTo(index) {
+function scrollMatchTo(index, postSnapLock = MATCH_POST_SNAP_LOCK, duration = 15, easing = null) {
   const $tops = getMatchSectionTops();
   const $clampedIndex = Math.max(0, Math.min(index, $tops.length - 1));
   const $target = $tops[$clampedIndex];
@@ -1179,22 +1494,22 @@ function scrollMatchTo(index) {
       window.$mainLenis.start();
     }
     window.$mainLenis.scrollTo($target, {
-      duration: 15,
+      duration,
       lock: true,
       immediate: false,
-      easing: (t) => 1 - Math.pow(1 - t, 3),
+      easing: typeof easing === 'function' ? easing : (t) => 1 - Math.pow(1 - t, 3),
       onComplete: () => {
-        $matchWheelLockedUntil = Date.now() + MATCH_POST_SNAP_LOCK;
+        $matchWheelLockedUntil = Date.now() + postSnapLock;
         if (typeof window.$mainLenis.stop === 'function' && typeof window.$mainLenis.start === 'function') {
           window.$mainLenis.stop();
           $matchLenisResumeTimer = window.setTimeout(() => {
             window.$mainLenis.start();
             $matchLenisResumeTimer = null;
-          }, MATCH_POST_SNAP_LOCK);
+          }, postSnapLock);
         }
         $matchSnapReleaseTimer = window.setTimeout(() => {
           $isMatchSnapping = false;
-        }, MATCH_POST_SNAP_LOCK);
+        }, postSnapLock);
       },
     });
     return;
@@ -1206,14 +1521,14 @@ function scrollMatchTo(index) {
   }
   window.scrollTo({ top: $target, behavior: 'smooth' });
   window.setTimeout(() => {
-    $matchWheelLockedUntil = Date.now() + MATCH_POST_SNAP_LOCK;
+    $matchWheelLockedUntil = Date.now() + postSnapLock;
     $matchSnapReleaseTimer = window.setTimeout(() => {
       $isMatchSnapping = false;
-    }, MATCH_POST_SNAP_LOCK);
+    }, postSnapLock);
   }, 1650);
 }
 
-function scrollMatchToTarget(target) {
+function scrollMatchToTarget(target, postSnapLock = MATCH_POST_SNAP_LOCK, duration = 15, onComplete = null, easing = null) {
   if (typeof target !== 'number') {
     return;
   }
@@ -1234,22 +1549,25 @@ function scrollMatchToTarget(target) {
       window.$mainLenis.start();
     }
     window.$mainLenis.scrollTo(target, {
-      duration: 15,
+      duration,
       lock: true,
       immediate: false,
-      easing: (t) => 1 - Math.pow(1 - t, 3),
+      easing: typeof easing === 'function' ? easing : (t) => 1 - Math.pow(1 - t, 3),
       onComplete: () => {
-        $matchWheelLockedUntil = Date.now() + MATCH_POST_SNAP_LOCK;
+        $matchWheelLockedUntil = Date.now() + postSnapLock;
         if (typeof window.$mainLenis.stop === 'function' && typeof window.$mainLenis.start === 'function') {
           window.$mainLenis.stop();
           $matchLenisResumeTimer = window.setTimeout(() => {
             window.$mainLenis.start();
             $matchLenisResumeTimer = null;
-          }, MATCH_POST_SNAP_LOCK);
+          }, postSnapLock);
         }
         $matchSnapReleaseTimer = window.setTimeout(() => {
           $isMatchSnapping = false;
-        }, MATCH_POST_SNAP_LOCK);
+        }, postSnapLock);
+        if (typeof onComplete === 'function') {
+          onComplete();
+        }
       },
     });
     return;
@@ -1261,10 +1579,13 @@ function scrollMatchToTarget(target) {
   }
   window.scrollTo({ top: target, behavior: 'smooth' });
   window.setTimeout(() => {
-    $matchWheelLockedUntil = Date.now() + MATCH_POST_SNAP_LOCK;
+    $matchWheelLockedUntil = Date.now() + postSnapLock;
     $matchSnapReleaseTimer = window.setTimeout(() => {
       $isMatchSnapping = false;
-    }, MATCH_POST_SNAP_LOCK);
+    }, postSnapLock);
+    if (typeof onComplete === 'function') {
+      onComplete();
+    }
   }, 1650);
 }
 
@@ -1303,6 +1624,37 @@ function getLastMatchBottomScrollTop() {
   }
 
   return getMatchBottomScrollTop();
+}
+
+function getPartnershipToMatchScrollTop() {
+  const $lastMatchOption = $options[$options.length - 1];
+
+  if (!$lastMatchOption) {
+    return null;
+  }
+
+  if (window.ScrollTrigger && typeof window.ScrollTrigger.getAll === 'function') {
+    const $pinTrigger = window.ScrollTrigger.getAll().find(($trigger) => (
+      $trigger.trigger === $lastMatchOption && $trigger.pin
+    ));
+
+    if ($pinTrigger) {
+      const $start = typeof $pinTrigger.start === 'number' ? Math.round($pinTrigger.start) : null;
+
+      if (typeof $start === 'number') {
+        const $settleOffset = Math.max(24, Math.round(window.innerHeight * 0.04));
+        return $start + $settleOffset;
+      }
+
+      const $end = typeof $pinTrigger.end === 'number' ? Math.round($pinTrigger.end) : null;
+
+      if (typeof $end === 'number') {
+        return Math.max(0, $end - 2);
+      }
+    }
+  }
+
+  return getLastMatchBottomScrollTop();
 }
 
 function isIntroInSnapZone() {
@@ -1355,6 +1707,28 @@ function isPartnershipInSnapZone() {
   return $partnershipRect.top < window.innerHeight && $partnershipRect.bottom > 0;
 }
 
+function isPartnershipUpSnapZone() {
+  if (!$partnershipSection) {
+    return false;
+  }
+
+  const $partnershipRect = $partnershipSection.getBoundingClientRect();
+  const $topTolerance = Math.max(72, Math.round(window.innerHeight * 0.12));
+  return $partnershipRect.top <= $topTolerance && $partnershipRect.bottom > window.innerHeight * 0.35;
+}
+
+function isPartnershipToMatchReadyZone() {
+  if (!$partnershipSection) {
+    return false;
+  }
+
+  if (isPartnershipUpSnapZone()) {
+    return true;
+  }
+
+  return Date.now() < $partnershipReentryUntil && isPartnershipInSnapZone();
+}
+
 function isPartnershipDownSnapZone() {
   if (!$partnershipSection) {
     return false;
@@ -1373,6 +1747,180 @@ function isReviewBlockingPartnershipMatch() {
   return $reviewRect.top <= 0 && $reviewRect.bottom > 0;
 }
 
+function armPartnershipWheelIntent(direction, duration = PARTNERSHIP_WHEEL_INTENT_WINDOW, $now = Date.now()) {
+  $partnershipWheelIntentDirection = direction;
+  $partnershipWheelIntentUntil = $now + duration;
+}
+
+function clearPartnershipTransitionState() {
+  $partnershipMatchLockedUntil = 0;
+  $partnershipToMatchIntentUntil = 0;
+  $partnershipReentryUntil = 0;
+  $partnershipWheelIntentDirection = 0;
+  $partnershipWheelIntentUntil = 0;
+}
+
+function clearMatchSnapRuntimeState() {
+  $isMatchSnapping = false;
+  $matchWheelLockedUntil = 0;
+
+  if ($matchSnapReleaseTimer) {
+    window.clearTimeout($matchSnapReleaseTimer);
+    $matchSnapReleaseTimer = null;
+  }
+
+  if ($matchLenisResumeTimer) {
+    window.clearTimeout($matchLenisResumeTimer);
+    $matchLenisResumeTimer = null;
+  }
+
+  if (!isReviewScrollLocked() && window.$mainLenis && typeof window.$mainLenis.start === 'function') {
+    window.$mainLenis.start();
+  }
+}
+
+function triggerPartnershipToMatchSnap($now = Date.now()) {
+  if (!$partnershipSection || !$matchSections.length) {
+    return false;
+  }
+
+  if ($isCaptured || $isMatchSnapping || $now < $matchWheelLockedUntil || $now < $partnershipMatchLockedUntil) {
+    return false;
+  }
+
+  const $target = getPartnershipToMatchScrollTop();
+  clearPartnershipTransitionState();
+  clearMatchSnapRuntimeState();
+  $currentMatchSnapIndex = $matchSections.length - 1;
+  $partnershipMatchLockedUntil = $now + PARTNERSHIP_TO_MATCH_POST_SNAP_LOCK;
+  $matchWheelLockedUntil = $now + PARTNERSHIP_TO_MATCH_POST_SNAP_LOCK;
+
+  if (typeof $target === 'number') {
+    scrollMatchToTarget(
+      $target,
+      PARTNERSHIP_TO_MATCH_POST_SNAP_LOCK,
+      PARTNERSHIP_TO_MATCH_DURATION,
+      null,
+      (t) => 1 - Math.pow(1 - t, 1.2)
+    );
+    return true;
+  }
+
+  scrollMatchTo(
+    $currentMatchSnapIndex,
+    PARTNERSHIP_TO_MATCH_POST_SNAP_LOCK,
+    PARTNERSHIP_TO_MATCH_DURATION,
+    (t) => 1 - Math.pow(1 - t, 1.2)
+  );
+  return true;
+}
+
+function triggerPartnershipToReviewSnap($now = Date.now()) {
+  if (!$partnershipSection || !$reviewSection) {
+    return false;
+  }
+
+  if ($isCaptured || $now < $captureLockedUntil) {
+    return false;
+  }
+
+  if (!isPartnershipDownSnapZone()) {
+    return false;
+  }
+
+  const $reviewTop = Math.round(window.scrollY + $reviewSection.getBoundingClientRect().top);
+  clearPartnershipTransitionState();
+  $captureLockedUntil = $now + 1100;
+
+  if (window.$mainLenis && typeof window.$mainLenis.scrollTo === 'function') {
+    window.$mainLenis.scrollTo(window.scrollY, {
+      immediate: true,
+    });
+    if (typeof window.$mainLenis.start === 'function') {
+      window.$mainLenis.start();
+    }
+    window.$mainLenis.scrollTo($reviewTop, {
+      duration: 15,
+      lock: true,
+      immediate: false,
+      easing: (t) => 1 - Math.pow(1 - t, 3),
+      onComplete: () => {
+        captureReview();
+      }
+    });
+    return true;
+  }
+
+  window.scrollTo({ top: $reviewTop, behavior: 'smooth' });
+  window.setTimeout(() => {
+    captureReview();
+  }, 1200);
+  return true;
+}
+
+function maybeHandlePartnershipSnapOnScroll() {
+  const $now = Date.now();
+
+  if ($now <= $partnershipToMatchIntentUntil && isPartnershipToMatchReadyZone()) {
+    triggerPartnershipToMatchSnap($now);
+    return;
+  }
+
+  if ($now > $partnershipWheelIntentUntil) {
+    return;
+  }
+
+  if ($partnershipWheelIntentDirection < 0 && isPartnershipToMatchReadyZone()) {
+    triggerPartnershipToMatchSnap($now);
+    return;
+  }
+
+  if ($partnershipWheelIntentDirection > 0 && isPartnershipDownSnapZone()) {
+    triggerPartnershipToReviewSnap($now);
+  }
+}
+
+function handlePartnershipWheelRouter(event) {
+  if (!$partnershipSection || !$matchSections.length || !$reviewSection) {
+    return;
+  }
+
+  if (!isPartnershipInSnapZone() || $isCaptured) {
+    return;
+  }
+
+  const $now = Date.now();
+  const $wheelDelta = Math.abs(event.deltaY);
+  const $isUp = event.deltaY < 0;
+  const $isDown = event.deltaY > 0;
+
+  if ($now < $captureLockedUntil) {
+    event.preventDefault();
+    return;
+  }
+
+  if ($isUp && $now < $partnershipMatchLockedUntil) {
+    event.preventDefault();
+    return;
+  }
+
+  if ($isMatchSnapping || $now < $matchWheelLockedUntil) {
+    event.preventDefault();
+    return;
+  }
+
+  if ($isUp && $wheelDelta >= PARTNERSHIP_MATCH_WHEEL_UP_THRESHOLD) {
+    event.preventDefault();
+    triggerPartnershipToMatchSnap($now);
+    return;
+  }
+
+  if ($isDown && $wheelDelta >= PARTNERSHIP_REVIEW_WHEEL_DOWN_THRESHOLD) {
+    event.preventDefault();
+    triggerPartnershipToReviewSnap($now);
+  }
+}
+
 function handlePartnershipToMatchWheel(event) {
   if (!$partnershipSection || !$matchSections.length) {
     return;
@@ -1389,7 +1937,7 @@ function handlePartnershipToMatchWheel(event) {
   }
 
   if ($isMatchSnapping || $now < $matchWheelLockedUntil) {
-    if (isPartnershipInSnapZone()) {
+    if (isPartnershipToMatchReadyZone()) {
       event.preventDefault();
     }
     return;
@@ -1398,14 +1946,17 @@ function handlePartnershipToMatchWheel(event) {
   const $isUp = event.deltaY < 0;
   const $wheelDelta = Math.abs(event.deltaY);
 
-  if (!$isUp || $wheelDelta < PARTNERSHIP_MATCH_WHEEL_UP_THRESHOLD || !isPartnershipInSnapZone()) {
+  if ($isUp && $wheelDelta >= PARTNERSHIP_MATCH_WHEEL_UP_THRESHOLD) {
+    armPartnershipWheelIntent(-1, PARTNERSHIP_WHEEL_INTENT_WINDOW, $now);
+    $partnershipToMatchIntentUntil = $now + PARTNERSHIP_MATCH_INTENT_WINDOW;
+  }
+
+  if (!$isUp || $wheelDelta < PARTNERSHIP_MATCH_WHEEL_UP_THRESHOLD || !isPartnershipToMatchReadyZone()) {
     return;
   }
 
   event.preventDefault();
-  $currentMatchSnapIndex = $matchSections.length - 1;
-  $matchWheelLockedUntil = $now + MATCH_POST_SNAP_LOCK;
-  scrollMatchTo($currentMatchSnapIndex);
+  triggerPartnershipToMatchSnap($now);
 }
 
 function isReviewInSnapEntryZone() {
@@ -1430,7 +1981,10 @@ function handlePartnershipToReviewWheel(event) {
 
   const $isDown = event.deltaY > 0;
   const $wheelDelta = Math.abs(event.deltaY);
-  const $partnershipRect = $partnershipSection.getBoundingClientRect();
+
+  if ($isDown && $wheelDelta >= PARTNERSHIP_REVIEW_WHEEL_DOWN_THRESHOLD) {
+    armPartnershipWheelIntent(1, PARTNERSHIP_WHEEL_INTENT_WINDOW, $now);
+  }
 
   if (!$isDown || $wheelDelta < PARTNERSHIP_REVIEW_WHEEL_DOWN_THRESHOLD) {
     return;
@@ -1441,32 +1995,7 @@ function handlePartnershipToReviewWheel(event) {
   }
 
   event.preventDefault();
-  $captureLockedUntil = $now + 900;
-  const $reviewTop = Math.round(window.scrollY + $reviewSection.getBoundingClientRect().top);
-
-  if (window.$mainLenis && typeof window.$mainLenis.scrollTo === 'function') {
-    window.$mainLenis.scrollTo(window.scrollY, {
-      immediate: true,
-    });
-    if (typeof window.$mainLenis.start === 'function') {
-      window.$mainLenis.start();
-    }
-    window.$mainLenis.scrollTo($reviewTop, {
-      duration: 15,
-      lock: true,
-      immediate: false,
-      easing: (t) => 1 - Math.pow(1 - t, 3),
-      onComplete: () => {
-        captureReview();
-      }
-    });
-    return;
-  }
-
-  window.scrollTo({ top: $reviewTop, behavior: 'smooth' });
-  window.setTimeout(() => {
-    captureReview();
-  }, 1200);
+  triggerPartnershipToReviewSnap($now);
 }
 
 function handleMatchWheel(event) {
@@ -1501,8 +2030,60 @@ function handleMatchWheel(event) {
   const $currentIndex = $currentMatchSnapIndex;
   const $lastIndex = $matchSections.length - 1;
   const $currentTop = getMatchSectionTops()[$currentIndex];
+  const $currentRange = getMatchSectionPinRange($matchSections[$currentIndex], $currentIndex);
+  const $isMisaligned = typeof $currentTop === 'number' && Math.abs(window.scrollY - $currentTop) > 8;
 
-  if (typeof $currentTop === 'number' && Math.abs(window.scrollY - $currentTop) > 8) {
+  if ($isMisaligned && $currentRange) {
+    if ($direction < 0 && window.scrollY < $currentRange.start - 8) {
+      event.preventDefault();
+
+      if ($currentIndex > 0) {
+        $matchWheelLockedUntil = $now + $cooldown;
+        scrollMatchTo($currentIndex - 1);
+        return;
+      }
+
+      const $ev6BottomTop = getEv6BottomScrollTop();
+
+      if (typeof $ev6BottomTop === 'number') {
+        $matchWheelLockedUntil = $now + $cooldown;
+        scrollMatchToTarget($ev6BottomTop);
+      }
+      return;
+    }
+
+    if ($direction > 0 && window.scrollY > $currentRange.end + 8) {
+      event.preventDefault();
+
+      if ($currentIndex < $lastIndex) {
+        $matchWheelLockedUntil = $now + $cooldown;
+        scrollMatchTo($currentIndex + 1);
+        return;
+      }
+
+      if ($partnershipSection) {
+        clearPartnershipTransitionState();
+        $matchWheelLockedUntil = $now + $cooldown;
+        scrollMatchToTarget(
+          Math.round(window.scrollY + $partnershipSection.getBoundingClientRect().top),
+          MATCH_POST_SNAP_LOCK,
+          15,
+          null
+        );
+      }
+      return;
+    }
+  }
+
+  if (
+    typeof $currentTop === 'number' &&
+    (
+      !$currentRange ||
+      window.scrollY < $currentRange.start - 8 ||
+      window.scrollY > $currentRange.end + 8
+    ) &&
+    $isMisaligned
+  ) {
     event.preventDefault();
     $matchWheelLockedUntil = $now + $cooldown;
     scrollMatchTo($currentIndex);
@@ -1526,8 +2107,14 @@ function handleMatchWheel(event) {
     if ($currentIndex === $lastIndex && $direction > 0) {
       if ($partnershipSection) {
         event.preventDefault();
+        clearPartnershipTransitionState();
         $matchWheelLockedUntil = $now + $cooldown;
-        scrollMatchToTarget(Math.round(window.scrollY + $partnershipSection.getBoundingClientRect().top));
+        scrollMatchToTarget(
+          Math.round(window.scrollY + $partnershipSection.getBoundingClientRect().top),
+          MATCH_POST_SNAP_LOCK,
+          15,
+          null
+        );
       }
       return;
     }
@@ -1544,24 +2131,12 @@ setupIntroPin();
 setupOptionScroll();
 syncCurrentMatchSnapIndex();
 window.addEventListener('wheel', handleIntroToEv6Wheel, { passive: false });
-window.addEventListener('wheel', handlePartnershipToMatchWheel, { passive: false });
-window.addEventListener('wheel', handlePartnershipToReviewWheel, { passive: false });
+window.addEventListener('wheel', handlePartnershipWheelRouter, { passive: false });
 window.addEventListener('wheel', handleMatchWheel, { passive: false });
 
 window.addEventListener('resize', () => {
-  $matchWheelLockedUntil = 0;
-  $partnershipMatchLockedUntil = 0;
-  $isMatchSnapping = false;
-
-  if ($matchSnapReleaseTimer) {
-    window.clearTimeout($matchSnapReleaseTimer);
-    $matchSnapReleaseTimer = null;
-  }
-
-  if ($matchLenisResumeTimer) {
-    window.clearTimeout($matchLenisResumeTimer);
-    $matchLenisResumeTimer = null;
-  }
+  clearMatchSnapRuntimeState();
+  clearPartnershipTransitionState();
 
   if (window.ScrollTrigger && typeof window.ScrollTrigger.refresh === 'function') {
     window.ScrollTrigger.refresh();
@@ -1723,8 +2298,11 @@ let $lockedScrollY = 0;
 let $reviewScrollTop = 0;
 let $captureLockedUntil = 0;
 let $releasePending = false;
+let $reviewWaitTimer = null;
+let $reviewModalTimer = null;
+let $reviewModalCloseTimer = null;
 
-const $scrollLockTime = 700;
+const $scrollLockTime = 950;
 const $modalCloseDelay = 300;
 const $captureTolerance = 80;
 const $wheelNoiseThreshold = 45;
@@ -1808,7 +2386,9 @@ function handleMapToReviewWheel(e) {
     const $reviewTop = getReviewScrollTop();
 
     e.preventDefault();
-    $captureLockedUntil = Date.now() + 900;
+    clearPartnershipTransitionState();
+    clearMatchSnapRuntimeState();
+    $captureLockedUntil = Date.now() + REVIEW_TO_PARTNERSHIP_LOCK;
 
     if (window.$mainLenis && typeof window.$mainLenis.scrollTo === 'function') {
         window.$mainLenis.scrollTo(window.scrollY, {
@@ -1860,6 +2440,8 @@ function handleFooterToMapWheel(e) {
     const $mapTop = Math.round(window.scrollY + $mapSection.getBoundingClientRect().top);
 
     e.preventDefault();
+    clearPartnershipTransitionState();
+    clearMatchSnapRuntimeState();
     $captureLockedUntil = Date.now() + 900;
 
     if (window.$mainLenis && typeof window.$mainLenis.scrollTo === 'function') {
@@ -1893,6 +2475,27 @@ function startLenis() {
     }
 }
 
+function isReviewScrollLocked() {
+    return document.documentElement.classList.contains('review_locked') || document.body.classList.contains('review_locked');
+}
+
+function clearReviewRuntimeTimers() {
+    if ($reviewWaitTimer) {
+        window.clearTimeout($reviewWaitTimer);
+        $reviewWaitTimer = null;
+    }
+
+    if ($reviewModalTimer) {
+        window.clearTimeout($reviewModalTimer);
+        $reviewModalTimer = null;
+    }
+
+    if ($reviewModalCloseTimer) {
+        window.clearTimeout($reviewModalCloseTimer);
+        $reviewModalCloseTimer = null;
+    }
+}
+
 function lockPageScroll($scrollTop) {
     $lockedScrollY = $scrollTop;
     stopLenis();
@@ -1910,6 +2513,7 @@ function unlockPageScroll($nextScrollY) {
 }
 
 function captureReview() {
+    clearReviewRuntimeTimers();
     $reviewScrollTop = getReviewScrollTop();
 
     if (Math.abs(window.scrollY - $reviewScrollTop) > 1) {
@@ -1928,6 +2532,7 @@ function captureReview() {
 }
 
 function releaseReview(isDown) {
+    clearReviewRuntimeTimers();
     const $targetScrollY = isDown
         ? ($mapSection
             ? Math.round(window.scrollY + $mapSection.getBoundingClientRect().top)
@@ -1936,9 +2541,12 @@ function releaseReview(isDown) {
             ? Math.round(window.scrollY + $partnershipSection.getBoundingClientRect().top)
             : Math.max(0, $reviewScrollTop - $captureTolerance - 2));
 
-    $captureLockedUntil = Date.now() + 900;
+    $captureLockedUntil = Date.now() + (isDown ? 900 : REVIEW_TO_PARTNERSHIP_LOCK);
     if (!isDown) {
-        $partnershipMatchLockedUntil = Date.now() + 120;
+        clearMatchSnapRuntimeState();
+        clearPartnershipTransitionState();
+    } else {
+        clearPartnershipTransitionState();
     }
     $isCaptured = false;
     $isWaiting = false;
@@ -1978,7 +2586,7 @@ function releaseReview(isDown) {
                 immediate: true,
             });
             window.$mainLenis.scrollTo($targetScrollY, {
-                duration: 15,
+                duration: REVIEW_TO_PARTNERSHIP_DURATION,
                 lock: true,
                 immediate: false,
                 easing: (t) => 1 - Math.pow(1 - t, 3),
@@ -2028,13 +2636,15 @@ function handleReviewWheel(e) {
     if ($modal.classList.contains('show')) {
         $isWaiting = true;
 
-        setTimeout(() => {
+        $reviewModalTimer = window.setTimeout(() => {
+            $reviewModalTimer = null;
             hideModal();
             $modalShown = false;
             $releasePending = true;
 
-            setTimeout(() => {
+            $reviewModalCloseTimer = window.setTimeout(() => {
                 $isWaiting = false;
+                $reviewModalCloseTimer = null;
             }, $modalCloseDelay);
         }, $modalCloseDelay);
 
@@ -2058,8 +2668,9 @@ function handleReviewWheel(e) {
             $releasePending = false;
             $isWaiting = true;
 
-            setTimeout(() => {
+            $reviewWaitTimer = window.setTimeout(() => {
                 $isWaiting = false;
+                $reviewWaitTimer = null;
             }, $scrollLockTime);
 
             return;
@@ -2079,8 +2690,9 @@ function handleReviewWheel(e) {
     syncReviewLists();
     checkActive();
 
-    setTimeout(() => {
+    $reviewWaitTimer = window.setTimeout(() => {
         $isWaiting = false;
+        $reviewWaitTimer = null;
     }, $scrollLockTime);
 }
 
@@ -2088,6 +2700,7 @@ window.addEventListener('wheel', handleReviewWheel, { passive: false });
 window.addEventListener('wheel', handleMapToReviewWheel, { passive: false });
 window.addEventListener('wheel', handleFooterToMapWheel, { passive: false });
 window.addEventListener('resize', () => {
+    clearReviewRuntimeTimers();
     updateReviewMetrics();
     syncReviewLists();
     checkActive();
