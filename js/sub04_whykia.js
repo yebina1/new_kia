@@ -981,7 +981,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const tightGatherX = index === 0 ? 270 : index === 1 ? 0 : -270;
             const finalX = 0;
             const spreadPhotoX = index === 0 ? -96 : index === 1 ? 0 : 96;
-            const photoRotate = index === 0 ? -10 : index === 1 ? 0 : 10;
+            const photoRotate = 0;
 
             let y;
             if (cardProgress < 0.18) {

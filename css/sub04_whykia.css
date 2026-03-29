@@ -4,7 +4,7 @@
     --bg: #0b1014;
     --text_main: #fbf6ef;
     --text_sub: #ddd8d1;
-    --header_height: 152px;
+    --header_height: 80px;
     --scene_count: 5;
     --scene_scroll: 300vh;
     --solution-track-base: rgba(251, 246, 239, 0.34);
@@ -578,7 +578,7 @@ h2 {
 
 .solution_title {
     font-family: "Cormorant Garamond", serif;
-    font-size: clamp(42px, 4.8vw, 70px);
+    font-size: 32px;
     font-weight: 500;
     line-height: 1.08;
     text-align: center;
@@ -587,7 +587,7 @@ h2 {
 
 .solution_sub {
     margin-top: 0;
-    font-size: clamp(16px, 1.15vw, 22px);
+    font-size: 24px;
     line-height: 1.6;
     text-align: center;
     color: rgba(251, 246, 239, 0.9);
@@ -689,6 +689,7 @@ h2 {
     --solution-desktop-gap: 420px;
     --solution-desktop-line-y: calc(50% + (var(--solution-desktop-list-top) / 2));
     --solution-surface-bg: #0a0f13;
+    --solution-panel-width: 680px;
     padding: 0;
 }
 
@@ -792,7 +793,7 @@ h2 {
 .solution_section.is_desktop_scroll .solution_list>li {
     width: min(1480px, calc(100vw - 120px));
     height: 100%;
-    grid-template-columns: minmax(0, 820px) minmax(320px, 1fr);
+    grid-template-columns: minmax(0, var(--solution-panel-width)) minmax(0, var(--solution-panel-width));
     align-items: center;
     column-gap: clamp(48px, 5vw, 96px);
     padding: 0;
@@ -805,13 +806,14 @@ h2 {
 .solution_section.is_desktop_scroll .solution_list>li>img {
     position: relative;
     z-index: 1;
-    width: 100%;
-    max-width: none;
+    width: min(100%, var(--solution-panel-width));
+    max-width: var(--solution-panel-width);
     height: min(460px, 58vh);
     opacity: 1;
     filter: brightness(calc(0.52 + (var(--slide-focus, 0) * 0.48)));
     transition: filter 0.24s ease;
     box-shadow: none;
+    justify-self: start;
 }
 
 .solution_section.is_desktop_scroll .solution_media_list .tex_box {
@@ -826,9 +828,10 @@ h2 {
 .solution_section.is_desktop_scroll .tex_box {
     position: relative;
     z-index: 1;
-    width: fit-content;
-    max-width: min(100%, 520px);
+    width: min(100%, var(--solution-panel-width));
+    max-width: var(--solution-panel-width);
     align-self: center;
+    justify-self: start;
     padding: 20px 24px;
     background: var(--solution-surface-bg);
     opacity: 1;
@@ -839,9 +842,9 @@ h2 {
 .solution_section.is_desktop_scroll .tex_box::before {
     content: "";
     position: absolute;
-    top: -28px;
-    bottom: -28px;
-    left: -148px;
+    top: 0;
+    bottom: 0;
+    left: calc(-1 * clamp(48px, 5vw, 96px));
     right: 0;
     background: var(--solution-surface-bg);
     z-index: -1;
@@ -1296,8 +1299,8 @@ h2 {
 
 .awards_item img {
     display: block;
-    width: 132px;
-    height: 82px;
+    width: 106px;
+    height: 66px;
     object-fit: contain;
     flex: 0 0 auto;
     filter: grayscale(1) brightness(1.08);
@@ -1332,10 +1335,10 @@ h2 {
     position: absolute;
     inset: 0;
     background: linear-gradient(90deg,
-            rgba(255, 255, 255, 0.08) 0%,
-            rgba(255, 255, 255, 0.05) 18%,
-            rgba(255, 255, 255, 0.02) 36%,
-            rgba(255, 255, 255, 0) 62%);
+            rgba(0, 0, 0, 0.24) 0%,
+            rgba(0, 0, 0, 0.16) 18%,
+            rgba(0, 0, 0, 0.08) 36%,
+            rgba(0, 0, 0, 0) 62%);
     mask: linear-gradient(90deg,
             transparent calc(var(--index) * 12%),
             #000 calc((var(--index) + 1) * 12%),

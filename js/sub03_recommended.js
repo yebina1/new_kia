@@ -101,6 +101,7 @@ const DESKTOP_TAB_POINT_CENTERS = {
 const MODAL_TRANSITION_MS = 420;
 const MOBILE_SWIPE_THRESHOLD = 40;
 const DESKTOP_SCROLL_LOCK_MS = 1100;
+const DESKTOP_STAGE_HEIGHT = 1080;
 const MOBILE_DRAG_MAX_OFFSET = 72;
 const DESKTOP_HERO_ROTATE_MS = 3200;
 
@@ -156,6 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.addEventListener("resize", () => {
         applyScrollLayout(recco, sections.length);
+        updateRecommendedTitleVisibility(recco, title);
 
         if (isMobileViewport()) {
             syncMobileGroup(state, sections, carAll, mobileTabs, title);
@@ -290,6 +292,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }, { passive: true });
 
     window.addEventListener("scroll", () => {
+        updateRecommendedTitleVisibility(recco, title);
         if (isMobileViewport() || isDesktopScrollLocked(state)) return;
 
         const stage = getStageRange(recco, sections.length);
@@ -298,7 +301,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (currentScroll < stage.start || currentScroll > stage.end) return;
 
         const nextIndex = clamp(
-            Math.round((currentScroll - stage.start) / window.innerHeight),
+            Math.round((currentScroll - stage.start) / DESKTOP_STAGE_HEIGHT),
             0,
             sections.length - 1
         );
@@ -570,7 +573,7 @@ function applyScrollLayout(recco, totalSections) {
         return;
     }
 
-    recco.style.minHeight = `${window.innerHeight * totalSections}px`;
+    recco.style.minHeight = `${DESKTOP_STAGE_HEIGHT * totalSections}px`;
 }
 
 function isDesktopScrollLocked(state) {
@@ -587,7 +590,7 @@ function navigateDesktopToIndex(targetIndex, state, recco, sections, title, expe
     renderSections(state.activeIndex, sections, title, recco, experimentalMode, desktopVisual, state);
 
     window.scrollTo({
-        top: stage.start + state.activeIndex * window.innerHeight,
+        top: stage.start + state.activeIndex * DESKTOP_STAGE_HEIGHT,
         behavior: "smooth"
     });
 
@@ -599,7 +602,7 @@ function navigateDesktopToIndex(targetIndex, state, recco, sections, title, expe
 
 function getStageRange(recco, totalSections) {
     const start = window.scrollY + recco.getBoundingClientRect().top;
-    const end = start + window.innerHeight * (totalSections - 1);
+    const end = start + DESKTOP_STAGE_HEIGHT * (totalSections - 1);
     return { start, end };
 }
 
@@ -626,7 +629,26 @@ function renderSections(activeIndex, sections, title, recco, experimentalMode, d
 
     if (recco) {
         updateExperimentalState(activeIndex, sections, title, recco, experimentalMode);
+        updateRecommendedTitleVisibility(recco, title);
     }
+}
+
+function updateRecommendedTitleVisibility(recco, title) {
+    if (!recco || !title || isMobileViewport()) return;
+
+    const sections = recco.querySelectorAll(".car_all section");
+    const totalSections = sections.length;
+    const stage = getStageRange(recco, totalSections);
+    const currentScroll = window.scrollY;
+    const fadeStart = stage.end - (DESKTOP_STAGE_HEIGHT * 0.35);
+    const fadeEnd = stage.end - (DESKTOP_STAGE_HEIGHT * 0.12);
+    let opacity = 1;
+
+    if (currentScroll >= fadeStart) {
+        opacity = clamp(1 - ((currentScroll - fadeStart) / Math.max(fadeEnd - fadeStart, 1)), 0, 1);
+    }
+
+    title.style.opacity = String(opacity);
 }
 
 function initializeDesktopHeroVisual(desktopVisual) {

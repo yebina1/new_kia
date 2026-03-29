@@ -306,9 +306,9 @@ body.modal-open {
     left: 0;
     top: 0;
     width: 100%;
-    height: 268px;
+    height: 360px;
     background:
-        linear-gradient(180deg, rgba(8, 11, 14, 0.98) 0%, rgba(12, 17, 21, 0.9) 30%, rgba(12, 17, 21, 0.52) 68%, rgba(12, 17, 21, 0) 100%);
+        linear-gradient(180deg, rgba(8, 11, 14, 1) 0%, rgba(12, 17, 21, 0.98) 28%, rgba(12, 17, 21, 0.86) 52%, rgba(12, 17, 21, 0.56) 72%, rgba(12, 17, 21, 0.18) 88%, rgba(12, 17, 21, 0) 100%);
 }
 
 .recco .tit h2 {
@@ -330,6 +330,19 @@ body.modal-open {
     height: 100vh;
     overflow: hidden;
     align-items: stretch;
+}
+
+.recco .contents::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 240px;
+    background:
+        linear-gradient(180deg, rgba(12, 17, 21, 1) 0%, rgba(12, 17, 21, 0.98) 36%, rgba(12, 17, 21, 0.92) 68%, rgba(12, 17, 21, 0) 100%);
+    pointer-events: none;
+    z-index: 4;
 }
 
 .overlay {
@@ -457,7 +470,7 @@ body.modal-open {
     flex-direction: column;
     justify-content: flex-start;
     gap: 30px;
-    padding: 274px 120px 60px 144px;
+    padding: 228px 120px 60px 144px;
     background: #0c0c0c;
     opacity: 1;
     visibility: visible;
@@ -536,12 +549,13 @@ body.modal-open {
 }
 
 .car_all .txt_box {
-    min-height: 106px;
-    padding: 24px 20px;
+    min-height: 126px;
+    padding: 22px 20px;
     border-radius: 24.71px;
     background: rgba(251, 246, 239, 0.14);
     border: 1px solid rgba(251, 246, 239, 0.12);
     backdrop-filter: blur(6px);
+    box-sizing: border-box;
 }
 
 .recco.recco--experimental .car_all .txt_box {
@@ -570,7 +584,7 @@ body.modal-open {
     margin-bottom: 8px;
     color: #fbf6ef;
     font-size: 20px;
-    line-height: 1.3;
+    line-height: 1.25;
     font-weight: 500;
 }
 
@@ -582,13 +596,13 @@ body.modal-open {
 .car_all .txt_box p {
     color: #ddd8d1;
     font-size: 15px;
-    line-height: 1.3;
+    line-height: 1.4;
 }
 
 .con > button {
     position: absolute;
     left: 144px;
-    bottom: 148px;
+    bottom: 96px;
     z-index: 5;
     width: 170px;
     height: 55px;
