@@ -124,6 +124,7 @@ const BEST_SNAP_LOCK = 320;
 const BEST_SNAP_DURATION = 15;
 const UPPER_WHEEL_THRESHOLD = 6;
 const UPPER_ALIGN_TOLERANCE = 6;
+const ENABLE_SECTION_TRANSITION_SNAP = false;
 
 if (window.gsap && window.ScrollTrigger) {
     gsap.registerPlugin(ScrollTrigger);
@@ -1003,7 +1004,9 @@ if ($showcase && $backText && $backTextGlass && $cards.length === 3 && $specValu
     }
 }
 
-window.addEventListener("wheel", handleUpperSectionWheel, { passive: false });
+if (ENABLE_SECTION_TRANSITION_SNAP) {
+    window.addEventListener("wheel", handleUpperSectionWheel, { passive: false });
+}
 window.addEventListener("scroll", syncSectionSnapIndicesOnScroll, { passive: true });
 window.addEventListener("resize", () => {
     clearUpperSnapRuntimeState();
@@ -2036,17 +2039,21 @@ function handleMatchWheel(event) {
 
   if ($isMisaligned && $currentRange) {
     if ($direction < 0 && window.scrollY < $currentRange.start - 8) {
-      event.preventDefault();
-
       if ($currentIndex > 0) {
+        event.preventDefault();
         $matchWheelLockedUntil = $now + $cooldown;
         scrollMatchTo($currentIndex - 1);
+        return;
+      }
+
+      if (!ENABLE_SECTION_TRANSITION_SNAP) {
         return;
       }
 
       const $ev6BottomTop = getEv6BottomScrollTop();
 
       if (typeof $ev6BottomTop === 'number') {
+        event.preventDefault();
         $matchWheelLockedUntil = $now + $cooldown;
         scrollMatchToTarget($ev6BottomTop);
       }
@@ -2054,15 +2061,19 @@ function handleMatchWheel(event) {
     }
 
     if ($direction > 0 && window.scrollY > $currentRange.end + 8) {
-      event.preventDefault();
-
       if ($currentIndex < $lastIndex) {
+        event.preventDefault();
         $matchWheelLockedUntil = $now + $cooldown;
         scrollMatchTo($currentIndex + 1);
         return;
       }
 
+      if (!ENABLE_SECTION_TRANSITION_SNAP) {
+        return;
+      }
+
       if ($partnershipSection) {
+        event.preventDefault();
         clearPartnershipTransitionState();
         $matchWheelLockedUntil = $now + $cooldown;
         scrollMatchToTarget(
@@ -2095,6 +2106,10 @@ function handleMatchWheel(event) {
 
   if ($targetIndex === $currentIndex) {
     if ($currentIndex === 0 && $direction < 0) {
+      if (!ENABLE_SECTION_TRANSITION_SNAP) {
+        return;
+      }
+
       const $ev6BottomTop = getEv6BottomScrollTop();
 
       if (typeof $ev6BottomTop === 'number') {
@@ -2106,6 +2121,10 @@ function handleMatchWheel(event) {
     }
 
     if ($currentIndex === $lastIndex && $direction > 0) {
+      if (!ENABLE_SECTION_TRANSITION_SNAP) {
+        return;
+      }
+
       if ($partnershipSection) {
         event.preventDefault();
         clearPartnershipTransitionState();
@@ -2131,8 +2150,10 @@ initLenis();
 setupIntroPin();
 setupOptionScroll();
 syncCurrentMatchSnapIndex();
-window.addEventListener('wheel', handleIntroToEv6Wheel, { passive: false });
-window.addEventListener('wheel', handlePartnershipWheelRouter, { passive: false });
+if (ENABLE_SECTION_TRANSITION_SNAP) {
+  window.addEventListener('wheel', handleIntroToEv6Wheel, { passive: false });
+  window.addEventListener('wheel', handlePartnershipWheelRouter, { passive: false });
+}
 window.addEventListener('wheel', handleMatchWheel, { passive: false });
 
 window.addEventListener('resize', () => {
@@ -2542,7 +2563,9 @@ function releaseReview(isDown) {
             ? Math.round(window.scrollY + $partnershipSection.getBoundingClientRect().top)
             : Math.max(0, $reviewScrollTop - $captureTolerance - 2));
 
-    $captureLockedUntil = Date.now() + (isDown ? 900 : REVIEW_TO_PARTNERSHIP_LOCK);
+    $captureLockedUntil = ENABLE_SECTION_TRANSITION_SNAP
+        ? Date.now() + (isDown ? 900 : REVIEW_TO_PARTNERSHIP_LOCK)
+        : 0;
     if (!isDown) {
         clearMatchSnapRuntimeState();
         clearPartnershipTransitionState();
@@ -2552,6 +2575,11 @@ function releaseReview(isDown) {
     $isCaptured = false;
     $isWaiting = false;
     $releasePending = false;
+
+    if (!ENABLE_SECTION_TRANSITION_SNAP) {
+        unlockPageScroll($targetScrollY);
+        return;
+    }
 
     if (isDown) {
         document.documentElement.classList.remove('review_locked');
@@ -2698,8 +2726,10 @@ function handleReviewWheel(e) {
 }
 
 window.addEventListener('wheel', handleReviewWheel, { passive: false });
-window.addEventListener('wheel', handleMapToReviewWheel, { passive: false });
-window.addEventListener('wheel', handleFooterToMapWheel, { passive: false });
+if (ENABLE_SECTION_TRANSITION_SNAP) {
+    window.addEventListener('wheel', handleMapToReviewWheel, { passive: false });
+    window.addEventListener('wheel', handleFooterToMapWheel, { passive: false });
+}
 window.addEventListener('resize', () => {
     clearReviewRuntimeTimers();
     updateReviewMetrics();

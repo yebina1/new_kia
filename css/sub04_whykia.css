@@ -705,11 +705,13 @@ h2 {
     width: 680px;
     height: 400px;
     object-fit: cover;
+    position: relative;
+    z-index: 6;
 }
 
 .solution_section.is_desktop_scroll {
     --solution-desktop-list-height: min(604px, calc(100vh - 376px));
-    --solution-desktop-gap: 600px;
+    --solution-desktop-gap: clamp(720px, 42vw, 920px);
     --solution-desktop-line-y: calc(var(--solution-desktop-list-height) / 2);
     --solution-surface-bg: #0a0f13;
     --solution-panel-width: 680px;
@@ -812,7 +814,7 @@ h2 {
     cursor: default;
     touch-action: none;
     transform-origin: left center;
-    z-index: 2;
+    z-index: 5;
 }
 
 .solution_section.is_desktop_scroll .solution_list>li {
@@ -833,7 +835,7 @@ h2 {
 
 .solution_section.is_desktop_scroll .solution_list>li>img {
     position: relative;
-    z-index: 1;
+    z-index: 6;
     width: min(100%, var(--solution-panel-width));
     max-width: var(--solution-panel-width);
     height: 400px;
@@ -908,7 +910,8 @@ h2 {
 }
 
 .solution_media_list {
-    z-index: 3;
+    position: absolute;
+    z-index: 5;
 }
 
 .solution_media_list .tex_box {
@@ -917,7 +920,8 @@ h2 {
 }
 
 .solution_text_list {
-    z-index: 4;
+    position: absolute;
+    z-index: 6;
     pointer-events: none;
 }
 
@@ -933,6 +937,8 @@ h2 {
 .solution_text_spacer {
     width: 680px;
     height: 400px;
+    position: relative;
+    z-index: 6;
 }
 
 .solution_section.is_desktop_scroll .solution_text_spacer {

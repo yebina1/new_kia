@@ -1,4 +1,5 @@
 @charset "utf-8";
+
 @media (max-width: 1200px) {
       .bg1_copy_left .num { font-size: 108px; }
       .bg1_copy_left .word,
@@ -151,8 +152,8 @@
         width: min(42vw, 250px);
       }
     }
-    @media (max-width: 640px) {
-    :root {
+@media (max-width: 640px) {
+:root {
         --belt-speed: 72;
     }
 

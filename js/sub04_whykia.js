@@ -447,7 +447,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function renderFromScroll() {
-        if (window.innerWidth <= 900 || storyTrigger) {
+        if (storyTrigger) {
             return;
         }
 
@@ -613,6 +613,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const firstSlideWidth = slides[0]?.getBoundingClientRect().width || viewportWidth;
 
         if (state.mode === "desktop") {
+            const desktopEdgePadding = Math.max((viewportWidth - firstSlideWidth) / 2, 0);
+
+            solutionList.style.paddingLeft = `${desktopEdgePadding}px`;
+            solutionList.style.paddingRight = `${desktopEdgePadding}px`;
+            textTrack.style.paddingLeft = `${desktopEdgePadding}px`;
+            textTrack.style.paddingRight = `${desktopEdgePadding}px`;
+
             state.sideOffset = 0;
             state.desktopOffsets = slides.map((slide) => {
                 const slideWidth = slide.getBoundingClientRect().width || viewportWidth;
@@ -621,6 +628,11 @@ document.addEventListener("DOMContentLoaded", () => {
             });
             state.maxOffset = state.desktopOffsets[state.desktopOffsets.length - 1] || 0;
         } else {
+            solutionList.style.paddingLeft = "";
+            solutionList.style.paddingRight = "";
+            textTrack.style.paddingLeft = "";
+            textTrack.style.paddingRight = "";
+
             state.sideOffset = Math.max((viewportWidth - firstSlideWidth) / 2, 0);
             state.maxOffset = Math.max(solutionList.scrollWidth - firstSlideWidth, 0);
             state.desktopOffsets = [];
@@ -630,7 +642,7 @@ document.addEventListener("DOMContentLoaded", () => {
         state.lastOne = clamp(state.lastOne, 0, state.maxOffset);
         state.lastTwo = clamp(state.lastTwo, 0, state.maxOffset);
 
-        if (state.mode !== "desktop") {
+        if (state.mode === "mobile") {
             solutionList.style.transform = `translate3d(${(state.sideOffset - state.lastOne).toFixed(2)}px, 0, 0)`;
             textTrack.style.transform = `translate3d(${(state.sideOffset - state.lastTwo).toFixed(2)}px, 0, 0)`;
         } else {
@@ -771,6 +783,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function applySolutionMode() {
         const nextMode = window.innerWidth >= DESKTOP_BREAKPOINT ? "desktop" : "mobile";
+        const modeChanged = nextMode !== state.mode;
 
         if (nextMode === state.mode && !(nextMode === "desktop" && !state.desktopTrigger)) {
             updateBounds();
@@ -789,6 +802,9 @@ document.addEventListener("DOMContentLoaded", () => {
         solutionSection.classList.toggle("is_mobile_drag", state.mode === "mobile");
 
         if (state.mode === "desktop") {
+            if (modeChanged) {
+                state.current = 0;
+            }
             state.lastOne = state.current;
             state.lastTwo = state.current;
             updateBounds();
@@ -797,6 +813,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         destroyDesktopScroll();
+        if (modeChanged) {
+            state.current = 0;
+        }
         state.current = clamp(state.current, 0, state.maxOffset);
         state.lastOne = state.current;
         state.lastTwo = state.current;
@@ -840,11 +859,9 @@ document.addEventListener("DOMContentLoaded", () => {
 document.addEventListener("DOMContentLoaded", () => {
     const partnerSection = document.getElementById("partnerSection");
 
-    if (!partnerSection || !window.gsap || !window.ScrollTrigger || window.innerWidth <= 900) {
+    if (!partnerSection) {
         return;
     }
-
-    window.gsap.registerPlugin(window.ScrollTrigger);
 
     const cards = Array.from(partnerSection.querySelectorAll(".partner_card"));
     const partnerHeading = partnerSection.querySelector(".partner_heading");
@@ -852,6 +869,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const partnerScrollDownButton = document.getElementById("partnerScrollDownButton");
     const partnerSticky = partnerSection.querySelector(".partner_sticky");
     const PARTNER_HOLD_PROGRESS = 0.18;
+    let isCompactPartnerLayout = window.innerWidth <= 900 || !window.gsap || !window.ScrollTrigger;
+    let partnerSceneTrigger = null;
+
+    if (!cards.length) {
+        return;
+    }
 
     const smoothStep = (progress) => progress * progress * (3 - (2 * progress));
     const setPartnerCardsToInitialState = () => {
@@ -908,6 +931,82 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         partnerCardsContainer?.classList.remove("has_open_card");
+    };
+
+    const clearPartnerInlineState = () => {
+        cards.forEach((card) => {
+            const wrapper = card.querySelector(".partner_card_wrapper");
+            const innerCard = card.querySelector(".partner_flip_inner");
+            const tiltShell = card.querySelector(".partner_tilt_shell");
+            const images = Array.from(card.querySelectorAll(".partner_face img"));
+
+            card.style.opacity = "";
+            card.style.transform = "";
+            card.style.rotate = "";
+            card.style.scale = "";
+            card.style.x = "";
+            card.style.y = "";
+
+            wrapper?.classList.remove("is_hovered", "is_open");
+            wrapper?.removeAttribute("style");
+            innerCard?.removeAttribute("style");
+
+            if (tiltShell) {
+                tiltShell.style.transform = "";
+            }
+
+            images.forEach((img) => {
+                img.style.transform = "";
+            });
+        });
+
+        if (partnerHeading) {
+            partnerHeading.style.opacity = "";
+            partnerHeading.style.transform = "";
+        }
+
+        if (partnerCardsContainer) {
+            partnerCardsContainer.style.zIndex = "";
+        }
+
+        partnerScrollDownButton?.classList.remove("is_visible");
+    };
+
+    const setPartnerCardsToCompactState = () => {
+        cards.forEach((card) => {
+            const innerCard = card.querySelector(".partner_flip_inner");
+            const wrapper = card.querySelector(".partner_card_wrapper");
+            const tiltShell = card.querySelector(".partner_tilt_shell");
+            const images = Array.from(card.querySelectorAll(".partner_face img"));
+
+            card.classList.remove("is_interactive", "is_open");
+            card.classList.add("is_label_visible");
+            wrapper?.classList.remove("is_hovered", "is_open");
+
+            card.style.opacity = "1";
+            card.style.transform = "translate3d(0, 0, 0) scale(1)";
+            card.style.rotate = "0deg";
+
+            if (innerCard) {
+                innerCard.style.transform = "none";
+            }
+
+            if (tiltShell) {
+                tiltShell.style.transform = "rotateX(0deg) rotateY(0deg)";
+            }
+
+            images.forEach((img) => {
+                img.style.transform = "translateX(0px) translateY(0px) scale(1.04)";
+            });
+        });
+
+        if (partnerHeading) {
+            partnerHeading.style.opacity = "1";
+            partnerHeading.style.transform = "none";
+        }
+
+        partnerCardsContainer?.classList.remove("has_open_card");
+        partnerScrollDownButton?.classList.remove("is_visible");
     };
 
     const applyPartnerScene = (progress) => {
@@ -1047,32 +1146,55 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
-    window.ScrollTrigger.create({
-        trigger: partnerSection,
-        start: "top top",
-        end: () => `+=${window.innerHeight * 3.8}`,
-        pin: partnerSticky,
-        pinSpacing: true,
-        scrub: 1,
-        invalidateOnRefresh: true,
-        onEnter: () => applyPartnerScene(0),
-        onEnterBack: () => applyPartnerScene(0),
-        onLeave: () => partnerScrollDownButton?.classList.remove("is_visible"),
-        onLeaveBack: () => {
-            applyPartnerScene(0);
-        },
-        onRefresh: (self) => {
-            if (self.progress <= 0) {
-                applyPartnerScene(0);
-            } else {
-                applyPartnerScene(self.progress);
-            }
-        },
-        onUpdate: (self) => applyPartnerScene(self.progress),
-    });
+    const setupPartnerLayout = () => {
+        const nextCompact = window.innerWidth <= 900 || !window.gsap || !window.ScrollTrigger;
 
-    setPartnerCardsToInitialState();
-    applyPartnerScene(0);
+        if (partnerSceneTrigger) {
+            partnerSceneTrigger.kill();
+            partnerSceneTrigger = null;
+        }
+
+        clearPartnerInlineState();
+        closeAllPartnerCards();
+        isCompactPartnerLayout = nextCompact;
+
+        if (isCompactPartnerLayout) {
+            setPartnerCardsToCompactState();
+            return;
+        }
+
+        window.gsap.registerPlugin(window.ScrollTrigger);
+        setPartnerCardsToInitialState();
+
+        partnerSceneTrigger = window.ScrollTrigger.create({
+            trigger: partnerSection,
+            start: "top top",
+            end: () => `+=${window.innerHeight * 3.8}`,
+            pin: partnerSticky,
+            pinSpacing: true,
+            scrub: 1,
+            invalidateOnRefresh: true,
+            onEnter: () => applyPartnerScene(0),
+            onEnterBack: () => applyPartnerScene(0),
+            onLeave: () => partnerScrollDownButton?.classList.remove("is_visible"),
+            onLeaveBack: () => {
+                applyPartnerScene(0);
+            },
+            onRefresh: (self) => {
+                if (self.progress <= 0) {
+                    applyPartnerScene(0);
+                } else {
+                    applyPartnerScene(self.progress);
+                }
+            },
+            onUpdate: (self) => applyPartnerScene(self.progress),
+        });
+
+        applyPartnerScene(0);
+    };
+
+    setupPartnerLayout();
+    window.addEventListener("resize", setupPartnerLayout);
 
     const partnerWrappers = Array.from(partnerSection.querySelectorAll(".partner_card_wrapper"));
 
@@ -1081,6 +1203,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const images = Array.from(wrapper.querySelectorAll(".partner_face img"));
 
         wrapper.addEventListener("mousemove", (event) => {
+            if (isCompactPartnerLayout) {
+                return;
+            }
+
             const card = wrapper.closest(".partner_card");
             if (!card || !card.classList.contains("is_interactive") || card.classList.contains("is_open")) {
                 return;
@@ -1106,6 +1232,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         wrapper.addEventListener("mouseleave", () => {
+            if (isCompactPartnerLayout) {
+                return;
+            }
+
             const card = wrapper.closest(".partner_card");
             if (card?.classList.contains("is_open")) {
                 return;
@@ -1123,6 +1253,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         wrapper.addEventListener("click", (event) => {
+            if (isCompactPartnerLayout) {
+                return;
+            }
+
             const card = wrapper.closest(".partner_card");
             if (!card || !card.classList.contains("is_interactive")) {
                 return;
@@ -1136,12 +1270,18 @@ document.addEventListener("DOMContentLoaded", () => {
             if (willOpen) {
                 card.classList.add("is_open");
                 wrapper.classList.add("is_open");
-                partnerCardsContainer?.classList.add("has_open_card");
+                if (!isCompactPartnerLayout) {
+                    partnerCardsContainer?.classList.add("has_open_card");
+                }
             }
         });
     });
 
     document.addEventListener("click", (event) => {
+        if (isCompactPartnerLayout) {
+            return;
+        }
+
         const clickedInsidePartnerCard = event.target instanceof Element && event.target.closest(".partner_card_wrapper");
 
         if (!clickedInsidePartnerCard) {

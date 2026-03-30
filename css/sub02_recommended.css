@@ -3,7 +3,7 @@
 .wrap {
     width: 100%;
     margin: 0 auto;
-    background:#0C1115;
+    background: #0C1115;
     color: #fbf6ef;
 }
 
@@ -49,6 +49,9 @@ section.way .inner p {
     position: relative;
 }
 
+/* =============================================
+   SELECTION MODAL
+============================================= */
 .selection_modal {
     position: fixed;
     inset: 0;
@@ -198,9 +201,10 @@ section.way .inner p {
     font-size: 21px;
     line-height: 1.3;
 }
+
 .selection_modal_desc p:last-child,
-.selection_modal_specs li:first-child{
-margin-top: 8px;
+.selection_modal_specs li:first-child {
+    margin-top: 8px;
 }
 
 .selection_modal_specs ul {
@@ -257,7 +261,7 @@ margin-top: 8px;
 .selection_modal_buttons button {
     width: 213px;
     height: 54px;
-    padding: 16 32px;
+    padding: 16px 32px;
     font-size: 20px;
 }
 
@@ -272,7 +276,7 @@ margin-top: 8px;
     min-width: 54px;
     min-height: 54px;
     display: flex;
-     padding: 0;     
+    padding: 0;
     justify-content: center;
     align-items: center;
     font-size: 24px;
@@ -287,11 +291,13 @@ margin-top: 8px;
     padding-right: 1px;
 }
 
-
 body.modal-open {
     overflow: hidden;
 }
 
+/* =============================================
+   RECCO TITLE
+============================================= */
 .recco .tit {
     position: sticky;
     top: 0;
@@ -322,11 +328,17 @@ body.modal-open {
     text-shadow: 0 12px 30px rgba(0, 0, 0, 0.52);
 }
 
+/* =============================================
+   CONTENTS GRID
+   핵심 수정: 960px 고정 → clamp() 유동값
+============================================= */
 .recco .contents {
     position: sticky;
     top: 0;
     display: grid;
-    grid-template-columns: 960px minmax(0, 1fr);
+    /* 변경 전: grid-template-columns: 960px minmax(0, 1fr); */
+    /* 변경 후: overlay는 최소 600px, 최대 960px, 뷰포트의 63% 기준으로 유동 */
+    grid-template-columns: clamp(600px, 63vw, 960px) minmax(0, 1fr);
     height: 100vh;
     overflow: hidden;
     align-items: stretch;
@@ -345,15 +357,22 @@ body.modal-open {
     z-index: 4;
 }
 
+/* =============================================
+   OVERLAY
+============================================= */
 .overlay {
     position: relative;
     height: 100vh;
     display: grid;
-    grid-template-columns: 96px minmax(0, 1fr);
+    /* tab(96px) + con 영역: tab도 vw 기반으로 최소값 확보 */
+    grid-template-columns: clamp(72px, 6vw, 96px) minmax(0, 1fr);
     background: #0c0c0c;
     overflow: hidden;
 }
 
+/* =============================================
+   TAB
+============================================= */
 .tab {
     position: relative;
     z-index: 10;
@@ -388,6 +407,9 @@ body.modal-open {
         0 18px 34px rgba(0, 0, 0, 0.28);
 }
 
+/* =============================================
+   EXPERIMENTAL MODE
+============================================= */
 .recco.recco--experimental {
     --exp-accent: #88a69f;
     --exp-accent-soft: rgba(136, 166, 159, 0.22);
@@ -444,6 +466,9 @@ body.modal-open {
     display: none;
 }
 
+/* =============================================
+   CON / CAR_ALL
+============================================= */
 .con {
     position: relative;
     overflow: hidden;
@@ -472,7 +497,9 @@ body.modal-open {
     flex-direction: column;
     justify-content: flex-start;
     gap: 20px;
-    padding: 330px 120px 60px 144px;
+    /* 변경 전: padding: 330px 120px 60px 144px; */
+    /* 변경 후: 좌우 padding을 vw 기반으로 유동화 */
+    padding: 330px clamp(40px, 8vw, 120px) 60px clamp(40px, 9vw, 144px);
     background: #0c0c0c;
     opacity: 1;
     visibility: visible;
@@ -533,17 +560,21 @@ body.modal-open {
     gap: 18px;
 }
 
+/* 변경 전: grid-template-columns: 133px minmax(0, 1fr); */
+/* 변경 후: 이미지 컬럼도 뷰포트에 따라 줄어들게 */
 .car_all ul li {
     display: grid;
-    grid-template-columns: 133px minmax(0, 1fr);
+    grid-template-columns: clamp(80px, 9vw, 133px) minmax(0, 1fr);
     gap: 16px;
     align-items: center;
     flex-shrink: 0;
 }
 
+/* 변경 전: width:130px; height:130px; */
+/* 변경 후: clamp로 최솟값 확보 */
 .car_all ul li img {
-    width: 130px;
-    height: 130px;
+    width: clamp(80px, 9vw, 130px);
+    height: clamp(80px, 9vw, 130px);
     display: block;
     object-fit: cover;
     border-radius: 50%;
@@ -559,34 +590,19 @@ body.modal-open {
     border: 1px solid rgba(251, 246, 239, 0.12);
     backdrop-filter: blur(6px);
     box-sizing: border-box;
-}
-
-.recco.recco--experimental .car_all .txt_box {
-    background:
-        linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(251, 246, 239, 0.1) 100%);
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.12),
-        0 16px 30px rgba(0, 0, 0, 0.14);
-    transition:
-        transform 0.45s ease,
-        border-color 0.45s ease,
-        background 0.45s ease;
-}
-
-.recco.recco--experimental .car_all section.is-active .txt_box {
-    transform: translateX(0);
-    border-color: rgba(255, 255, 255, 0.16);
-}
-
-.recco.recco--experimental .car_all section .txt_box {
-    transform: translateX(14px);
+    /* 핵심 추가: 텍스트 깨짐 방지 — 최소 너비 확보 */
+    min-width: 0;
+    word-break: keep-all;
+    overflow-wrap: break-word;
 }
 
 .car_all .txt_box b {
     display: block;
     margin-bottom: 8px;
     color: #fbf6ef;
-    font-size: 20px;
+    /* 변경 전: font-size: 20px; */
+    /* 변경 후: 좁은 화면에서 줄어들게 */
+    font-size: clamp(15px, 1.4vw, 20px);
     line-height: 1.25;
     font-weight: 500;
 }
@@ -598,13 +614,18 @@ body.modal-open {
 
 .car_all .txt_box p {
     color: #ddd8d1;
-    font-size: 15px;
+    /* 변경 전: font-size: 15px; */
+    font-size: clamp(13px, 1.1vw, 15px);
     line-height: 1.4;
 }
 
+/* =============================================
+   BUILD IT BUTTON
+============================================= */
 .con > button {
     position: absolute;
-    left: 144px;
+    /* 변경 전: left: 144px; */
+    left: clamp(40px, 9vw, 144px);
     bottom: 32px;
     z-index: 5;
     width: 170px;
@@ -639,10 +660,39 @@ body.modal-open {
     box-shadow: 0 14px 26px rgba(0, 0, 0, 0.28);
 }
 
+/* =============================================
+   EXPERIMENTAL: txt_box
+============================================= */
+.recco.recco--experimental .car_all .txt_box {
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(251, 246, 239, 0.1) 100%);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.12),
+        0 16px 30px rgba(0, 0, 0, 0.14);
+    transition:
+        transform 0.45s ease,
+        border-color 0.45s ease,
+        background 0.45s ease;
+}
+
+.recco.recco--experimental .car_all section.is-active .txt_box {
+    transform: translateX(0);
+    border-color: rgba(255, 255, 255, 0.16);
+}
+
+.recco.recco--experimental .car_all section .txt_box {
+    transform: translateX(14px);
+}
+
+/* =============================================
+   VID (오른쪽 이미지 영역)
+============================================= */
 .vid {
     position: relative;
     align-self: start;
     height: 100vh;
+    /* 추가: 최소 너비 확보 — 너무 좁아지지 않게 */
+    min-width: clamp(160px, 20vw, 400px);
     background:
         linear-gradient(180deg, rgba(98, 105, 117, 0.2) 0%, rgba(34, 39, 46, 0.35) 100%),
         linear-gradient(135deg, #6c7480 0%, #414852 46%, #1f252d 100%);
