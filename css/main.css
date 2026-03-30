@@ -27,7 +27,7 @@
 
 .main_visual .inner {
   width: 100%;
-  height: min(100vh, 720px);
+  height: clamp(950px, 90vh, 100vh);
 }
 
 .main_visual video {
@@ -85,7 +85,7 @@ body.section_transition_lock {
 .best .inner {
     position: relative;
     width: 100%;
-    height: min(100vh, 950px);
+    height: clamp(9500px, 90vh, 100vh);
     padding: 100px 0;
     display: flex;
     flex-direction: column;
@@ -1147,7 +1147,7 @@ footer {
 .intro .inner {
   display: flex;
   flex-direction: column;
-  height: min(100vh, 950px);
+  height: clamp(950px, 90vh, 100vh);
   align-items: center;
   justify-content: center;
   overflow: hidden;
@@ -1187,7 +1187,7 @@ section[class*="option"] {
 
 section[class*="option"] .inner {
   width: 100%;
-  height: min(100vh, 950px);
+  height: clamp(950px, 90vh, 100vh);
   min-height: 950px;
   display: flex;
   flex-direction: column;
@@ -1521,7 +1521,7 @@ section[class*="option"] .bottom>ul.cars>li:hover .info_con>ul.info {
 
 .partnership .inner {
   width: 100%;
-  height: min(100vh, 950px);
+  height: clamp(950px, 90vh, 100vh);
   margin: 0 auto;
   padding: 72px 0 0;
   display: flex;
@@ -1704,7 +1704,7 @@ body.review_locked {
 
 .review .inner {
   max-width: 1440px;
-  height: min(100vh, 950px);
+  height: clamp(950px, 90vh, 100vh);
   margin: 0 auto;
   display: flex;
   flex-direction: column;
