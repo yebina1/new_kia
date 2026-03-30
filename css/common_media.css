@@ -105,6 +105,10 @@
   header nav .icons a:last-child {
     display: block;
   }
+
+  header .header_bottom {
+    display: none;
+  }
 }
 
 @media (max-width: 800px) {

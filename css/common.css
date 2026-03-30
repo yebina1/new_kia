@@ -544,11 +544,6 @@ header .header_bottom .sub_nav li a:hover {
   font-weight: 500;
 }
 
-
-  header .header_bottom {
-    display: none;
-  }
-
   header .m_panel {
     display: block;
     position: fixed;

@@ -339,10 +339,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const stmtIn = clamp((timeline - 0.54) / 0.52, 0, 1);
         const circleIn = clamp((timeline - 1.36) / 0.32, 0, 1);
         const circleGrow = clamp((timeline - 1.58) / 1.92, 0, 1);
-        const circleOut = clamp((timeline - 3.18) / 0.56, 0, 1);
+        const circleOut = clamp((timeline - 3.18) / 0.92, 0, 1);
         const movementIn = clamp((timeline - 2.02) / 0.92, 0, 1);
-        const movementOut = clamp((timeline - 3.92) / 0.26, 0, 1);
-        const needsIn = clamp((timeline - 4.26) / 0.26, 0, 1);
+        const movementOut = clamp((timeline - 3.92) / 0.42, 0, 1);
+        const needsIn = clamp((timeline - 4.18) / 0.42, 0, 1);
         const circleAppear = easeOutCubic(circleIn);
         const circleExpand = easeInOutQuart(circleGrow);
         const circleFade = easeOutCubic(circleOut);
@@ -361,13 +361,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const movementReveal = easeOutCubic(clamp((timeline - 2.02) / 0.88, 0, 1));
         const movementExit = easeOutCubic(movementOut);
         const needsOpacity = needsIn > 0 ? easeOutCubic(needsIn) : 0;
-        const needsReveal = easeOutCubic(clamp((timeline - 4.26) / 0.42, 0, 1));
+        const needsReveal = easeOutCubic(clamp((timeline - 4.18) / 0.58, 0, 1));
         const movementTextIn = easeOutCubic(clamp((timeline - 2.1) / 0.82, 0, 1));
         const textStageVisible = timeline < 3.02;
         const leadVisible = textStageVisible;
         const stmtVisible = textStageVisible && timeline >= 0.54;
-        const movementVisible = timeline >= 1.98 && timeline < 4.2;
-        const needsVisible = timeline >= 4.26;
+        const movementVisible = timeline >= 1.98 && timeline < 4.32;
+        const needsVisible = timeline >= 4.18;
 
         introCircle.style.opacity = Math.max(0, Math.min(1, circleAppear * (1 - circleFade) * 1)).toFixed(3);
         introCircle.style.transform =
@@ -404,7 +404,7 @@ document.addEventListener("DOMContentLoaded", () => {
         visionTxt.style.transform = `translateY(${lerp(22, 0, movementTextIn).toFixed(2)}px)`;
         visionTxt.style.filter = `blur(${lerp(16, 0, movementTextIn).toFixed(2)}px)`;
 
-        const visibleNeedsOpacity = needsVisible && movementDisplayOpacity <= 0.005 ? needsOpacity : 0;
+        const visibleNeedsOpacity = needsVisible ? (needsOpacity * (1 - (movementDisplayOpacity * 0.7))) : 0;
 
         needsStage.style.display = needsVisible ? "flex" : "none";
         needsStage.style.opacity = visibleNeedsOpacity.toFixed(3);
