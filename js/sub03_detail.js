@@ -491,7 +491,6 @@ if (driverAssistVideo) {
   const getWheelYRatio = (progress) => {
     const p = clamp(progress, 0, 1);
 
-    // Enter diagonally during first movement, then stay on the text slot height.
     if (p <= PHASE.move1[1]) {
       return lerp(wheelEntryStartRatio, WHEEL_Y_RATIO.slot, normalize(p, ...PHASE.move1));
     }
