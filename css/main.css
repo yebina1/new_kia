@@ -1670,6 +1670,16 @@ section[class*="option"] .bottom>ul.cars>li:hover .info_con>ul.info {
   z-index: 4;
 }
 
+.belt_machine_body2{
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: auto;
+  z-index: 2;
+}
+
 /* section.review */
 html.review_locked,
 body.review_locked {
