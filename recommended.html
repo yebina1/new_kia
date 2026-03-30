@@ -66,45 +66,45 @@
     <div class="selection_modal" aria-hidden="true">
         <div class="selection_modal_dim"></div>
         <div class="selection_modal_panel" role="dialog" aria-modal="true" aria-labelledby="selection-modal-title">
-            <button type="button" class="selection_modal_close" aria-label="Close modal">??/button>
-                <div class="selection_modal_inner">
-                    <div class="selection_modal_header">
-                        <strong class="selection_modal_logo"><img src="img/sub02_recommended/logo/logo_white.svg"
-                                alt=""></strong>
-                        <p>Your Final Selection Estimate</p>
-                    </div>
-                    <div class="selection_modal_body">
-                        <div class="selection_modal_copy">
-                            <div class="selection_modal_titlebox">
-                                <h3 id="selection-modal-title">Telluride (X-Pro SX Prestige)
-                                </h3>
-                            </div>
-                            <div class="selection_modal_desc">
-                                <p class="selection_modal_label">Description:</p>
-                                <p>A versatile 3-row SUV with a spacious body
-                                    and ample cargo room...</p>
-                            </div>
-                            <div class="selection_modal_specs">
-                                <p class="selection_modal_label">Selected Specs :</p>
-                                <ul>
-                                    <li>Performance: Self-Leveling Rear Suspension</li>
-                                    <li>Interior: Terracotta Interior Color</li>
-                                    <li>Exterior: Side Steps (Accessory)</li>
-                                </ul>
-                            </div>
+            <button type="button" class="selection_modal_close" aria-label="Close modal">&times;</button>
+            <div class="selection_modal_inner">
+                <div class="selection_modal_header">
+                    <strong class="selection_modal_logo"><img src="img/sub02_recommended/logo/logo_white.svg"
+                            alt=""></strong>
+                    <p>Your Final Selection Estimate</p>
+                </div>
+                <div class="selection_modal_body">
+                    <div class="selection_modal_copy">
+                        <div class="selection_modal_titlebox">
+                            <h3 id="selection-modal-title">Telluride (X-Pro SX Prestige)
+                            </h3>
                         </div>
-                        <div class="selection_modal_visual">
-                            <img src="img/sub02_recommended/modal/telluride_diorama.png" alt="Telluride diorama">
+                        <div class="selection_modal_desc">
+                            <p class="selection_modal_label">Description:</p>
+                            <p>A versatile 3-row SUV with a spacious body
+                                and ample cargo room...</p>
+                        </div>
+                        <div class="selection_modal_specs">
+                            <p class="selection_modal_label">Selected Specs :</p>
+                            <ul>
+                                <li>Performance: Self-Leveling Rear Suspension</li>
+                                <li>Interior: Terracotta Interior Color</li>
+                                <li>Exterior: Side Steps (Accessory)</li>
+                            </ul>
                         </div>
                     </div>
-                    <div class="selection_modal_actions">
-                        <div class="selection_modal_buttons">
-                            <button type="button" class="is-primary">Take To Build</button>
-                            <button type="button">Get A Quote</button>
-                            <button type="button">Download PDF</button>
-                        </div>
+                    <div class="selection_modal_visual">
+                        <img src="img/sub02_recommended/modal/telluride_diorama.png" alt="Telluride diorama">
                     </div>
                 </div>
+                <div class="selection_modal_actions">
+                    <div class="selection_modal_buttons">
+                        <button type="button" class="is-primary">Take To Build</button>
+                        <button type="button">Get A Quote</button>
+                        <button type="button">Download PDF</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="wrap">
@@ -233,12 +233,12 @@
                     <button type="button" data-group="electric">Electric</button>
                 </div>
                 <div class="contents">
-                    <div aria-hidden="true" style="position:absolute; left:-70px; top:-80px; width:1120px; height:calc(100% + 160px); pointer-events:none; z-index:0;
-                        background:
-                        radial-gradient(circle at left center, rgba(12,17,21,0.92) 0%, rgba(12,17,21,0.78) 28%, rgba(12,17,21,0.34) 56%, rgba(12,17,21,0) 76%),
-                        linear-gradient(180deg, rgba(12,17,21,0.95) 0%, rgba(12,17,21,0.48) 14%, rgba(12,17,21,0.12) 26%, rgba(12,17,21,0) 38%),
-                        linear-gradient(0deg, rgba(12,17,21,0.95) 0%, rgba(12,17,21,0.48) 14%, rgba(12,17,21,0.12) 26%, rgba(12,17,21,0) 38%);
-                        filter: blur(42px); opacity:0.96;">
+                    <div aria-hidden="true" style="position:absolute; inset:0; pointer-events:none; z-index:0;
+    background:
+    radial-gradient(circle at left center, rgba(12,17,21,0.92) 0%, rgba(12,17,21,0.78) 28%, rgba(12,17,21,0.34) 56%, rgba(12,17,21,0) 76%),
+    linear-gradient(180deg, rgba(12,17,21,0.95) 0%, rgba(12,17,21,0.48) 14%, rgba(12,17,21,0.12) 26%, rgba(12,17,21,0) 38%),
+    linear-gradient(0deg, rgba(12,17,21,0.95) 0%, rgba(12,17,21,0.48) 14%, rgba(12,17,21,0.12) 26%, rgba(12,17,21,0) 38%);
+    filter: blur(42px); opacity:0.96; overflow:hidden;">
                     </div>
                     <div class="overlay" style="position:relative; z-index:1; border-radius: 40px 0 0 40px; box-shadow:
                         -90px 0 140px rgba(12, 17, 21, 0.78),
@@ -705,7 +705,7 @@
                     <div class="vid"></div><!-- //.vid -->
                     <a href="#telluride_outdoor_next" id="tellurideBoundaryScroll" class="scroll_down_button"
                         onclick="event.preventDefault(); document.getElementById('telluride_outdoor_next').scrollIntoView({ behavior: 'smooth', block: 'center' });"
-                        style="position:absolute; left:calc(960px - 33px); bottom:32px; width:66px; padding-top:52px; color:#c7ffee; font-size:12px; letter-spacing:0.18em; text-decoration:none; text-transform:uppercase; z-index:8; cursor:pointer; text-align:center; opacity:1;">
+                        style="position:absolute; right:clamp(8px, 3vw, 48px); bottom:32px; width:66px; padding-top:52px; color:#c7ffee; font-size:12px; letter-spacing:0.18em; text-decoration:none; text-transform:uppercase; z-index:8; cursor:pointer; text-align:center; opacity:1;">
                         <span
                             style="position:absolute; top:0; left:50%; width:28px; height:46px; margin-left:-14px; border:2px solid #c7ffee; border-radius:999px; box-sizing:border-box;"></span>
                         <span aria-hidden="true"
