@@ -4,6 +4,9 @@
     display: none;
 }
 
+/* =========================
+   DESKTOP BASE (821px+)
+========================= */
 @media (min-width: 821px) {
     .tab.has-icons::before,
     .recco.recco--experimental .tab.has-icons::before,
@@ -13,7 +16,7 @@
 
     .tab.has-icons .tab_stage {
         position: absolute;
-        left: 42px;
+        left: max(16px, 2.5vw);
         top: 50%;
         display: block;
         width: 78px;
@@ -79,7 +82,122 @@
 }
 
 /* =========================
-   TABLET / SMALL TABLET
+ 821px ~ 1280px
+========================= */
+@media (min-width: 821px) and (max-width: 1280px) {
+
+    /* 암막 그라디언트 div 넘침 방지 */
+    .recco .contents {
+        overflow: hidden;
+    }
+
+    /* inner 여백 유동화 */
+    .recco .inner {
+        padding: 0 clamp(16px, 3vw, 48px);
+        box-sizing: border-box;
+    }
+
+    /* tab 패널 좌측 위치 유동화 */
+    .tab.has-icons .tab_stage {
+        left: max(12px, 1.8vw);
+    }
+
+    /* con 영역 — tab 너비(78px) + 간격 확보 */
+    .con {
+        padding-left: clamp(90px, 9vw, 120px);
+        box-sizing: border-box;
+    }
+
+    /* 카드 목록 너비 유동 조정 */
+    .car_all ul li {
+        padding-right: clamp(8px, 1.5vw, 20px);
+    }
+
+    /* overlay 그림자 축소 — 821~960 구간 좌측 넘침 방지 */
+    .overlay {
+        box-shadow:
+            clamp(-40px, -5vw, -20px) 0 clamp(60px, 8vw, 100px) rgba(12, 17, 21, 0.78),
+            0 -40px 80px rgba(12, 17, 21, 0.52),
+            0 40px 80px rgba(12, 17, 21, 0.52) !important;
+    }
+
+    /* scroll_down_button — 고정 left 값 대신 동적 위치 */
+    #tellurideBoundaryScroll {
+        left: auto !important;
+        right: clamp(8px, 3vw, 40px) !important;
+    }
+     /* 추가: contents를 flex로 전환해 vid가 함께 줄어들게 */
+    .recco .contents {
+        display: flex;
+        align-items: stretch;
+        overflow: hidden;
+    }
+
+    /* overlay는 고정 비율 유지, vid는 남은 공간 채움 */
+    .overlay {
+        flex: 0 0 auto;
+        width: clamp(560px, 60vw, 960px);
+        min-width: 0;
+    }
+
+    .vid {
+        flex: 1 1 auto;
+        min-width: 0;
+        width: auto !important; /* 고정값 override */
+    }
+
+    /* vid 안 이미지도 비율에 맞게 */
+    .vid img,
+    .vid .vid_hero_image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+    }
+}
+
+/* =========================
+   MEDIUM DESKTOP (1281px ~ 1920px)
+========================= */
+@media (min-width: 1281px) and (max-width: 1920px) {
+
+    .recco .contents {
+        overflow: hidden;
+    }
+
+    /* scroll_down_button — 원래 의도(contents 오른쪽 끝)를 vw 기반으로 */
+    #tellurideBoundaryScroll {
+        left: auto !important;
+        right: clamp(16px, 2vw, 48px) !important;
+    }
+    .recco .contents {
+        display: flex;
+        align-items: stretch;
+        overflow: hidden;
+    }
+
+    .overlay {
+        flex: 0 0 auto;
+        width: clamp(760px, 65vw, 1100px);
+    }
+
+    .vid {
+        flex: 1 1 auto;
+        min-width: 0;
+        width: auto !important;
+    }
+
+    .vid img,
+    .vid .vid_hero_image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+    }
+}
+
+/* =========================
+   TABLET / SMALL TABLET (≤820px)
 ========================= */
 @media (max-width: 820px) {
     .mobile_tabs {
@@ -522,7 +640,7 @@
 }
 
 /* =========================
-   MOBILE
+   MOBILE MID (641px ~ 800px)
 ========================= */
 @media (max-width: 800px) and (min-width: 641px) {
     .recco {
@@ -602,6 +720,9 @@
     }
 }
 
+/* =========================
+   SELECTION MODAL (≤820px)
+========================= */
 @media (max-width: 820px) {
     .selection_modal_panel {
         width: calc(100% - 24px);
@@ -706,6 +827,9 @@
     }
 }
 
+/* =========================
+   MOBILE (≤640px)
+========================= */
 @media (max-width: 640px) {
     .selection_modal_visual {
         right: -84px;
@@ -946,6 +1070,9 @@
     }
 }
 
+/* =========================
+   VERY SMALL (≤392px)
+========================= */
 @media (max-width: 392px) {
     section.way .inner,
     .recco .inner,
@@ -1019,6 +1146,9 @@
     }
 }
 
+/* =========================
+   VERY NARROW MOBILE (≤430px)
+========================= */
 @media (max-width: 430px) {
     .car_all ul li img {
         display: none;
@@ -1031,8 +1161,10 @@
     }
 }
 
+/* =========================
+   MOBILE SWIPE / FLEX (≤820px)
+========================= */
 @media (max-width: 820px) {
-    /* 현재 보이는 카드 구조를 세로 flex로 고정 */
     .car_all section,
     .car_all section:first-child,
     .car_all section.is-active,
@@ -1052,7 +1184,6 @@
         transition: transform 0.22s ease, opacity 0.22s ease;
     }
 
-    /* 이미지 박스 */
     .mobile_hero {
         order: 1;
         display: block;
@@ -1075,7 +1206,6 @@
         object-fit: cover;
     }
 
-    /* 제목은 이미지 안 위쪽 */
     .mobile_hero_title {
         display: block;
         position: absolute;
@@ -1094,7 +1224,6 @@
         text-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
     }
 
-    /* dot은 이미지 바로 아래 */
     .mobile_dots {
         order: 2;
         display: flex;
@@ -1106,20 +1235,21 @@
         position: relative;
     }
 
-    /* 텍스트 */
     .car_all .top {
         order: 3;
         padding: 0 24px;
         margin: 0 0 12px;
     }
 
-    /* 리스트 */
     .car_all ul {
         order: 4;
         padding: 8px 24px 0;
     }
 }
 
+/* =========================
+   MOBILE CARD BLOCK (≤430px)
+========================= */
 @media (max-width: 430px) {
     .car_all ul li {
         display: block;
