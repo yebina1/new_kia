@@ -1376,7 +1376,7 @@ button {
 
 .hero_quote_error {
   padding: 0 8px 0 22px;
-  color: #ff6b6b;
+  color: #7c3536;
   font-family: "Inter", sans-serif;
   font-size: 12px;
   font-weight: 600;
@@ -1968,7 +1968,7 @@ button {
       rgba(255, 255, 255, 0.58) 0%,
       rgba(255, 255, 255, 0.22) 50%,
       rgba(200, 200, 200, 0.32) 100%);
-  color: var(--kia-black);
+  color: var(--kia-white1);
   font-family: "Outfit", sans-serif;
   font-size: 14px;
   font-weight: 500;
@@ -2561,7 +2561,7 @@ button {
       rgba(255, 255, 255, 0.58) 0%,
       rgba(255, 255, 255, 0.22) 50%,
       rgba(200, 200, 200, 0.32) 100%);
-  color: var(--kia-black);
+  color: var(--kia-white1);
   font-family: "Outfit", sans-serif;
   font-size: 14px;
   font-weight: 500;
