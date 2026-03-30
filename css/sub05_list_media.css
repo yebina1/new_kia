@@ -16,7 +16,7 @@
   }
 
   .list_layout {
-    grid-template-columns: 200px minmax(0, 1fr);
+    grid-template-columns: minmax(240px, 280px) minmax(0, 1fr);
   }
 
   .vehicle_grid {
@@ -50,6 +50,7 @@
 
   .list_sidebar {
     position: static;
+    width: 100%;
     gap: 20px;
   }
 
@@ -71,6 +72,7 @@
   }
 
   .compare_tray {
+    width: 100%;
     max-width: 420px;
   }
 
