@@ -1735,6 +1735,7 @@ body.review_locked {
 }
 
 .review .review_con {
+  position: relative;
   display: flex;
   justify-content: center;
   gap: 60px;
@@ -1746,14 +1747,14 @@ body.review_locked {
 
 .review .review_con::before {
   content: '';
-  width: 130px;
-  height: 1440px;
+  width: 100%;
+  height: 140px;
   position: absolute;
-  right: 50%;
-  bottom: -18%;
-  transform: rotate(90deg);
-  background: linear-gradient(270deg, rgba(12, 17, 21, 0.00) 40.39%, #0C1115 102.93%);
+  top: 0;
+  left: 0;
+  background: linear-gradient(180deg, #0C1115 0%, rgba(12, 17, 21, 0.88) 36%, rgba(12, 17, 21, 0) 100%);
   z-index: 10;
+  pointer-events: none;
 }
 
 .review .review_con::after {
@@ -1761,9 +1762,10 @@ body.review_locked {
   width: 100%;
   height: 130px;
   position: absolute;
-  left: 0.5px;
-  bottom: 60px;
+  left: 0;
+  bottom: 0;
   background: linear-gradient(180deg, rgba(12, 17, 21, 0.00) 40.39%, #0C1115 91.98%);
+  pointer-events: none;
 }
 
 .review .review_con ul.re_left,
