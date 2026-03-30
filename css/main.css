@@ -1265,6 +1265,18 @@ section[class*="option"] .bottom>ul.cars>li {
   align-content: flex-end;
 }
 
+section[class*="option"] .bottom>ul.cars>li .match_card_link_overlay {
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+}
+
+section[class*="option"] .bottom>ul.cars>li .match_card_link_overlay:focus-visible {
+  outline: 2px solid var(--kia-white1);
+  outline-offset: -2px;
+}
+
 section.option01 .bottom>ul.cars>li:nth-child(1) {
   background-image: url("../img/main/match/Outdoor_Adventure_01_Telluride_img.jpg");
 }
