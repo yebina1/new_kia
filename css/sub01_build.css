@@ -2605,7 +2605,7 @@ button {
 .hero_trim_select_btn,
 .hero_plan_add_btn {
   width: max-content;
-  min-width: calc(6ch + 32px);
+  min-width: calc(8ch + 32px);
   height: auto;
   padding: 8px 16px;
   flex: 0 0 auto;
