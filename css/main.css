@@ -417,6 +417,13 @@ body.section_transition_lock {
     font-size: 45px;
 }
 
+.best_spec_label img {
+    display: block;
+    width: 45px;
+    height: 45px;
+    object-fit: contain;
+}
+
 .best_spec_label_engine {
     display: flex;
     justify-content: center;

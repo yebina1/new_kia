@@ -200,17 +200,7 @@
   .page_top_btn_icon {
     width: 36px;
     height: 36px;
-  }
-
-  .page_top_btn_icon::before {
-    top: 9px;
-    height: 18px;
-  }
-
-  .page_top_btn_icon::after {
-    top: 7px;
-    width: 14px;
-    height: 14px;
+    font-size: 32px;
   }
 
   header .inner {
