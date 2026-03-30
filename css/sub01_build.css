@@ -64,12 +64,9 @@ button {
   --hero-stage-actions-right: auto;
   --hero-stage-actions-bottom: -106px;
   --hero-stage-actions-gap: 96px;
-  --hero-stage-actions-center-x: calc(
-    64px + var(--hero-vehicle-max-width) + 40px +
-    ((100% - 128px - var(--hero-vehicle-max-width) - 40px) / 2) +
-    var(--hero-stage-panel-offset-x) - 80px
-    /* 하단 버튼 위치 조정 */
-  );
+  --hero-stage-actions-center-x: calc(64px + var(--hero-vehicle-max-width) + 40px + ((100% - 128px - var(--hero-vehicle-max-width) - 40px) / 2) + var(--hero-stage-panel-offset-x) - 80px
+      /* 하단 버튼 위치 조정 */
+    );
   --hero-stage-steps-left: calc(64px + (var(--hero-vehicle-max-width) / 2) - 120px);
   /* 상태바 위치 조정 */
   --hero-stage-steps-bottom: 24px;
@@ -121,12 +118,10 @@ button {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-    ellipse at center top,
-    rgba(255, 255, 255, 0.14) 0%,
-    rgba(255, 255, 255, 0.02) 38%,
-    transparent 60%
-  );
+  background: radial-gradient(ellipse at center top,
+      rgba(255, 255, 255, 0.14) 0%,
+      rgba(255, 255, 255, 0.02) 38%,
+      transparent 60%);
   opacity: 0.35;
   pointer-events: none;
   z-index: 1;
@@ -140,12 +135,10 @@ button {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(
-      to bottom,
+    linear-gradient(to bottom,
       rgba(18, 23, 30, 0.45),
       rgba(18, 23, 30, 0.15) 32%,
-      rgba(18, 23, 30, 0.35)
-    );
+      rgba(18, 23, 30, 0.35));
   pointer-events: none;
   z-index: 2;
 }
@@ -933,12 +926,10 @@ button {
   padding: 36px 34px 32px;
   border-radius: 36px;
   background:
-    linear-gradient(
-      180deg,
+    linear-gradient(180deg,
       rgba(120, 124, 130, 0.46) 0%,
       rgba(145, 145, 145, 0.3) 22%,
-      rgba(121, 121, 121, 0.22) 100%
-    );
+      rgba(121, 121, 121, 0.22) 100%);
   border: 1px solid rgba(251, 246, 239, 0.18);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -1385,7 +1376,7 @@ button {
 
 .hero_quote_error {
   padding: 0 8px 0 22px;
-  color: #ff6b6b;
+  color: #7c3536;
   font-family: "Inter", sans-serif;
   font-size: 12px;
   font-weight: 600;
@@ -1602,12 +1593,10 @@ button {
   height: 48px;
   margin: 0;
   border-radius: 999px;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.62) 0%,
-    rgba(255, 255, 255, 0.26) 54%,
-    rgba(200, 200, 200, 0.34) 100%
-  );
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.62) 0%,
+      rgba(255, 255, 255, 0.26) 54%,
+      rgba(200, 200, 200, 0.34) 100%);
   border: 1px solid rgba(255, 255, 255, 0.78);
   color: var(--kia-black);
   font-family: "Outfit", sans-serif;
@@ -1669,14 +1658,12 @@ button {
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.58) 0%,
-    rgba(255, 255, 255, 0.22) 50%,
-    rgba(200, 200, 200, 0.32) 100%
-  );
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.58) 0%,
+      rgba(255, 255, 255, 0.22) 50%,
+      rgba(200, 200, 200, 0.32) 100%);
   border: 1px solid rgba(255, 255, 255, 0.8);
-  color: var(--kia-black);
+  color: var(--kia-white1);
   font-family: "Outfit", sans-serif;
   font-size: 14px;
   font-weight: 600;
@@ -1703,6 +1690,10 @@ button {
     inset 0 1px 0 rgba(255, 255, 255, 0.1),
     0 0 0 1px rgba(160, 247, 255, 0.32),
     0 0 12px rgba(160, 247, 255, 0.18);
+}
+
+#requestQuoteButton {
+  color: var(--kia-white1);
 }
 
 .hero_accessory_cards {
@@ -1916,9 +1907,10 @@ button {
 .hero_accessory_card_top span {
   font-family: "Roboto", sans-serif;
   font-size: 20px;
-  font-weight: 500;
+  font-weight: 400;
   white-space: nowrap;
   color: rgba(251, 246, 239, 0.82);
+  font-weight: 400;
 }
 
 .hero_plan_card_top span {
@@ -1926,6 +1918,7 @@ button {
   font-size: 20px;
   white-space: nowrap;
   color: rgba(251, 246, 239, 0.82);
+  font-weight: 400;
 }
 
 .hero_accessory_add_btn {
@@ -1936,14 +1929,12 @@ button {
   min-width: 118px;
   padding: 7px 12px;
   border-radius: 999px;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.58) 0%,
-    rgba(255, 255, 255, 0.22) 50%,
-    rgba(200, 200, 200, 0.32) 100%
-  );
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.58) 0%,
+      rgba(255, 255, 255, 0.22) 50%,
+      rgba(200, 200, 200, 0.32) 100%);
   border: 0;
-  color: var(--kia-black);
+  color: var(--kia-white1);
   font-family: "Outfit", sans-serif;
   font-size: 14px;
   font-weight: 500;
@@ -1973,13 +1964,11 @@ button {
   min-width: 118px;
   padding: 8px 16px;
   border-radius: 999px;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.58) 0%,
-    rgba(255, 255, 255, 0.22) 50%,
-    rgba(200, 200, 200, 0.32) 100%
-  );
-  color: var(--kia-black);
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.58) 0%,
+      rgba(255, 255, 255, 0.22) 50%,
+      rgba(200, 200, 200, 0.32) 100%);
+  color: var(--kia-white1);
   font-family: "Outfit", sans-serif;
   font-size: 14px;
   font-weight: 500;
@@ -2155,7 +2144,7 @@ button {
   line-height: 1.4;
 }
 
-.hero_plan_card_divider + .hero_plan_card_section_title {
+.hero_plan_card_divider+.hero_plan_card_section_title {
   margin-top: 12px;
 }
 
@@ -2170,7 +2159,7 @@ button {
   line-height: 1.35;
 }
 
-.hero_plan_card_list li + li {
+.hero_plan_card_list li+li {
   margin-top: 6px;
 }
 
@@ -2319,6 +2308,7 @@ button {
   display: block;
   color: #fbf6ef;
   line-height: 1.3;
+  font-weight: 400;
 }
 
 .hero_package_card_heading span {
@@ -2338,14 +2328,12 @@ button {
   min-width: 118px;
   padding: 10px 18px;
   border-radius: 999px;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.58) 0%,
-    rgba(255, 255, 255, 0.22) 50%,
-    rgba(200, 200, 200, 0.32) 100%
-  );
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.58) 0%,
+      rgba(255, 255, 255, 0.22) 50%,
+      rgba(200, 200, 200, 0.32) 100%);
   border: 0;
-  color: var(--kia-black);
+  color: var(--kia-white1);
   font-family: "Outfit", sans-serif;
   font-size: 14px;
   font-weight: 500;
@@ -2569,13 +2557,11 @@ button {
   height: auto;
   padding: 8px 16px;
   border-radius: 999px;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.58) 0%,
-    rgba(255, 255, 255, 0.22) 50%,
-    rgba(200, 200, 200, 0.32) 100%
-  );
-  color: var(--kia-black);
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.58) 0%,
+      rgba(255, 255, 255, 0.22) 50%,
+      rgba(200, 200, 200, 0.32) 100%);
+  color: var(--kia-white1);
   font-family: "Outfit", sans-serif;
   font-size: 14px;
   font-weight: 500;
@@ -2614,6 +2600,27 @@ button {
     inset 0 1px 0 rgba(255, 255, 255, 0.1),
     0 0 0 1px rgba(160, 247, 255, 0.55),
     0 0 18px rgba(160, 247, 255, 0.34);
+}
+
+.hero_trim_select_btn,
+.hero_plan_add_btn {
+  width: max-content;
+  min-width: calc(8ch + 32px);
+  height: auto;
+  padding: 8px 16px;
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.hero_package_add_btn,
+.hero_accessory_add_btn {
+  width: max-content;
+  min-width: calc(8ch + 32px);
+  padding: 8px 16px;
+  flex: 0 0 auto;
+  white-space: nowrap;
+  font-weight: 600;
+  color: #fbf6ef;
 }
 
 .hero_trim_card_details {
@@ -2822,14 +2829,12 @@ button {
   white-space: nowrap;
   color: #fbf6ef;
   background:
-    linear-gradient(
-      -45deg,
+    linear-gradient(-45deg,
       rgba(255, 255, 255, 0.8) 0%,
       rgba(255, 255, 255, 0.34) 18%,
       rgba(255, 255, 255, 0.08) 38%,
       rgba(255, 255, 255, 0) 56%,
-      rgba(0, 0, 0, 0.1) 100%
-    ),
+      rgba(0, 0, 0, 0.1) 100%),
     rgba(251, 246, 239, 0.26);
   border: 1px solid rgba(251, 246, 239, 0.32);
   border-top-color: rgba(255, 255, 255, 0.68);
@@ -2852,12 +2857,12 @@ button {
     0 12px 34px rgba(0, 0, 0, 0.2);
 }
 
-.hero_trim_stage.is-visible ~ .hero_bottom_steps,
-.hero_color_stage.is-visible ~ .hero_bottom_steps,
-.hero_package_stage.is-visible ~ .hero_bottom_steps,
-.hero_accessory_stage.is-visible ~ .hero_bottom_steps,
-.hero_plan_stage.is-visible ~ .hero_bottom_steps,
-.hero_summary_stage.is-visible ~ .hero_bottom_steps {
+.hero_trim_stage.is-visible~.hero_bottom_steps,
+.hero_color_stage.is-visible~.hero_bottom_steps,
+.hero_package_stage.is-visible~.hero_bottom_steps,
+.hero_accessory_stage.is-visible~.hero_bottom_steps,
+.hero_plan_stage.is-visible~.hero_bottom_steps,
+.hero_summary_stage.is-visible~.hero_bottom_steps {
   /* 상태바 위치 조정 */
   left: var(--hero-stage-steps-left);
   right: auto;
@@ -2867,12 +2872,12 @@ button {
   max-width: var(--hero-stage-steps-max-width);
 }
 
-.hero_trim_stage.is-visible ~ .hero_bottom_steps .hero_bottom_tabs,
-.hero_color_stage.is-visible ~ .hero_bottom_steps .hero_bottom_tabs,
-.hero_package_stage.is-visible ~ .hero_bottom_steps .hero_bottom_tabs,
-.hero_accessory_stage.is-visible ~ .hero_bottom_steps .hero_bottom_tabs,
-.hero_plan_stage.is-visible ~ .hero_bottom_steps .hero_bottom_tabs,
-.hero_summary_stage.is-visible ~ .hero_bottom_steps .hero_bottom_tabs {
+.hero_trim_stage.is-visible~.hero_bottom_steps .hero_bottom_tabs,
+.hero_color_stage.is-visible~.hero_bottom_steps .hero_bottom_tabs,
+.hero_package_stage.is-visible~.hero_bottom_steps .hero_bottom_tabs,
+.hero_accessory_stage.is-visible~.hero_bottom_steps .hero_bottom_tabs,
+.hero_plan_stage.is-visible~.hero_bottom_steps .hero_bottom_tabs,
+.hero_summary_stage.is-visible~.hero_bottom_steps .hero_bottom_tabs {
   justify-content: space-between;
   gap: 0;
 }
@@ -3158,14 +3163,12 @@ button {
 
 .dark_origin {
   background:
-    linear-gradient(
-      -45deg,
+    linear-gradient(-45deg,
       rgba(255, 255, 255, 0.8) 0%,
       rgba(255, 255, 255, 0.34) 18%,
       rgba(255, 255, 255, 0.08) 38%,
       rgba(255, 255, 255, 0) 56%,
-      rgba(0, 0, 0, 0.1) 100%
-    ),
+      rgba(0, 0, 0, 0.1) 100%),
     rgba(251, 246, 239, 0.26);
   backdrop-filter: blur(4px) saturate(187%);
   -webkit-backdrop-filter: blur(4px) saturate(187%);
@@ -3234,7 +3237,7 @@ button {
   max-width: var(--hero-stage-steps-max-width);
 }
 
-.hero_model_stage:not(.is-hidden) ~ .hero_bottom_steps {
+.hero_model_stage:not(.is-hidden)~.hero_bottom_steps {
   left: 50%;
   transform: translateX(-50%);
 }
@@ -3264,11 +3267,9 @@ button {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: linear-gradient(
-    292deg,
-    rgba(175, 194, 209, 0.2) 32.67%,
-    rgba(90, 99, 107, 0) 107.81%
-  );
+  background: linear-gradient(292deg,
+      rgba(175, 194, 209, 0.2) 32.67%,
+      rgba(90, 99, 107, 0) 107.81%);
   opacity: 0.6;
   pointer-events: none;
 }
@@ -3279,11 +3280,9 @@ button {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.8),
-    rgba(255, 255, 255, 0.1)
-  );
+  background: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.8),
+      rgba(255, 255, 255, 0.1));
   filter: blur(2px);
   opacity: 0.45;
   pointer-events: none;
@@ -3560,7 +3559,7 @@ button {
     --hero-stage-steps-transform: none;
     --hero-stage-steps-width: auto;
     --hero-stage-steps-max-width: none;
-  } 
+  }
 
   .hero_package_stage {
     inset: 64px 16px 88px;
@@ -3626,8 +3625,8 @@ button {
   }
 
   .hero_package_add_btn {
-    min-width: 70px;
-    padding: 8px 12px;
+    min-width: calc(8ch + 32px);
+    padding: 8px 16px;
     font-size: 14px;
     line-height: 1;
   }
@@ -3724,8 +3723,9 @@ button {
   }
 
   .hero_trim_select_btn {
-    min-width: 64px;
-    height: 24px;
+    min-width: calc(6ch + 32px);
+    height: auto;
+    padding: 8px 16px;
     font-size: 14px;
     line-height: 1;
   }
@@ -3901,14 +3901,12 @@ button {
   }
 }
 
-.build_wrap :is(
-  [class*="hero_trim_"],
+.build_wrap :is([class*="hero_trim_"],
   [class*="hero_color_"],
   [class*="hero_package_"],
   [class*="hero_accessory_"],
   [class*="hero_plan_"],
   [class*="hero_summary_"],
-  [class*="hero_quote_"]
-):not(.hero_trim_select_btn):not(.hero_package_add_btn):not(.hero_accessory_add_btn):not(.hero_plan_add_btn):not(.hero_summary_cta_btn):not(.hero_quote_send_btn):not(.hero_quote_back_btn):not(.hero_summary_row_price):not(.hero_trim_card_price):not(.hero_trim_card_lease):not(.hero_package_card_heading span):not(.hero_accessory_card_top span):not(.hero_plan_card_top span) {
+  [class*="hero_quote_"]):not(.hero_trim_select_btn):not(.hero_package_add_btn):not(.hero_accessory_add_btn):not(.hero_plan_add_btn):not(.hero_summary_cta_btn):not(.hero_quote_send_btn):not(.hero_quote_back_btn):not(.hero_summary_row_price):not(.hero_trim_card_price):not(.hero_trim_card_lease):not(.hero_package_card_heading span):not(.hero_accessory_card_top span):not(.hero_plan_card_top span) {
   line-height: 1.3;
 }

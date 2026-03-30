@@ -306,6 +306,41 @@ const $mobileHamOpen = document.querySelector('header .icon_menu');
 const $mobileHamClose = document.querySelector('header .close');
 const $mobileHamItems = Array.from(document.querySelectorAll('header .m_gnb > li'));
 const $mobileHamBreakpoint = 1500;
+const $topButtonPages = new Set(['index.html', 'list.html', 'whykia.html', 'detail.html', '']);
+const $currentPageName = (window.location.pathname.split('/').pop() || 'index.html').toLowerCase();
+let $pageTopBtn = null;
+
+function syncPageTopButtonVisibility() {
+  if (!$pageTopBtn) return;
+
+  const shouldShow = window.scrollY > Math.max(window.innerHeight * 0.6, 240);
+  $pageTopBtn.classList.toggle('is-visible', shouldShow);
+}
+
+function initPageTopButton() {
+  if (!$topButtonPages.has($currentPageName)) return;
+
+  $pageTopBtn = document.createElement('button');
+  $pageTopBtn.type = 'button';
+  $pageTopBtn.className = 'page_top_btn';
+  $pageTopBtn.setAttribute('aria-label', 'Back to top');
+  $pageTopBtn.innerHTML = `
+    <svg class="page_top_btn_icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M12 18V7"></path>
+      <path d="M7.5 11.5L12 7l4.5 4.5"></path>
+    </svg>
+  `;
+
+  $pageTopBtn.addEventListener('click', () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  });
+
+  document.body.appendChild($pageTopBtn);
+  syncPageTopButtonVisibility();
+}
 
 function closeMobileHam() {
   if (!$mobileHam) return;
@@ -389,12 +424,15 @@ if ($mobileHam && $mobileHamOpen) {
   });
 }
 
+initPageTopButton();
+
 window.addEventListener('scroll', () => {
   const $currentScrollY = window.scrollY;
 
   if (document.body.classList.contains('mobile_ham_open')) {
     $header.classList.remove('hide');
     $lastScrollY = $currentScrollY;
+    syncPageTopButtonVisibility();
     return;
   }
 
@@ -405,6 +443,7 @@ window.addEventListener('scroll', () => {
   }
 
   $lastScrollY = $currentScrollY;
+  syncPageTopButtonVisibility();
 });
 
 window.addEventListener('resize', () => {

@@ -1147,7 +1147,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="hero_trim_card_head">
               <strong>${escapeHtml(trimItem.name)}</strong>
               <button type="button" class="hero_trim_select_btn" aria-pressed="${index === selectedTrimIndex ? "true" : "false"}">
-                Select
+                ${index === selectedTrimIndex ? "Selected" : "Select"}
               </button>
             </div>
             <div class="hero_trim_card_details">
@@ -1220,6 +1220,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const selectButton = card.querySelector(".hero_trim_select_btn");
       if (selectButton) {
+        selectButton.textContent = isSelected ? "Selected" : "Select";
         selectButton.setAttribute("aria-pressed", isSelected ? "true" : "false");
       }
 
@@ -1258,7 +1259,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const selectButton = card.querySelector(".hero_plan_add_btn");
       if (selectButton) {
-        selectButton.textContent = "Select";
+        selectButton.textContent = isSelected ? "Selected" : "Select";
         selectButton.setAttribute("aria-pressed", isSelected ? "true" : "false");
       }
 

@@ -45,9 +45,41 @@ header .inner h1 a {
   color: var(--kia-white2);
 }
 
+.list_intro_meta,
+.list_summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  row-gap: 6px;
+  color: var(--kia-white2);
+}
+
+.list_intro_meta span,
+.list_summary span {
+  display: inline-flex;
+  align-items: center;
+}
+
+.list_intro_meta span + span::before,
+.list_summary span + span::before {
+  content: "•";
+  margin: 0 10px 0 12px;
+  color: rgba(221, 216, 209, 0.82);
+}
+
+.list_summary {
+  display: none;
+  width: 100%;
+  margin-bottom: 32px;
+  font-size: 18px;
+  font-weight: 500;
+  text-align: right;
+}
+
 .list_layout {
   display: grid;
-  grid-template-columns: max-content minmax(0, 1fr);
+  grid-template-columns: minmax(280px, 320px) minmax(0, 1fr);
   gap: 32px;
   align-items: start;
 }
@@ -55,6 +87,8 @@ header .inner h1 a {
 .list_sidebar {
   position: sticky;
   top: 156px;
+  width: 100%;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -82,6 +116,8 @@ header .inner h1 a {
 }
 
 .compare_tray {
+  width: 100%;
+  min-width: 0;
   border: 1px solid rgba(251, 246, 239, 0.16);
   border-radius: 24px;
   padding: 28px 24px;
@@ -90,35 +126,104 @@ header .inner h1 a {
 
 .compare_tray strong {
   display: block;
-  margin-bottom: 20px;
+  margin-bottom: 8px;
   font-family: "Outfit", sans-serif;
   font-size: 20px;
   color: var(--kia-white2);
 }
 
+.compare_tray .compare_hint {
+  margin-bottom: 20px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(251, 246, 239, 0.72);
+}
+
 .compare_tray ul {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
+  min-height: 152px;
   margin-bottom: 24px;
+}
+
+.compare_tray.is-empty ul {
+  justify-content: center;
+}
+
+.compare_tray.is-empty .compare_list::before {
+  content: "No vehicles added yet.";
+  display: block;
+  padding: 18px 16px;
+  border: 1px dashed rgba(251, 246, 239, 0.18);
+  border-radius: 18px;
+  font-size: 15px;
+  line-height: 1.4;
+  color: rgba(251, 246, 239, 0.6);
 }
 
 .compare_tray li {
   display: flex;
   justify-content: space-between;
-  gap: 8px;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(251, 246, 239, 0.12);
   font-size: 24px;
   font-family: "Cormorant Garamond", serif;
   color: var(--kia-white1);
 }
 
-.compare_tray li span,
-.compare_tray li b {
+.compare_tray li:last-child {
+  border-bottom: none;
+}
+
+.compare_tray li span {
+  flex: 1;
+  min-width: 0;
+  line-height: 1.1;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
   color: inherit;
+}
+
+.compare_tray .btn_remove_compare {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  flex-shrink: 0;
+  border: 1px solid rgba(251, 246, 239, 0.24);
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  background: transparent;
+  font-size: 0;
+  cursor: pointer;
+  transition:
+    border-color 0.25s ease,
+    background-color 0.25s ease;
+}
+
+.compare_tray .btn_remove_compare::before {
+  content: "";
+  width: 12px;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--kia-white1);
+}
+
+.compare_tray .btn_remove_compare:hover,
+.compare_tray .btn_remove_compare:focus-visible {
+  border-color: rgba(251, 246, 239, 0.48);
+  background: rgba(251, 246, 239, 0.08);
 }
 
 .compare_tray .open_compare {
   width: 100%;
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
   padding: 12px 16px;
   font-size: 16px;
@@ -153,6 +258,7 @@ header .inner h1 a {
 }
 
 .vehicle_card {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -175,16 +281,23 @@ header .inner h1 a {
   transition: transform 0.35s ease;
 }
 
-.vehicle_card .thumb::before {
-  content: "Add To Compare";
+.vehicle_card .thumb::before,
+.vehicle_card .thumb::after {
+  content: none;
+}
+
+.vehicle_card .btn_compare {
   position: absolute;
-  inset: 0;
-  z-index: 2;
+  inset: 0 0 auto;
+  z-index: 3;
+  height: 220px;
+  border: 0;
+  border-radius: 24px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding-bottom: 56px;
-  border-radius: 24px;
+  gap: 18px;
   background: rgba(18, 18, 18, 0.5);
   color: var(--kia-white1);
   font-family: "Outfit", sans-serif;
@@ -195,19 +308,21 @@ header .inner h1 a {
   transform: translateY(8px);
   transition:
     opacity 0.25s ease,
-    transform 0.25s ease;
+    transform 0.25s ease,
+    background-color 0.25s ease;
+  pointer-events: none;
+  cursor: pointer;
+}
+
+.vehicle_card .btn_compare span {
   pointer-events: none;
 }
 
-.vehicle_card .thumb::after {
+.vehicle_card .btn_compare::after {
   content: "+";
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  z-index: 3;
   width: 50px;
   height: 50px;
-  border-radius: 555px;
+  border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -216,29 +331,36 @@ header .inner h1 a {
   font-weight: 400;
   color: #fff;
   background: rgba(251, 246, 239, 0.45);
-  transform: translate(-50%, calc(-50% + 34px)) scale(0.88);
-  opacity: 0;
-  transition:
-    opacity 0.25s ease,
-    transform 0.25s ease;
-  pointer-events: none;
+}
+
+.vehicle_card .btn_compare.is-selected {
+  background: rgba(18, 18, 18, 0.62);
+}
+
+.vehicle_card .btn_compare.is-selected::after {
+  content: "\2713";
+  font-size: 26px;
+}
+
+.vehicle_card .btn_compare.is-full {
+  background: rgba(18, 18, 18, 0.62);
+}
+
+.vehicle_card .btn_compare.is-full::after {
+  content: "!";
+  font-size: 28px;
 }
 
 .vehicle_card:hover .thumb img {
   transform: scale(1.04);
 }
 
-.vehicle_card:hover .thumb::before,
-.vehicle_card:hover .thumb::after,
-.vehicle_card .thumb:focus-visible::before,
-.vehicle_card .thumb:focus-visible::after {
+.vehicle_card:hover .btn_compare,
+.vehicle_card:focus-within .btn_compare,
+.vehicle_card .btn_compare:focus-visible {
   opacity: 1;
-  transform: translate(-50%, calc(-50% + 34px)) scale(1);
-}
-
-.vehicle_card:hover .thumb::before,
-.vehicle_card .thumb:focus-visible::before {
   transform: translateY(0);
+  pointer-events: auto;
 }
 
 .vehicle_card .meta {
@@ -344,7 +466,7 @@ header .inner h1 a {
 }
 
 .assistant_banner .cta i {
-  color: #121212;
+  color: var(--kia-black);
   font-size: 20px;
 }
 

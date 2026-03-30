@@ -119,6 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const desktopVisual = document.querySelector(".vid");
     const modal = document.querySelector(".selection_modal");
     const modalCloseButton = document.querySelector(".selection_modal_close");
+    const modalBuildButton = modal?.querySelector(".selection_modal_buttons .is-primary");
     const buildTrigger = document.querySelector(".build_trigger");
     const experimentalMode = recco?.classList.contains("recco--experimental");
 
@@ -219,6 +220,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     modalCloseButton?.addEventListener("click", () => {
         closeSelectionModal(modal, state);
+    });
+
+    modalBuildButton?.addEventListener("click", () => {
+        const targetHref = modalBuildButton.dataset.href;
+        if (!targetHref) return;
+        window.location.href = targetHref;
     });
 
     carAll.addEventListener("touchstart", (event) => {

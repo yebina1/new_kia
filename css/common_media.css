@@ -189,6 +189,20 @@
 }
 
 @media (max-width: 560px) {
+  .page_top_btn {
+    right: 20px;
+    bottom: 20px;
+    width: 64px;
+    height: 64px;
+    padding: 12px;
+  }
+
+  .page_top_btn_icon {
+    width: 36px;
+    height: 36px;
+    font-size: 32px;
+  }
+
   header .inner {
     min-width: 360px;
     padding: 32px 16px;

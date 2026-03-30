@@ -9,7 +9,7 @@ body {
 body {
     width: 100%;
     background: #06111b;
-    color: #fff;
+    color: var(--kia-white1);
     overflow-x: hidden;
 }
 
@@ -56,7 +56,7 @@ a {
     font-weight: 400;
     line-height: 1;
     letter-spacing: -0.02em;
-    color: #fff;
+    color: var(--kia-white1);
     text-align: center;
 }
 
@@ -174,13 +174,14 @@ a {
     width: 190px;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     gap: 20px;
 }
 
 .main_visual .spec_item img {
     width: auto;
     height: 54px;
+    margin: 0 auto;
     object-fit: contain;
 }
 
@@ -188,13 +189,15 @@ a {
     display: flex;
     flex-direction: column;
     gap: 4px;
+    align-items: center;
+    text-align: center;
 }
 
 .main_visual .spec_value,
 .main_visual .spec_desc {
     font-family: "Inter", sans-serif;
     font-weight: 500;
-    color: #fff;
+    color: var(--kia-white1);
     letter-spacing: -0.02em;
 }
 
@@ -216,8 +219,12 @@ a {
 
 .size_it_up {
     width: 100%;
-    height: 874px;
+    min-height: 874px;
+    height: auto;
     padding-top: 240px;
+    padding-bottom: 120px;
+    position: relative;
+    z-index: 1;
     background: #0C1115;
 }
 
@@ -282,7 +289,7 @@ a {
     font-size: 24px;
     font-weight: 600;
     line-height: 1.2;
-    color: #fff;
+    color: var(--kia-white1);
 }
 
 .size_it_up .size_info_desc {
@@ -295,6 +302,9 @@ a {
 
 .wheels_story {
     width: 100%;
+    position: relative;
+    z-index: 0;
+    isolation: isolate;
     background: #0c1115;
 }
 
@@ -438,8 +448,8 @@ a {
     }
 
     .wheels_story .wheel_story_block_19,
-.wheels_story .wheel_story_block_20,
-.wheels_story .wheel_story_block_21 {
+    .wheels_story .wheel_story_block_20,
+    .wheels_story .wheel_story_block_21 {
         left: 50%;
         right: auto;
         transform: translate(-50%, -50%);
@@ -567,7 +577,7 @@ a {
     font-size: 48px;
     font-weight: 500;
     line-height: 1.1;
-    color: #fff;
+    color: var(--kia-white1);
 }
 
 .trim_selector .trim_price {
@@ -575,7 +585,7 @@ a {
     font-size: 30px;
     font-weight: 400;
     line-height: 1.1;
-    color: #fff;
+    color: var(--kia-white1);
 }
 
 .trim_selector .trim_price.is_empty {
@@ -607,7 +617,7 @@ a {
     font-size: 20px;
     font-weight: 500;
     line-height: 1;
-    color: #fff;
+    color: var(--kia-white1);
 }
 
 .trim_selector .trim_info {
@@ -637,7 +647,7 @@ a {
     font-size: 24px;
     font-weight: 600;
     line-height: 1.2;
-    color: #fff;
+    color: var(--kia-white1);
 }
 
 .trim_selector .trim_card_line {
@@ -734,7 +744,7 @@ a {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    background: #fff;
+    background: var(--kia-white1);
     border-radius: 999px;
 }
 
@@ -839,7 +849,7 @@ a {
     inset: 50% auto auto 50%;
     width: 20px;
     height: 2px;
-    background: #fff;
+    background: var(--kia-white1);
     border-radius: 999px;
     transform-origin: center;
 }
