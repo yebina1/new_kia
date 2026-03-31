@@ -1619,7 +1619,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const heroCenterRect = heroCenter.getBoundingClientRect();
     const bottomStepsRect = heroBottomSteps.getBoundingClientRect();
     const startZoneRect = startButtonZone.getBoundingClientRect();
-    const gap = window.innerWidth <= 768 ? 42 : 52;
+    const gap = window.innerWidth <= 560 ? 8 : window.innerWidth <= 768 ? 16 : 52;
     const nextTop =
       bottomStepsRect.top - heroCenterRect.top - startZoneRect.height - gap;
 
@@ -1634,7 +1634,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const isModelStage = currentStep === 0;
     const shouldUseResponsiveStageLayout =
-      !isModelStage && window.innerWidth <= 1500 && window.innerWidth > 768;
+      !isModelStage && window.innerWidth <= 1500;
 
     if (!shouldUseResponsiveStageLayout) {
       heroBottomSteps.style.removeProperty("top");
@@ -1675,8 +1675,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const vehicleRect = vehicle.getBoundingClientRect();
     const panelRect = panel.getBoundingClientRect();
     const stepsRect = heroBottomSteps.getBoundingClientRect();
-    const gapBelowVehicle = 20;
-    const gapAbovePanel = 18;
+    const isMobileStageLayout = window.innerWidth <= 768;
+    const gapBelowVehicle = isMobileStageLayout ? 16 : 20;
+    const gapAbovePanel = isMobileStageLayout ? 16 : 18;
     const minTop = vehicleRect.bottom - visualRect.top + gapBelowVehicle;
     const maxTop = panelRect.top - visualRect.top - stepsRect.height - gapAbovePanel;
     const preferredTop = minTop + Math.max((maxTop - minTop) * 0.42, 0);
@@ -1689,8 +1690,12 @@ document.addEventListener("DOMContentLoaded", () => {
     heroBottomSteps.style.right = "auto";
     heroBottomSteps.style.bottom = "auto";
     heroBottomSteps.style.top = `${Math.max(0, resolvedTop)}px`;
-    heroBottomSteps.style.width = "min(calc(100vw - 96px), 760px)";
-    heroBottomSteps.style.maxWidth = "min(calc(100vw - 96px), 760px)";
+    heroBottomSteps.style.width = isMobileStageLayout
+      ? "calc(100vw - 32px)"
+      : "min(calc(100vw - 96px), 760px)";
+    heroBottomSteps.style.maxWidth = isMobileStageLayout
+      ? "calc(100vw - 32px)"
+      : "min(calc(100vw - 96px), 760px)";
     heroBottomSteps.style.transform = "translateX(-50%)";
   }
 

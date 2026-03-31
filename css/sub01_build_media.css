@@ -396,21 +396,21 @@
   .hero {
     --hero-stage-shell-right: 20px;
     --hero-right-rail: 20px;
-    --hero-stage-bottom-rail: 24px;
-    --hero-stage-steps-bottom: 24px;
-    --hero-model-title-anchor-offset: 122px;
-    --hero-model-start-gap: 72px;
+    --hero-stage-bottom-rail: 34px;
+    --hero-stage-steps-bottom: 34px;
+    --hero-model-title-anchor-offset: 108px;
+    --hero-model-start-gap: 48px;
   }
 
   .hero_visual {
-    min-height: 980px;
-    padding-top: 108px;
+    min-height: 880px;
+    padding-top: 96px;
   }
 
   .hero_top_tabs {
-    top: 92px;
-    min-height: 52px;
-    padding: 0 14px 8px;
+    top: 84px;
+    min-height: 48px;
+    padding: 0 12px 6px;
     gap: 4px;
     border-radius: 22px;
   }
@@ -422,13 +422,13 @@
   }
 
   .hero_title {
-    top: clamp(188px, 30vw, 240px);
-    font-size: clamp(28px, 7vw, 38px);
+    top: clamp(164px, 28vw, 212px);
+    font-size: clamp(24px, 6.6vw, 32px);
     transform: translateX(-50%);
   }
 
   .hero_car {
-    width: min(82vw, 520px);
+    width: min(74vw, 460px);
   }
 
   .hero_color_seat_preview {
@@ -455,6 +455,31 @@
   .hero_summary_stage {
     inset: 72px 20px 88px;
     row-gap: 18px;
+  }
+
+  .hero_trim_intro,
+  .hero_color_intro,
+  .hero_package_intro,
+  .hero_accessory_intro,
+  .hero_plan_intro,
+  .hero_summary_intro {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .hero_trim_summary,
+  .hero_color_summary,
+  .hero_package_summary,
+  .hero_accessory_summary,
+  .hero_plan_summary,
+  .hero_summary_summary {
+    flex: 0 0 auto;
+    max-width: min(48vw, 240px);
+    margin-left: auto;
+    text-align: right;
   }
 
   .hero_trim_title,
@@ -530,13 +555,13 @@
 
   .hero_stage_actions {
     grid-template-columns: 1fr 1fr;
-    gap: 64px;
+    gap: 24px;
     padding: 0;
   }
 
   .hero_trim_action_btn {
     height: auto;
-    padding: 16px 32px;
+    padding: 8px 16px;
     font-size: 14px;
   }
 
@@ -566,8 +591,17 @@
   .hero_summary_stage.is-visible ~ .hero_bottom_steps {
     width: calc(100vw - 32px);
     max-width: calc(100vw - 32px);
-    padding: 32px 24px;
+    padding: 0;
     box-sizing: border-box;
+  }
+
+  .hero_progress,
+  .hero_bottom_tabs {
+    padding-inline: 24px;
+  }
+
+  .hero_progress {
+    margin-bottom: 32px;
   }
 
   .hero_quote_method_tabs {
@@ -601,23 +635,23 @@
   .hero {
     --hero-stage-shell-right: 16px;
     --hero-right-rail: 16px;
-    --hero-stage-bottom-rail: 20px;
-    --hero-stage-steps-bottom: 20px;
-    --hero-model-title-anchor-offset: 104px;
-    --hero-model-start-gap: 64px;
+    --hero-stage-bottom-rail: 32px;
+    --hero-stage-steps-bottom: 32px;
+    --hero-model-title-anchor-offset: 84px;
+    --hero-model-start-gap: 28px;
   }
 
   .hero_visual {
-    min-height: 900px;
-    padding-top: 96px;
+    min-height: 760px;
+    padding-top: 80px;
   }
 
   .hero_top_tabs {
-    top: 82px;
+    top: 66px;
     width: calc(100vw - 24px);
     max-width: calc(100vw - 24px);
-    min-height: 48px;
-    padding: 0 10px 8px;
+    min-height: 40px;
+    padding: 0 8px 4px;
   }
 
   .hero_top_tabs button {
@@ -626,13 +660,13 @@
   }
 
   .hero_title {
-    top: clamp(168px, 34vw, 214px);
-    font-size: clamp(24px, 8vw, 32px);
+    top: clamp(132px, 27vw, 170px);
+    font-size: clamp(20px, 6.4vw, 26px);
     transform: translateX(-50%);
   }
 
   .hero_car {
-    width: calc(100vw - 72px);
+    width: calc(100vw - 128px);
   }
 
   .hero_color_seat_preview {
@@ -645,6 +679,16 @@
     width: calc(100vw - 20px);
   }
 
+  .hero_model_start_btn {
+    min-width: 82px;
+    padding: 8px 12px !important;
+    font-size: 12px;
+  }
+
+  .hero_model_start_btn i {
+    font-size: 12px;
+  }
+
   .hero_trim_stage,
   .hero_color_stage,
   .hero_package_stage,
@@ -652,6 +696,24 @@
   .hero_plan_stage,
   .hero_summary_stage {
     inset: 64px 16px 84px;
+  }
+
+  .hero_trim_intro,
+  .hero_color_intro,
+  .hero_package_intro,
+  .hero_accessory_intro,
+  .hero_plan_intro,
+  .hero_summary_intro {
+    gap: 12px;
+  }
+
+  .hero_trim_summary,
+  .hero_color_summary,
+  .hero_package_summary,
+  .hero_accessory_summary,
+  .hero_plan_summary,
+  .hero_summary_summary {
+    max-width: min(50vw, 200px);
   }
 
   .hero_trim_panel,
@@ -677,13 +739,13 @@
 
   .hero_stage_actions {
     grid-template-columns: 1fr;
-    gap: 64px;
+    gap: 24px;
     padding: 0;
   }
 
   .hero_trim_action_btn {
     height: auto;
-    padding: 16px 32px;
+    padding: 8px 16px;
     font-size: 13px;
   }
 
@@ -807,5 +869,41 @@
 @media (max-width: 560px) {
   .hero_color_panel + .hero_color_panel {
     margin-top: 20px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero_stage_actions,
+  .hero_trim_actions,
+  .hero_package_actions,
+  .hero_accessory_actions,
+  .hero_plan_actions,
+  .hero_summary_actions,
+  .hero_color_actions {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+    justify-content: center;
+    gap: 24px !important;
+    flex-wrap: nowrap;
+  }
+
+  .hero_stage_actions .hero_trim_action_btn,
+  .hero_trim_actions .hero_trim_action_btn,
+  .hero_package_actions .hero_trim_action_btn,
+  .hero_accessory_actions .hero_trim_action_btn,
+  .hero_plan_actions .hero_trim_action_btn,
+  .hero_summary_actions .hero_trim_action_btn,
+  .hero_color_actions .hero_trim_action_btn {
+    width: auto !important;
+    min-width: 0 !important;
+    flex: 0 0 auto !important;
+    padding: 8px 16px !important;
+  }
+
+  .hero_model_start_btn {
+    min-width: 96px;
+    padding: 12px 16px !important;
+    font-size: 14px;
   }
 }
