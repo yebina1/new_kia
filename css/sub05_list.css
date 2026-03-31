@@ -61,8 +61,8 @@ header .inner h1 a {
   align-items: center;
 }
 
-.list_intro_meta span + span::before,
-.list_summary span + span::before {
+.list_intro_meta span+span::before,
+.list_summary span+span::before {
   content: "•";
   margin: 0 10px 0 12px;
   color: rgba(221, 216, 209, 0.82);
@@ -399,7 +399,7 @@ header .inner h1 a {
   justify-content: center;
   min-height: 44px;
   border-radius: 999px;
-  font-size: 18px;
+  font-size: 1.125rem;
   font-family: "Outfit", sans-serif;
   font-weight: 600;
   text-transform: uppercase;
@@ -408,15 +408,15 @@ header .inner h1 a {
 .vehicle_card .actions .btn_build {
   background: rgba(251, 246, 239, 0.24);
   color: var(--kia-white1);
+  padding: 16px 16px;
 }
 
 .vehicle_card .actions .btn_detail {
-  background: linear-gradient(
-    90deg,
-    rgba(251, 246, 239, 0.1),
-    rgba(50, 176, 180, 0.2)
-  );
+  background: linear-gradient(90deg,
+      rgba(251, 246, 239, 0.1),
+      rgba(50, 176, 180, 0.2));
   color: var(--kia-white1);
+  padding: 16px 16px;
 }
 
 .assistant_banner {
@@ -469,4 +469,3 @@ header .inner h1 a {
   color: var(--kia-black);
   font-size: 20px;
 }
-
