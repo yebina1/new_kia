@@ -103,7 +103,7 @@
   }
 
   header nav .icons a:last-child {
-    display: block;
+    display: flex;
   }
 
   header .header_bottom {

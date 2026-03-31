@@ -27,7 +27,7 @@ const $resolveMenuKey = (item) => {
   if (href.includes('list.html')) return 'vehicles';
   if (href.includes('recommended.html')) return 'shopping-assistant';
   if (href.includes('detail.html')) return 'inventory';
-  if (href.includes('#map')) return 'center';
+  if (href.includes('#map') || label.includes('center')) return 'center';
   if (label.includes('owners')) return 'owners';
 
   return '';
@@ -56,7 +56,7 @@ const $subMenuMap = {
     { label: 'sub shop', href: '' },
   ],
   center: [
-    { label: 'kia map', href: 'index.html#map' },
+    { label: 'kia map', href: '' },
     { label: 'kia connect', href: '' },
     { label: 'consultation', href: '' },
     { label: 'FAQ', href: '' },
