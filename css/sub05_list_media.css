@@ -151,7 +151,7 @@
 
   .vehicle_card .actions a {
     min-height: 48px;
-    font-size: 16px;
+    font-size: 1rem;
   }
 
   .assistant_banner {
@@ -290,7 +290,7 @@
     width: 100%;
     min-height: 38px;
     padding: 12px 24px;
-    font-size: 14px;
+    font-size: 0.875rem;
   }
 
   .assistant_banner {
