@@ -876,7 +876,7 @@ button {
 }
 
 .hero_accessory_vehicle img {
-  filter: blur(4px) opacity(0.5);
+  filter: none;
 }
 
 .hero_plan_vehicle {
@@ -884,7 +884,7 @@ button {
 }
 
 .hero_plan_vehicle img {
-  filter: blur(4px) opacity(0.5);
+  filter: none;
 }
 
 .hero_summary_vehicle {

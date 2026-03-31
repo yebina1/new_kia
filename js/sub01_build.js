@@ -1577,6 +1577,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     syncTrimSelectionGate();
     syncStageStepsPosition();
+    scheduleLayoutSync();
   }
 
   function syncTopTabsIndicator() {
@@ -1691,6 +1692,23 @@ document.addEventListener("DOMContentLoaded", () => {
     heroBottomSteps.style.width = "min(calc(100vw - 96px), 760px)";
     heroBottomSteps.style.maxWidth = "min(calc(100vw - 96px), 760px)";
     heroBottomSteps.style.transform = "translateX(-50%)";
+  }
+
+  let pendingLayoutSyncFrame = 0;
+
+  function scheduleLayoutSync() {
+    if (pendingLayoutSyncFrame) {
+      window.cancelAnimationFrame(pendingLayoutSyncFrame);
+    }
+
+    pendingLayoutSyncFrame = window.requestAnimationFrame(() => {
+      pendingLayoutSyncFrame = 0;
+      syncResponsiveStepTabs();
+      syncProgressPosition();
+      syncTopTabsIndicator();
+      syncStartButtonPosition();
+      syncStageStepsPosition();
+    });
   }
 
   function setCategory(categoryKey) {
@@ -2664,6 +2682,7 @@ document.addEventListener("DOMContentLoaded", () => {
       renderPackageCards(getCurrentCar()?.title || "EV9");
       applySelectedTrim(getCurrentCar()?.title || "EV9");
       updateSummaryPanel(getCurrentBasePrice());
+      scheduleLayoutSync();
       return;
     }
 
@@ -2671,6 +2690,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const willExpand = !card.classList.contains("expanded");
       card.classList.toggle("expanded", willExpand);
       moreTrigger.setAttribute("aria-expanded", willExpand ? "true" : "false");
+      scheduleLayoutSync();
     }
   });
 
@@ -2699,6 +2719,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       applySelectedTrim(getCurrentCar()?.title || "EV9");
       updateSummaryPanel(getCurrentBasePrice());
+      scheduleLayoutSync();
 
       return;
     }
@@ -2710,6 +2731,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const willExpand = !card.classList.contains("expanded");
     card.classList.toggle("expanded", willExpand);
     moreTrigger.setAttribute("aria-expanded", willExpand ? "true" : "false");
+    scheduleLayoutSync();
   });
 
   document.getElementById("heroPlanCards")?.addEventListener("click", (event) => {
@@ -2740,28 +2762,20 @@ document.addEventListener("DOMContentLoaded", () => {
     const willExpand = !card.classList.contains("expanded");
     card.classList.toggle("expanded", willExpand);
     moreTrigger.setAttribute("aria-expanded", willExpand ? "true" : "false");
+    scheduleLayoutSync();
   });
 
   window.addEventListener("resize", () => {
-    syncProgressPosition();
-    syncTopTabsIndicator();
-    syncStartButtonPosition();
-    syncStageStepsPosition();
+    scheduleLayoutSync();
   });
 
   window.addEventListener("load", () => {
-    syncProgressPosition();
-    syncTopTabsIndicator();
-    syncStartButtonPosition();
-    syncStageStepsPosition();
+    scheduleLayoutSync();
   });
 
   if (document.fonts?.ready) {
     document.fonts.ready.then(() => {
-      syncProgressPosition();
-      syncTopTabsIndicator();
-      syncStartButtonPosition();
-      syncStageStepsPosition();
+      scheduleLayoutSync();
     });
   }
 
@@ -2771,7 +2785,5 @@ document.addEventListener("DOMContentLoaded", () => {
   syncColorStageSelections();
   syncEv9OnlyState();
   updateSteps(currentStep);
-  syncTopTabsIndicator();
-  syncStartButtonPosition();
-  syncStageStepsPosition();
+  scheduleLayoutSync();
 });
