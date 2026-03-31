@@ -51,19 +51,30 @@ button {
   --hero-swatch-height: 34px;
   --hero-color-frame-padding-block: 24px;
   --hero-color-frame-padding-inline: 16px;
-  --hero-vehicle-max-width: 1140px;
+  --hero-vehicle-max-width: 1320px;
   --hero-stage-panel-width: 765px;
-  --hero-model-vehicle-width: min(76vw, var(--hero-vehicle-max-width));
-  --hero-stage-vehicle-width: min(76vw, var(--hero-vehicle-max-width));
+  --hero-model-vehicle-width: min(82vw, var(--hero-vehicle-max-width));
+  /* 차량 사진 크기 조정 */
+  --hero-stage-vehicle-width: var(--hero-model-vehicle-width);
+  --hero-stage-vehicle-center-x: 25vw;
+  --hero-stage-vehicle-bottom: 20%;
   --hero-stage-vehicle-shift-x: -32px;
   --hero-stage-panel-offset-x: -0px;
   /* 오른쪽 카드 위치 조정 */
   --hero-title-offset-y: 100px;
-  /* 모델 페이지 모델명 위치 조정 가능 */
+  --hero-model-center-offset-y: 0px;
+  --hero-model-title-top: -120px;
+  --hero-model-vehicle-height-estimate: calc(var(--hero-model-vehicle-width) * 0.48);
+  --hero-model-start-gap: 160px;
+  --hero-model-arrow-size: 60px;
+  --hero-model-arrow-side-padding: clamp(24px, 6vw, 60px);
+    /* 모델 페이지 모델명 위치 조정 가능 */
+  /* 좌우 버튼 간격 조정 가능 */
   --hero-stage-actions-left: 40px;
   --hero-stage-actions-right: auto;
   --hero-stage-actions-bottom: -106px;
   --hero-stage-actions-gap: 96px;
+  --hero-stage-panel-gap: calc(88px + 4vw);
   --hero-stage-actions-center-x: calc(64px + var(--hero-vehicle-max-width) + 40px + ((100% - 128px - var(--hero-vehicle-max-width) - 40px) / 2) + var(--hero-stage-panel-offset-x) - 80px
       /* 하단 버튼 위치 조정 */
     );
@@ -74,6 +85,10 @@ button {
   --hero-stage-steps-width: min(88vw, 760px);
   --hero-stage-steps-max-width: min(88vw, 760px);
   --hero-stage-steps-tabs-gap: 20px;
+  --hero-stage-actions-center-x: 75%;
+  --hero-stage-steps-left: 25%;
+  --hero-stage-steps-width: min(calc(50vw - 120px), 760px);
+  --hero-stage-steps-max-width: min(calc(50vw - 120px), 760px);
   width: 100%;
   min-height: 100vh;
   padding: 0;
@@ -267,6 +282,12 @@ button {
   display: none;
 }
 
+.hero_model_stage {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+}
+
 .hero_trim_stage,
 .hero_color_stage,
 .hero_package_stage,
@@ -281,14 +302,14 @@ button {
 }
 
 .hero_trim_stage {
-  grid-template-columns: minmax(860px, 1fr) var(--hero-stage-panel-width);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   grid-template-areas:
     "intro panel"
     "vehicle panel"
     "vehicle actions";
-  column-gap: 40px;
-  row-gap: 80px;
-  align-items: start;
+  column-gap: var(--hero-stage-panel-gap);
+  row-gap: clamp(24px, 3vh, 48px);
+  align-items: stretch;
 }
 
 .hero_trim_stage.is-visible {
@@ -296,13 +317,13 @@ button {
 }
 
 .hero_color_stage {
-  grid-template-columns: minmax(860px, 1fr) var(--hero-stage-panel-width);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   grid-template-areas:
     "intro panels"
     "vehicle panels"
     "vehicle actions";
-  column-gap: 40px;
-  row-gap: 56px;
+  column-gap: var(--hero-stage-panel-gap);
+  row-gap: clamp(24px, 3vh, 48px);
 }
 
 .hero_color_stage.is-visible {
@@ -310,47 +331,47 @@ button {
 }
 
 .hero_package_stage {
-  grid-template-columns: minmax(860px, 1fr) var(--hero-stage-panel-width);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   grid-template-areas:
     "intro panel"
     "vehicle panel"
     "vehicle actions";
-  column-gap: 40px;
-  row-gap: 80px;
-  align-items: start;
+  column-gap: var(--hero-stage-panel-gap);
+  row-gap: clamp(24px, 3vh, 48px);
+  align-items: stretch;
 }
 
 .hero_accessory_stage {
-  grid-template-columns: minmax(280px, 1fr) minmax(0, min(1419px, calc(100vw - 320px)));
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   grid-template-areas:
     "intro panel"
     "vehicle panel"
     "vehicle actions";
-  column-gap: 40px;
-  row-gap: 80px;
-  align-items: start;
+  column-gap: clamp(24px, 3vw, 56px);
+  row-gap: clamp(24px, 3vh, 48px);
+  align-items: stretch;
 }
 
 .hero_plan_stage {
-  grid-template-columns: minmax(280px, 1fr) minmax(0, min(1419px, calc(100vw - 320px)));
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   grid-template-areas:
     "intro panel"
     "vehicle panel"
     "vehicle actions";
-  column-gap: 40px;
-  row-gap: 80px;
-  align-items: start;
+  column-gap: clamp(24px, 3vw, 56px);
+  row-gap: clamp(24px, 3vh, 48px);
+  align-items: stretch;
 }
 
 .hero_summary_stage {
-  grid-template-columns: minmax(860px, 1fr) var(--hero-stage-panel-width);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   grid-template-areas:
     "intro panel"
     "vehicle panel"
     "vehicle actions";
-  column-gap: 48px;
-  row-gap: 56px;
-  align-items: start;
+  column-gap: var(--hero-stage-panel-gap);
+  row-gap: clamp(24px, 3vh, 48px);
+  align-items: stretch;
 }
 
 .hero_summary_side {
@@ -411,7 +432,9 @@ button {
 .hero_plan_intro,
 .hero_summary_intro {
   grid-area: intro;
-  max-width: 420px;
+  max-width: min(100%, 520px);
+  width: 100%;
+  align-self: start;
 }
 
 .hero_trim_title,
@@ -537,16 +560,16 @@ button {
 .hero_accessory_vehicle,
 .hero_plan_vehicle,
 .hero_summary_vehicle {
-  grid-area: vehicle;
-  align-self: end;
-  justify-self: start;
+  position: absolute;
+  left: var(--hero-stage-vehicle-center-x);
+  bottom: var(--hero-stage-vehicle-bottom);
   width: var(--hero-stage-vehicle-width);
-  transform: translateX(var(--hero-stage-vehicle-shift-x));
+  transform: translateX(-50%);
+  z-index: 3;
 }
 
 .hero_color_vehicle {
-  position: relative;
-  margin-top: -24px;
+  margin-top: 0;
   /* 차량 사진 위치 조정 */
 }
 
@@ -808,11 +831,11 @@ button {
 }
 
 .hero_package_vehicle {
-  margin-top: -20px;
+  margin-top: 0;
 }
 
 .hero_accessory_vehicle {
-  margin-top: -20px;
+  margin-top: 0;
 }
 
 .hero_accessory_vehicle img {
@@ -820,7 +843,7 @@ button {
 }
 
 .hero_plan_vehicle {
-  margin-top: -20px;
+  margin-top: 0;
 }
 
 .hero_plan_vehicle img {
@@ -828,8 +851,7 @@ button {
 }
 
 .hero_summary_vehicle {
-  margin-top: -12px;
-  transform: translateX(calc(var(--hero-stage-vehicle-shift-x) - 56px));
+  margin-top: 0;
 }
 
 .hero_package_actions {
@@ -2437,7 +2459,7 @@ button {
 }
 
 .hero_trim_vehicle {
-  margin-top: -20px;
+  margin-top: 0;
 }
 
 .hero_trim_panel {
@@ -2800,6 +2822,15 @@ button {
   transform: translateX(-50%);
 }
 
+.hero_trim_stage.is-visible .hero_stage_actions,
+.hero_color_stage.is-visible .hero_stage_actions,
+.hero_package_stage.is-visible .hero_stage_actions,
+.hero_accessory_stage.is-visible .hero_stage_actions,
+.hero_plan_stage.is-visible .hero_stage_actions,
+.hero_summary_stage.is-visible .hero_stage_actions {
+  left: 75%;
+}
+
 .hero_trim_actions,
 .hero_color_actions,
 .hero_package_actions,
@@ -2951,17 +2982,19 @@ button {
 }
 
 .hero_center {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  flex: 1;
-  gap: 0;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, calc(-50% + var(--hero-model-center-offset-y)));
+  display: block;
   width: min(92vw, 980px);
-  padding-bottom: 180px;
+  height: min(56vh, 560px);
 }
 
 .hero_title {
+  position: absolute;
+  left: 50%;
+  top: var(--hero-model-title-top);
   margin: 0;
   margin-bottom: 4px;
   padding-top: 32px;
@@ -2971,7 +3004,9 @@ button {
   align-items: flex-start;
   justify-content: center;
   gap: 6px;
-  transform: translateY(var(--hero-title-offset-y));
+  width: max-content;
+  max-width: 100%;
+  transform: translate(-50%, var(--hero-title-offset-y));
 }
 
 .hero_car_name {
@@ -3053,7 +3088,10 @@ button {
 }
 
 .hero_car {
-  position: relative;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   width: var(--hero-model-vehicle-width);
   filter: drop-shadow(0 30px 35px rgba(0, 0, 0, 0.32));
   touch-action: pan-y;
@@ -3121,17 +3159,29 @@ button {
   transform: translateX(72px);
 }
 
-.hero_arrow {
+.hero_arrow_frame {
   position: absolute;
-  top: 52%;
-  transform: translateY(-50%);
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: min(calc(var(--hero-model-vehicle-width) + clamp(360px, 38vw, 760px)), calc(100vw - (var(--hero-model-arrow-side-padding) * 2)));
+  pointer-events: none;
+  z-index: 5;
+}
+
+.hero_arrow {
+  position: static;
+  transform: none;
   display: grid;
   place-items: center;
   padding: 0;
-  flex: 0 0 60px;
+  flex: 0 0 var(--hero-model-arrow-size);
   z-index: 5;
-  width: 60px;
-  height: 60px;
+  width: var(--hero-model-arrow-size);
+  height: var(--hero-model-arrow-size);
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.12);
   color: #fff;
@@ -3141,6 +3191,7 @@ button {
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   transition: 0.3s;
+  pointer-events: auto;
 }
 
 .hero_arrow i {
@@ -3154,11 +3205,11 @@ button {
 }
 
 .hero_arrow_left {
-  left: 88px;
+  left: auto;
 }
 
 .hero_arrow_right {
-  right: 88px;
+  right: auto;
 }
 
 .dark_origin {
@@ -3185,10 +3236,10 @@ button {
   position: absolute;
   left: 50%;
   right: auto;
-  top: auto;
-  bottom: 84px;
+  top: calc(50% + (var(--hero-model-vehicle-height-estimate) / 2) + var(--hero-model-start-gap));
+  bottom: auto;
   /* 버튼 위치 조정 */
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
   display: inline-flex;
   width: auto;
   min-width: 124px;
@@ -3220,7 +3271,7 @@ button {
 }
 
 .hero_model_start_btn:hover {
-  transform: translateX(-50%) translateY(-1px);
+  transform: translate(-50%, calc(-50% - 1px));
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.78),
     inset 0 -1px 0 rgba(255, 255, 255, 0.18),
@@ -3354,11 +3405,22 @@ button {
 @media (max-width: 1024px) {
   .hero {
     --hero-stage-actions-gap: 24px;
-    --hero-stage-actions-center-x: 50%;
+    --hero-stage-panel-gap: calc(16px + 1.4vw);
+    --hero-stage-actions-center-x: 75%;
     --hero-package-actions-center-x: 50%;
-    --hero-stage-steps-left: 32px;
+    --hero-stage-vehicle-width: var(--hero-model-vehicle-width);
+    --hero-stage-vehicle-center-x: 25vw;
+    --hero-stage-vehicle-bottom: 18%;
+    --hero-model-center-offset-y: 0px;
+    --hero-model-title-top: -44px;
+    --hero-model-start-gap: 64px;
+    --hero-model-arrow-size: 60px;
+    --hero-model-arrow-side-padding: clamp(24px, 6vw, 60px);
+    --hero-stage-steps-left: 25%;
     --hero-stage-steps-bottom: 28px;
-    --hero-stage-steps-transform: none;
+    --hero-stage-steps-transform: translateX(-50%);
+    --hero-stage-steps-width: min(calc(50vw - 72px), 640px);
+    --hero-stage-steps-max-width: min(calc(50vw - 72px), 640px);
   }
 
   .hero_package_stage {
@@ -3422,7 +3484,7 @@ button {
   }
 
   .hero_trim_vehicle {
-    width: min(44vw, 420px);
+    width: var(--hero-stage-vehicle-width);
   }
 
   .hero_trim_action_btn {
@@ -3462,7 +3524,7 @@ button {
   }
 
   .hero_center {
-    padding-bottom: 164px;
+    height: min(52vh, 500px);
   }
 
   .hero_car {
@@ -3502,16 +3564,7 @@ button {
     transform: translateY(-3px);
   }
 
-  .hero_arrow_left {
-    left: 32px;
-  }
-
-  .hero_arrow_right {
-    right: 32px;
-  }
-
   .hero_model_start_btn {
-    bottom: 88px;
     min-width: 120px;
     padding: 16px 24px;
     font-size: 20px;
@@ -3552,8 +3605,17 @@ button {
 @media (max-width: 360px) {
   .hero {
     --hero-stage-actions-gap: 8px;
+    --hero-stage-panel-gap: 16px;
     --hero-stage-actions-center-x: 50%;
     --hero-package-actions-center-x: 50%;
+    --hero-stage-vehicle-width: min(70vw, 280px);
+    --hero-stage-vehicle-center-x: 50vw;
+    --hero-stage-vehicle-bottom: 16%;
+    --hero-model-center-offset-y: 0px;
+    --hero-model-title-top: -28px;
+    --hero-model-start-gap: 52px;
+    --hero-model-arrow-size: 40px;
+    --hero-model-arrow-side-padding: clamp(12px, 4vw, 32px);
     --hero-stage-steps-left: 12px;
     --hero-stage-steps-bottom: 32px;
     --hero-stage-steps-transform: none;
@@ -3591,9 +3653,9 @@ button {
   }
 
   .hero_package_vehicle {
-    width: 100%;
-    max-width: 280px;
-    justify-self: center;
+    width: var(--hero-stage-vehicle-width);
+    max-width: none;
+    justify-self: auto;
     margin-top: 0;
   }
 
@@ -3690,9 +3752,9 @@ button {
   }
 
   .hero_trim_vehicle {
-    width: 100%;
-    max-width: 240px;
-    justify-self: center;
+    width: var(--hero-stage-vehicle-width);
+    max-width: none;
+    justify-self: auto;
   }
 
   .hero_trim_panel {
@@ -3825,8 +3887,7 @@ button {
   }
 
   .hero_center {
-    padding-bottom: 244px;
-    gap: 8px;
+    height: min(42vh, 260px);
   }
 
   .hero_car {
@@ -3843,16 +3904,7 @@ button {
     font-size: 20px;
   }
 
-  .hero_arrow_left {
-    left: 8px;
-  }
-
-  .hero_arrow_right {
-    right: 8px;
-  }
-
   .hero_model_start_btn {
-    bottom: 120px;
     min-width: 96px;
     padding: 12px 16px;
     font-size: 14px;
