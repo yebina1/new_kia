@@ -1284,3 +1284,18 @@
         text-align: left;
     }
 }
+
+@media (min-width: 900px) and (max-width: 1920px) {
+    #tellurideBoundaryScroll {
+        display: block !important;
+        left: 50% !important;
+        right: auto !important;
+        transform: translateX(-50%) !important;
+    }
+}
+
+@media (max-width: 899px) {
+    #tellurideBoundaryScroll {
+        display: none !important;
+    }
+}
