@@ -468,7 +468,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let isAnimating = false;
   let heroCarSwipeState = null;
   let currentStep = 0;
-  let selectedTrimIndex = null;
+  let selectedTrimIndex = 0;
   let selectedExteriorIndex = 0;
   let selectedInteriorIndex = 0;
   let selectedPlanIndex = 0;
@@ -1477,7 +1477,7 @@ document.addEventListener("DOMContentLoaded", () => {
     currentCategory = categoryKey;
     currentCars = nextCars;
     currentIndex = 0;
-    selectedTrimIndex = null;
+    selectedTrimIndex = 0;
     selectedExteriorIndex = 0;
     selectedInteriorIndex = 0;
     selectedPlanIndex = 0;
@@ -1554,7 +1554,7 @@ document.addEventListener("DOMContentLoaded", () => {
             currentCategory = nextCategoryKey;
             currentCars = catalog[currentCategory] || [];
             currentIndex = 0;
-            selectedTrimIndex = null;
+            selectedTrimIndex = 0;
             selectedExteriorIndex = 0;
             selectedInteriorIndex = 0;
             selectedPlanIndex = 0;
@@ -1567,7 +1567,7 @@ document.addEventListener("DOMContentLoaded", () => {
             syncTopTabsIndicator();
           } else {
             currentIndex = 0;
-            selectedTrimIndex = null;
+            selectedTrimIndex = 0;
             selectedExteriorIndex = 0;
             selectedInteriorIndex = 0;
             selectedPlanIndex = 0;
@@ -1576,7 +1576,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       } else if (currentIndex > 0) {
         currentIndex -= 1;
-        selectedTrimIndex = null;
+        selectedTrimIndex = 0;
         selectedExteriorIndex = 0;
         selectedInteriorIndex = 0;
         selectedPlanIndex = 0;
@@ -1588,7 +1588,7 @@ document.addEventListener("DOMContentLoaded", () => {
           currentCategory = previousCategoryKey;
           currentCars = catalog[currentCategory] || [];
           currentIndex = Math.max(currentCars.length - 1, 0);
-          selectedTrimIndex = null;
+          selectedTrimIndex = 0;
           selectedExteriorIndex = 0;
           selectedInteriorIndex = 0;
           selectedPlanIndex = 0;
@@ -1601,7 +1601,7 @@ document.addEventListener("DOMContentLoaded", () => {
           syncTopTabsIndicator();
         } else {
           currentIndex = Math.max(currentCars.length - 1, 0);
-          selectedTrimIndex = null;
+          selectedTrimIndex = 0;
           selectedExteriorIndex = 0;
           selectedInteriorIndex = 0;
           selectedPlanIndex = 0;
@@ -1626,6 +1626,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   topTabButtons.forEach((button) => {
     button.addEventListener("click", () => {
+      updateSteps(0);
       setCategory(button.dataset.category);
     });
   });
