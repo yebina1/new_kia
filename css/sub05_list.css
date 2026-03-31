@@ -264,6 +264,59 @@ header .inner h1 a {
   gap: 24px;
 }
 
+article.ev9 {
+  isolation: isolate;
+}
+
+article.ev9 .ev9_trace_svg {
+  position: absolute;
+  inset: -5px;
+  width: calc(100% + 10px);
+  height: calc(100% + 10px);
+  display: block;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 4;
+}
+
+article.ev9 .ev9_trace_line {
+  fill: none;
+  stroke: rgba(199, 255, 238, 0.96);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 62 500;
+  stroke-dashoffset: 0;
+  vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 0 6px rgba(172, 255, 235, 0.24));
+  animation: ev9-border-spinner 1s linear infinite;
+}
+
+article.ev9 .btn_compare {
+  z-index: 5;
+}
+
+@keyframes ev9-border-spinner {
+  from {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+
+  8% {
+    opacity: 1;
+  }
+
+  88% {
+    stroke-dashoffset: -304;
+    opacity: 1;
+  }
+
+  to {
+    stroke-dashoffset: -304;
+    opacity: 0;
+  }
+}
+
 .vehicle_card .thumb {
   display: block;
   width: 100%;
