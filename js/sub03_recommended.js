@@ -120,6 +120,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const modal = document.querySelector(".selection_modal");
     const modalCloseButton = document.querySelector(".selection_modal_close");
     const modalBuildButton = modal?.querySelector(".selection_modal_buttons .is-primary");
+    const modalQuoteButton = modal?.querySelector(".selection_modal_quote");
+    const modalPdfButton = modal?.querySelector(".selection_modal_pdf");
     const buildTrigger = document.querySelector(".build_trigger");
     const experimentalMode = recco?.classList.contains("recco--experimental");
 
@@ -226,6 +228,32 @@ document.addEventListener("DOMContentLoaded", () => {
         const targetHref = modalBuildButton.dataset.href;
         if (!targetHref) return;
         window.location.href = targetHref;
+    });
+
+    modalQuoteButton?.addEventListener("click", () => {
+        window.alert("Coming Soon");
+    });
+
+    modalPdfButton?.addEventListener("click", async () => {
+        const pdfPath = "files/testpdf.pdf";
+
+        try {
+            const response = await fetch(pdfPath, { method: "HEAD" });
+
+            if (!response.ok) {
+                throw new Error("PDF not found");
+            }
+
+            const link = document.createElement("a");
+            link.href = pdfPath;
+            link.download = "testpdf.pdf";
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            window.alert("Your PDF has been downloaded.");
+        } catch (error) {
+            window.alert("testpdf.pdf 파일을 찾을 수 없습니다.");
+        }
     });
 
     carAll.addEventListener("touchstart", (event) => {

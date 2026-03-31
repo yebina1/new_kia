@@ -7,7 +7,7 @@ const trimInfo = document.querySelector('.trim_selector .trim_info');
 
 const trimData = {
   'light-rwd': {
-    image: './img/sub03_detail/trim_visual_base.png',
+    image: './img/sub03_detail/trim_light_rwd_visual.png',
     name: 'Light RWD',
     price: '$54,900',
     chips: ['230 Miles w', '800V Charging', '76.1 kWh Battery', '7-Passenger Seating'],
@@ -31,7 +31,7 @@ const trimData = {
     ]
   },
   'light-long-range-rwd': {
-    image: './img/sub03_detail/trim_visual_1_photo.png',
+    image: './img/sub03_detail/trim_light_long_range_rwd_visual.png',
     name: 'Light Long Range RWD',
     price: '$59,900',
     chips: ['304 miles w', 'Rear-Wheel Drive', '99.8 kWh Battery', 'Heat pump'],
@@ -55,7 +55,7 @@ const trimData = {
     ]
   },
   'wind-awd': {
-    image: './img/sub03_detail/trim_visual_2_photo.png',
+    image: './img/sub03_detail/trim_wind_awd_visual.png',
     name: 'Wind AWD',
     price: '$63,900',
     chips: ['280 miles w', 'Dual Motor AWD', '99.8 kWh Battery', 'Towing prep'],
@@ -79,7 +79,7 @@ const trimData = {
     ]
   },
   'land-awd': {
-    image: './img/sub03_detail/trim_visual_3_photo.png',
+    image: './img/sub03_detail/trim_land_awd_visual.png',
     name: 'Land AWD',
     price: '$69,900',
     chips: ['280 miles w', 'Dual Motor AWD', '19-in+ features', 'Boosted comfort'],
@@ -103,7 +103,7 @@ const trimData = {
     ]
   },
   'gt-line-awd': {
-    image: './img/sub03_detail/trim_visual_4_photo.png',
+    image: './img/sub03_detail/trim_gt_line_awd_visual.png',
     name: 'GT-Line AWD',
     price: '$71,900',
     chips: ['270 miles w', 'Dual Motor AWD', '21-in wheels', 'Turbo comfort'],
@@ -192,23 +192,23 @@ const interiorPanelClose = document.querySelector('.interior .interior_panel_clo
 
 const interiorData = {
   'spacious-3-row': {
-    image: './img/sub03_detail/but1.png',
+    image: './img/sub03_detail/interior_spacious_3_row_panel.png',
     alt: 'Spacious 3-Row Room for everyone panel'
   },
   'meridian-audio': {
-    image: './img/sub03_detail/but2.png',
+    image: './img/sub03_detail/interior_meridian_audio_panel.png',
     alt: 'Meridian Audio Premium sound panel'
   },
   'panoramic-display-rear': {
-    image: './img/sub03_detail/but3.png',
+    image: './img/sub03_detail/interior_panoramic_display_rear_panel.png',
     alt: 'Panoramic Display Dual 12.3-in screens panel'
   },
   'power-front-seats': {
-    image: './img/sub03_detail/but4.png',
+    image: './img/sub03_detail/interior_power_front_seats_panel.png',
     alt: 'Power Front Seats Easy seat adjustment panel'
   },
   'panoramic-display-front': {
-    image: './img/sub03_detail/but5.png',
+    image: './img/sub03_detail/interior_panoramic_display_front_panel.png',
     alt: 'Panoramic Display Wide intuitive view panel'
   }
 };
@@ -311,12 +311,9 @@ if (driverAssistVideo) {
   /*
     ASSET PATH CONFIG
     - Current project: flat PNG files in img/sub03_detail/wheels/
-      ex) 19in_01.png ... 19in_13.png
-    - If you switch to requested structure (/images/wheels/19in/00.webp ... 12.webp),
-      change naming to 'folderWebp00' and basePath to '/images/wheels'.
+      ex) wheel_19_inch_frame_01.png ... wheel_19_inch_frame_13.png
   */
   const ASSET_CONFIG = {
-    naming: 'flatPng1Based', // 'flatPng1Based' | 'folderWebp00'
     basePath: 'img/sub03_detail/wheels',
   };
 
@@ -432,11 +429,8 @@ if (driverAssistVideo) {
   };
 
   const buildFramePath = (wheelType, frameIndex) => {
-    if (ASSET_CONFIG.naming === 'folderWebp00') {
-      return `${ASSET_CONFIG.basePath}/${wheelType}/${String(frameIndex).padStart(2, '0')}.webp`;
-    }
-
-    return `${ASSET_CONFIG.basePath}/${wheelType}_${String(frameIndex + 1).padStart(2, '0')}.png`;
+    const wheelSize = wheelType.replace('in', '_inch');
+    return `${ASSET_CONFIG.basePath}/wheel_${wheelSize}_frame_${String(frameIndex + 1).padStart(2, '0')}.png`;
   };
 
   const preloadFrames = () => {
