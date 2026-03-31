@@ -607,6 +607,19 @@ header .header_bottom .sub_nav li a:hover {
   font-weight: 500;
 }
 
+header .header_bottom .sub_nav li a:not([href]),
+header .header_bottom .sub_nav li a[href=""],
+header .header_bottom .sub_nav li a[href="#"] {
+  color: rgba(221, 216, 209, 0.3);
+}
+
+header .header_bottom .sub_nav li a:not([href]):hover,
+header .header_bottom .sub_nav li a[href=""]:hover,
+header .header_bottom .sub_nav li a[href="#"]:hover {
+  color: rgba(221, 216, 209, 0.3);
+  font-weight: 400;
+}
+
   header .m_panel {
     display: block;
     position: fixed;
@@ -807,10 +820,20 @@ header .header_bottom .sub_nav li a:hover {
     color: var(--kia-white2);
   }
 
+  header .m_sub a:not([href]),
+  header .m_sub a[href=""] {
+    color: rgba(221, 216, 209, 0.3);
+  }
+
   header .m_sub a:hover {
     font-weight: 400;
     color: var(--kia-white1);
     background: rgba(255, 255, 255, 0.04);
+  }
+
+  header .m_sub a:not([href]):hover,
+  header .m_sub a[href=""]:hover {
+    color: rgba(221, 216, 209, 0.3);
   }
 
   .mobile_ham_open {
