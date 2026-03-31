@@ -504,13 +504,18 @@ header nav ul.gnb > li > a {
   z-index: 2;
 }
 
-header nav ul.gnb > li:hover > a,
-header nav ul.gnb > li:hover > a > i {
+header nav ul.gnb > li:hover > a{
   color: var(--kia-white1);
+}
+
+header nav ul.gnb > li:last-child > a,
+header nav ul.gnb > li:last-child:hover > a{
+  color : rgba(221,216,209,0.3);
 }
 
 header nav ul.gnb > li > a > i {
   font-size: 22px;
+  color : rgba(221,216,209,0.3);
 }
 
 header nav ul.gnb > li.on > a,
