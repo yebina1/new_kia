@@ -93,33 +93,19 @@ const $bestSection = document.querySelector(".best");
 const $ev6Section = document.querySelector(".ev6");
 
 const MOVE_DURATION = 900;
-const TEXT_DELAY = 500;
-const ENTER_DELAY = Math.max(0, TEXT_DELAY - MOVE_DURATION);
-const SLOT_REVEAL_DELAY = 260;
 const CARD_MOVE_EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
 const CARD_EXIT_EASE = "cubic-bezier(0.4, 0, 0.2, 1)";
 const CARD_ENTER_EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
 
 let $currentIndex = 0;
 let $isAnimating = false;
-let $delayTimer = null;
 let $hasActivatedSpecCount = false;
-let $isBestSnapping = false;
-let $bestSnapLockedUntil = 0;
-let $bestSnapReleaseTimer = null;
-let $isMainVisualSnapping = false;
-let $mainVisualSnapLockedUntil = 0;
-let $mainVisualSnapReleaseTimer = null;
-let $isEv6Snapping = false;
-let $ev6SnapLockedUntil = 0;
-let $ev6SnapReleaseTimer = null;
 let $currentUpperSnapIndex = 0;
 let $isUpperSnapping = false;
 let $upperWheelLockedUntil = 0;
 let $upperSnapReleaseTimer = null;
 let $upperLenisResumeTimer = null;
 
-const BEST_SNAP_TOLERANCE = 120;
 const BEST_SNAP_LOCK = 320;
 const BEST_SNAP_DURATION = 15;
 const UPPER_WHEEL_THRESHOLD = 6;
@@ -267,10 +253,6 @@ function getFrameRect(card) {
     return ($frame || card).getBoundingClientRect();
 }
 
-function getCardRect(card) {
-    return card.getBoundingClientRect();
-}
-
 function setFloating(card, rect) {
     card.classList.add("is-floating");
     card.style.left = `${rect.left}px`;
@@ -313,16 +295,7 @@ function clearFloating(card) {
     card.style.removeProperty("opacity");
 }
 
-function getRectDelta(fromRect, targetRect) {
-    return {
-        x: targetRect.left - fromRect.left,
-        y: targetRect.top - fromRect.top,
-        scaleX: targetRect.width / Math.max(fromRect.width, 1),
-        scaleY: targetRect.height / Math.max(fromRect.height, 1)
-    };
-}
-
-function animateCardToRect(card, fromRect, targetRect, options = {}) {
+function animateCardToRect(card, targetRect, options = {}) {
     const {
         ease = CARD_MOVE_EASE
     } = options;
@@ -361,12 +334,6 @@ function animateCardFadeOut(card) {
         });
 
         window.setTimeout(resolve, MOVE_DURATION);
-    });
-}
-
-function wait(ms) {
-    return new Promise((resolve) => {
-        $delayTimer = window.setTimeout(resolve, ms);
     });
 }
 
@@ -409,7 +376,7 @@ async function animateTransition(direction) {
     }
     $clickedCard.classList.remove("is-hidden-card");
 
-    const $enterPromise = animateCardToRect($clickedClone, $clickedRect, $mainFrameRect, {
+    const $enterPromise = animateCardToRect($clickedClone, $mainFrameRect, {
         ease: CARD_ENTER_EASE
     });
     const $fadePromise = animateCardFadeOut($mainClone);
@@ -450,99 +417,6 @@ function getBestScrollTop() {
     return Math.round(window.scrollY + $sectionRect.top);
 }
 
-function isBestInSnapZone() {
-    if (!$bestSection) {
-        return false;
-    }
-
-    const $sectionRect = $bestSection.getBoundingClientRect();
-    return $sectionRect.top <= window.innerHeight && $sectionRect.bottom > 0;
-}
-
-function snapBestSection() {
-    const $bestTop = getBestScrollTop();
-
-    if (typeof $bestTop !== "number") {
-        return;
-    }
-
-    $currentUpperSnapIndex = 1;
-    $isBestSnapping = true;
-
-    if ($bestSnapReleaseTimer) {
-        window.clearTimeout($bestSnapReleaseTimer);
-        $bestSnapReleaseTimer = null;
-    }
-
-    if (window.$mainLenis && typeof window.$mainLenis.scrollTo === "function") {
-        if ($bestSnapReleaseTimer) {
-            window.clearTimeout($bestSnapReleaseTimer);
-            $bestSnapReleaseTimer = null;
-        }
-        window.$mainLenis.scrollTo(window.scrollY, {
-            immediate: true,
-        });
-        if (typeof window.$mainLenis.start === "function") {
-            window.$mainLenis.start();
-        }
-        window.$mainLenis.scrollTo($bestTop, {
-            duration: BEST_SNAP_DURATION,
-            lock: true,
-            immediate: false,
-            easing: (t) => 1 - Math.pow(1 - t, 3),
-            onComplete: () => {
-                $bestSnapLockedUntil = Date.now() + BEST_SNAP_LOCK;
-                $bestSnapReleaseTimer = window.setTimeout(() => {
-                    $isBestSnapping = false;
-                }, BEST_SNAP_LOCK);
-            }
-        });
-        return;
-    }
-
-    window.scrollTo({ top: $bestTop, behavior: "smooth" });
-    $bestSnapReleaseTimer = window.setTimeout(() => {
-        $bestSnapLockedUntil = Date.now() + BEST_SNAP_LOCK;
-        $isBestSnapping = false;
-    }, 1200);
-}
-
-function handleBestWheel(event) {
-    if (!$bestSection) {
-        return;
-    }
-
-    const $now = Date.now();
-
-    if ($isBestSnapping || $now < $bestSnapLockedUntil) {
-        if (isBestInSnapZone()) {
-            event.preventDefault();
-        }
-        return;
-    }
-
-    const $wheelDelta = Math.abs(event.deltaY);
-    const $isDown = event.deltaY > 0;
-    const $bestTop = getBestScrollTop();
-    const $isAboveBest = window.scrollY < $bestTop;
-    const $isBelowBest = window.scrollY > $bestTop;
-
-    if (Math.abs(window.scrollY - $bestTop) <= 2) {
-        return;
-    }
-
-    if ($wheelDelta < 30 || !isBestInSnapZone()) {
-        return;
-    }
-
-    if (($isDown && !$isAboveBest) || (!$isDown && !$isBelowBest)) {
-        return;
-    }
-
-    event.preventDefault();
-    snapBestSection();
-}
-
 function getMainVisualScrollTop() {
     if (!$mainVisualSection) {
         return 0;
@@ -552,93 +426,6 @@ function getMainVisualScrollTop() {
     return Math.round(window.scrollY + $sectionRect.top);
 }
 
-function isMainVisualInSnapZone() {
-    if (!$mainVisualSection) {
-        return false;
-    }
-
-    const $sectionRect = $mainVisualSection.getBoundingClientRect();
-    return $sectionRect.top <= 0 && $sectionRect.bottom > 0;
-}
-
-function snapMainVisualSection() {
-    const $mainVisualTop = getMainVisualScrollTop();
-
-    if (typeof $mainVisualTop !== "number") {
-        return;
-    }
-
-    $currentUpperSnapIndex = 0;
-    $isMainVisualSnapping = true;
-
-    if ($mainVisualSnapReleaseTimer) {
-        window.clearTimeout($mainVisualSnapReleaseTimer);
-        $mainVisualSnapReleaseTimer = null;
-    }
-
-    if (window.$mainLenis && typeof window.$mainLenis.scrollTo === "function") {
-        window.$mainLenis.scrollTo(window.scrollY, {
-            immediate: true,
-        });
-        if (typeof window.$mainLenis.start === "function") {
-            window.$mainLenis.start();
-        }
-        window.$mainLenis.scrollTo($mainVisualTop, {
-            duration: BEST_SNAP_DURATION,
-            lock: true,
-            immediate: false,
-            easing: (t) => 1 - Math.pow(1 - t, 3),
-            onComplete: () => {
-                $mainVisualSnapLockedUntil = Date.now() + BEST_SNAP_LOCK;
-                $mainVisualSnapReleaseTimer = window.setTimeout(() => {
-                    $isMainVisualSnapping = false;
-                }, BEST_SNAP_LOCK);
-            }
-        });
-        return;
-    }
-
-    window.scrollTo({ top: $mainVisualTop, behavior: "smooth" });
-    $mainVisualSnapReleaseTimer = window.setTimeout(() => {
-        $mainVisualSnapLockedUntil = Date.now() + BEST_SNAP_LOCK;
-        $isMainVisualSnapping = false;
-    }, 1200);
-}
-
-function handleMainVisualWheel(event) {
-    if (!$mainVisualSection) {
-        return;
-    }
-
-    const $now = Date.now();
-
-    if ($isMainVisualSnapping || $now < $mainVisualSnapLockedUntil) {
-        if (isMainVisualInSnapZone()) {
-            event.preventDefault();
-        }
-        return;
-    }
-
-    const $wheelDelta = Math.abs(event.deltaY);
-    const $isUp = event.deltaY < 0;
-    const $mainVisualTop = getMainVisualScrollTop();
-
-    if (Math.abs(window.scrollY - $mainVisualTop) <= 2) {
-        return;
-    }
-
-    if (window.scrollY < $mainVisualTop) {
-        return;
-    }
-
-    if ($wheelDelta < 30 || !$isUp || !isMainVisualInSnapZone()) {
-        return;
-    }
-
-    event.preventDefault();
-    snapMainVisualSection();
-}
-
 function getEv6ScrollTop() {
     if (!$ev6Section) {
         return 0;
@@ -646,93 +433,6 @@ function getEv6ScrollTop() {
 
     const $sectionRect = $ev6Section.getBoundingClientRect();
     return Math.round(window.scrollY + $sectionRect.top);
-}
-
-function isEv6InSnapZone() {
-    if (!$ev6Section) {
-        return false;
-    }
-
-    const $sectionRect = $ev6Section.getBoundingClientRect();
-    return $sectionRect.top <= window.innerHeight && $sectionRect.bottom > 0;
-}
-
-function snapEv6Section() {
-    const $ev6Top = getEv6ScrollTop();
-
-    if (typeof $ev6Top !== "number") {
-        return;
-    }
-
-    $currentUpperSnapIndex = 2;
-    $isEv6Snapping = true;
-
-    if ($ev6SnapReleaseTimer) {
-        window.clearTimeout($ev6SnapReleaseTimer);
-        $ev6SnapReleaseTimer = null;
-    }
-
-    if (window.$mainLenis && typeof window.$mainLenis.scrollTo === "function") {
-        window.$mainLenis.scrollTo(window.scrollY, {
-            immediate: true,
-        });
-        if (typeof window.$mainLenis.start === "function") {
-            window.$mainLenis.start();
-        }
-        window.$mainLenis.scrollTo($ev6Top, {
-            duration: BEST_SNAP_DURATION,
-            lock: true,
-            immediate: false,
-            easing: (t) => 1 - Math.pow(1 - t, 3),
-            onComplete: () => {
-                $ev6SnapLockedUntil = Date.now() + BEST_SNAP_LOCK;
-                $ev6SnapReleaseTimer = window.setTimeout(() => {
-                    $isEv6Snapping = false;
-                }, BEST_SNAP_LOCK);
-            }
-        });
-        return;
-    }
-
-    window.scrollTo({ top: $ev6Top, behavior: "smooth" });
-    $ev6SnapReleaseTimer = window.setTimeout(() => {
-        $ev6SnapLockedUntil = Date.now() + BEST_SNAP_LOCK;
-        $isEv6Snapping = false;
-    }, 1200);
-}
-
-function handleEv6Wheel(event) {
-    if (!$ev6Section) {
-        return;
-    }
-
-    const $now = Date.now();
-
-    if ($isEv6Snapping || $now < $ev6SnapLockedUntil) {
-        if (isEv6InSnapZone()) {
-            event.preventDefault();
-        }
-        return;
-    }
-
-    const $wheelDelta = Math.abs(event.deltaY);
-    const $isDown = event.deltaY > 0;
-    const $ev6Top = getEv6ScrollTop();
-
-    if (Math.abs(window.scrollY - $ev6Top) <= 2) {
-        return;
-    }
-
-    if (window.scrollY > $ev6Top) {
-        return;
-    }
-
-    if ($wheelDelta < 30 || !$isDown || !isEv6InSnapZone()) {
-        return;
-    }
-
-    event.preventDefault();
-    snapEv6Section();
 }
 
 function getUpperSectionTops() {
@@ -763,22 +463,6 @@ function getSettledUpperSectionIndex() {
 
 function syncCurrentUpperSnapIndex() {
     $currentUpperSnapIndex = getSettledUpperSectionIndex();
-}
-
-function snapUpperSectionTo(index) {
-    const $clampedIndex = Math.max(0, Math.min(index, 2));
-
-    if ($clampedIndex === 0) {
-        snapMainVisualSection();
-        return;
-    }
-
-    if ($clampedIndex === 1) {
-        snapBestSection();
-        return;
-    }
-
-    snapEv6Section();
 }
 
 function clearUpperSnapRuntimeState() {
@@ -971,8 +655,10 @@ function syncSectionSnapIndicesOnScroll() {
         syncCurrentUpperSnapIndex();
     }
 
-    if (!$isMatchSnapping && $now >= $matchWheelLockedUntil) {
-        syncCurrentMatchSnapIndex();
+    if (typeof $isMatchSnapping !== "undefined" && typeof $matchWheelLockedUntil !== "undefined") {
+        if (!$isMatchSnapping && $now >= $matchWheelLockedUntil) {
+            syncCurrentMatchSnapIndex();
+        }
     }
 }
 
@@ -1240,40 +926,6 @@ window.addEventListener("scroll", handleScroll, { passive: true });
 window.addEventListener("resize", handleScroll, { passive: true });
 handleScroll();
 
-const $intro = document.querySelector('.intro');
-const $options = document.querySelectorAll('section[class*="option"]');
-const $matchSection = document.querySelector('.match');
-const $partnershipSection = document.querySelector('.partnership');
-const $matchSections = [$intro, ...$options].filter(Boolean);
-let $matchWheelLockedUntil = 0;
-let $matchLastWheelDirection = 1;
-let $isMatchSnapping = false;
-let $matchSnapReleaseTimer = null;
-let $matchLenisResumeTimer = null;
-let $currentMatchSnapIndex = 0;
-let $partnershipMatchLockedUntil = 0;
-let $partnershipToMatchIntentUntil = 0;
-let $partnershipReentryUntil = 0;
-let $partnershipWheelIntentDirection = 0;
-let $partnershipWheelIntentUntil = 0;
-
-const MATCH_WHEEL_DOWN_THRESHOLD = 10;
-const MATCH_WHEEL_UP_THRESHOLD = 8;
-const PARTNERSHIP_MATCH_WHEEL_UP_THRESHOLD = 1;
-const PARTNERSHIP_REVIEW_WHEEL_DOWN_THRESHOLD = 1;
-const MATCH_WHEEL_DOWN_COOLDOWN = 520;
-const MATCH_WHEEL_UP_COOLDOWN = 440;
-const MATCH_SECTION_SWITCH_VIEWPORT = 0.51;
-const MATCH_POST_SNAP_LOCK = 500;
-const PARTNERSHIP_TO_MATCH_POST_SNAP_LOCK = 1050;
-const PARTNERSHIP_TO_MATCH_DURATION = 3.2;
-const PARTNERSHIP_MATCH_INTENT_WINDOW = 260;
-const PARTNERSHIP_REENTRY_GRACE = 1200;
-const PARTNERSHIP_MATCH_REENTRY_INTENT_WINDOW = 1600;
-const PARTNERSHIP_WHEEL_INTENT_WINDOW = 900;
-const REVIEW_TO_PARTNERSHIP_LOCK = 2000;
-const REVIEW_TO_PARTNERSHIP_DURATION = 22;
-
 function initLenis() {
   const $lenis = new Lenis();
   window.$mainLenis = $lenis;
@@ -1282,10 +934,29 @@ function initLenis() {
   gsap.ticker.lagSmoothing(0);
 }
 
+initLenis();
+
+const $intro = document.querySelector('.intro');
+const $options = document.querySelectorAll('section[class*="option"]');
+const $matchSection = document.querySelector('.match');
+const $matchSections = [$intro, ...$options].filter(Boolean);
+
+let $matchWheelLockedUntil = 0;
+let $isMatchSnapping = false;
+let $matchSnapReleaseTimer = null;
+let $matchLenisResumeTimer = null;
+let $currentMatchSnapIndex = 0;
+
+const MATCH_WHEEL_DOWN_THRESHOLD = 10;
+const MATCH_WHEEL_UP_THRESHOLD = 8;
+const MATCH_WHEEL_DOWN_COOLDOWN = 520;
+const MATCH_WHEEL_UP_COOLDOWN = 440;
+const MATCH_POST_SNAP_LOCK = 500;
+
 function setupIntroPin() {
   const $firstOption = document.querySelector('.option01');
 
-  if (!$intro || !$firstOption) {
+  if (!$intro || !$firstOption || !window.ScrollTrigger || !window.gsap) {
     return;
   }
 
@@ -1312,6 +983,10 @@ function setupIntroPin() {
 }
 
 function setupOptionScroll() {
+  if (!window.ScrollTrigger || !window.gsap) {
+    return;
+  }
+
   const optionsArr = gsap.utils.toArray('section[class*="option"]');
 
   optionsArr.forEach(($sec, index) => {
@@ -1334,8 +1009,8 @@ function setupOptionScroll() {
         onUpdate: (self) => {
           const progress = self.progress;
           gsap.set($sec, {
-            scale: 1 - progress * 0.25,      // 100% -> 75%
-            opacity: 1 - progress,           // 1 -> 0
+            scale: 1 - progress * 0.25,
+            opacity: 1 - progress,
           });
         },
       });
@@ -1413,20 +1088,6 @@ function getMatchSectionTops() {
   return $matchSections.map(($section, index) => getMatchSectionSnapTop($section, index));
 }
 
-function getCurrentMatchSectionIndex() {
-  const $tops = getMatchSectionTops();
-  const $anchor = window.scrollY + (window.innerHeight * MATCH_SECTION_SWITCH_VIEWPORT);
-  let $index = 0;
-
-  $tops.forEach(($top, index) => {
-    if ($anchor >= $top - 2) {
-      $index = index;
-    }
-  });
-
-  return $index;
-}
-
 function getSettledMatchSectionIndex() {
   if (!$matchSections.length) {
     return -1;
@@ -1468,6 +1129,29 @@ function syncCurrentMatchSnapIndex() {
 
   if ($index >= 0) {
     $currentMatchSnapIndex = $index;
+  }
+}
+
+function clearMatchSnapRuntimeState() {
+  $isMatchSnapping = false;
+  $matchWheelLockedUntil = 0;
+
+  if ($matchSnapReleaseTimer) {
+    window.clearTimeout($matchSnapReleaseTimer);
+    $matchSnapReleaseTimer = null;
+  }
+
+  if ($matchLenisResumeTimer) {
+    window.clearTimeout($matchLenisResumeTimer);
+    $matchLenisResumeTimer = null;
+  }
+
+  const isReviewLocked =
+    document.documentElement.classList.contains('review_locked') ||
+    document.body.classList.contains('review_locked');
+
+  if (!isReviewLocked && window.$mainLenis && typeof window.$mainLenis.start === 'function') {
+    window.$mainLenis.start();
   }
 }
 
@@ -1532,476 +1216,6 @@ function scrollMatchTo(index, postSnapLock = MATCH_POST_SNAP_LOCK, duration = 15
   }, 1650);
 }
 
-function scrollMatchToTarget(target, postSnapLock = MATCH_POST_SNAP_LOCK, duration = 15, onComplete = null, easing = null) {
-  if (typeof target !== 'number') {
-    return;
-  }
-
-  if (window.$mainLenis && typeof window.$mainLenis.scrollTo === 'function') {
-    $isMatchSnapping = true;
-    if ($matchSnapReleaseTimer) {
-      window.clearTimeout($matchSnapReleaseTimer);
-    }
-    if ($matchLenisResumeTimer) {
-      window.clearTimeout($matchLenisResumeTimer);
-      $matchLenisResumeTimer = null;
-    }
-    window.$mainLenis.scrollTo(window.scrollY, {
-      immediate: true,
-    });
-    if (typeof window.$mainLenis.start === 'function') {
-      window.$mainLenis.start();
-    }
-    window.$mainLenis.scrollTo(target, {
-      duration,
-      lock: true,
-      immediate: false,
-      easing: typeof easing === 'function' ? easing : (t) => 1 - Math.pow(1 - t, 3),
-      onComplete: () => {
-        $matchWheelLockedUntil = Date.now() + postSnapLock;
-        if (typeof window.$mainLenis.stop === 'function' && typeof window.$mainLenis.start === 'function') {
-          window.$mainLenis.stop();
-          $matchLenisResumeTimer = window.setTimeout(() => {
-            window.$mainLenis.start();
-            $matchLenisResumeTimer = null;
-          }, postSnapLock);
-        }
-        $matchSnapReleaseTimer = window.setTimeout(() => {
-          $isMatchSnapping = false;
-        }, postSnapLock);
-        if (typeof onComplete === 'function') {
-          onComplete();
-        }
-      },
-    });
-    return;
-  }
-
-  $isMatchSnapping = true;
-  if ($matchSnapReleaseTimer) {
-    window.clearTimeout($matchSnapReleaseTimer);
-  }
-  window.scrollTo({ top: target, behavior: 'smooth' });
-  window.setTimeout(() => {
-    $matchWheelLockedUntil = Date.now() + postSnapLock;
-    $matchSnapReleaseTimer = window.setTimeout(() => {
-      $isMatchSnapping = false;
-    }, postSnapLock);
-    if (typeof onComplete === 'function') {
-      onComplete();
-    }
-  }, 1650);
-}
-
-function getEv6BottomScrollTop() {
-  if (!$ev6Section) {
-    return null;
-  }
-
-  const $ev6Top = Math.round($ev6Section.offsetTop);
-  return Math.max(0, Math.round($ev6Top + $ev6Section.offsetHeight - window.innerHeight));
-}
-
-function getMatchBottomScrollTop() {
-  if (!$matchSection) {
-    return null;
-  }
-
-  return Math.max(0, Math.round($matchSection.offsetTop + $matchSection.scrollHeight - window.innerHeight));
-}
-
-function getLastMatchBottomScrollTop() {
-  const $lastMatchOption = $options[$options.length - 1];
-
-  if (!$lastMatchOption) {
-    return getMatchBottomScrollTop();
-  }
-
-  if (window.ScrollTrigger && typeof window.ScrollTrigger.getAll === 'function') {
-    const $pinTrigger = window.ScrollTrigger.getAll().find(($trigger) => (
-      $trigger.trigger === $lastMatchOption && $trigger.pin
-    ));
-
-    if ($pinTrigger && typeof $pinTrigger.end === 'number') {
-      return Math.round($pinTrigger.end);
-    }
-  }
-
-  return getMatchBottomScrollTop();
-}
-
-function getPartnershipToMatchScrollTop() {
-  const $lastMatchOption = $options[$options.length - 1];
-
-  if (!$lastMatchOption) {
-    return null;
-  }
-
-  if (window.ScrollTrigger && typeof window.ScrollTrigger.getAll === 'function') {
-    const $pinTrigger = window.ScrollTrigger.getAll().find(($trigger) => (
-      $trigger.trigger === $lastMatchOption && $trigger.pin
-    ));
-
-    if ($pinTrigger) {
-      const $start = typeof $pinTrigger.start === 'number' ? Math.round($pinTrigger.start) : null;
-
-      if (typeof $start === 'number') {
-        const $settleOffset = Math.max(24, Math.round(window.innerHeight * 0.04));
-        return $start + $settleOffset;
-      }
-
-      const $end = typeof $pinTrigger.end === 'number' ? Math.round($pinTrigger.end) : null;
-
-      if (typeof $end === 'number') {
-        return Math.max(0, $end - 2);
-      }
-    }
-  }
-
-  return getLastMatchBottomScrollTop();
-}
-
-function isIntroInSnapZone() {
-  if (!$intro) {
-    return false;
-  }
-
-  const $introRect = $intro.getBoundingClientRect();
-  return $introRect.top <= 1 && $introRect.bottom > window.innerHeight * 0.25;
-}
-
-function handleIntroToEv6Wheel(event) {
-  if (!$intro || !$ev6Section) {
-    return;
-  }
-
-  const $now = Date.now();
-
-  if ($isMatchSnapping || $now < $matchWheelLockedUntil) {
-    if (isIntroInSnapZone()) {
-      event.preventDefault();
-    }
-    return;
-  }
-
-  const $isUp = event.deltaY < 0;
-  const $wheelDelta = Math.abs(event.deltaY);
-
-  if (!$isUp || $wheelDelta < MATCH_WHEEL_UP_THRESHOLD || !isIntroInSnapZone()) {
-    return;
-  }
-
-  const $ev6BottomTop = getEv6BottomScrollTop();
-
-  if (typeof $ev6BottomTop !== 'number') {
-    return;
-  }
-
-  event.preventDefault();
-  $matchWheelLockedUntil = $now + MATCH_WHEEL_UP_COOLDOWN;
-  scrollMatchToTarget($ev6BottomTop);
-}
-
-function isPartnershipInSnapZone() {
-  if (!$partnershipSection) {
-    return false;
-  }
-
-  const $partnershipRect = $partnershipSection.getBoundingClientRect();
-  return $partnershipRect.top < window.innerHeight && $partnershipRect.bottom > 0;
-}
-
-function isPartnershipUpSnapZone() {
-  if (!$partnershipSection) {
-    return false;
-  }
-
-  const $partnershipRect = $partnershipSection.getBoundingClientRect();
-  const $topTolerance = Math.max(72, Math.round(window.innerHeight * 0.12));
-  return $partnershipRect.top <= $topTolerance && $partnershipRect.bottom > window.innerHeight * 0.35;
-}
-
-function isPartnershipToMatchReadyZone() {
-  if (!$partnershipSection) {
-    return false;
-  }
-
-  if (isPartnershipUpSnapZone()) {
-    return true;
-  }
-
-  return Date.now() < $partnershipReentryUntil && isPartnershipInSnapZone();
-}
-
-function isPartnershipDownSnapZone() {
-  if (!$partnershipSection) {
-    return false;
-  }
-
-  const $partnershipRect = $partnershipSection.getBoundingClientRect();
-  return $partnershipRect.top < window.innerHeight && $partnershipRect.bottom > 0;
-}
-
-function isReviewBlockingPartnershipMatch() {
-  if (!$reviewSection) {
-    return false;
-  }
-
-  const $reviewRect = $reviewSection.getBoundingClientRect();
-  return $reviewRect.top <= 0 && $reviewRect.bottom > 0;
-}
-
-function armPartnershipWheelIntent(direction, duration = PARTNERSHIP_WHEEL_INTENT_WINDOW, $now = Date.now()) {
-  $partnershipWheelIntentDirection = direction;
-  $partnershipWheelIntentUntil = $now + duration;
-}
-
-function clearPartnershipTransitionState() {
-  $partnershipMatchLockedUntil = 0;
-  $partnershipToMatchIntentUntil = 0;
-  $partnershipReentryUntil = 0;
-  $partnershipWheelIntentDirection = 0;
-  $partnershipWheelIntentUntil = 0;
-}
-
-function clearMatchSnapRuntimeState() {
-  $isMatchSnapping = false;
-  $matchWheelLockedUntil = 0;
-
-  if ($matchSnapReleaseTimer) {
-    window.clearTimeout($matchSnapReleaseTimer);
-    $matchSnapReleaseTimer = null;
-  }
-
-  if ($matchLenisResumeTimer) {
-    window.clearTimeout($matchLenisResumeTimer);
-    $matchLenisResumeTimer = null;
-  }
-
-  if (!isReviewScrollLocked() && window.$mainLenis && typeof window.$mainLenis.start === 'function') {
-    window.$mainLenis.start();
-  }
-}
-
-function triggerPartnershipToMatchSnap($now = Date.now()) {
-  if (!$partnershipSection || !$matchSections.length) {
-    return false;
-  }
-
-  if ($isCaptured || $isMatchSnapping || $now < $matchWheelLockedUntil || $now < $partnershipMatchLockedUntil) {
-    return false;
-  }
-
-  const $target = getPartnershipToMatchScrollTop();
-  clearPartnershipTransitionState();
-  clearMatchSnapRuntimeState();
-  $currentMatchSnapIndex = $matchSections.length - 1;
-  $partnershipMatchLockedUntil = $now + PARTNERSHIP_TO_MATCH_POST_SNAP_LOCK;
-  $matchWheelLockedUntil = $now + PARTNERSHIP_TO_MATCH_POST_SNAP_LOCK;
-
-  if (typeof $target === 'number') {
-    scrollMatchToTarget(
-      $target,
-      PARTNERSHIP_TO_MATCH_POST_SNAP_LOCK,
-      PARTNERSHIP_TO_MATCH_DURATION,
-      null,
-      (t) => 1 - Math.pow(1 - t, 1.2)
-    );
-    return true;
-  }
-
-  scrollMatchTo(
-    $currentMatchSnapIndex,
-    PARTNERSHIP_TO_MATCH_POST_SNAP_LOCK,
-    PARTNERSHIP_TO_MATCH_DURATION,
-    (t) => 1 - Math.pow(1 - t, 1.2)
-  );
-  return true;
-}
-
-function triggerPartnershipToReviewSnap($now = Date.now()) {
-  if (!$partnershipSection || !$reviewSection) {
-    return false;
-  }
-
-  if ($isCaptured || $now < $captureLockedUntil) {
-    return false;
-  }
-
-  if (!isPartnershipDownSnapZone()) {
-    return false;
-  }
-
-  const $reviewTop = Math.round(window.scrollY + $reviewSection.getBoundingClientRect().top);
-  clearPartnershipTransitionState();
-  $captureLockedUntil = $now + 1100;
-
-  if (window.$mainLenis && typeof window.$mainLenis.scrollTo === 'function') {
-    window.$mainLenis.scrollTo(window.scrollY, {
-      immediate: true,
-    });
-    if (typeof window.$mainLenis.start === 'function') {
-      window.$mainLenis.start();
-    }
-    window.$mainLenis.scrollTo($reviewTop, {
-      duration: 15,
-      lock: true,
-      immediate: false,
-      easing: (t) => 1 - Math.pow(1 - t, 3),
-      onComplete: () => {
-        captureReview();
-      }
-    });
-    return true;
-  }
-
-  window.scrollTo({ top: $reviewTop, behavior: 'smooth' });
-  window.setTimeout(() => {
-    captureReview();
-  }, 1200);
-  return true;
-}
-
-function maybeHandlePartnershipSnapOnScroll() {
-  const $now = Date.now();
-
-  if ($now <= $partnershipToMatchIntentUntil && isPartnershipToMatchReadyZone()) {
-    triggerPartnershipToMatchSnap($now);
-    return;
-  }
-
-  if ($now > $partnershipWheelIntentUntil) {
-    return;
-  }
-
-  if ($partnershipWheelIntentDirection < 0 && isPartnershipToMatchReadyZone()) {
-    triggerPartnershipToMatchSnap($now);
-    return;
-  }
-
-  if ($partnershipWheelIntentDirection > 0 && isPartnershipDownSnapZone()) {
-    triggerPartnershipToReviewSnap($now);
-  }
-}
-
-function handlePartnershipWheelRouter(event) {
-  if (!$partnershipSection || !$matchSections.length || !$reviewSection) {
-    return;
-  }
-
-  if (!isPartnershipInSnapZone() || $isCaptured) {
-    return;
-  }
-
-  const $now = Date.now();
-  const $wheelDelta = Math.abs(event.deltaY);
-  const $isUp = event.deltaY < 0;
-  const $isDown = event.deltaY > 0;
-
-  if ($now < $captureLockedUntil) {
-    event.preventDefault();
-    return;
-  }
-
-  if ($isUp && $now < $partnershipMatchLockedUntil) {
-    event.preventDefault();
-    return;
-  }
-
-  if ($isMatchSnapping || $now < $matchWheelLockedUntil) {
-    event.preventDefault();
-    return;
-  }
-
-  if ($isUp && $wheelDelta >= PARTNERSHIP_MATCH_WHEEL_UP_THRESHOLD) {
-    event.preventDefault();
-    triggerPartnershipToMatchSnap($now);
-    return;
-  }
-
-  if ($isDown && $wheelDelta >= PARTNERSHIP_REVIEW_WHEEL_DOWN_THRESHOLD) {
-    event.preventDefault();
-    triggerPartnershipToReviewSnap($now);
-  }
-}
-
-function handlePartnershipToMatchWheel(event) {
-  if (!$partnershipSection || !$matchSections.length) {
-    return;
-  }
-
-  if ($isCaptured) {
-    return;
-  }
-
-  const $now = Date.now();
-
-  if ($now < $partnershipMatchLockedUntil) {
-    return;
-  }
-
-  if ($isMatchSnapping || $now < $matchWheelLockedUntil) {
-    if (isPartnershipToMatchReadyZone()) {
-      event.preventDefault();
-    }
-    return;
-  }
-
-  const $isUp = event.deltaY < 0;
-  const $wheelDelta = Math.abs(event.deltaY);
-
-  if ($isUp && $wheelDelta >= PARTNERSHIP_MATCH_WHEEL_UP_THRESHOLD) {
-    armPartnershipWheelIntent(-1, PARTNERSHIP_WHEEL_INTENT_WINDOW, $now);
-    $partnershipToMatchIntentUntil = $now + PARTNERSHIP_MATCH_INTENT_WINDOW;
-  }
-
-  if (!$isUp || $wheelDelta < PARTNERSHIP_MATCH_WHEEL_UP_THRESHOLD || !isPartnershipToMatchReadyZone()) {
-    return;
-  }
-
-  event.preventDefault();
-  triggerPartnershipToMatchSnap($now);
-}
-
-function isReviewInSnapEntryZone() {
-  if (!$reviewSection) {
-    return false;
-  }
-
-  const $reviewRect = $reviewSection.getBoundingClientRect();
-  return $reviewRect.top <= window.innerHeight && $reviewRect.bottom > 0;
-}
-
-function handlePartnershipToReviewWheel(event) {
-  if (!$partnershipSection || !$reviewSection) {
-    return;
-  }
-
-  const $now = Date.now();
-
-  if ($isCaptured || $now < $captureLockedUntil) {
-    return;
-  }
-
-  const $isDown = event.deltaY > 0;
-  const $wheelDelta = Math.abs(event.deltaY);
-
-  if ($isDown && $wheelDelta >= PARTNERSHIP_REVIEW_WHEEL_DOWN_THRESHOLD) {
-    armPartnershipWheelIntent(1, PARTNERSHIP_WHEEL_INTENT_WINDOW, $now);
-  }
-
-  if (!$isDown || $wheelDelta < PARTNERSHIP_REVIEW_WHEEL_DOWN_THRESHOLD) {
-    return;
-  }
-
-  if (!isPartnershipDownSnapZone()) {
-    return;
-  }
-
-  event.preventDefault();
-  triggerPartnershipToReviewSnap($now);
-}
-
 function handleMatchWheel(event) {
   if (!isMatchWheelCaptureZone() || !$matchSections.length) {
     return;
@@ -2021,7 +1235,6 @@ function handleMatchWheel(event) {
 
   const $wheelDelta = Math.abs(event.deltaY);
   const $isDown = event.deltaY > 0;
-  $matchLastWheelDirection = $isDown ? 1 : -1;
   const $threshold = $isDown ? MATCH_WHEEL_DOWN_THRESHOLD : MATCH_WHEEL_UP_THRESHOLD;
   const $cooldown = $isDown ? MATCH_WHEEL_DOWN_COOLDOWN : MATCH_WHEEL_UP_COOLDOWN;
 
@@ -2030,7 +1243,7 @@ function handleMatchWheel(event) {
   }
 
   syncCurrentMatchSnapIndex();
-  const $direction = event.deltaY > 0 ? 1 : -1;
+  const $direction = $isDown ? 1 : -1;
   const $currentIndex = $currentMatchSnapIndex;
   const $lastIndex = $matchSections.length - 1;
   const $currentTop = getMatchSectionTops()[$currentIndex];
@@ -2043,19 +1256,6 @@ function handleMatchWheel(event) {
         event.preventDefault();
         $matchWheelLockedUntil = $now + $cooldown;
         scrollMatchTo($currentIndex - 1);
-        return;
-      }
-
-      if (!ENABLE_SECTION_TRANSITION_SNAP) {
-        return;
-      }
-
-      const $ev6BottomTop = getEv6BottomScrollTop();
-
-      if (typeof $ev6BottomTop === 'number') {
-        event.preventDefault();
-        $matchWheelLockedUntil = $now + $cooldown;
-        scrollMatchToTarget($ev6BottomTop);
       }
       return;
     }
@@ -2065,23 +1265,6 @@ function handleMatchWheel(event) {
         event.preventDefault();
         $matchWheelLockedUntil = $now + $cooldown;
         scrollMatchTo($currentIndex + 1);
-        return;
-      }
-
-      if (!ENABLE_SECTION_TRANSITION_SNAP) {
-        return;
-      }
-
-      if ($partnershipSection) {
-        event.preventDefault();
-        clearPartnershipTransitionState();
-        $matchWheelLockedUntil = $now + $cooldown;
-        scrollMatchToTarget(
-          Math.round(window.scrollY + $partnershipSection.getBoundingClientRect().top),
-          MATCH_POST_SNAP_LOCK,
-          15,
-          null
-        );
       }
       return;
     }
@@ -2102,42 +1285,9 @@ function handleMatchWheel(event) {
     return;
   }
 
-  const $targetIndex = Math.max(0, Math.min($currentIndex + $direction, $matchSections.length - 1));
+  const $targetIndex = Math.max(0, Math.min($currentIndex + $direction, $lastIndex));
 
   if ($targetIndex === $currentIndex) {
-    if ($currentIndex === 0 && $direction < 0) {
-      if (!ENABLE_SECTION_TRANSITION_SNAP) {
-        return;
-      }
-
-      const $ev6BottomTop = getEv6BottomScrollTop();
-
-      if (typeof $ev6BottomTop === 'number') {
-        event.preventDefault();
-        $matchWheelLockedUntil = $now + $cooldown;
-        scrollMatchToTarget($ev6BottomTop);
-      }
-      return;
-    }
-
-    if ($currentIndex === $lastIndex && $direction > 0) {
-      if (!ENABLE_SECTION_TRANSITION_SNAP) {
-        return;
-      }
-
-      if ($partnershipSection) {
-        event.preventDefault();
-        clearPartnershipTransitionState();
-        $matchWheelLockedUntil = $now + $cooldown;
-        scrollMatchToTarget(
-          Math.round(window.scrollY + $partnershipSection.getBoundingClientRect().top),
-          MATCH_POST_SNAP_LOCK,
-          15,
-          null
-        );
-      }
-      return;
-    }
     return;
   }
 
@@ -2146,19 +1296,12 @@ function handleMatchWheel(event) {
   scrollMatchTo($targetIndex);
 }
 
-initLenis();
 setupIntroPin();
 setupOptionScroll();
 syncCurrentMatchSnapIndex();
-if (ENABLE_SECTION_TRANSITION_SNAP) {
-  window.addEventListener('wheel', handleIntroToEv6Wheel, { passive: false });
-  window.addEventListener('wheel', handlePartnershipWheelRouter, { passive: false });
-}
 window.addEventListener('wheel', handleMatchWheel, { passive: false });
-
 window.addEventListener('resize', () => {
   clearMatchSnapRuntimeState();
-  clearPartnershipTransitionState();
 
   if (window.ScrollTrigger && typeof window.ScrollTrigger.refresh === 'function') {
     window.ScrollTrigger.refresh();
@@ -2302,11 +1445,8 @@ window.addEventListener("resize", setupPartnerBelt);
 
 /* section.review */
 const $reviewSection = document.querySelector('.review');
-const $mapSection = document.querySelector('.map');
-const $footerSection = document.querySelector('footer');
 const $reviewCon = document.querySelector('.review_con');
 const $lists = document.querySelectorAll('.review_con ul');
-const $items = document.querySelectorAll('.review_con li');
 const $modal = document.querySelector('.modal');
 const $reviewFirstList = $lists[0];
 
@@ -2314,12 +1454,11 @@ let $currentScroll = 0;
 let $step = 276;
 let $maxScroll = 0;
 let $isWaiting = false;
-let $modalShown = false;
 let $isCaptured = false;
-let $lockedScrollY = 0;
 let $reviewScrollTop = 0;
 let $captureLockedUntil = 0;
 let $releasePending = false;
+let $skipReviewCaptureUntilOutOfZone = false;
 let $reviewWaitTimer = null;
 let $reviewModalTimer = null;
 let $reviewModalCloseTimer = null;
@@ -2373,118 +1512,6 @@ function isReviewInCaptureZone() {
     return $sectionRect.top <= $captureTolerance && $sectionRect.bottom > window.innerHeight / 2;
 }
 
-function isMapInSnapZone() {
-    if (!$mapSection) return false;
-
-    const $mapRect = $mapSection.getBoundingClientRect();
-    return $mapRect.top <= window.innerHeight && $mapRect.bottom > 0;
-}
-
-function isFooterInSnapZone() {
-    if (!$footerSection) return false;
-
-    const $footerRect = $footerSection.getBoundingClientRect();
-    return $footerRect.top <= 0 && $footerRect.bottom > window.innerHeight * 0.25;
-}
-
-function isFooterToMapSnapZone() {
-    if (!$footerSection) return false;
-
-    const $footerRect = $footerSection.getBoundingClientRect();
-    return $footerRect.top <= window.innerHeight * 0.6 && $footerRect.bottom > 0;
-}
-
-function handleMapToReviewWheel(e) {
-    if (!$mapSection || !$reviewSection || $isCaptured || Date.now() < $captureLockedUntil) return;
-    if (isFooterToMapSnapZone()) return;
-
-    const $isUp = e.deltaY < 0;
-    const $wheelDelta = Math.abs(e.deltaY);
-
-    if (!$isUp || $wheelDelta < $wheelNoiseThreshold || !isMapInSnapZone()) {
-        return;
-    }
-
-    const $reviewTop = getReviewScrollTop();
-
-    e.preventDefault();
-    clearPartnershipTransitionState();
-    clearMatchSnapRuntimeState();
-    $captureLockedUntil = Date.now() + REVIEW_TO_PARTNERSHIP_LOCK;
-
-    if (window.$mainLenis && typeof window.$mainLenis.scrollTo === 'function') {
-        window.$mainLenis.scrollTo(window.scrollY, {
-            immediate: true,
-        });
-        if (typeof window.$mainLenis.start === 'function') {
-            window.$mainLenis.start();
-        }
-        window.$mainLenis.scrollTo($reviewTop, {
-            duration: 15,
-            lock: true,
-            immediate: false,
-            easing: (t) => 1 - Math.pow(1 - t, 3),
-            onComplete: () => {
-                $currentScroll = $maxScroll;
-                $isCaptured = true;
-                $releasePending = true;
-                $modalShown = false;
-                lockPageScroll($reviewTop);
-                syncReviewLists();
-                checkActive();
-            }
-        });
-        return;
-    }
-
-    window.scrollTo({ top: $reviewTop, behavior: 'smooth' });
-    window.setTimeout(() => {
-        $currentScroll = $maxScroll;
-        $isCaptured = true;
-        $releasePending = true;
-        $modalShown = false;
-        lockPageScroll($reviewTop);
-        syncReviewLists();
-        checkActive();
-    }, 1200);
-}
-
-function handleFooterToMapWheel(e) {
-    if (!$footerSection || !$mapSection || $isCaptured || Date.now() < $captureLockedUntil) return;
-
-    const $isUp = e.deltaY < 0;
-    const $wheelDelta = Math.abs(e.deltaY);
-
-    if (!$isUp || $wheelDelta < $wheelNoiseThreshold || !isFooterToMapSnapZone()) {
-        return;
-    }
-
-    const $mapTop = Math.round(window.scrollY + $mapSection.getBoundingClientRect().top);
-
-    e.preventDefault();
-    clearPartnershipTransitionState();
-    clearMatchSnapRuntimeState();
-    $captureLockedUntil = Date.now() + 900;
-
-    if (window.$mainLenis && typeof window.$mainLenis.scrollTo === 'function') {
-        window.$mainLenis.scrollTo(window.scrollY, {
-            immediate: true,
-        });
-        if (typeof window.$mainLenis.start === 'function') {
-            window.$mainLenis.start();
-        }
-        window.$mainLenis.scrollTo($mapTop, {
-            duration: 15,
-            lock: true,
-            immediate: false,
-            easing: (t) => 1 - Math.pow(1 - t, 3),
-        });
-        return;
-    }
-
-    window.scrollTo({ top: $mapTop, behavior: 'smooth' });
-}
-
 function stopLenis() {
     if (window.$mainLenis && typeof window.$mainLenis.stop === 'function') {
         window.$mainLenis.stop();
@@ -2495,10 +1522,6 @@ function startLenis() {
     if (window.$mainLenis && typeof window.$mainLenis.start === 'function') {
         window.$mainLenis.start();
     }
-}
-
-function isReviewScrollLocked() {
-    return document.documentElement.classList.contains('review_locked') || document.body.classList.contains('review_locked');
 }
 
 function clearReviewRuntimeTimers() {
@@ -2518,8 +1541,7 @@ function clearReviewRuntimeTimers() {
     }
 }
 
-function lockPageScroll($scrollTop) {
-    $lockedScrollY = $scrollTop;
+function lockPageScroll() {
     stopLenis();
     document.documentElement.classList.add('review_locked');
     document.body.classList.add('review_locked');
@@ -2534,7 +1556,7 @@ function unlockPageScroll($nextScrollY) {
     });
 }
 
-function captureReview() {
+function captureReview(startAtBottom = false) {
     clearReviewRuntimeTimers();
     $reviewScrollTop = getReviewScrollTop();
 
@@ -2542,13 +1564,13 @@ function captureReview() {
         window.scrollTo({ top: $reviewScrollTop, behavior: 'auto' });
     }
 
-    $currentScroll = 0;
+    $currentScroll = startAtBottom ? $maxScroll : 0;
     $isWaiting = false;
-    $modalShown = false;
     $isCaptured = true;
-    $releasePending = false;
+    $releasePending = startAtBottom;
+    $skipReviewCaptureUntilOutOfZone = false;
     hideModal();
-    lockPageScroll($reviewScrollTop);
+    lockPageScroll();
     syncReviewLists();
     checkActive();
 }
@@ -2556,74 +1578,14 @@ function captureReview() {
 function releaseReview(isDown) {
     clearReviewRuntimeTimers();
     const $targetScrollY = isDown
-        ? ($mapSection
-            ? Math.round(window.scrollY + $mapSection.getBoundingClientRect().top)
-            : $reviewScrollTop + $captureTolerance + 2)
-        : ($partnershipSection
-            ? Math.round(window.scrollY + $partnershipSection.getBoundingClientRect().top)
-            : Math.max(0, $reviewScrollTop - $captureTolerance - 2));
+        ? Math.round($reviewScrollTop + $captureTolerance + 8)
+        : Math.max(0, $reviewScrollTop - $captureTolerance - 2);
 
-    $captureLockedUntil = ENABLE_SECTION_TRANSITION_SNAP
-        ? Date.now() + (isDown ? 900 : REVIEW_TO_PARTNERSHIP_LOCK)
-        : 0;
-    if (!isDown) {
-        clearMatchSnapRuntimeState();
-        clearPartnershipTransitionState();
-    } else {
-        clearPartnershipTransitionState();
-    }
+    $captureLockedUntil = Date.now() + 900;
     $isCaptured = false;
     $isWaiting = false;
     $releasePending = false;
-
-    if (!ENABLE_SECTION_TRANSITION_SNAP) {
-        unlockPageScroll($targetScrollY);
-        return;
-    }
-
-    if (isDown) {
-        document.documentElement.classList.remove('review_locked');
-        document.body.classList.remove('review_locked');
-
-        if (window.$mainLenis && typeof window.$mainLenis.scrollTo === 'function') {
-            requestAnimationFrame(() => {
-                startLenis();
-                window.$mainLenis.scrollTo(window.scrollY, {
-                    immediate: true,
-                });
-                window.$mainLenis.scrollTo($targetScrollY, {
-                    duration: 15,
-                    lock: true,
-                    immediate: false,
-                    easing: (t) => 1 - Math.pow(1 - t, 3),
-                });
-            });
-            return;
-        }
-
-        unlockPageScroll($targetScrollY);
-        return;
-    }
-
-    document.documentElement.classList.remove('review_locked');
-    document.body.classList.remove('review_locked');
-
-    if (window.$mainLenis && typeof window.$mainLenis.scrollTo === 'function') {
-        requestAnimationFrame(() => {
-            startLenis();
-            window.$mainLenis.scrollTo(window.scrollY, {
-                immediate: true,
-            });
-            window.$mainLenis.scrollTo($targetScrollY, {
-                duration: REVIEW_TO_PARTNERSHIP_DURATION,
-                lock: true,
-                immediate: false,
-                easing: (t) => 1 - Math.pow(1 - t, 3),
-            });
-        });
-        return;
-    }
-
+    $skipReviewCaptureUntilOutOfZone = true;
     unlockPageScroll($targetScrollY);
 }
 
@@ -2650,9 +1612,17 @@ function handleReviewWheel(e) {
 
     if (!$isCaptured && Date.now() < $captureLockedUntil) return;
 
+    if (!$isCaptured && $skipReviewCaptureUntilOutOfZone) {
+        if (!isReviewInCaptureZone()) {
+            $skipReviewCaptureUntilOutOfZone = false;
+        } else {
+            return;
+        }
+    }
+
     if (!$isCaptured && isReviewInCaptureZone()) {
         e.preventDefault();
-        captureReview();
+        captureReview(!isDown);
         return;
     }
 
@@ -2668,7 +1638,6 @@ function handleReviewWheel(e) {
         $reviewModalTimer = window.setTimeout(() => {
             $reviewModalTimer = null;
             hideModal();
-            $modalShown = false;
             $releasePending = true;
 
             $reviewModalCloseTimer = window.setTimeout(() => {
@@ -2693,7 +1662,6 @@ function handleReviewWheel(e) {
     if (isDown) {
         if ($currentScroll >= $maxScroll) {
             showModal();
-            $modalShown = true;
             $releasePending = false;
             $isWaiting = true;
 
@@ -2709,10 +1677,6 @@ function handleReviewWheel(e) {
     } else {
         $currentScroll = Math.max($currentScroll - $step, 0);
         $releasePending = false;
-
-        if ($currentScroll < $maxScroll) {
-            $modalShown = false;
-        }
     }
 
     $isWaiting = true;
@@ -2726,10 +1690,6 @@ function handleReviewWheel(e) {
 }
 
 window.addEventListener('wheel', handleReviewWheel, { passive: false });
-if (ENABLE_SECTION_TRANSITION_SNAP) {
-    window.addEventListener('wheel', handleMapToReviewWheel, { passive: false });
-    window.addEventListener('wheel', handleFooterToMapWheel, { passive: false });
-}
 window.addEventListener('resize', () => {
     clearReviewRuntimeTimers();
     updateReviewMetrics();
