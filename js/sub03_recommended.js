@@ -362,12 +362,17 @@ function openSelectionModal(modal, state) {
 function closeSelectionModal(modal, state) {
     if (!modal) return;
 
+    clearBuildTriggerActiveState();
     modal.classList.remove("is-open");
     modal.setAttribute("aria-hidden", "true");
     window.clearTimeout(state.modalCloseTimer);
     state.modalCloseTimer = window.setTimeout(() => {
         document.body.classList.remove("modal-open");
     }, MODAL_TRANSITION_MS);
+}
+
+function clearBuildTriggerActiveState() {
+    document.querySelector(".build_trigger")?.classList.remove("on");
 }
 
 function handleMobileSwipeEnd(state, sections, carAll, mobileTabs, title) {

@@ -110,6 +110,25 @@ button {
     0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
+.white_origin:hover{
+  border-color: #C7FFEE;
+  box-shadow:
+    inset 0 5px 10px rgba(255, 255, 255, 0.5),
+    inset 0 -3px 5px rgba(0, 0, 0, 0.05),
+    0 0 0 1px #C7FFEE,
+    0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.white_origin.on{
+  background: rgba(12, 17, 21, 0.72);
+  border-width: 1px;
+  border-color: rgba(160, 247, 255, 0.92);
+  color: var(--kia-white1);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0px 0px 11px 8px rgba(172, 255, 235, 0.26);
+}
+
 .white_origin span {
   color: var(--kia-black);
 }

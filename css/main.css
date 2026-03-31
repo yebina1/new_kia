@@ -1900,9 +1900,10 @@ body.review_locked {
   display: flex;
   gap: 12px;
   font-family: "Outfit", sans-serif;
+  opacity: 0.35;
 }
 
-.modal a:hover {
+.modal button a:hover {
   transform: translateY(-4px);
 }
 
@@ -1968,6 +1969,7 @@ body.review_locked {
     box-shadow 0.25s ease,
     border-color 0.25s ease;
   color: var(--kia-white1);
+  opacity: 0.7;
 }
 
 .map button::before {
@@ -1979,6 +1981,7 @@ body.review_locked {
       rgba(255, 255, 255, 0.28),
       rgba(255, 255, 255, 0.05));
   pointer-events: none;
+  opacity: 0.7;
 }
 
 .map button:hover {
