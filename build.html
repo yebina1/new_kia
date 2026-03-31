@@ -36,6 +36,8 @@
     <link rel="stylesheet" href="css/sub01_build_media.css">
 
     <!-- js -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
     <script src="js/common.js" defer></script>
     <script src="js/sub01_build.js" defer></script>
 </head>
@@ -239,6 +241,11 @@
                         </div>
                         <div class="hero_car">
                             <img id="heroCarImage" src="./img/sub01_build/trim_light.png" alt="ev9 image" />
+                        </div>
+                        <div class="magnet_zone hero_start_btn_zone">
+                            <button type="button" class="hero_start_btn hero_model_start_btn dark_origin cta_btn"
+                                id="startStepButton">Start
+                                <i class="bx bx-chevron-right"></i></button>
                         </div>
                     </div>
                 </div>
@@ -696,7 +703,7 @@
                                 </div>
                                 <div class="hero_accessory_card_body">
                                     <div class="hero_accessory_card_top">
-                                        <strong>Carpeted Cargo Mat w/<br> Seatback Protection</strong>
+                                        <strong>Carpeted Cargo Mat w/ Seatback Protection</strong>
                                         <span>+$145</span>
                                         <button type="button" class="hero_accessory_add_btn">Add +</button>
                                     </div>
@@ -1174,8 +1181,10 @@
                                 </div>
                             </div>
                             <div class="hero_summary_cta">
-                                <button type="button" class="hero_summary_cta_btn">View Inventory</button>
-                                <button type="button" class="hero_summary_cta_btn">Share Build</button>
+                                <button type="button" class="hero_summary_cta_btn" disabled
+                                    aria-disabled="true">View Inventory</button>
+                                <button type="button" class="hero_summary_cta_btn" disabled aria-disabled="true">Share
+                                    Build</button>
                                 <button type="button" class="hero_summary_cta_btn" id="requestQuoteButton"
                                     aria-expanded="false">Request a Quote</button>
                             </div>
@@ -1215,7 +1224,8 @@
                                     <label class="hero_quote_field">
                                         <span class="hero_quote_field_shell">
                                             <span class="hero_quote_field_label">First name</span>
-                                            <input type="text" id="quoteFirstName" placeholder="First name" />
+                                            <input type="text" id="quoteFirstName" placeholder="First name"
+                                                value="Alex" />
                                         </span>
                                         <span class="hero_quote_error" id="quoteFirstNameError" hidden>First Name is
                                             Required</span>
@@ -1223,7 +1233,8 @@
                                     <label class="hero_quote_field">
                                         <span class="hero_quote_field_shell">
                                             <span class="hero_quote_field_label">Last name</span>
-                                            <input type="text" id="quoteLastName" placeholder="Last name" />
+                                            <input type="text" id="quoteLastName" placeholder="Last name"
+                                                value="Kim" />
                                         </span>
                                         <span class="hero_quote_error" id="quoteLastNameError" hidden>Last Name is
                                             Required</span>
@@ -1231,7 +1242,8 @@
                                     <label class="hero_quote_field hero_quote_field_full">
                                         <span class="hero_quote_field_shell">
                                             <span class="hero_quote_field_label">Phone</span>
-                                            <input type="tel" id="quotePhone" placeholder="phone" />
+                                            <input type="tel" id="quotePhone" placeholder="phone"
+                                                value="010-1234-5678" />
                                         </span>
                                         <span class="hero_quote_error" id="quotePhoneError" hidden>Phone is
                                             Required</span>
@@ -1239,7 +1251,8 @@
                                     <label class="hero_quote_field hero_quote_field_full">
                                         <span class="hero_quote_field_shell">
                                             <span class="hero_quote_field_label">Email</span>
-                                            <input type="email" id="quoteEmail" placeholder="email" />
+                                            <input type="email" id="quoteEmail" placeholder="email"
+                                                value="alex.kim@example.com" />
                                         </span>
                                         <span class="hero_quote_error" id="quoteEmailError" hidden>Email is
                                             Required</span>
@@ -1247,7 +1260,8 @@
                                     <label class="hero_quote_field hero_quote_field_full">
                                         <span class="hero_quote_field_shell">
                                             <span class="hero_quote_field_label">Address</span>
-                                            <input type="text" id="quoteAddress" placeholder="address" />
+                                            <input type="text" id="quoteAddress" placeholder="address"
+                                                value="123 Gangnam-daero, Seoul" />
                                         </span>
                                         <span class="hero_quote_error" id="quoteAddressError" hidden>Address is
                                             Required</span>
@@ -1333,10 +1347,6 @@
                                     </div>
                                 </section>
 
-                                <div class="hero_quote_actions">
-                                    <button type="button" class="hero_quote_back_btn" id="quoteBackButton">Back</button>
-                                    <button type="button" class="hero_quote_send_btn" id="quoteSendButton">Send</button>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -1349,9 +1359,6 @@
                 </div>
 
                 <!-- Start / Progress -->
-                <button type="button" class="hero_start_btn hero_model_start_btn dark_origin" id="startStepButton">Start
-                    <i class="bx bx-chevron-right"></i></button>
-
                 <div class="hero_bottom_steps" id="heroBottomSteps">
                     <div class="hero_progress" aria-hidden="true">
                         <div class="hero_progress_track"></div>
@@ -1359,14 +1366,20 @@
                     </div>
 
                     <div class="hero_bottom_tabs" role="tablist" aria-label="Build steps">
-                        <button type="button" class="active" data-step="0" role="tab"
+                        <button type="button" class="active" data-step="0" data-mobile-label="Model" role="tab"
                             aria-selected="true">Model</button>
-                        <button type="button" data-step="1" role="tab" aria-selected="false">Trim</button>
-                        <button type="button" data-step="2" role="tab" aria-selected="false">Color</button>
-                        <button type="button" data-step="3" role="tab" aria-selected="false">Packages</button>
-                        <button type="button" data-step="4" role="tab" aria-selected="false">Accessories</button>
-                        <button type="button" data-step="5" role="tab" aria-selected="false">Maintenance Plan</button>
-                        <button type="button" data-step="6" role="tab" aria-selected="false">Summary</button>
+                        <button type="button" data-step="1" data-mobile-label="Trim" role="tab"
+                            aria-selected="false">Trim</button>
+                        <button type="button" data-step="2" data-mobile-label="Color" role="tab"
+                            aria-selected="false">Color</button>
+                        <button type="button" data-step="3" data-mobile-label="Package" role="tab"
+                            aria-selected="false">Packages</button>
+                        <button type="button" data-step="4" data-mobile-label="Accessory" role="tab"
+                            aria-selected="false">Accessories</button>
+                        <button type="button" data-step="5" data-mobile-label="Plan" role="tab"
+                            aria-selected="false">Maintenance Plan</button>
+                        <button type="button" data-step="6" data-mobile-label="Summary" role="tab"
+                            aria-selected="false">Summary</button>
                     </div>
                 </div>
             </div>

@@ -1,8 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
+  if (window.gsap && window.ScrollTrigger) {
+    window.gsap.registerPlugin(window.ScrollTrigger);
+  }
+
   const heroSection = document.getElementById("heroSection");
   const heroBgImage = document.getElementById("heroBgImage");
   const heroTitle = document.getElementById("heroTitle");
   const heroCarImage = document.getElementById("heroCarImage");
+  const heroVisual = document.getElementById("heroVisual");
   const heroModelStage = document.getElementById("heroModelStage");
   const heroTrimStage = document.getElementById("heroTrimStage");
   const heroCatalog = document.getElementById("heroCatalog");
@@ -39,6 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const heroPlanPrice = document.getElementById("heroPlanPrice");
   const heroPlanLease = document.getElementById("heroPlanLease");
   const heroPlanImage = document.getElementById("heroPlanImage");
+  const heroPlanCards = document.getElementById("heroPlanCards");
   const heroSummaryStage = document.getElementById("heroSummaryStage");
   const heroSummaryTitle = document.getElementById("heroSummaryTitle");
   const heroSummaryTrim = document.getElementById("heroSummaryTrim");
@@ -100,11 +106,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const prevBtn = document.getElementById("prevCar");
   const nextBtn = document.getElementById("nextCar");
   const startStepButton = document.getElementById("startStepButton");
+  const startButtonZone = document.querySelector(".hero_start_btn_zone");
+  const heroCenter = document.querySelector(".hero_center");
   const heroCarStageSurface = document.querySelector("#heroModelStage .hero_car");
+  const heroBottomSteps = document.getElementById("heroBottomSteps");
   const progressFill = document.getElementById("heroProgressFill");
   const stepButtons = Array.from(
     document.querySelectorAll(".hero_bottom_tabs button")
   );
+  const mobileStepMediaQuery = window.matchMedia?.("(max-width: 768px)");
   const categoryOrder = topTabButtons.map((button) => button.dataset.category);
   const defaultBackgroundImage =
     heroSection?.dataset.defaultBg || "./img/sub01_build/build_bg.png";
@@ -473,6 +483,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let selectedInteriorIndex = 0;
   let selectedPlanIndex = 0;
   let selectedPackages = new Set();
+  let pendingColorSecondarySync = 0;
+  let suppressInstantActionClickUntil = 0;
   function parseCurrencyValue(value) {
     const numericValue = Number(String(value || "").replace(/[^0-9.-]/g, ""));
     return Number.isFinite(numericValue) ? numericValue : 0;
@@ -727,11 +739,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     if (startStepButton) {
-      startStepButton.disabled = !ev9Selected;
+      const isLocked = !ev9Selected;
+      startStepButton.disabled = isLocked;
       startStepButton.setAttribute(
         "aria-disabled",
-        !ev9Selected ? "true" : "false"
+        isLocked ? "true" : "false"
       );
+      startStepButton.classList.toggle("is-ev9-locked", isLocked);
     }
 
     if (!ev9Selected && currentStep > 0) {
@@ -796,6 +810,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const selectedExteriorMedia = getSelectedExteriorMedia(fallbackSrc, fallbackAlt);
     imageElement.src = selectedExteriorMedia.src;
     imageElement.alt = selectedExteriorMedia.alt;
+  }
+
+  function syncNonColorStageVehicleImages() {
+    setVehicleStageImage(heroPackageImage, heroPackageImage?.src, heroPackageImage?.alt);
+    setVehicleStageImage(heroAccessoryImage, heroAccessoryImage?.src, heroAccessoryImage?.alt);
+    setVehicleStageImage(heroPlanImage, heroPlanImage?.src, heroPlanImage?.alt);
+    setVehicleStageImage(heroSummaryImage, heroSummaryImage?.src, heroSummaryImage?.alt);
   }
 
   function getCurrentTrimItems(title) {
@@ -1071,13 +1092,72 @@ document.addEventListener("DOMContentLoaded", () => {
 
   }
 
-  function syncColorStageSelections() {
+  function selectExteriorSwatch(index) {
+    const exteriorSwatches = heroExteriorSwatches
+      ? Array.from(heroExteriorSwatches.querySelectorAll(".hero_color_swatch"))
+      : [];
+
+    if (!exteriorSwatches.length) {
+      return;
+    }
+
+    const nextIndex = Math.max(
+      0,
+      Math.min(index, exteriorSwatches.length - 1)
+    );
+
+    if (nextIndex === selectedExteriorIndex) {
+      return;
+    }
+
+    selectedExteriorIndex = nextIndex;
+    syncColorStageSelections({ deferSecondary: true });
+  }
+
+  function selectInteriorSwatch(index) {
+    const interiorSwatches = heroInteriorSwatches
+      ? Array.from(heroInteriorSwatches.querySelectorAll(".hero_color_swatch"))
+      : [];
+
+    if (!interiorSwatches.length) {
+      return;
+    }
+
+    const nextIndex = Math.max(
+      0,
+      Math.min(index, interiorSwatches.length - 1)
+    );
+
+    if (nextIndex === selectedInteriorIndex) {
+      return;
+    }
+
+    selectedInteriorIndex = nextIndex;
+    syncColorStageSelections({ deferSecondary: true });
+  }
+
+  function syncColorStageSelections(options = {}) {
+    const { deferSecondary = false } = options;
     const exteriorSwatches = heroExteriorSwatches
       ? Array.from(heroExteriorSwatches.querySelectorAll(".hero_color_swatch"))
       : [];
     const interiorSwatches = heroInteriorSwatches
       ? Array.from(heroInteriorSwatches.querySelectorAll(".hero_color_swatch"))
       : [];
+
+    if (exteriorSwatches.length) {
+      selectedExteriorIndex = Math.max(
+        0,
+        Math.min(selectedExteriorIndex, exteriorSwatches.length - 1)
+      );
+    }
+
+    if (interiorSwatches.length) {
+      selectedInteriorIndex = Math.max(
+        0,
+        Math.min(selectedInteriorIndex, interiorSwatches.length - 1)
+      );
+    }
 
     exteriorSwatches.forEach((swatch, index) => {
       swatch.classList.toggle("is-selected", index === selectedExteriorIndex);
@@ -1110,11 +1190,6 @@ document.addEventListener("DOMContentLoaded", () => {
       heroInteriorName.textContent = selectedInterior.dataset.name || "";
     }
 
-    const currentCar = getCurrentCar();
-    if (currentCar) {
-      applySelectedTrim(currentCar.title);
-    }
-
     const selectedInteriorAsset = getInteriorAssetFromSwatch(selectedInterior);
 
     if (heroSeatPreviewImage && selectedInteriorAsset) {
@@ -1125,12 +1200,26 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     setVehicleStageImage(heroColorImage, heroColorImage?.src, heroColorImage?.alt);
-    setVehicleStageImage(heroPackageImage, heroPackageImage?.src, heroPackageImage?.alt);
-    setVehicleStageImage(heroAccessoryImage, heroAccessoryImage?.src, heroAccessoryImage?.alt);
-    setVehicleStageImage(heroPlanImage, heroPlanImage?.src, heroPlanImage?.alt);
-    setVehicleStageImage(heroSummaryImage, heroSummaryImage?.src, heroSummaryImage?.alt);
 
-    updateSummaryPanel(getCurrentBasePrice());
+    const syncSecondaryUi = () => {
+      syncNonColorStageVehicleImages();
+      updateSummaryPanel(getCurrentBasePrice());
+      syncQuoteSelectedModel();
+    };
+
+    if (!deferSecondary) {
+      syncSecondaryUi();
+      return;
+    }
+
+    if (pendingColorSecondarySync) {
+      cancelAnimationFrame(pendingColorSecondarySync);
+    }
+
+    pendingColorSecondarySync = requestAnimationFrame(() => {
+      pendingColorSecondarySync = 0;
+      syncSecondaryUi();
+    });
 
   }
 
@@ -1237,6 +1326,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     syncTrimSelectionGate();
+    syncStartButtonPosition();
   }
 
   function setSelectedPlanCard(targetIndex) {
@@ -1334,6 +1424,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
   }
 
+  function resetHeroCarImageState() {
+    if (!heroCarImage) {
+      return;
+    }
+
+    heroCarImage.classList.remove(
+      "is-sliding-out-left",
+      "is-sliding-out-right",
+      "is-sliding-in-left",
+      "is-sliding-in-right"
+    );
+    heroCarImage.style.opacity = "1";
+    heroCarImage.style.transform = "none";
+  }
+
   function syncProgressPosition() {
     if (!progressFill || !stepButtons.length) {
       return;
@@ -1368,6 +1473,33 @@ document.addEventListener("DOMContentLoaded", () => {
     progressFill.style.width = `${fillWidth}px`;
   }
 
+  function syncResponsiveStepTabs() {
+    if (!stepButtons.length) {
+      return;
+    }
+
+    const isMobileSteps = mobileStepMediaQuery?.matches;
+
+    stepButtons.forEach((button, index) => {
+      const isActive = index === currentStep;
+      const isPrev = index === currentStep - 1;
+      const isNext = index === currentStep + 1;
+      const shouldShowLabel = !isMobileSteps || isActive || isPrev || isNext;
+      const desktopLabel = button.dataset.label || button.textContent.trim();
+      const mobileLabel = button.dataset.mobileLabel || desktopLabel;
+
+      button.dataset.label = desktopLabel;
+      button.textContent = shouldShowLabel
+        ? (isMobileSteps ? mobileLabel : desktopLabel)
+        : desktopLabel;
+      button.classList.toggle("is-mobile-active", !!isMobileSteps && isActive);
+      button.classList.toggle("is-mobile-neighbor", !!isMobileSteps && !isActive && (isPrev || isNext));
+      button.classList.toggle("is-mobile-dot", !!isMobileSteps && !shouldShowLabel);
+      button.setAttribute("aria-current", isActive ? "step" : "false");
+      button.setAttribute("aria-label", desktopLabel);
+    });
+  }
+
   function updateSteps(stepIndex) {
     const allowedStep = getAllowedStep(stepIndex);
     currentStep =
@@ -1379,6 +1511,7 @@ document.addEventListener("DOMContentLoaded", () => {
       button.setAttribute("aria-selected", isActive ? "true" : "false");
     });
 
+    syncResponsiveStepTabs();
     syncProgressPosition();
 
     if (heroTrimHeader) {
@@ -1443,10 +1576,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     syncTrimSelectionGate();
+    syncStageStepsPosition();
   }
 
   function syncTopTabsIndicator() {
-    if (!heroTopTabs || !heroTopTabsIndicator) {
+    if (!heroTopTabs || !heroTopTabsIndicator || !heroVisual) {
       return;
     }
 
@@ -1457,14 +1591,106 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const tabsRect = heroTopTabs.getBoundingClientRect();
+    const visualRect = heroVisual.getBoundingClientRect();
     const buttonRect = activeButton.getBoundingClientRect();
     const indicatorWidth = heroTopTabsIndicator.getBoundingClientRect().width || 18;
     const nextX =
       buttonRect.left - tabsRect.left + (buttonRect.width / 2) - (indicatorWidth / 2);
 
     heroTopTabs.style.setProperty("--hero-top-tabs-indicator-x", `${nextX}px`);
-    heroTopTabsIndicator.style.left = `${tabsRect.left + nextX}px`;
-    heroTopTabsIndicator.style.top = `${tabsRect.bottom - (indicatorWidth / 2)}px`;
+    heroTopTabsIndicator.style.left = `${tabsRect.left - visualRect.left + nextX}px`;
+    heroTopTabsIndicator.style.top = `${tabsRect.bottom - visualRect.top - (indicatorWidth / 2)}px`;
+  }
+
+  function syncStartButtonPosition() {
+    if (!startButtonZone || !startStepButton || !heroCenter || !heroBottomSteps) {
+      return;
+    }
+
+    const isModelStage = currentStep === 0;
+
+    if (!isModelStage) {
+      startButtonZone.style.removeProperty("top");
+      startButtonZone.style.removeProperty("bottom");
+      return;
+    }
+
+    const heroCenterRect = heroCenter.getBoundingClientRect();
+    const bottomStepsRect = heroBottomSteps.getBoundingClientRect();
+    const startZoneRect = startButtonZone.getBoundingClientRect();
+    const gap = window.innerWidth <= 768 ? 42 : 52;
+    const nextTop =
+      bottomStepsRect.top - heroCenterRect.top - startZoneRect.height - gap;
+
+    startButtonZone.style.bottom = "auto";
+    startButtonZone.style.top = `${Math.max(0, nextTop)}px`;
+  }
+
+  function syncStageStepsPosition() {
+    if (!heroBottomSteps || !heroVisual) {
+      return;
+    }
+
+    const isModelStage = currentStep === 0;
+    const shouldUseResponsiveStageLayout =
+      !isModelStage && window.innerWidth <= 1500 && window.innerWidth > 768;
+
+    if (!shouldUseResponsiveStageLayout) {
+      heroBottomSteps.style.removeProperty("top");
+      heroBottomSteps.style.removeProperty("left");
+      heroBottomSteps.style.removeProperty("right");
+      heroBottomSteps.style.removeProperty("bottom");
+      heroBottomSteps.style.removeProperty("transform");
+      heroBottomSteps.style.removeProperty("width");
+      heroBottomSteps.style.removeProperty("max-width");
+      return;
+    }
+
+    const visibleStage = [
+      heroTrimStage,
+      heroColorStage,
+      heroPackageStage,
+      heroAccessoryStage,
+      heroPlanStage,
+      heroSummaryStage
+    ].find((stage) => stage?.classList.contains("is-visible"));
+
+    if (!visibleStage) {
+      return;
+    }
+
+    const vehicle = visibleStage.querySelector(
+      ".hero_trim_vehicle, .hero_color_vehicle, .hero_package_vehicle, .hero_accessory_vehicle, .hero_plan_vehicle, .hero_summary_vehicle"
+    );
+    const panel = visibleStage.querySelector(
+      ".hero_trim_panel, .hero_color_panels, .hero_package_panel, .hero_accessory_panel, .hero_plan_panel, .hero_summary_side"
+    );
+
+    if (!vehicle || !panel) {
+      return;
+    }
+
+    const visualRect = heroVisual.getBoundingClientRect();
+    const vehicleRect = vehicle.getBoundingClientRect();
+    const panelRect = panel.getBoundingClientRect();
+    const stepsRect = heroBottomSteps.getBoundingClientRect();
+    const gapBelowVehicle = 20;
+    const gapAbovePanel = 18;
+    const minTop = vehicleRect.bottom - visualRect.top + gapBelowVehicle;
+    const maxTop = panelRect.top - visualRect.top - stepsRect.height - gapAbovePanel;
+    const preferredTop = minTop + Math.max((maxTop - minTop) * 0.42, 0);
+    const resolvedTop =
+      maxTop > minTop
+        ? Math.min(Math.max(preferredTop, minTop), maxTop)
+        : minTop;
+
+    heroBottomSteps.style.left = "50%";
+    heroBottomSteps.style.right = "auto";
+    heroBottomSteps.style.bottom = "auto";
+    heroBottomSteps.style.top = `${Math.max(0, resolvedTop)}px`;
+    heroBottomSteps.style.width = "min(calc(100vw - 96px), 760px)";
+    heroBottomSteps.style.maxWidth = "min(calc(100vw - 96px), 760px)";
+    heroBottomSteps.style.transform = "translateX(-50%)";
   }
 
   function setCategory(categoryKey) {
@@ -1488,7 +1714,7 @@ document.addEventListener("DOMContentLoaded", () => {
       button.setAttribute("aria-selected", isActive ? "true" : "false");
     });
     syncTopTabsIndicator();
-
+    resetHeroCarImageState();
     renderCar(currentIndex);
     syncArrowState();
     syncEv9OnlyState();
@@ -1627,8 +1853,22 @@ document.addEventListener("DOMContentLoaded", () => {
   topTabButtons.forEach((button) => {
     button.addEventListener("click", () => {
       updateSteps(0);
+      resetHeroCarImageState();
       setCategory(button.dataset.category);
     });
+  });
+
+  heroTopTabs?.addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-category]");
+
+    if (!button) {
+      return;
+    }
+
+    event.preventDefault();
+    updateSteps(0);
+    resetHeroCarImageState();
+    setCategory(button.dataset.category);
   });
 
   prevBtn.addEventListener("click", () => {
@@ -1693,6 +1933,11 @@ document.addEventListener("DOMContentLoaded", () => {
     button.addEventListener("click", () => {
       updateSteps(index);
     });
+  });
+
+  mobileStepMediaQuery?.addEventListener("change", () => {
+    syncResponsiveStepTabs();
+    syncProgressPosition();
   });
 
   document.getElementById("heroSummaryBreakdown")?.addEventListener("click", (event) => {
@@ -1815,7 +2060,11 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   quoteSendButton?.addEventListener("click", () => {
-    validateQuoteForm();
+    if (!validateQuoteForm()) {
+      return;
+    }
+
+    window.alert("Quote request has been sent.");
   });
 
   heroQuotePanel?.addEventListener("click", (event) => {
@@ -1855,11 +2104,448 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  viewModelButton?.addEventListener("click", () => {
+  function initializeStartButtonMotion() {
+    if (
+      !startStepButton ||
+      !startButtonZone ||
+      !window.gsap ||
+      !window.ScrollTrigger
+    ) {
+      return;
+    }
+
+    const prefersReducedMotion = window.matchMedia?.(
+      "(prefers-reduced-motion: reduce)"
+    )?.matches;
+
+    if (prefersReducedMotion) {
+      window.gsap.set(startStepButton, { clearProps: "x,y,opacity" });
+      return;
+    }
+
+    window.gsap.set(startStepButton, {
+      y: 40,
+      opacity: 0
+    });
+
+    window.gsap.to(startStepButton, {
+      y: 0,
+      opacity: 1,
+      duration: 0.6,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: heroSection || startButtonZone,
+        start: "top 80%",
+        toggleActions: "play none none reset"
+      }
+    });
+
+    startButtonZone.addEventListener("mousemove", (event) => {
+      if (startStepButton.disabled) {
+        return;
+      }
+
+      const rect = startButtonZone.getBoundingClientRect();
+      const x = event.clientX - (rect.left + rect.width / 2);
+      const y = event.clientY - (rect.top + rect.height / 2);
+
+      window.gsap.to(startStepButton, {
+        x: x * 0.1,
+        y: y * 0.1,
+        duration: 0.3,
+        ease: "power2.out",
+        overwrite: "auto"
+      });
+    });
+
+    startButtonZone.addEventListener("mouseleave", () => {
+      if (startStepButton.disabled) {
+        return;
+      }
+
+      window.gsap.to(startStepButton, {
+        x: 0,
+        y: 0,
+        duration: 0.45,
+        ease: "power3.out",
+        overwrite: "auto"
+      });
+    });
+
+    const refreshScrollTrigger = () => {
+      window.ScrollTrigger.refresh();
+      window.setTimeout(() => {
+        window.ScrollTrigger.refresh();
+      }, 500);
+    };
+
+    if (document.readyState === "complete") {
+      refreshScrollTrigger();
+    } else {
+      window.addEventListener("load", refreshScrollTrigger, { once: true });
+    }
+  }
+
+  function initializeAccessoryImageMagnifier() {
+    const accessoryMediaItems = Array.from(
+      document.querySelectorAll(".hero_accessory_card_media")
+    );
+
+    if (!accessoryMediaItems.length) {
+      return;
+    }
+
+    const supportsHover = window.matchMedia?.("(hover: hover)")?.matches;
+
+    accessoryMediaItems.forEach((media) => {
+      const image = media.querySelector("img");
+
+      if (!image) {
+        return;
+      }
+
+      if (!supportsHover) {
+        media.classList.remove("is-magnifying");
+        media.style.removeProperty("--magnifier-x");
+        media.style.removeProperty("--magnifier-y");
+        return;
+      }
+
+      media.addEventListener("mousemove", (event) => {
+        const rect = media.getBoundingClientRect();
+        const x = ((event.clientX - rect.left) / rect.width) * 100;
+        const y = ((event.clientY - rect.top) / rect.height) * 100;
+
+        media.style.setProperty("--magnifier-x", `${x}%`);
+        media.style.setProperty("--magnifier-y", `${y}%`);
+        media.classList.add("is-magnifying");
+      });
+
+      media.addEventListener("mouseleave", () => {
+        media.classList.remove("is-magnifying");
+        media.style.removeProperty("--magnifier-x");
+        media.style.removeProperty("--magnifier-y");
+      });
+    });
+  }
+
+  function initializeBuildCursor() {
+    const buildWrap = document.querySelector(".build_wrap");
+    const canUseCustomCursor = window.matchMedia?.("(pointer: fine)")?.matches;
+
+    if (!buildWrap || !canUseCustomCursor) {
+      return;
+    }
+
+    const cursor = document.createElement("div");
+    const label = document.createElement("span");
+
+    cursor.className = "hero-build-cursor";
+    cursor.appendChild(label);
+    document.body.appendChild(cursor);
+
+    const zoomSelector = [
+      ".hero_accessory_card_media",
+      ".hero_trim_card_asset",
+      ".hero_color_vehicle",
+      ".hero_color_seat_preview"
+    ].join(", ");
+
+    const selectSelector = [
+      ".build_wrap button:not(:disabled)",
+      ".hero_trim_select_btn",
+      ".hero_package_add_btn",
+      ".hero_accessory_add_btn",
+      ".hero_plan_add_btn",
+      ".hero_summary_cta_btn",
+      ".hero_color_swatch",
+      ".hero_color_swatches_interior",
+      ".hero_trim_card_head",
+      ".hero_package_card_top",
+      ".hero_accessory_card_top",
+      ".hero_plan_card_top",
+      ".hero_trim_more_btn",
+      ".hero_package_more_btn",
+      ".hero_accessory_more_btn",
+      ".hero_plan_more_btn"
+    ].join(", ");
+    const selectHitRowSelector = [
+      ".hero_trim_card_head",
+      ".hero_package_card_top",
+      ".hero_accessory_card_top",
+      ".hero_plan_card_top"
+    ].join(", ");
+    const genericBuildButtonSelector = ".build_wrap button:not(:disabled)";
+    const moreHitRowSelector = [
+      ".hero_trim_more_btn",
+      ".hero_package_more_btn",
+      ".hero_accessory_more_btn",
+      ".hero_plan_more_btn"
+    ].join(", ");
+
+    function getExpandedSelectButtonFromPoint(event) {
+      const row = event.target.closest(selectHitRowSelector);
+      const button = row?.querySelector(
+        ".hero_trim_select_btn, .hero_package_add_btn, .hero_accessory_add_btn, .hero_plan_add_btn"
+      );
+
+      if (!row || !button) {
+        return null;
+      }
+
+      const rect = button.getBoundingClientRect();
+      const paddingLeft = 18;
+      const paddingRight = 18;
+      const paddingTop = 10;
+      const paddingBottom = 30;
+      const isWithinExpandedArea =
+        event.clientX >= rect.left - paddingLeft &&
+        event.clientX <= rect.right + paddingRight &&
+        event.clientY >= rect.top - paddingTop &&
+        event.clientY <= rect.bottom + paddingBottom;
+
+      return isWithinExpandedArea ? button : null;
+    }
+
+    function getExpandedMoreButtonFromPoint(event) {
+      const moreButton = event.target.closest(moreHitRowSelector);
+
+      if (moreButton) {
+        return moreButton;
+      }
+
+      const card = event.target.closest(
+        ".hero_trim_card, .hero_package_card, .hero_accessory_card, .hero_plan_card"
+      );
+      const candidate = card?.querySelector(moreHitRowSelector);
+
+      if (!card || !candidate) {
+        return null;
+      }
+
+      const rect = candidate.getBoundingClientRect();
+      const isWithinMoreRow =
+        event.clientX >= rect.left &&
+        event.clientX <= rect.right &&
+        event.clientY >= rect.top - 4 &&
+        event.clientY <= rect.bottom + 8;
+
+      return isWithinMoreRow ? candidate : null;
+    }
+
+    function getExpandedBuildButtonFromPoint(event) {
+      const directButton = event.target.closest(genericBuildButtonSelector);
+
+      if (directButton) {
+        return directButton;
+      }
+
+      const buttons = Array.from(document.querySelectorAll(genericBuildButtonSelector));
+
+      return buttons.find((button) => {
+        const rect = button.getBoundingClientRect();
+        const extraTop = 6;
+        const extraBottom = 28;
+        const extraHorizontal = 8;
+
+        return (
+          event.clientX >= rect.left - extraHorizontal &&
+          event.clientX <= rect.right + extraHorizontal &&
+          event.clientY >= rect.top - extraTop &&
+          event.clientY <= rect.bottom + extraBottom
+        );
+      }) || null;
+    }
+
+    function moveCursor(event) {
+      cursor.style.left = `${event.clientX}px`;
+      cursor.style.top = `${event.clientY}px`;
+
+      const zoomTarget = event.target.closest(zoomSelector);
+      const selectTarget =
+        event.target.closest(selectSelector) ||
+        getExpandedBuildButtonFromPoint(event) ||
+        getExpandedSelectButtonFromPoint(event) ||
+        getExpandedMoreButtonFromPoint(event);
+
+      if (selectTarget) {
+        cursor.dataset.label = "select";
+        label.textContent = "Select";
+      } else if (zoomTarget) {
+        cursor.dataset.label = "zoom";
+        label.textContent = "Zoom";
+      } else {
+        cursor.dataset.label = "";
+        label.textContent = "";
+      }
+    }
+
+    function showCursor(event) {
+      moveCursor(event);
+      cursor.classList.add("is-visible");
+    }
+
+    function hideCursor() {
+      cursor.classList.remove("is-visible");
+      cursor.classList.remove("is-active");
+    }
+
+    function activateCursor() {
+      cursor.classList.add("is-active");
+    }
+
+    function deactivateCursor() {
+      cursor.classList.remove("is-active");
+    }
+
+    buildWrap.addEventListener("pointerenter", showCursor);
+    buildWrap.addEventListener("pointermove", moveCursor);
+    buildWrap.addEventListener("pointerleave", hideCursor);
+    buildWrap.addEventListener("pointerdown", activateCursor);
+    buildWrap.addEventListener("pointerup", deactivateCursor);
+    buildWrap.addEventListener("pointercancel", deactivateCursor);
+    buildWrap.addEventListener("click", (event) => {
+      if (event.target.closest(selectSelector)) {
+        return;
+      }
+
+      const expandedBuildButton = getExpandedBuildButtonFromPoint(event);
+      const expandedSelectButton = getExpandedSelectButtonFromPoint(event);
+      const expandedMoreButton = getExpandedMoreButtonFromPoint(event);
+
+      if (!expandedBuildButton && !expandedSelectButton && !expandedMoreButton) {
+        return;
+      }
+
+      event.preventDefault();
+      (expandedBuildButton || expandedSelectButton || expandedMoreButton).click();
+    });
+
+    window.addEventListener("blur", hideCursor);
+    window.addEventListener("scroll", hideCursor, { passive: true });
+    window.addEventListener("pointerup", deactivateCursor);
+  }
+
+  function bindDirectSwatchSelection(container, onSelect) {
+    if (!container) {
+      return;
+    }
+
+    Array.from(container.querySelectorAll(".hero_color_swatch")).forEach(
+      (swatch, index) => {
+        swatch.dataset.swatchIndex = String(index);
+      }
+    );
+
+    container.addEventListener("click", (event) => {
+      const swatches = Array.from(container.querySelectorAll(".hero_color_swatch"));
+
+      if (!swatches.length) {
+        return;
+      }
+
+      const directSwatch = event.target.closest(".hero_color_swatch");
+      const swatch =
+        directSwatch && container.contains(directSwatch)
+          ? directSwatch
+          : swatches.reduce((nearest, current) => {
+              if (!("clientX" in event)) {
+                return nearest;
+              }
+
+              const currentRect = current.getBoundingClientRect();
+              const currentDistance = Math.abs(
+                event.clientX - (currentRect.left + currentRect.width / 2)
+              );
+
+              if (!nearest) {
+                return { element: current, distance: currentDistance };
+              }
+
+              return currentDistance < nearest.distance
+                ? { element: current, distance: currentDistance }
+                : nearest;
+            }, null)?.element;
+
+      if (!swatch) {
+        return;
+      }
+
+      const swatchIndex = Number(swatch.dataset.swatchIndex);
+
+      if (Number.isNaN(swatchIndex)) {
+        return;
+      }
+
+      onSelect(swatchIndex);
+    });
+  }
+
+  function bindInstantActionButton(button, handler) {
+    if (!button) {
+      return;
+    }
+
+    button.addEventListener("pointerdown", (event) => {
+      if (button.disabled || event.button > 0) {
+        return;
+      }
+
+      event.preventDefault();
+      suppressInstantActionClickUntil = window.performance.now() + 400;
+      handler();
+    });
+
+    button.addEventListener("click", (event) => {
+      if (button.disabled) {
+        return;
+      }
+
+      if (window.performance.now() < suppressInstantActionClickUntil) {
+        event.preventDefault();
+        event.stopPropagation();
+        return;
+      }
+
+      handler();
+    });
+  }
+
+  function getExpandedMoreButtonFromCardEvent(event) {
+    const directButton = event.target.closest(
+      ".hero_trim_more_btn, .hero_package_more_btn, .hero_accessory_more_btn, .hero_plan_more_btn"
+    );
+
+    if (directButton) {
+      return directButton;
+    }
+
+    const card = event.target.closest(
+      ".hero_trim_card, .hero_package_card, .hero_accessory_card, .hero_plan_card"
+    );
+    const candidate = card?.querySelector(
+      ".hero_trim_more_btn, .hero_package_more_btn, .hero_accessory_more_btn, .hero_plan_more_btn"
+    );
+
+    if (!card || !candidate) {
+      return null;
+    }
+
+    const rect = candidate.getBoundingClientRect();
+    const isWithinMoreRow =
+      event.clientX >= rect.left &&
+      event.clientX <= rect.right &&
+      event.clientY >= rect.top - 4 &&
+      event.clientY <= rect.bottom + 8;
+
+    return isWithinMoreRow ? candidate : null;
+  }
+
+  bindInstantActionButton(viewModelButton, () => {
     updateSteps(0);
   });
 
-  nextColorButton?.addEventListener("click", () => {
+  bindInstantActionButton(nextColorButton, () => {
     if (!isEv9Selected()) {
       return;
     }
@@ -1867,65 +2553,79 @@ document.addEventListener("DOMContentLoaded", () => {
     updateSteps(Math.min(2, stepButtons.length - 1));
   });
 
-  viewTrimButton?.addEventListener("click", () => {
+  bindInstantActionButton(viewTrimButton, () => {
     updateSteps(1);
   });
 
-  nextPackagesButton?.addEventListener("click", () => {
+  bindInstantActionButton(nextPackagesButton, () => {
     updateSteps(Math.min(3, stepButtons.length - 1));
   });
 
-  viewColorButton?.addEventListener("click", () => {
+  bindInstantActionButton(viewColorButton, () => {
     updateSteps(2);
   });
 
-  nextAccessoriesButton?.addEventListener("click", () => {
+  bindInstantActionButton(nextAccessoriesButton, () => {
     updateSteps(Math.min(4, stepButtons.length - 1));
   });
 
-  viewPackagesButton?.addEventListener("click", () => {
+  bindInstantActionButton(viewPackagesButton, () => {
     updateSteps(3);
   });
 
-  nextPlanButton?.addEventListener("click", () => {
+  bindInstantActionButton(nextPlanButton, () => {
     updateSteps(Math.min(5, stepButtons.length - 1));
   });
 
-  viewAccessoriesButton?.addEventListener("click", () => {
+  bindInstantActionButton(viewAccessoriesButton, () => {
     updateSteps(4);
   });
 
-  nextSummaryButton?.addEventListener("click", () => {
+  bindInstantActionButton(nextSummaryButton, () => {
     updateSteps(Math.min(6, stepButtons.length - 1));
   });
 
-  viewPlanButton?.addEventListener("click", () => {
+  bindInstantActionButton(viewPlanButton, () => {
     updateSteps(5);
   });
 
-  sendBuildButton?.addEventListener("click", () => {
+  bindInstantActionButton(sendBuildButton, () => {
+    if (!heroQuotePanel?.hidden) {
+      if (!validateQuoteForm()) {
+        return;
+      }
+
+      window.alert("Quote request has been sent.");
+      return;
+    }
+
     updateSteps(6);
   });
 
   setSelectedPlanCard(selectedPlanIndex);
+  initializeStartButtonMotion();
+  initializeAccessoryImageMagnifier();
+  initializeBuildCursor();
+  syncResponsiveStepTabs();
 
   heroTrimCards?.addEventListener("click", (event) => {
     const selectTrigger = event.target.closest(".hero_trim_select_btn");
-    const moreTrigger = event.target.closest(".hero_trim_more_btn");
+    const moreTrigger = getExpandedMoreButtonFromCardEvent(event);
+    const selectRegion = event.target.closest(".hero_trim_card_head");
     const trigger = selectTrigger || moreTrigger;
 
-    if (!trigger) {
+    if (!trigger && !selectRegion) {
       return;
     }
 
-    const card = trigger.closest(".hero_trim_card");
+    const card = (trigger || selectRegion).closest(".hero_trim_card");
     const trimIndex = Number(card?.dataset.trimIndex);
 
     if (Number.isNaN(trimIndex)) {
       return;
     }
 
-    if (selectTrigger) {
+    if (selectTrigger || selectRegion) {
       setSelectedTrimCard(trimIndex);
       return;
     }
@@ -1935,37 +2635,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  heroExteriorSwatches?.addEventListener("click", (event) => {
-    const swatch = event.target.closest(".hero_color_swatch");
-
-    if (!swatch) {
-      return;
-    }
-
-    const exteriorSwatches = Array.from(
-      heroExteriorSwatches.querySelectorAll(".hero_color_swatch")
-    );
-    selectedExteriorIndex = exteriorSwatches.indexOf(swatch);
-    syncColorStageSelections();
+  bindDirectSwatchSelection(heroExteriorSwatches, (selectedIndex) => {
+    selectExteriorSwatch(selectedIndex);
   });
 
-  heroInteriorSwatches?.addEventListener("click", (event) => {
-    const swatch = event.target.closest(".hero_color_swatch");
-
-    if (!swatch) {
-      return;
-    }
-
-    const interiorSwatches = Array.from(
-      heroInteriorSwatches.querySelectorAll(".hero_color_swatch")
-    );
-    selectedInteriorIndex = interiorSwatches.indexOf(swatch);
-    syncColorStageSelections();
+  bindDirectSwatchSelection(heroInteriorSwatches, (selectedIndex) => {
+    selectInteriorSwatch(selectedIndex);
   });
 
   heroPackageCards?.addEventListener("click", (event) => {
     const addTrigger = event.target.closest(".hero_package_add_btn");
-    const moreTrigger = event.target.closest(".hero_package_more_btn");
+    const moreTrigger = getExpandedMoreButtonFromCardEvent(event);
+    const selectRegion = event.target.closest(".hero_package_card_top");
     const card = event.target.closest(".hero_package_card");
     const packageIndex = Number(card?.dataset.packageIndex);
 
@@ -1973,7 +2654,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    if (addTrigger) {
+    if (addTrigger || (selectRegion && !moreTrigger)) {
       if (selectedPackages.has(packageIndex)) {
         selectedPackages.delete(packageIndex);
       } else {
@@ -1995,14 +2676,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("heroAccessoryCards")?.addEventListener("click", (event) => {
     const addTrigger = event.target.closest(".hero_accessory_add_btn");
-    const moreTrigger = event.target.closest(".hero_accessory_more_btn");
+    const moreTrigger = getExpandedMoreButtonFromCardEvent(event);
+    const selectRegion = event.target.closest(".hero_accessory_card_top");
     const card = event.target.closest(".hero_accessory_card");
 
     if (!card) {
       return;
     }
 
-    if (addTrigger) {
+    if (addTrigger || (selectRegion && !moreTrigger)) {
       const willSelect = !card.classList.contains("is-selected");
       const moreButton = card.querySelector(".hero_accessory_more_btn");
 
@@ -2032,7 +2714,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("heroPlanCards")?.addEventListener("click", (event) => {
     const addTrigger = event.target.closest(".hero_plan_add_btn");
-    const moreTrigger = event.target.closest(".hero_plan_more_btn");
+    const moreTrigger = getExpandedMoreButtonFromCardEvent(event);
+    const selectRegion = event.target.closest(".hero_plan_card_top");
     const card = event.target.closest(".hero_plan_card");
     const planCards = heroPlanCards
       ? Array.from(heroPlanCards.querySelectorAll(".hero_plan_card"))
@@ -2043,7 +2726,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    if (addTrigger) {
+    if (addTrigger || (selectRegion && !moreTrigger)) {
       if (planIndex !== -1) {
         setSelectedPlanCard(planIndex);
       }
@@ -2062,17 +2745,23 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("resize", () => {
     syncProgressPosition();
     syncTopTabsIndicator();
+    syncStartButtonPosition();
+    syncStageStepsPosition();
   });
 
   window.addEventListener("load", () => {
     syncProgressPosition();
     syncTopTabsIndicator();
+    syncStartButtonPosition();
+    syncStageStepsPosition();
   });
 
   if (document.fonts?.ready) {
     document.fonts.ready.then(() => {
       syncProgressPosition();
       syncTopTabsIndicator();
+      syncStartButtonPosition();
+      syncStageStepsPosition();
     });
   }
 
@@ -2083,4 +2772,6 @@ document.addEventListener("DOMContentLoaded", () => {
   syncEv9OnlyState();
   updateSteps(currentStep);
   syncTopTabsIndicator();
+  syncStartButtonPosition();
+  syncStageStepsPosition();
 });
