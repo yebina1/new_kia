@@ -36,9 +36,9 @@ const $resolveMenuKey = (item) => {
 const $subMenuMap = {
   company: [
     { label: 'why kia', href: 'whykia.html' },
-    { label: 'safety', href: '#' },
-    { label: 'kia media', href: '#' },
-    { label: 'event', href: '#' },
+    { label: 'safety', href: '' },
+    { label: 'kia media', href: '' },
+    { label: 'event', href: '' },
   ],
   vehicles: [
     { label: 'EV', href: 'list.html#ev' },
@@ -49,18 +49,18 @@ const $subMenuMap = {
   'shopping-assistant': [
     { label: 'build my kia', href: 'build.html' },
     { label: 'kia recommended', href: 'recommended.html' },
-    { label: 'payment calculator', href: '#' },
-    { label: 'trade in', href: '#' },
-    { label: 'easy buy', href: '#' },
-    { label: 'certified pre-owned', href: '#' },
-    { label: 'sub shop', href: '#' },
+    { label: 'payment calculator', href: '' },
+    { label: 'trade in', href: '' },
+    { label: 'easy buy', href: '' },
+    { label: 'certified pre-owned', href: '' },
+    { label: 'sub shop', href: '' },
   ],
   center: [
     { label: 'kia map', href: 'index.html#map' },
-    { label: 'kia connect', href: '#' },
-    { label: 'consultation', href: '#' },
-    { label: 'FAQ', href: '#' },
-    { label: 'test drive', href: '#' },
+    { label: 'kia connect', href: '' },
+    { label: 'consultation', href: '' },
+    { label: 'FAQ', href: '' },
+    { label: 'test drive', href: '' },
   ],
 };
 
