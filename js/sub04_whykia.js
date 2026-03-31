@@ -561,7 +561,7 @@ document.addEventListener("DOMContentLoaded", () => {
         desktopOffsets: []
     };
 
-    const DESKTOP_BREAKPOINT = 901;
+    const DESKTOP_BREAKPOINT = 900;
     const SOLUTION_DESKTOP_HOLD = 0.16;
 
     function clamp(value, min, max) {
@@ -692,6 +692,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const diff = state.current - state.lastOne;
         const acc = diff / Math.max(dragArea.clientWidth, 1);
+        const isCompactMobile = window.innerWidth <= 899;
+
+        if (isCompactMobile) {
+            solutionList.style.transform =
+                `translate3d(${(state.sideOffset - state.lastOne).toFixed(2)}px, 0, 0)`;
+            textTrack.style.transform =
+                `translate3d(${(state.sideOffset - state.lastTwo).toFixed(2)}px, 0, 0)`;
+            updateProgress();
+            updateSlideFocus();
+            window.requestAnimationFrame(render);
+            return;
+        }
+
         const bounce = 1 - Math.abs(acc * 0.25);
         const skew = acc * 7.5;
         const tiltY = acc * 10;
@@ -843,10 +856,11 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+        event.preventDefault();
         const pointerX = getClientX(event);
         state.current = state.off - (pointerX - state.on);
         state.current = clamp(state.current, 0, state.maxOffset);
-    }, { passive: true });
+    }, { passive: false });
     window.addEventListener("touchend", stopDragging);
     window.addEventListener("mouseleave", stopDragging);
 
