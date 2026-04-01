@@ -713,6 +713,8 @@ function initEv6Scene() {
   const bgTrack = document.getElementById("bgTrack");
   const bg1Img = document.getElementById("bg1Img");
   const bg2Img = document.getElementById("bg2Img");
+  const bg2FeaturesTrack = document.getElementById("bg2FeaturesTrack");
+  const bg2FeaturesSurface = document.getElementById("bg2FeaturesSurface");
   const carWrap = document.getElementById("carWrap");
   const solidCar = document.getElementById("solidCar");
   const xrayCar = document.getElementById("xrayCar");
@@ -790,6 +792,9 @@ function initEv6Scene() {
 
     const trackY = Math.round(mix(0, -vh, panelPushP));
     bgTrack.style.transform = `translate3d(0, ${trackY}px, 0)`;
+    if (bg2FeaturesTrack) {
+      bg2FeaturesTrack.style.transform = `translate3d(0, ${trackY}px, 0)`;
+    }
 
     const bg1InnerY = mix(0, -vh * 0.03, sstep(0.06, 0.46, baseP));
     const bg2InnerY = mix(vh * 0.035, 0, panelPushP);
@@ -800,6 +805,9 @@ function initEv6Scene() {
       bg1Img.style.transform = `translate3d(0, ${Math.round(bg1InnerY)}px, 0) scale(${bg1Scale * 1.002})`;
     }
     bg2Img.style.transform = `translate3d(0, ${Math.round(bg2InnerY)}px, 0) scale(${bg2Scale * 1.002})`;
+    if (bg2FeaturesSurface) {
+      bg2FeaturesSurface.style.transform = `translate3d(0, ${Math.round(bg2InnerY)}px, 0) scale(${bg2Scale * 1.002})`;
+    }
 
     const carHeight = carWrap.offsetHeight;
     const startY = carHeight * 1.18 + vh * 0.18;

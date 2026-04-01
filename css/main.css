@@ -90,7 +90,7 @@ body.section_transition_lock {
     width: 100%;
     height: 100vh;
     min-height: clamp(950px, 90vh, 100vh);
-    padding: 100px 0;
+    padding-block: clamp(100px, 20vw, 200px);
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -106,7 +106,7 @@ body.section_transition_lock {
 
 .best .tit p {
     margin-top: 6px;
-    font-size: 24px;
+    font-size: clamp(20px, 2vw, 24px);
 }
 
 .best_showcase {
@@ -490,7 +490,7 @@ body.section_transition_lock {
 
 .best_spec_unit {
     margin-top: 16px;
-    font-size: 24px;
+    font-size: clamp(20px, 2vw, 24px);
     font-weight: 300;
     letter-spacing: -1px;
     text-transform: uppercase;
@@ -606,6 +606,14 @@ body.section_transition_lock {
   pointer-events: none;
 }
 
+.bg2_features_viewport {
+  position: absolute;
+  inset: 0;
+  z-index: 9;
+  overflow: hidden;
+  pointer-events: none;
+}
+
 .bg_track {
   position: absolute;
   left: 0;
@@ -622,6 +630,38 @@ body.section_transition_lock {
   width: 100%;
   height: calc(100vh + var(--panel-overlap));
   overflow: hidden;
+}
+
+.bg2_features_track {
+  position: absolute;
+  left: 0;
+  top: calc(-1 * var(--panel-overlap));
+  width: 100%;
+  height: calc(200vh + (var(--panel-overlap) * 2));
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+}
+
+.bg2_features_panel {
+  position: absolute;
+  left: 0;
+  top: calc(100vh - var(--panel-overlap));
+  width: 100%;
+  height: calc(100vh + var(--panel-overlap));
+  overflow: hidden;
+}
+
+.bg2_features_surface {
+  position: absolute;
+  left: 0;
+  top: calc(-1 * var(--bg-overscan));
+  width: 100%;
+  height: calc(100% + (var(--bg-overscan) * 2));
+  user-select: none;
+  pointer-events: none;
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
 .bg1_panel {
@@ -688,7 +728,7 @@ body.section_transition_lock {
   margin-top: 12px;
   margin-left: 132px;
   width: 272px;
-  font-size: 24px;
+  font-size: clamp(20px, 2vw, 24px);
   font-weight: 400;
   line-height: 1.38;
   text-align: center;
@@ -704,7 +744,7 @@ body.section_transition_lock {
 
 .bg1_copy_right .sub {
   margin-top: 8px;
-  font-size: 24px;
+  font-size: clamp(20px, 2vw, 24px);
   font-weight: 400;
   line-height: 1.32;
   color: var(--kia-white2);
@@ -773,7 +813,7 @@ body.section_transition_lock {
 .bg2_copy_left .desc {
   margin-top: 18px;
   width: min(29vw, 480px);
-  font-size: 18px;
+  font-size: clamp(20px, 2vw, 24px);
   font-weight: 400;
   line-height: 1.36;
   color: var(--kia-white2);
@@ -1243,7 +1283,7 @@ footer {
 }
 
 .intro p {
-  font-size: 0.94rem;
+  font-size: 24px;
   line-height: 1.3;
   margin-top: 16px;
 }
@@ -1272,6 +1312,7 @@ section[class*="option"] {
 section[class*="option"] .inner {
   width: 100%;
   height: 100vh;
+  padding-block: 100px;
   min-height: clamp(950px, 90vh, 100vh);
   min-height: 950px;
   display: flex;
@@ -1292,6 +1333,11 @@ section[class*="option"] .top strong {
   font-size: 2.2rem;
   font-style: normal;
   font-weight: 400;
+}
+
+section[class*="option"] .top strong span{
+  font-size: 1rem;
+  padding-left: 32px;
 }
 
 section[class*="option"] .top a {
@@ -1819,7 +1865,7 @@ body.review_locked {
 }
 
 .review .tit p {
-  font-size: 24px;
+  font-size: clamp(20px, 2vw, 24px);
   line-height: 1.3;
   margin: 0;
 }
@@ -2015,11 +2061,12 @@ body.review_locked {
 }
 
 .map p {
-  font-size: 24px;
+  font-size: clamp(20px, 2vw, 24px);
   padding-bottom: 32px;
 }
 
-.map button {
+.map button,
+.map .txt_box > a {
   position: relative;
   min-width: 170px;
   height: 56px;
@@ -2044,7 +2091,8 @@ body.review_locked {
   opacity: 0.7;
 }
 
-.map button::before {
+.map button::before,
+.map .txt_box > a::before {
   content: "";
   position: absolute;
   inset: 2px;
@@ -2056,7 +2104,8 @@ body.review_locked {
   opacity: 0.7;
 }
 
-.map button:hover {
+.map button:hover,
+.map .txt_box > a:hover {
   transform: translateY(-2px);
   border-color: rgba(255, 255, 255, 0.45);
   box-shadow:

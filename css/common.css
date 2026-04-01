@@ -1120,3 +1120,114 @@ footer .f_right .f_copy {
   line-height: 1.3;
   white-space: nowrap;
 }
+
+body > .scroll_down_wrap,
+body .wrap > .scroll_down_wrap,
+body .wrap > header + .scroll_down_wrap {
+  position: fixed !important;
+  top: auto !important;
+  right: auto !important;
+  left: 50% !important;
+  bottom: 32px !important;
+  transform: translateX(-50%) !important;
+  z-index: 1095 !important;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  width: max-content;
+  height: auto !important;
+  min-height: 0 !important;
+  margin-top: 0 !important;
+  padding-bottom: 0 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: none;
+}
+
+body .scroll_down {
+  position: relative;
+  display: inline-block !important;
+  padding-top: 60px;
+  color: var(--kia-white1);
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-shadow: 0 0 18px rgba(12, 17, 21, 0.28);
+  user-select: none;
+  opacity: 0.88;
+  white-space: nowrap;
+}
+
+body .scroll_down span {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 30px;
+  height: 50px;
+  margin-left: -15px;
+  border: 2px solid var(--kia-white1);
+  border-radius: 999px;
+  box-sizing: border-box;
+}
+
+body .scroll_down span::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  background-color: var(--kia-white1);
+  border-radius: 50%;
+  animation: scroll-down-dot 2s infinite;
+  box-sizing: border-box;
+}
+
+@keyframes scroll-down-dot {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+
+  40% {
+    opacity: 1;
+  }
+
+  80% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 767px) {
+  body > .scroll_down_wrap,
+  body .wrap > .scroll_down_wrap,
+  body .wrap > header + .scroll_down_wrap {
+    bottom: calc(24px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  body .scroll_down {
+    padding-top: 52px;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+  }
+
+  body .scroll_down span {
+    width: 26px;
+    height: 44px;
+    margin-left: -13px;
+  }
+
+  body .scroll_down span::before {
+    top: 9px;
+    width: 5px;
+    height: 5px;
+    margin-left: -2.5px;
+  }
+}
