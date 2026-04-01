@@ -4842,6 +4842,12 @@ button {
   pointer-events: auto;
 }
 
+.selection_modal[aria-hidden="false"] {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
 .selection_modal_dim {
   position: absolute;
   inset: 0;
@@ -4869,6 +4875,11 @@ button {
 }
 
 .selection_modal.is-open .selection_modal_panel {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+}
+
+.selection_modal[aria-hidden="false"] .selection_modal_panel {
   opacity: 1;
   transform: translate(-50%, -50%);
 }
