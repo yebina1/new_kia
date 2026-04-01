@@ -1058,6 +1058,9 @@ document.addEventListener("DOMContentLoaded", () => {
     let isCompactPartnerLayout = window.innerWidth <= 900 || !window.gsap || !window.ScrollTrigger;
     let partnerSceneTrigger = null;
     let partnerCursor = null;
+    let lastPartnerPointerX = 0;
+    let lastPartnerPointerY = 0;
+    let hasPartnerPointerPosition = false;
 
     if (!cards.length) {
         return;
@@ -1108,7 +1111,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const closeAllPartnerCards = () => {
         cards.forEach((card) => {
             card.classList.remove("is_open");
-            card.classList.toggle("is_label_visible", isCompactPartnerLayout);
+            card.classList.toggle(
+                "is_label_visible",
+                isCompactPartnerLayout || card.classList.contains("is_interactive")
+            );
             const wrapper = card.querySelector(".partner_card_wrapper");
             const tiltShell = card.querySelector(".partner_tilt_shell");
             const images = Array.from(card.querySelectorAll(".partner_face img"));
@@ -1398,6 +1404,9 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+        lastPartnerPointerX = event.clientX;
+        lastPartnerPointerY = event.clientY;
+        hasPartnerPointerPosition = true;
         partnerCursor.style.left = `${event.clientX}px`;
         partnerCursor.style.top = `${event.clientY}px`;
     }
@@ -1413,6 +1422,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
         movePartnerCursor(event);
         partnerCursor.classList.add("is-visible");
+    }
+
+    function syncPartnerCursorToViewport() {
+        if (!partnerCursor || isCompactPartnerLayout || !partnerSection || !hasPartnerPointerPosition) {
+            hidePartnerCursor();
+            return;
+        }
+
+        const rect = partnerSection.getBoundingClientRect();
+        const isPointerInsideSection =
+            lastPartnerPointerX >= rect.left &&
+            lastPartnerPointerX <= rect.right &&
+            lastPartnerPointerY >= rect.top &&
+            lastPartnerPointerY <= rect.bottom;
+
+        if (!isPointerInsideSection) {
+            hidePartnerCursor();
+            return;
+        }
+
+        showPartnerCursor({
+            clientX: lastPartnerPointerX,
+            clientY: lastPartnerPointerY,
+        });
     }
 
     partnerWrappers.forEach((wrapper) => {
@@ -1514,7 +1547,14 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    window.addEventListener("scroll", hidePartnerCursor, { passive: true });
+    if (canUsePartnerCursor) {
+        window.addEventListener("pointermove", (event) => {
+            lastPartnerPointerX = event.clientX;
+            lastPartnerPointerY = event.clientY;
+            hasPartnerPointerPosition = true;
+        }, { passive: true });
+        window.addEventListener("scroll", syncPartnerCursorToViewport, { passive: true });
+    }
     window.addEventListener("blur", hidePartnerCursor);
     window.addEventListener("pointerup", () => {
         partnerCursor?.classList.remove("is-active");
