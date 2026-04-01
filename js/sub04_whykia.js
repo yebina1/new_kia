@@ -276,6 +276,30 @@ if (heroTitle) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    const mainScrollDownButton = document.querySelector(".scroll_down_button");
+    const pageFooter = document.querySelector("footer");
+
+    if (mainScrollDownButton && pageFooter) {
+        const syncMainScrollButton = () => {
+            const footerRect = pageFooter.getBoundingClientRect();
+            const shouldShowButton = footerRect.top > window.innerHeight;
+
+            mainScrollDownButton.classList.toggle("is_visible", shouldShowButton);
+        };
+
+        mainScrollDownButton.addEventListener("click", (event) => {
+            event.preventDefault();
+            window.scrollBy({
+                top: window.innerHeight * 0.82,
+                behavior: "smooth",
+            });
+        });
+
+        syncMainScrollButton();
+        window.addEventListener("scroll", syncMainScrollButton, { passive: true });
+        window.addEventListener("resize", syncMainScrollButton);
+    }
+
     const shell = document.getElementById("storyHistory");
     const frame = shell?.querySelector(".story_frame");
     const introCircle = document.getElementById("introCircle");

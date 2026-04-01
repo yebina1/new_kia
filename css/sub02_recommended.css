@@ -781,6 +781,15 @@ body.modal-open {
     z-index: 2;
 }
 
+/* Align the left recommended panel with the site default background */
+.overlay {
+    background: #0c1115;
+}
+
+.car_all section {
+    background: #0c1115;
+}
+
 .recco.recco--experimental .vid {
     background:
         radial-gradient(circle at 24% 18%, var(--exp-accent-soft), transparent 24%),

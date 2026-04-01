@@ -159,6 +159,9 @@ document.addEventListener("DOMContentLoaded", () => {
     applyScrollLayout(recco, sections.length);
     renderSections(state.activeIndex, sections, title, recco, experimentalMode, desktopVisual, state);
     syncMobileGroup(state, sections, carAll, mobileTabs, title);
+    window.requestAnimationFrame(() => {
+        ensureMobileRecommendationState(state, sections, carAll, mobileTabs, title);
+    });
 
     window.addEventListener("resize", () => {
         applyScrollLayout(recco, sections.length);
@@ -166,6 +169,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (isMobileViewport()) {
             syncMobileGroup(state, sections, carAll, mobileTabs, title);
+            window.requestAnimationFrame(() => {
+                ensureMobileRecommendationState(state, sections, carAll, mobileTabs, title);
+            });
         } else {
             window.clearTimeout(state.releaseTimer);
             state.isAnimating = false;
@@ -186,6 +192,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 state.activeMobileGroup = targetGroup;
                 state.currentMobileIndex = 0;
                 syncMobileGroup(state, sections, carAll, mobileTabs, title);
+                window.requestAnimationFrame(() => {
+                    ensureMobileRecommendationState(state, sections, carAll, mobileTabs, title);
+                });
                 return;
             }
 
@@ -201,6 +210,9 @@ document.addEventListener("DOMContentLoaded", () => {
             state.activeMobileGroup = button.dataset.group || "outdoor";
             state.currentMobileIndex = 0;
             syncMobileGroup(state, sections, carAll, mobileTabs, title);
+            window.requestAnimationFrame(() => {
+                ensureMobileRecommendationState(state, sections, carAll, mobileTabs, title);
+            });
         });
     });
 
@@ -387,9 +399,7 @@ function handleMobileSwipeEnd(state, sections, carAll, mobileTabs, title) {
         return;
     }
 
-    const visibleSections = sections.filter(
-        (section) => section.dataset.mobileGroup === state.activeMobileGroup
-    );
+    const visibleSections = getMobileSectionsByGroup(sections, state.activeMobileGroup);
 
     if (!visibleSections.length) {
         resetMobileSwipeTracking(state);
@@ -547,7 +557,7 @@ function clearMobileSwipeVisual(sections) {
 
 function getCurrentMobileSection(state, sections) {
     return sections.find((section) =>
-        section.dataset.mobileGroup === state.activeMobileGroup &&
+        getMobileGroup(section.id) === state.activeMobileGroup &&
         Number(section.dataset.mobileIndex) === state.currentMobileIndex
     ) || null;
 }
@@ -914,6 +924,10 @@ function getIndexInMobileGroup(section, sections) {
         .findIndex((item) => item.id === section.id);
 }
 
+function getMobileSectionsByGroup(sections, group) {
+    return sections.filter((section) => getMobileGroup(section.id) === group);
+}
+
 function syncMobileGroup(state, sections, carAll, buttons, title) {
     if (!isMobileViewport()) {
         resetMobileState(sections, carAll);
@@ -924,9 +938,7 @@ function syncMobileGroup(state, sections, carAll, buttons, title) {
         button.classList.toggle("is-active", button.dataset.group === state.activeMobileGroup);
     });
 
-    const visibleSections = sections.filter(
-        (section) => section.dataset.mobileGroup === state.activeMobileGroup
-    );
+    const visibleSections = getMobileSectionsByGroup(sections, state.activeMobileGroup);
 
     const safeIndex = clamp(
         state.currentMobileIndex,
@@ -937,7 +949,7 @@ function syncMobileGroup(state, sections, carAll, buttons, title) {
     state.currentMobileIndex = safeIndex;
 
     sections.forEach((section) => {
-        const matches = section.dataset.mobileGroup === state.activeMobileGroup;
+        const matches = getMobileGroup(section.id) === state.activeMobileGroup;
         section.classList.toggle("is-mobile-hidden", !matches);
         section.classList.toggle("is-mobile-visible", matches);
         section.classList.toggle("is-mobile-current", false);
@@ -952,6 +964,7 @@ function syncMobileGroup(state, sections, carAll, buttons, title) {
     }
 
     const currentSection = visibleSections[safeIndex];
+    state.activeIndex = Math.max(0, sections.indexOf(currentSection));
 
     visibleSections.forEach((section, index) => {
         const isCurrent = index === safeIndex;
@@ -976,6 +989,33 @@ function syncMobileGroup(state, sections, carAll, buttons, title) {
         carAll.style.height = currentHeight ? `${currentHeight}px` : "auto";
         carAll.style.minHeight = currentHeight ? `${currentHeight}px` : "";
     });
+}
+
+function ensureMobileRecommendationState(state, sections, carAll, buttons, title) {
+    if (!isMobileViewport()) {
+        return;
+    }
+
+    const currentSection = sections.find((section) =>
+        section.classList.contains("is-mobile-current") &&
+        getMobileGroup(section.id) === state.activeMobileGroup
+    );
+
+    if (currentSection) {
+        return;
+    }
+
+    const fallbackGroup = state.activeMobileGroup || getMobileGroup(sections[0]?.id || "") || "outdoor";
+    const fallbackSections = getMobileSectionsByGroup(sections, fallbackGroup);
+
+    state.activeMobileGroup = fallbackGroup;
+    state.currentMobileIndex = clamp(state.currentMobileIndex, 0, Math.max(0, fallbackSections.length - 1));
+
+    if (!fallbackSections.length) {
+        return;
+    }
+
+    syncMobileGroup(state, sections, carAll, buttons, title);
 }
 
 function resetMobileState(sections, carAll) {
