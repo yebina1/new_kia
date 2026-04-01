@@ -17,6 +17,8 @@
   --photo-opacity: 0;
   --photo-y: 18px;
   --ev6-details-bottom: clamp(56px, 11vh, 110px);
+  --ev6-photo-card-bottom: var(--ev6-details-bottom);
+  --ev6-bg-layer-bottom: calc(var(--ev6-photo-card-bottom) + var(--bg-overscan));
 }
 
 /* main_visual */
@@ -115,8 +117,7 @@ body.section_transition_lock {
     gap: 0;
     flex: 1;
     width: 100%;
-    min-height: 0;
-    max-height: 450px;
+    height: clamp(450px, 60vh, 700px);
     margin-top: 20px;
     overflow: visible;
     z-index: 1;
@@ -524,6 +525,79 @@ body.section_transition_lock {
   background: var(--page-bg);
 }
 
+.scroll_down_wrap {
+  position: sticky;
+  top: 0;
+  z-index: 6;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  height: 100vh;
+  margin-top: -100vh;
+  padding-bottom: 32px;
+  pointer-events: none;
+}
+
+.scroll_down {
+  position: relative;
+  display: inline-block;
+  padding-top: 60px;
+  color: var(--kia-white1);
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-shadow: 0 0 18px rgba(12, 17, 21, 0.28);
+  user-select: none;
+  opacity: 0.88;
+}
+
+.scroll_down span {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 30px;
+  height: 50px;
+  margin-left: -15px;
+  border: 2px solid var(--kia-white1);
+  border-radius: 999px;
+  box-sizing: border-box;
+}
+
+.scroll_down span::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  background-color: var(--kia-white1);
+  border-radius: 50%;
+  animation: scroll-down-dot 2s infinite;
+  box-sizing: border-box;
+}
+
+@keyframes scroll-down-dot {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+
+  40% {
+    opacity: 1;
+  }
+
+  80% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
 .bg_viewport {
   position: absolute;
   inset: 0;
@@ -726,7 +800,7 @@ body.section_transition_lock {
   position: absolute;
   left: clamp(76px, 6.1vw, 112px);
   top: auto;
-  bottom: calc(var(--ev6-details-bottom) + var(--bg-overscan));
+  bottom: var(--ev6-bg-layer-bottom);
   width: min(40vw, 640px);
   display: grid;
   grid-template-columns: minmax(220px, 1.08fr) minmax(190px, 0.92fr);

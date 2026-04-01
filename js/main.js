@@ -725,6 +725,7 @@ function initEv6Scene() {
   const luggagePhotoCard = document.getElementById("luggagePhotoCard");
   const seatingPhotoCard = document.getElementById("seatingPhotoCard");
   const carpetsPhotoCard = document.getElementById("carpetsPhotoCard");
+  const photoCards = [dashPhotoCard, luggagePhotoCard, seatingPhotoCard, carpetsPhotoCard];
   const root = document.documentElement;
 
   const requiredNodes = [
@@ -739,10 +740,7 @@ function initEv6Scene() {
     seatingMask,
     carpetsMask,
     detailsLayer,
-    dashPhotoCard,
-    luggagePhotoCard,
-    seatingPhotoCard,
-    carpetsPhotoCard,
+    ...photoCards,
   ];
 
   if (requiredNodes.some((node) => !node)) {
@@ -752,6 +750,29 @@ function initEv6Scene() {
 
   let rafId = null;
   document.body.style.backgroundColor = "";
+
+  function syncFeatureBottomToVisiblePhotoCard() {
+    if (!scene) return;
+
+    const visibleCards = photoCards.filter((card) => {
+      const opacity = Number.parseFloat(card.style.opacity || "0");
+      return opacity > 0.01;
+    });
+
+    if (!visibleCards.length) {
+      scene.style.removeProperty("--ev6-photo-card-bottom");
+      return;
+    }
+
+    const sceneRect = scene.getBoundingClientRect();
+    const visibleCardBottom = Math.max(
+      ...visibleCards.map((card) => card.getBoundingClientRect().bottom)
+    );
+    const clampedBottom = Math.min(visibleCardBottom, sceneRect.bottom);
+    const bottomOffset = Math.max(sceneRect.bottom - clampedBottom, 0);
+
+    scene.style.setProperty("--ev6-photo-card-bottom", `${Math.round(bottomOffset)}px`);
+  }
 
   function render() {
     const total = Math.max(section.offsetHeight - window.innerHeight, 1);
@@ -856,6 +877,7 @@ function initEv6Scene() {
     seatingPhotoCard.style.transform = `translate3d(0, ${seatPhotoOpacity > 0 ? 0 : 18}px, 0) scale(${seatPhotoOpacity > 0 ? 1 : 0.76})`;
     carpetsPhotoCard.style.opacity = String(carpetPhotoOpacity);
     carpetsPhotoCard.style.transform = `translate3d(0, ${carpetPhotoOpacity > 0 ? 0 : 18}px, 0) scale(${carpetPhotoOpacity > 0 ? 1 : 0.76})`;
+    syncFeatureBottomToVisiblePhotoCard();
 
     const dashFocusOn = bg2StageP >= 0.11 && bg2StageP < 0.22;
     const luggageFocusOn = bg2StageP >= 0.37 && bg2StageP < 0.47;
@@ -927,11 +949,23 @@ window.addEventListener("resize", handleScroll, { passive: true });
 handleScroll();
 
 function initLenis() {
-  const $lenis = new Lenis();
+  if (typeof window.Lenis !== "function") {
+    window.$mainLenis = null;
+    console.warn("[main] Lenis is unavailable. Falling back to native scroll.");
+    return;
+  }
+
+  const $lenis = new window.Lenis();
   window.$mainLenis = $lenis;
-  $lenis.on('scroll', ScrollTrigger.update);
-  gsap.ticker.add((time) => $lenis.raf(time * 20000));
-  gsap.ticker.lagSmoothing(0);
+
+  if (window.ScrollTrigger && typeof ScrollTrigger.update === "function") {
+    $lenis.on('scroll', ScrollTrigger.update);
+  }
+
+  if (window.gsap && gsap.ticker) {
+    gsap.ticker.add((time) => $lenis.raf(time * 20000));
+    gsap.ticker.lagSmoothing(0);
+  }
 }
 
 initLenis();
@@ -1468,6 +1502,7 @@ const $scrollLockTime = 950;
 const $modalCloseDelay = 300;
 const $captureTolerance = 80;
 const $wheelNoiseThreshold = 45;
+const $reviewResetMargin = 24;
 
 function updateReviewMetrics() {
     if (!$reviewFirstList) return;
@@ -1483,9 +1518,27 @@ function updateReviewMetrics() {
     $maxScroll = Math.max(0, ($listItems.length - 1) * $step);
 }
 
-function syncReviewLists() {
+function syncReviewLists(immediate = false) {
+    if (immediate) {
+        $lists.forEach(($list) => {
+            $list.style.transition = 'none';
+        });
+    }
+
     $lists.forEach(($list) => {
         $list.style.transform = `translateY(${-1 * $currentScroll}px)`;
+    });
+
+    if (!immediate) {
+        return;
+    }
+
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            $lists.forEach(($list) => {
+                $list.style.removeProperty('transition');
+            });
+        });
     });
 }
 
@@ -1576,6 +1629,27 @@ function captureReview(startAtBottom = false) {
     checkActive();
 }
 
+function primeReviewState(startAtBottom = false) {
+    if (!$reviewSection || !$reviewCon || !$reviewFirstList) {
+        return;
+    }
+
+    const $targetScroll = startAtBottom ? $maxScroll : 0;
+    const shouldHideModal = $modal && $modal.classList.contains('show');
+
+    if ($currentScroll === $targetScroll && $releasePending === startAtBottom && !shouldHideModal) {
+        return;
+    }
+
+    clearReviewRuntimeTimers();
+    $currentScroll = $targetScroll;
+    $isWaiting = false;
+    $releasePending = startAtBottom;
+    hideModal();
+    syncReviewLists(true);
+    checkActive();
+}
+
 function releaseReview(isDown) {
     clearReviewRuntimeTimers();
     const $targetScrollY = isDown
@@ -1604,6 +1678,21 @@ function hideModal() {
     if ($reviewModalLink) {
         $reviewModalLink.classList.remove('on');
     }
+}
+
+function syncReviewResetStateAboveSection() {
+    if (!$reviewSection || !$reviewCon || !$reviewFirstList || $isCaptured) {
+        return;
+    }
+
+    const $sectionRect = $reviewSection.getBoundingClientRect();
+    const isReviewFullyBelowViewport = $sectionRect.top >= window.innerHeight + $reviewResetMargin;
+
+    if (!isReviewFullyBelowViewport) {
+        return;
+    }
+
+    primeReviewState(false);
 }
 
 function handleReviewWheel(e) {
@@ -1699,6 +1788,7 @@ function handleReviewWheel(e) {
 }
 
 window.addEventListener('wheel', handleReviewWheel, { passive: false });
+window.addEventListener('scroll', syncReviewResetStateAboveSection, { passive: true });
 window.addEventListener('resize', () => {
     clearReviewRuntimeTimers();
     updateReviewMetrics();
