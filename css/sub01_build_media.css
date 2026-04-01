@@ -1,1 +1,909 @@
 @charset "utf-8";
+
+@media (max-width: 1500px) {
+  .hero_trim_panel,
+  .hero_color_panels,
+  .hero_package_panel,
+  .hero_accessory_panel,
+  .hero_plan_panel,
+  .hero_summary_side,
+  .hero_summary_panel,
+  .hero_quote_panel {
+    display: block;
+    align-self: start;
+    padding: 32px;
+    height: auto;
+    min-height: auto;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .hero_trim_cards,
+  .hero_package_cards,
+  .hero_accessory_cards,
+  .hero_plan_cards,
+  .hero_summary_breakdown,
+  .hero_summary_items,
+  .hero_quote_panel_body {
+    flex: 0 0 auto;
+    min-height: auto;
+    height: auto;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .hero_trim_cards,
+  .hero_accessory_cards,
+  .hero_quote_panel_body {
+    padding-bottom: 32px;
+    box-sizing: border-box;
+  }
+
+  .hero_trim_cards::after,
+  .hero_accessory_cards::after,
+  .hero_quote_panel_body::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 32px;
+    flex: 0 0 32px;
+  }
+
+  .hero_color_panels {
+    gap: 32px;
+  }
+
+  .hero_trim_panel,
+  .hero_accessory_panel,
+  .hero_quote_panel {
+    padding-bottom: 32px;
+  }
+
+  .hero_stage_actions,
+  .hero_trim_actions,
+  .hero_package_actions,
+  .hero_accessory_actions,
+  .hero_plan_actions,
+  .hero_summary_actions {
+    position: static !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    transform: none !important;
+    grid-area: actions;
+    align-self: start;
+    justify-self: end !important;
+    display: flex;
+    width: min(calc(100% - var(--hero-panel-right-offset)), var(--hero-stage-wide-panel-max-width));
+    max-width: min(calc(100% - var(--hero-panel-right-offset)), var(--hero-stage-wide-panel-max-width));
+    margin-top: 64px;
+    margin-left: auto;
+    margin-right: var(--hero-panel-right-offset);
+    justify-content: center;
+    gap: 64px;
+    padding: 0;
+    min-height: 0;
+  }
+
+  .hero_trim_action_btn {
+    width: auto;
+    min-width: 0;
+    height: auto;
+    padding: 16px 32px;
+  }
+}
+
+@media (max-width: 1280px) {
+  .hero {
+    --hero-stage-shell-right: 32px;
+    --hero-right-rail: clamp(20px, 3vw, 32px);
+    --hero-stage-panel-offset-x: 0px;
+    --hero-stage-panel-gap: 32px;
+    --hero-stage-card-bottom-clearance: calc(156px + 4vw);
+    --hero-model-title-anchor-offset: 172px;
+    --hero-model-start-gap: 108px;
+    --hero-stage-steps-left: 50%;
+    --hero-stage-steps-transform: translateX(-50%);
+    --hero-stage-steps-width: min(calc(100vw - 128px), 840px);
+    --hero-stage-steps-max-width: min(calc(100vw - 128px), 840px);
+  }
+
+  .hero_visual {
+    min-height: clamp(980px, 110vw, 1420px);
+  }
+
+  .hero_trim_stage,
+  .hero_color_stage,
+  .hero_package_stage,
+  .hero_accessory_stage,
+  .hero_plan_stage,
+  .hero_summary_stage {
+    inset: 112px 32px 96px;
+  }
+
+  .hero_trim_intro,
+  .hero_color_intro,
+  .hero_package_intro,
+  .hero_accessory_intro,
+  .hero_plan_intro,
+  .hero_summary_intro {
+    gap: 20px;
+  }
+
+  .hero_trim_panel,
+  .hero_color_panels,
+  .hero_package_panel,
+  .hero_accessory_panel,
+  .hero_plan_panel,
+  .hero_summary_side,
+  .hero_stage_actions {
+    width: min(calc(100% - var(--hero-panel-right-offset)), calc(100vw - 96px));
+    max-width: min(calc(100% - var(--hero-panel-right-offset)), calc(100vw - 96px));
+  }
+
+  .hero_trim_vehicle,
+  .hero_color_vehicle,
+  .hero_package_vehicle,
+  .hero_accessory_vehicle,
+  .hero_plan_vehicle,
+  .hero_summary_vehicle {
+    width: min(100%, 760px);
+  }
+
+  .hero_color_seat_preview {
+    right: clamp(28px, 5vw, 72px);
+    bottom: clamp(6px, 1vw, 18px);
+    width: clamp(132px, 15vw, 176px);
+  }
+
+  .hero_bottom_steps {
+    width: min(calc(100vw - 128px), 840px);
+    max-width: min(calc(100vw - 128px), 840px);
+  }
+}
+
+@media (max-width: 1024px) {
+  .hero {
+    --hero-stage-shell-right: 24px;
+    --hero-right-rail: 24px;
+    --hero-panel-right-offset: 0px;
+    --hero-stage-actions-center-x: 50%;
+    --hero-stage-bottom-rail: 30px;
+    --hero-stage-steps-bottom: 30px;
+    --hero-model-title-anchor-offset: 144px;
+    --hero-model-start-gap: 88px;
+    --hero-stage-steps-width: min(calc(100vw - 64px), 720px);
+    --hero-stage-steps-max-width: min(calc(100vw - 64px), 720px);
+  }
+
+  .hero_visual {
+    min-height: clamp(1040px, 124vw, 1500px);
+    padding-top: 118px;
+  }
+
+  .hero_top_tabs {
+    top: 104px;
+    width: min(685px, calc(100vw - 48px));
+    padding: 0 20px 10px;
+  }
+
+  .hero_top_tabs button {
+    padding-inline: 12px;
+    font-size: 17px;
+  }
+
+  .hero_title {
+    top: clamp(210px, 24vw, 276px);
+    font-size: clamp(34px, 5.2vw, 48px);
+    transform: translateX(-50%);
+  }
+
+  .hero_car {
+    width: min(78vw, 640px);
+  }
+
+  .hero_arrow_frame {
+    width: min(calc(100vw - 48px), calc(var(--hero-model-vehicle-width) + 260px));
+  }
+
+  .hero_trim_stage,
+  .hero_color_stage,
+  .hero_package_stage,
+  .hero_accessory_stage,
+  .hero_plan_stage,
+  .hero_summary_stage {
+    inset: 96px 24px 96px;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto;
+    row-gap: 22px;
+  }
+
+  .hero_trim_stage,
+  .hero_package_stage,
+  .hero_accessory_stage,
+  .hero_plan_stage,
+  .hero_summary_stage {
+    grid-template-areas:
+      "intro"
+      "vehicle"
+      "panel"
+      "actions";
+  }
+
+  .hero_color_stage {
+    grid-template-areas:
+      "intro"
+      "vehicle"
+      "panels"
+      "actions";
+  }
+
+  .hero_trim_intro,
+  .hero_color_intro,
+  .hero_package_intro,
+  .hero_accessory_intro,
+  .hero_plan_intro,
+  .hero_summary_intro {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 12px;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding-top: 0;
+  }
+
+  .hero_trim_summary,
+  .hero_color_summary,
+  .hero_package_summary,
+  .hero_accessory_summary,
+  .hero_plan_summary,
+  .hero_summary_summary {
+    max-width: 100%;
+    margin-left: 0;
+    padding-top: 0;
+    text-align: left;
+  }
+
+  .hero_trim_vehicle,
+  .hero_color_vehicle,
+  .hero_package_vehicle,
+  .hero_accessory_vehicle,
+  .hero_plan_vehicle,
+  .hero_summary_vehicle,
+  .hero_trim_panel,
+  .hero_color_panels,
+  .hero_package_panel,
+  .hero_accessory_panel,
+  .hero_plan_panel,
+  .hero_summary_side,
+  .hero_stage_actions {
+    justify-self: center;
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    transform: none;
+  }
+
+  .hero_color_seat_preview {
+    right: clamp(8px, 2vw, 24px);
+    bottom: clamp(-8px, -0.5vw, 6px);
+    width: clamp(112px, 16vw, 148px);
+  }
+
+  .hero_trim_panel,
+  .hero_color_panels,
+  .hero_package_panel,
+  .hero_accessory_panel,
+  .hero_plan_panel,
+  .hero_summary_panel,
+  .hero_quote_panel {
+    padding: 32px;
+    border-radius: 28px;
+  }
+
+  .hero_color_panels,
+  .hero_summary_side {
+    margin-top: 48px;
+  }
+
+  .hero_stage_actions {
+    position: static;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 64px;
+    padding: 0;
+  }
+
+  .hero_trim_action_btn {
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    padding: 16px 32px;
+    font-size: 16px;
+  }
+
+  .hero_color_panels {
+    gap: 32px;
+  }
+
+  .hero_trim_panel,
+  .hero_accessory_panel,
+  .hero_quote_panel {
+    padding-bottom: 32px;
+  }
+
+  .hero_trim_cards::after,
+  .hero_accessory_cards::after,
+  .hero_quote_panel_body::after {
+    height: 32px;
+    flex-basis: 32px;
+  }
+
+  .hero_bottom_steps,
+  .hero_trim_stage.is-visible ~ .hero_bottom_steps,
+  .hero_color_stage.is-visible ~ .hero_bottom_steps,
+  .hero_package_stage.is-visible ~ .hero_bottom_steps,
+  .hero_accessory_stage.is-visible ~ .hero_bottom_steps,
+  .hero_plan_stage.is-visible ~ .hero_bottom_steps,
+  .hero_summary_stage.is-visible ~ .hero_bottom_steps {
+    left: 50%;
+    right: auto;
+    bottom: var(--hero-stage-bottom-rail);
+    width: min(calc(100vw - 48px), 720px);
+    max-width: min(calc(100vw - 48px), 720px);
+    transform: translateX(-50%);
+  }
+
+  .hero_bottom_tabs {
+    gap: 12px;
+  }
+
+  .hero_bottom_tabs button {
+    font-size: 15px;
+  }
+
+  .hero_summary_cta {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .hero_summary_cta_btn {
+    width: 100%;
+  }
+
+  .hero_quote_fields,
+  .hero_quote_dealer_cards {
+    grid-template-columns: 1fr;
+  }
+
+  .hero_quote_method_tabs {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .hero_quote_dealer_meta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    --hero-stage-shell-right: 20px;
+    --hero-right-rail: 20px;
+    --hero-stage-bottom-rail: 34px;
+    --hero-stage-steps-bottom: 34px;
+    --hero-model-title-anchor-offset: 108px;
+    --hero-model-start-gap: 48px;
+  }
+
+  .hero_visual {
+    min-height: 880px;
+    padding-top: 96px;
+  }
+
+  .hero_top_tabs {
+    top: 84px;
+    min-height: 48px;
+    padding: 0 12px 6px;
+    gap: 4px;
+    border-radius: 22px;
+  }
+
+  .hero_top_tabs button {
+    padding-inline: 10px;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+  }
+
+  .hero_title {
+    top: clamp(164px, 28vw, 212px);
+    font-size: clamp(24px, 6.6vw, 32px);
+    transform: translateX(-50%);
+  }
+
+  .hero_car {
+    width: min(74vw, 460px);
+  }
+
+  .hero_color_seat_preview {
+    right: clamp(-2px, 1vw, 10px);
+    bottom: -10px;
+    width: clamp(96px, 22vw, 132px);
+  }
+
+  .hero_arrow_frame {
+    width: calc(100vw - 32px);
+  }
+
+  .hero_arrow {
+    width: 44px;
+    height: 44px;
+    flex-basis: 44px;
+  }
+
+  .hero_trim_stage,
+  .hero_color_stage,
+  .hero_package_stage,
+  .hero_accessory_stage,
+  .hero_plan_stage,
+  .hero_summary_stage {
+    inset: 72px 20px 88px;
+    row-gap: 18px;
+  }
+
+  .hero_trim_intro,
+  .hero_color_intro,
+  .hero_package_intro,
+  .hero_accessory_intro,
+  .hero_plan_intro,
+  .hero_summary_intro {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .hero_trim_summary,
+  .hero_color_summary,
+  .hero_package_summary,
+  .hero_accessory_summary,
+  .hero_plan_summary,
+  .hero_summary_summary {
+    flex: 0 0 auto;
+    max-width: min(48vw, 240px);
+    margin-left: auto;
+    text-align: right;
+  }
+
+  .hero_trim_title,
+  .hero_color_title,
+  .hero_package_title,
+  .hero_accessory_title,
+  .hero_plan_title,
+  .hero_summary_title,
+  .hero_trim_panel_title,
+  .hero_color_panel_title,
+  .hero_package_panel_title,
+  .hero_quote_title {
+    font-size: clamp(28px, 7vw, 36px);
+  }
+
+  .hero_trim_grade,
+  .hero_color_trim,
+  .hero_package_trim,
+  .hero_accessory_trim,
+  .hero_plan_trim,
+  .hero_summary_trim,
+  .hero_quote_label,
+  .hero_quote_dealer_title {
+    font-size: 17px;
+  }
+
+  .hero_trim_price,
+  .hero_trim_lease,
+  .hero_color_price,
+  .hero_color_lease,
+  .hero_package_price,
+  .hero_package_lease,
+  .hero_accessory_price,
+  .hero_accessory_lease,
+  .hero_plan_price,
+  .hero_plan_lease,
+  .hero_summary_price,
+  .hero_summary_lease,
+  .hero_quote_dealer_copy,
+  .hero_quote_dealer_hint,
+  .hero_quote_zip_btn,
+  .hero_quote_field_label,
+  .hero_quote_field input,
+  .hero_quote_selected_model_input {
+    font-size: 15px;
+  }
+
+  .hero_trim_panel,
+  .hero_color_panels,
+  .hero_package_panel,
+  .hero_accessory_panel,
+  .hero_plan_panel,
+  .hero_summary_panel,
+  .hero_quote_panel {
+    padding: 32px;
+    border-radius: 24px;
+  }
+
+  .hero_color_panel,
+  .hero_trim_card,
+  .hero_package_card,
+  .hero_accessory_card,
+  .hero_plan_card,
+  .hero_quote_dealer_card,
+  .hero_quote_field_shell_selected_model {
+    border-radius: 24px;
+  }
+
+  .hero_color_panels,
+  .hero_summary_side {
+    margin-top: 40px;
+  }
+
+  .hero_stage_actions {
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    padding: 0;
+  }
+
+  .hero_trim_action_btn {
+    height: auto;
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+
+  .hero_color_panels {
+    gap: 32px;
+  }
+
+  .hero_trim_panel,
+  .hero_accessory_panel,
+  .hero_quote_panel {
+    padding-bottom: 28px;
+  }
+
+  .hero_trim_cards::after,
+  .hero_accessory_cards::after,
+  .hero_quote_panel_body::after {
+    height: 28px;
+    flex-basis: 28px;
+  }
+
+  .hero_bottom_steps,
+  .hero_trim_stage.is-visible ~ .hero_bottom_steps,
+  .hero_color_stage.is-visible ~ .hero_bottom_steps,
+  .hero_package_stage.is-visible ~ .hero_bottom_steps,
+  .hero_accessory_stage.is-visible ~ .hero_bottom_steps,
+  .hero_plan_stage.is-visible ~ .hero_bottom_steps,
+  .hero_summary_stage.is-visible ~ .hero_bottom_steps {
+    width: calc(100vw - 32px);
+    max-width: calc(100vw - 32px);
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  .hero_progress,
+  .hero_bottom_tabs {
+    padding-inline: 24px;
+  }
+
+  .hero_progress {
+    margin-bottom: 32px;
+  }
+
+  .hero_quote_method_tabs {
+    grid-template-columns: 1fr;
+  }
+
+  .hero_quote_field_shell {
+    min-height: 52px;
+    padding-inline: 18px;
+  }
+
+  .hero_quote_field_shell_selected_model {
+    min-height: 64px;
+    padding: 12px 18px;
+  }
+
+  .hero_quote_dealer_card {
+    min-height: 0;
+    padding: 18px;
+  }
+
+  .hero_quote_dealer_check,
+  .hero_quote_check {
+    width: 38px;
+    height: 38px;
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 560px) {
+  .hero {
+    --hero-stage-shell-right: 16px;
+    --hero-right-rail: 16px;
+    --hero-stage-bottom-rail: 32px;
+    --hero-stage-steps-bottom: 32px;
+    --hero-model-title-anchor-offset: 84px;
+    --hero-model-start-gap: 28px;
+  }
+
+  .hero_visual {
+    min-height: 760px;
+    padding-top: 80px;
+  }
+
+  .hero_top_tabs {
+    top: 66px;
+    width: calc(100vw - 24px);
+    max-width: calc(100vw - 24px);
+    min-height: 40px;
+    padding: 0 8px 4px;
+  }
+
+  .hero_top_tabs button {
+    padding-inline: 8px;
+    font-size: 11px;
+  }
+
+  .hero_title {
+    top: clamp(132px, 27vw, 170px);
+    font-size: clamp(20px, 6.4vw, 26px);
+    transform: translateX(-50%);
+  }
+
+  .hero_car {
+    width: calc(100vw - 128px);
+  }
+
+  .hero_color_seat_preview {
+    right: 0;
+    bottom: -8px;
+    width: clamp(84px, 24vw, 112px);
+  }
+
+  .hero_arrow_frame {
+    width: calc(100vw - 20px);
+  }
+
+  .hero_model_start_btn {
+    min-width: 82px;
+    padding: 8px 12px !important;
+    font-size: 12px;
+  }
+
+  .hero_model_start_btn i {
+    font-size: 12px;
+  }
+
+  .hero_trim_stage,
+  .hero_color_stage,
+  .hero_package_stage,
+  .hero_accessory_stage,
+  .hero_plan_stage,
+  .hero_summary_stage {
+    inset: 64px 16px 84px;
+  }
+
+  .hero_trim_intro,
+  .hero_color_intro,
+  .hero_package_intro,
+  .hero_accessory_intro,
+  .hero_plan_intro,
+  .hero_summary_intro {
+    gap: 12px;
+  }
+
+  .hero_trim_summary,
+  .hero_color_summary,
+  .hero_package_summary,
+  .hero_accessory_summary,
+  .hero_plan_summary,
+  .hero_summary_summary {
+    max-width: min(50vw, 200px);
+  }
+
+  .hero_trim_panel,
+  .hero_color_panels,
+  .hero_package_panel,
+  .hero_accessory_panel,
+  .hero_plan_panel,
+  .hero_summary_panel,
+  .hero_quote_panel {
+    padding: 32px;
+    border-radius: 24px;
+  }
+
+  .hero_color_panel,
+  .hero_trim_card,
+  .hero_package_card,
+  .hero_accessory_card,
+  .hero_plan_card,
+  .hero_quote_dealer_card,
+  .hero_quote_field_shell_selected_model {
+    border-radius: 24px;
+  }
+
+  .hero_stage_actions {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 0;
+  }
+
+  .hero_trim_action_btn {
+    height: auto;
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+
+  .hero_color_panels {
+    gap: 32px;
+  }
+
+  .hero_trim_panel,
+  .hero_accessory_panel,
+  .hero_quote_panel {
+    padding-bottom: 24px;
+  }
+
+  .hero_trim_cards::after,
+  .hero_accessory_cards::after,
+  .hero_quote_panel_body::after {
+    height: 24px;
+    flex-basis: 24px;
+  }
+
+  .hero_quote_intro {
+    align-items: flex-start;
+  }
+
+  .hero_quote_title_icon {
+    margin-right: 0;
+    font-size: 30px;
+  }
+
+  .hero_quote_field_shell {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    min-height: 68px;
+    padding-block: 10px;
+  }
+
+  .hero_quote_field_shell_selected_model {
+    min-height: 72px;
+  }
+
+  .hero_quote_error {
+    padding-left: 6px;
+  }
+
+  .hero_quote_dealer_card {
+    gap: 12px;
+  }
+
+  .hero_quote_dealer_name {
+    font-size: 16px;
+  }
+
+  .hero_quote_optin_row {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 1500px) {
+  .hero_color_panels {
+    gap: 0 !important;
+  }
+
+  .hero_color_panel + .hero_color_panel {
+    margin-top: 32px !important;
+  }
+
+  .hero_trim_panel,
+  .hero_accessory_panel,
+  .hero_quote_panel {
+    padding: 32px !important;
+  }
+
+  .hero_trim_panel_title,
+  .hero_color_panel_title,
+  .hero_package_panel_title,
+  .hero_accessory_panel_title,
+  .hero_plan_panel_title,
+  .hero_summary_panel_title,
+  .hero_quote_title {
+    margin: 0 0 16px !important;
+  }
+
+  .hero_trim_cards,
+  .hero_accessory_cards,
+  .hero_quote_panel_body {
+    padding-bottom: 0 !important;
+  }
+
+  .hero_trim_cards::after,
+  .hero_accessory_cards::after,
+  .hero_quote_panel_body::after {
+    content: none !important;
+  }
+
+  .hero_stage_actions,
+  .hero_trim_actions,
+  .hero_package_actions,
+  .hero_accessory_actions,
+  .hero_plan_actions,
+  .hero_summary_actions {
+    margin-top: 64px !important;
+    margin-bottom: 64px !important;
+    padding-top: 0 !important;
+    padding-bottom: 64px !important;
+  }
+}
+
+@media (max-width: 1024px) {
+  .hero_color_panel + .hero_color_panel {
+    margin-top: 28px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero_color_panel + .hero_color_panel {
+    margin-top: 24px !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .hero_color_panel + .hero_color_panel {
+    margin-top: 20px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero_stage_actions,
+  .hero_trim_actions,
+  .hero_package_actions,
+  .hero_accessory_actions,
+  .hero_plan_actions,
+  .hero_summary_actions,
+  .hero_color_actions {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+    justify-content: center;
+    gap: 24px !important;
+    flex-wrap: nowrap;
+  }
+
+  .hero_stage_actions .hero_trim_action_btn,
+  .hero_trim_actions .hero_trim_action_btn,
+  .hero_package_actions .hero_trim_action_btn,
+  .hero_accessory_actions .hero_trim_action_btn,
+  .hero_plan_actions .hero_trim_action_btn,
+  .hero_summary_actions .hero_trim_action_btn,
+  .hero_color_actions .hero_trim_action_btn {
+    width: auto !important;
+    min-width: 0 !important;
+    flex: 0 0 auto !important;
+    padding: 8px 16px !important;
+  }
+
+  .hero_model_start_btn {
+    min-width: 96px;
+    padding: 12px 16px !important;
+    font-size: 14px;
+  }
+}
