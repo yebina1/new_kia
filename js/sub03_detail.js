@@ -130,7 +130,7 @@ const trimData = {
 
 const renderTrimCards = (cards) => {
   trimInfo.innerHTML = cards.map((card) => `
-    <article class="trim_card">
+    <article class="trim_card glass_bg2">
       <h3 class="trim_card_title">${card.title}</h3>
       <span class="trim_card_line"></span>
       <ul class="trim_card_list">
@@ -217,7 +217,10 @@ const closeInteriorPanel = () => {
   if (!interiorPanel) return;
 
   interiorPanel.classList.remove('is_open');
-  interiorButtons.forEach((button) => button.classList.remove('is-active'));
+  interiorButtons.forEach((button) => {
+    button.classList.remove('is-active');
+    button.classList.remove('on');
+  });
 
   window.setTimeout(() => {
     if (!interiorPanel.classList.contains('is_open')) {
