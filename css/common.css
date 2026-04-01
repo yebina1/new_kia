@@ -330,7 +330,7 @@ a.white_origin{
 
 .black_btn2:hover{
   border: 1px solid #ABF4F6;
-  color: #ABF4F6;
+  /* color: #ABF4F6; */
 }
 
 .page_top_btn {

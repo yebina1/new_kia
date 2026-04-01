@@ -514,7 +514,6 @@ article.ev9 .btn_compare {
 
 .assistant_banner .white_origin:hover{
   border: 1px solid #ABF4F6;
-  /* color: #ABF4F6; */
   border-color: rgba(160, 247, 255, 0.92);
   color: var(--kia-white1);
   box-shadow:
