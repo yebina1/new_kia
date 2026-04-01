@@ -70,6 +70,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const quoteEmailError = document.getElementById("quoteEmailError");
   const quoteAddressError = document.getElementById("quoteAddressError");
   const quoteSelectedModel = document.getElementById("quoteSelectedModel");
+  const buildSendModal = document.getElementById("buildSendModal");
+  const buildSendModalClose = document.getElementById("buildSendModalClose");
+  const buildSendModalTitle = document.getElementById("build-send-modal-title");
+  const buildSendModalEyebrow = document.getElementById("buildSendModalEyebrow");
+  const buildSendModalDescription = document.getElementById("buildSendModalDescription");
+  const buildSendModalSpecs = document.getElementById("buildSendModalSpecs");
+  const buildSendModalImage = document.getElementById("buildSendModalImage");
+  const buildSendModalPrimary = document.getElementById("buildSendModalPrimary");
+  const buildSendModalSecondary = document.getElementById("buildSendModalSecondary");
   const summaryRowTrim = document.getElementById("summaryRowTrim");
   const summaryRowTrimPrice = document.getElementById("summaryRowTrimPrice");
   const summaryRowExterior = document.getElementById("summaryRowExterior");
@@ -485,6 +494,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let selectedPackages = new Set();
   let pendingColorSecondarySync = 0;
   let suppressInstantActionClickUntil = 0;
+  let buildSendModalOpenedAt = 0;
+  let buildSendModalArmTimer = 0;
   function parseCurrencyValue(value) {
     const numericValue = Number(String(value || "").replace(/[^0-9.-]/g, ""));
     return Number.isFinite(numericValue) ? numericValue : 0;
@@ -633,6 +644,95 @@ document.addEventListener("DOMContentLoaded", () => {
       price: parseCurrencyValue(priceText),
       displayPrice: priceText
     };
+  }
+
+  function getBuildModalSpecs() {
+    const selectedExterior = getSelectedExteriorSwatch();
+    const selectedInterior = getSelectedInteriorSwatch();
+    const selectedPlan = getSelectedPlanItem();
+    const packageItems = getSelectedPackageItems();
+    const accessoryItems = getSelectedAccessoryItems();
+    const items = [
+      `Trim: ${heroSummaryTrim?.textContent?.trim() || "Land AWD"}`,
+      `Exterior: ${selectedExterior?.dataset.name || "Panthera Metal"}`,
+      `Interior: ${selectedInterior?.dataset.name || "Black & Dark Gray Quilted Stripes SynTex Seat Trim"}`,
+      `Maintenance Plan: ${selectedPlan.name}`,
+      `Build Total: ${summaryBuildTotal?.textContent?.trim() || "$0"}`
+    ];
+
+    packageItems.forEach((item) => {
+      items.push(`Package: ${item.name}`);
+    });
+
+    accessoryItems.forEach((item) => {
+      items.push(`Accessory: ${item.name}`);
+    });
+
+    return items.slice(0, 8);
+  }
+
+  function populateBuildSendModal(options = {}) {
+    if (
+      !buildSendModalTitle ||
+      !buildSendModalEyebrow ||
+      !buildSendModalDescription ||
+      !buildSendModalSpecs
+    ) {
+      return;
+    }
+
+    const currentCar = getCurrentCar();
+    const trimName = heroSummaryTrim?.textContent?.trim() || "Land AWD";
+    const title = currentCar?.title ? `${currentCar.title} (${trimName})` : trimName;
+
+    buildSendModalTitle.textContent = title;
+    buildSendModalEyebrow.textContent = options.eyebrow || "Your Final Selection Estimate";
+    buildSendModalDescription.textContent =
+      options.description || "Your build summary has been prepared successfully.";
+    buildSendModalSpecs.innerHTML = "";
+
+    getBuildModalSpecs().forEach((item) => {
+      const li = document.createElement("li");
+      li.textContent = item;
+      buildSendModalSpecs.appendChild(li);
+    });
+
+    if (buildSendModalImage && heroSummaryImage) {
+      buildSendModalImage.src = heroSummaryImage.src;
+      buildSendModalImage.alt =
+        heroSummaryImage.alt || `${currentCar?.title || "Selected build"} preview`;
+    }
+  }
+
+  function openBuildSendModal(options = {}) {
+    if (!buildSendModal) {
+      return;
+    }
+
+    populateBuildSendModal(options);
+    buildSendModalOpenedAt = window.performance.now();
+    buildSendModal.dataset.closable = "false";
+    window.clearTimeout(buildSendModalArmTimer);
+    buildSendModalArmTimer = window.setTimeout(() => {
+      if (buildSendModal?.classList.contains("is-open")) {
+        buildSendModal.dataset.closable = "true";
+      }
+    }, 300);
+    buildSendModal.classList.add("is-open");
+    buildSendModal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("modal-open");
+  }
+
+  function closeBuildSendModal() {
+    if (!buildSendModal) {
+      return;
+    }
+
+    window.clearTimeout(buildSendModalArmTimer);
+    buildSendModal.dataset.closable = "false";
+    buildSendModal.classList.remove("is-open");
+    buildSendModal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("modal-open");
   }
 
   function updateSummaryPanel(basePriceText) {
@@ -2087,7 +2187,35 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    window.alert("Quote request has been sent.");
+    closeQuotePanel();
+    openBuildSendModal({
+      eyebrow: "Quote Request Complete",
+      description:
+        "Your quote request has been sent successfully. A dealer will review your build and contact you soon."
+    });
+  });
+
+  buildSendModalClose?.addEventListener("click", closeBuildSendModal);
+  buildSendModalPrimary?.addEventListener("click", closeBuildSendModal);
+  buildSendModalSecondary?.addEventListener("click", closeBuildSendModal);
+
+  buildSendModal?.addEventListener("click", (event) => {
+    if (
+      window.performance.now() - buildSendModalOpenedAt < 400 ||
+      buildSendModal.dataset.closable !== "true"
+    ) {
+      return;
+    }
+
+    if (event.target instanceof HTMLElement && event.target.hasAttribute("data-build-modal-close")) {
+      closeBuildSendModal();
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && buildSendModal?.classList.contains("is-open")) {
+      closeBuildSendModal();
+    }
   });
 
   heroQuotePanel?.addEventListener("click", (event) => {
@@ -2618,11 +2746,21 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      window.alert("Quote request has been sent.");
+      closeQuotePanel();
+      openBuildSendModal({
+        eyebrow: "Quote Request Complete",
+        description:
+          "Your quote request has been sent successfully. A dealer will review your build and contact you soon."
+      });
       return;
     }
 
     updateSteps(6);
+    openBuildSendModal({
+      eyebrow: "Build Estimate Ready",
+      description:
+        "Your build estimate has been organized into a final summary. You can keep editing or close this window."
+    });
   });
 
   setSelectedPlanCard(selectedPlanIndex);
