@@ -569,7 +569,7 @@ h2 {
     position: relative;
     z-index: 1;
     overflow: hidden;
-    padding: 64px 0;
+    padding: 6vh 0 11vh;
     background: #0a0f13;
 }
 
@@ -577,7 +577,7 @@ h2 {
     width: min(1440px, calc(100% - 80px));
     min-height: 1080px;
     margin: 0 auto;
-    padding: 32px 0 64px;
+    padding: 3vh 0 6vh;
 }
 
 .solution_section .solution_tit {
@@ -723,7 +723,10 @@ h2 {
     width: min(1600px, calc(100% - 80px));
     height: 100vh;
     min-height: 100vh;
-    padding: 88px 0 72px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: clamp(56px, 7vh, 96px) 0;
     box-sizing: border-box;
     overflow: visible;
 }
@@ -732,6 +735,7 @@ h2 {
     align-items: center;
     gap: 18px;
     text-align: center;
+    flex-shrink: 0;
 }
 
 .solution_section.is_desktop_scroll .solution_sub {
@@ -742,7 +746,7 @@ h2 {
     width: 100%;
     height: var(--solution-desktop-list-height);
     padding-top: 0;
-    margin: 54px auto 0;
+    margin: clamp(28px, 4vh, 54px) auto 0;
     left: auto;
     perspective: none;
     transform: none;
@@ -975,7 +979,9 @@ h2 {
 .partner_section {
     position: relative;
     min-height: 320vh;
+    padding-top: 5vh;
     background: #0a0f13;
+    z-index: 3;
 }
 
 .partner_sticky {
@@ -983,19 +989,21 @@ h2 {
     top: 0;
     min-height: 100vh;
     overflow: hidden;
+    z-index: 3;
+    background: #0a0f13;
 }
 
 .partner_inner {
     width: min(1440px, calc(100% - 80px));
     min-height: 100vh;
     margin: 0 auto;
-    padding: 40px 0 72px;
+    padding: 4vh 0 7vh;
     position: relative;
 }
 
 .partner_heading {
     position: absolute;
-    top: 130px;
+    top: 16vh;
     left: 50%;
     z-index: 6;
     font-family: "Cormorant Garamond", serif;
@@ -1024,19 +1032,19 @@ h2 {
 }
 
 .partner_cards {
-    height: calc(100vh - 160px);
+    height: calc(100vh - 15vh);
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    margin-top: 260px;
+    margin-top: 31vh;
 }
 
 .partner_cards_container {
-    width: min(1120px, 100%);
+    width: min(1280px, 100%);
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    gap: 80px;
+    gap: 72px;
     transition: filter 0.35s ease, opacity 0.35s ease;
     position: relative;
     z-index: 4;
@@ -1044,7 +1052,7 @@ h2 {
 
 .partner_card {
     flex: 1;
-    max-width: 320px;
+    max-width: 380px;
     display: flex;
     flex-direction: column;
     gap: 0;
@@ -1238,7 +1246,7 @@ h2 {
 .partner_scroll_down_button {
     left: 50%;
     top: auto;
-    bottom: 296px;
+    bottom: 8vh;
     z-index: 7;
     opacity: 0;
     visibility: hidden;
@@ -1269,12 +1277,12 @@ h2 {
     position: relative;
     width: 100%;
     overflow: hidden;
-    padding: 0 40px;
+    padding: 0;
 }
 
 .awards_inner::before,
 .awards_inner::after {
-    content: "";
+    content: none;
     position: absolute;
     top: -26px;
     bottom: -26px;
@@ -1297,8 +1305,8 @@ h2 {
     position: relative;
     height: 130px;
     overflow: hidden;
-    mask: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
-    -webkit-mask: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+    mask: none;
+    -webkit-mask: none;
 }
 
 .awards_marquee {
@@ -1324,9 +1332,9 @@ h2 {
     display: flex;
     align-items: center;
     gap: 14px;
-    width: 420px;
+    width: 500px;
     height: 130px;
-    padding: 0 20px;
+    padding: 0 24px;
     color: #ffffff;
     background: transparent;
     border-radius: 18px;
@@ -1351,43 +1359,7 @@ h2 {
 }
 
 .awards_blur {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 160px;
-    z-index: 4;
-    pointer-events: none;
-}
-
-.awards_blur_left {
-    left: 0;
-    transform: scaleX(-1);
-}
-
-.awards_blur_right {
-    right: 0;
-}
-
-.awards_blur div {
-    position: absolute;
-    inset: 0;
-    /* background: linear-gradient(90deg,
-            rgba(0, 0, 0, 0.24) 0%,
-            rgba(0, 0, 0, 0.16) 18%,
-            rgba(0, 0, 0, 0.08) 36%,
-            rgba(0, 0, 0, 0) 62%);
-    mask: linear-gradient(90deg,
-            transparent calc(var(--index) * 12%),
-            #000 calc((var(--index) + 1) * 12%),
-            #000 calc((var(--index) + 2) * 12%),
-            transparent calc((var(--index) + 3) * 12%));
-    -webkit-mask: linear-gradient(90deg,
-            transparent calc(var(--index) * 12%),
-            #000 calc((var(--index) + 1) * 12%),
-            #000 calc((var(--index) + 2) * 12%),
-            transparent calc((var(--index) + 3) * 12%));
-    backdrop-filter: blur(calc((var(--index) + 1) * 2.2px)); */
-    background: #0c1115;
+    display: none;
 }
 
 .awards_viewport:has(.awards_item:hover) .awards_marquee {

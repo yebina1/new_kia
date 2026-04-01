@@ -563,6 +563,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const DESKTOP_BREAKPOINT = 900;
     const SOLUTION_DESKTOP_HOLD = 0.16;
+    const SOLUTION_ACCENT_COLOR = "#C7FFEE";
 
     function clamp(value, min, max) {
         return Math.min(Math.max(value, min), max);
@@ -587,8 +588,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const currentOffset = state.mode === "desktop" ? state.lastOne : state.lastTwo;
         const scale = state.maxOffset > 0 ? currentOffset / state.maxOffset : 0;
+
         solutionProgress.style.setProperty("--solution-progress-scale", scale.toFixed(4));
         solutionProgress.style.setProperty("--solution-travel-progress", scale.toFixed(4));
+        solutionProgress.style.setProperty("--solution-accent", SOLUTION_ACCENT_COLOR);
     }
 
     function updateSlideFocus() {
@@ -611,8 +614,18 @@ document.addEventListener("DOMContentLoaded", () => {
     function updateBounds() {
         const viewportWidth = dragArea.clientWidth;
         const firstSlideWidth = slides[0]?.getBoundingClientRect().width || viewportWidth;
+        const isCompactMobile = window.innerWidth <= 899;
 
         if (state.mode === "desktop") {
+            slides.forEach((slide) => {
+                slide.style.width = "";
+                slide.style.flexBasis = "";
+            });
+            textSlides.forEach((slide) => {
+                slide.style.width = "";
+                slide.style.flexBasis = "";
+            });
+
             const desktopEdgePadding = Math.max((viewportWidth - firstSlideWidth) / 2, 0);
 
             solutionList.style.paddingLeft = `${desktopEdgePadding}px`;
@@ -633,8 +646,30 @@ document.addEventListener("DOMContentLoaded", () => {
             textTrack.style.paddingLeft = "";
             textTrack.style.paddingRight = "";
 
-            state.sideOffset = Math.max((viewportWidth - firstSlideWidth) / 2, 0);
-            state.maxOffset = Math.max(solutionList.scrollWidth - firstSlideWidth, 0);
+            if (isCompactMobile) {
+                slides.forEach((slide) => {
+                    slide.style.width = `${viewportWidth}px`;
+                    slide.style.flexBasis = `${viewportWidth}px`;
+                });
+                textSlides.forEach((slide) => {
+                    slide.style.width = `${viewportWidth}px`;
+                    slide.style.flexBasis = `${viewportWidth}px`;
+                });
+            } else {
+                slides.forEach((slide) => {
+                    slide.style.width = "";
+                    slide.style.flexBasis = "";
+                });
+                textSlides.forEach((slide) => {
+                    slide.style.width = "";
+                    slide.style.flexBasis = "";
+                });
+            }
+
+            state.sideOffset = isCompactMobile ? 0 : Math.max((viewportWidth - firstSlideWidth) / 2, 0);
+            state.maxOffset = isCompactMobile
+                ? Math.max(solutionList.scrollWidth - viewportWidth, 0)
+                : Math.max(solutionList.scrollWidth - firstSlideWidth, 0);
             state.desktopOffsets = [];
         }
 
@@ -928,7 +963,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const closeAllPartnerCards = () => {
         cards.forEach((card) => {
             card.classList.remove("is_open");
-            card.classList.remove("is_label_visible");
+            card.classList.toggle("is_label_visible", isCompactPartnerLayout);
             const wrapper = card.querySelector(".partner_card_wrapper");
             const tiltShell = card.querySelector(".partner_tilt_shell");
             const images = Array.from(card.querySelectorAll(".partner_face img"));
@@ -993,7 +1028,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const tiltShell = card.querySelector(".partner_tilt_shell");
             const images = Array.from(card.querySelectorAll(".partner_face img"));
 
-            card.classList.remove("is_interactive", "is_open");
+            card.classList.remove("is_open");
+            card.classList.add("is_interactive");
             card.classList.add("is_label_visible");
             wrapper?.classList.remove("is_hovered", "is_open");
 
@@ -1267,12 +1303,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         wrapper.addEventListener("click", (event) => {
-            if (isCompactPartnerLayout) {
-                return;
-            }
-
             const card = wrapper.closest(".partner_card");
-            if (!card || !card.classList.contains("is_interactive")) {
+            if (!card || (!isCompactPartnerLayout && !card.classList.contains("is_interactive"))) {
                 return;
             }
 
@@ -1284,18 +1316,12 @@ document.addEventListener("DOMContentLoaded", () => {
             if (willOpen) {
                 card.classList.add("is_open");
                 wrapper.classList.add("is_open");
-                if (!isCompactPartnerLayout) {
-                    partnerCardsContainer?.classList.add("has_open_card");
-                }
+                partnerCardsContainer?.classList.add("has_open_card");
             }
         });
     });
 
     document.addEventListener("click", (event) => {
-        if (isCompactPartnerLayout) {
-            return;
-        }
-
         const clickedInsidePartnerCard = event.target instanceof Element && event.target.closest(".partner_card_wrapper");
 
         if (!clickedInsidePartnerCard) {
