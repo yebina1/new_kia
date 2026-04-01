@@ -569,7 +569,7 @@ h2 {
     position: relative;
     z-index: 1;
     overflow: hidden;
-    padding: 64px 0;
+    padding: 6vh 0 11vh;
     background: #0a0f13;
 }
 
@@ -577,7 +577,7 @@ h2 {
     width: min(1440px, calc(100% - 80px));
     min-height: 1080px;
     margin: 0 auto;
-    padding: 32px 0 64px;
+    padding: 3vh 0 6vh;
 }
 
 .solution_section .solution_tit {
@@ -682,6 +682,10 @@ h2 {
     cursor: grabbing;
 }
 
+.solution_swipe_overlay {
+    display: none;
+}
+
 .solution_list>li {
     position: relative;
     flex: 0 0 auto;
@@ -716,6 +720,7 @@ h2 {
     --solution-surface-bg: #0a0f13;
     --solution-panel-width: 680px;
     --solution-copy-width: 710px;
+    --solution-line-edge-mask: max(calc((100vw - (var(--solution-panel-width) + var(--solution-copy-width) + 50px)) / 2), 0px);
     padding: 0;
 }
 
@@ -723,7 +728,10 @@ h2 {
     width: min(1600px, calc(100% - 80px));
     height: 100vh;
     min-height: 100vh;
-    padding: 88px 0 72px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: clamp(56px, 7vh, 96px) 0;
     box-sizing: border-box;
     overflow: visible;
 }
@@ -732,6 +740,7 @@ h2 {
     align-items: center;
     gap: 18px;
     text-align: center;
+    flex-shrink: 0;
 }
 
 .solution_section.is_desktop_scroll .solution_sub {
@@ -742,7 +751,7 @@ h2 {
     width: 100%;
     height: var(--solution-desktop-list-height);
     padding-top: 0;
-    margin: 54px auto 0;
+    margin: clamp(28px, 4vh, 54px) auto 0;
     left: auto;
     perspective: none;
     transform: none;
@@ -756,7 +765,13 @@ h2 {
     left: 50%;
     width: 100vw;
     height: 1px;
-    background: linear-gradient(90deg, rgba(235, 247, 242, 0.9) 0%, rgba(235, 247, 242, 0.48) 68%, rgba(235, 247, 242, 0.08) 100%);
+    background: linear-gradient(90deg,
+            transparent 0,
+            transparent var(--solution-line-mask-left, 0px),
+            rgba(235, 247, 242, 0.72) var(--solution-line-mask-left, 0px),
+            rgba(235, 247, 242, 0.72) calc(100% - var(--solution-line-mask-right, 0px)),
+            transparent calc(100% - var(--solution-line-mask-right, 0px)),
+            transparent 100%);
     transform: translate(-50%, -50%);
     z-index: 0;
     opacity: 0.72;
@@ -804,6 +819,14 @@ h2 {
     border-radius: 999px;
     transform: translate(-100%, -50%);
     box-shadow: 0 0 12px rgba(248, 255, 251, 0.7), 0 0 26px rgba(248, 255, 251, 0.24);
+}
+
+.solution_section.is_desktop_scroll.is_first_slide {
+    --solution-line-mask-left: var(--solution-line-edge-mask);
+}
+
+.solution_section.is_desktop_scroll.is_last_slide {
+    --solution-line-mask-right: var(--solution-line-edge-mask);
 }
 
 .solution_section.is_desktop_scroll .solution_list {
@@ -975,7 +998,9 @@ h2 {
 .partner_section {
     position: relative;
     min-height: 320vh;
+    padding-top: 5vh;
     background: #0a0f13;
+    z-index: 3;
 }
 
 .partner_sticky {
@@ -983,19 +1008,21 @@ h2 {
     top: 0;
     min-height: 100vh;
     overflow: hidden;
+    z-index: 3;
+    background: #0a0f13;
 }
 
 .partner_inner {
     width: min(1440px, calc(100% - 80px));
     min-height: 100vh;
     margin: 0 auto;
-    padding: 40px 0 72px;
+    padding: 4vh 0 7vh;
     position: relative;
 }
 
 .partner_heading {
     position: absolute;
-    top: 130px;
+    top: 16vh;
     left: 50%;
     z-index: 6;
     font-family: "Cormorant Garamond", serif;
@@ -1024,19 +1051,19 @@ h2 {
 }
 
 .partner_cards {
-    height: calc(100vh - 160px);
+    height: calc(100vh - 15vh);
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    margin-top: 260px;
+    margin-top: 31vh;
 }
 
 .partner_cards_container {
-    width: min(1120px, 100%);
+    width: min(1280px, 100%);
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    gap: 80px;
+    gap: 72px;
     transition: filter 0.35s ease, opacity 0.35s ease;
     position: relative;
     z-index: 4;
@@ -1044,7 +1071,7 @@ h2 {
 
 .partner_card {
     flex: 1;
-    max-width: 320px;
+    max-width: 380px;
     display: flex;
     flex-direction: column;
     gap: 0;
@@ -1063,6 +1090,58 @@ h2 {
     aspect-ratio: 0.72 / 1;
     perspective: 1400px;
     cursor: pointer;
+}
+
+.partner-click-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 46px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px 50px 50px 50px;
+    background: rgba(251, 246, 239, 0.12);
+    border: 1px solid rgba(251, 246, 239, 0.28);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.35),
+        0 12px 32px rgba(0, 0, 0, 0.24);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.88);
+    transform-origin: center;
+    transition:
+        opacity 0.2s ease,
+        transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: 1200;
+}
+
+.partner-click-cursor span {
+    color: #fbf6ef;
+    font-family: var(--font-outfit);
+    font-size: 15px;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 1;
+}
+
+.partner-click-cursor.is-visible {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.partner-click-cursor.is-active {
+    border-color: #fbf6ef;
+}
+
+@media (pointer: fine) {
+    .partner_section,
+    .partner_section *:not(input):not(textarea):not(select) {
+        cursor: none;
+    }
 }
 
 .partner_tilt_shell {
@@ -1238,7 +1317,7 @@ h2 {
 .partner_scroll_down_button {
     left: 50%;
     top: auto;
-    bottom: 296px;
+    bottom: 8vh;
     z-index: 7;
     opacity: 0;
     visibility: hidden;
@@ -1269,12 +1348,12 @@ h2 {
     position: relative;
     width: 100%;
     overflow: hidden;
-    padding: 0 40px;
+    padding: 0;
 }
 
 .awards_inner::before,
 .awards_inner::after {
-    content: "";
+    content: none;
     position: absolute;
     top: -26px;
     bottom: -26px;
@@ -1297,8 +1376,8 @@ h2 {
     position: relative;
     height: 130px;
     overflow: hidden;
-    mask: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
-    -webkit-mask: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+    mask: none;
+    -webkit-mask: none;
 }
 
 .awards_marquee {
@@ -1324,9 +1403,9 @@ h2 {
     display: flex;
     align-items: center;
     gap: 14px;
-    width: 420px;
+    width: 500px;
     height: 130px;
-    padding: 0 20px;
+    padding: 0 24px;
     color: #ffffff;
     background: transparent;
     border-radius: 18px;
@@ -1351,43 +1430,7 @@ h2 {
 }
 
 .awards_blur {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 160px;
-    z-index: 4;
-    pointer-events: none;
-}
-
-.awards_blur_left {
-    left: 0;
-    transform: scaleX(-1);
-}
-
-.awards_blur_right {
-    right: 0;
-}
-
-.awards_blur div {
-    position: absolute;
-    inset: 0;
-    /* background: linear-gradient(90deg,
-            rgba(0, 0, 0, 0.24) 0%,
-            rgba(0, 0, 0, 0.16) 18%,
-            rgba(0, 0, 0, 0.08) 36%,
-            rgba(0, 0, 0, 0) 62%);
-    mask: linear-gradient(90deg,
-            transparent calc(var(--index) * 12%),
-            #000 calc((var(--index) + 1) * 12%),
-            #000 calc((var(--index) + 2) * 12%),
-            transparent calc((var(--index) + 3) * 12%));
-    -webkit-mask: linear-gradient(90deg,
-            transparent calc(var(--index) * 12%),
-            #000 calc((var(--index) + 1) * 12%),
-            #000 calc((var(--index) + 2) * 12%),
-            transparent calc((var(--index) + 3) * 12%));
-    backdrop-filter: blur(calc((var(--index) + 1) * 2.2px)); */
-    background: #0c1115;
+    display: none;
 }
 
 .awards_viewport:has(.awards_item:hover) .awards_marquee {

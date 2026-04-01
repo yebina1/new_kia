@@ -44,6 +44,23 @@
     @media (max-width: 767px) {
       .scroll_scene { height: 1320vh; }
       .car_wrap { height: min(110vh, 980px); }
+      .scroll_down_wrap { padding-bottom: 24px; }
+      .scroll_down {
+        padding-top: 52px;
+        font-size: 12px;
+        letter-spacing: 0.18em;
+      }
+      .scroll_down span {
+        width: 26px;
+        height: 44px;
+        margin-left: -13px;
+      }
+      .scroll_down span::before {
+        top: 9px;
+        width: 5px;
+        height: 5px;
+        margin-left: -2.5px;
+      }
 
       
       .bg1_copy_left { left: 24px; top: auto; bottom: 18vh; }

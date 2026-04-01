@@ -517,9 +517,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const dragArea = solutionSection?.querySelector(".container");
     const solutionList = solutionSection?.querySelector(".solution_list");
     const solutionProgress = solutionSection?.querySelector(".con");
+    const solutionSub = solutionSection?.querySelector(".solution_sub");
+    const solutionPrevButton = solutionSection?.querySelector(".solution_nav_prev");
+    const solutionNextButton = solutionSection?.querySelector(".solution_nav_next");
 
     if (!solutionSection || !solutionInner || !solutionList || !dragArea) {
         return;
+    }
+
+    if (solutionSub) {
+        solutionSub.innerHTML = "A responsible step for humanity and the planet<br>Kia's sustainable journey.";
     }
 
     solutionList.classList.add("solution_media_list");
@@ -563,6 +570,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const DESKTOP_BREAKPOINT = 900;
     const SOLUTION_DESKTOP_HOLD = 0.16;
+    const SOLUTION_ACCENT_COLOR = "#C7FFEE";
+    let hasDismissedSwipeHint = false;
 
     function clamp(value, min, max) {
         return Math.min(Math.max(value, min), max);
@@ -587,8 +596,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const currentOffset = state.mode === "desktop" ? state.lastOne : state.lastTwo;
         const scale = state.maxOffset > 0 ? currentOffset / state.maxOffset : 0;
+        const activeIndex = slides.reduce((nearestIndex, slide, index) => {
+            const offset = clamp(slide.offsetLeft, 0, state.maxOffset);
+            const nearestOffset = clamp(slides[nearestIndex]?.offsetLeft ?? 0, 0, state.maxOffset);
+            return Math.abs(currentOffset - offset) < Math.abs(currentOffset - nearestOffset) ? index : nearestIndex;
+        }, 0);
+
         solutionProgress.style.setProperty("--solution-progress-scale", scale.toFixed(4));
         solutionProgress.style.setProperty("--solution-travel-progress", scale.toFixed(4));
+        solutionProgress.style.setProperty("--solution-accent", SOLUTION_ACCENT_COLOR);
+        solutionSection.classList.toggle("is_first_slide", state.mode === "desktop" && activeIndex === 0);
+        solutionSection.classList.toggle("is_last_slide", state.mode === "desktop" && activeIndex === slides.length - 1);
+
+        if (state.mode === "mobile" && window.innerWidth <= 899) {
+            if (solutionPrevButton) {
+                solutionPrevButton.disabled = activeIndex === 0;
+            }
+
+            if (solutionNextButton) {
+                solutionNextButton.disabled = activeIndex === slides.length - 1;
+            }
+        } else {
+            if (solutionPrevButton) {
+                solutionPrevButton.disabled = false;
+            }
+
+            if (solutionNextButton) {
+                solutionNextButton.disabled = false;
+            }
+        }
     }
 
     function updateSlideFocus() {
@@ -608,11 +644,86 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    function updateSwipeHintVisibility() {
+        const shouldShowHint = state.mode === "mobile" && window.innerWidth <= 899 && !hasDismissedSwipeHint;
+        solutionSection.classList.toggle("show_swipe_hint", shouldShowHint);
+    }
+
+    function dismissSwipeHint() {
+        if (hasDismissedSwipeHint) {
+            return;
+        }
+
+        hasDismissedSwipeHint = true;
+        solutionSection.classList.remove("show_swipe_hint");
+    }
+
+    function setupSolutionCursor() {
+        const cursor = document.createElement("div");
+        const label = document.createElement("span");
+
+        cursor.className = "solution-swipe-cursor";
+        label.textContent = "← Swipe →";
+        cursor.appendChild(label);
+        document.body.appendChild(cursor);
+        solutionCursor = cursor;
+
+        function moveCursor(event) {
+            solutionCursor.style.left = `${event.clientX}px`;
+            solutionCursor.style.top = `${event.clientY}px`;
+        }
+
+        function showCursor(event) {
+            if (state.mode !== "mobile") {
+                return;
+            }
+
+            moveCursor(event);
+            solutionCursor.classList.add("is-visible");
+        }
+
+        function hideCursor() {
+            solutionCursor.classList.remove("is-visible", "is-active");
+        }
+
+        function activateCursor() {
+            if (state.mode !== "mobile") {
+                return;
+            }
+
+            solutionCursor.classList.add("is-active");
+        }
+
+        function deactivateCursor() {
+            solutionCursor.classList.remove("is-active");
+        }
+
+        dragArea.addEventListener("pointerenter", showCursor);
+        dragArea.addEventListener("pointermove", moveCursor);
+        dragArea.addEventListener("pointerleave", hideCursor);
+        dragArea.addEventListener("pointerdown", activateCursor);
+        dragArea.addEventListener("pointerup", deactivateCursor);
+        dragArea.addEventListener("pointercancel", deactivateCursor);
+        window.addEventListener("blur", hideCursor);
+        window.addEventListener("scroll", hideCursor, { passive: true });
+        window.addEventListener("pointerup", deactivateCursor);
+    }
+
     function updateBounds() {
         const viewportWidth = dragArea.clientWidth;
         const firstSlideWidth = slides[0]?.getBoundingClientRect().width || viewportWidth;
+        const isCompactMobile = window.innerWidth <= 899;
 
         if (state.mode === "desktop") {
+            slides.forEach((slide) => {
+                slide.style.width = "";
+                slide.style.flexBasis = "";
+            });
+            textSlides.forEach((slide) => {
+                slide.style.width = "";
+                slide.style.flexBasis = "";
+            });
+
             const desktopEdgePadding = Math.max((viewportWidth - firstSlideWidth) / 2, 0);
 
             solutionList.style.paddingLeft = `${desktopEdgePadding}px`;
@@ -633,8 +744,30 @@ document.addEventListener("DOMContentLoaded", () => {
             textTrack.style.paddingLeft = "";
             textTrack.style.paddingRight = "";
 
-            state.sideOffset = Math.max((viewportWidth - firstSlideWidth) / 2, 0);
-            state.maxOffset = Math.max(solutionList.scrollWidth - firstSlideWidth, 0);
+            if (isCompactMobile) {
+                slides.forEach((slide) => {
+                    slide.style.width = `${viewportWidth}px`;
+                    slide.style.flexBasis = `${viewportWidth}px`;
+                });
+                textSlides.forEach((slide) => {
+                    slide.style.width = `${viewportWidth}px`;
+                    slide.style.flexBasis = `${viewportWidth}px`;
+                });
+            } else {
+                slides.forEach((slide) => {
+                    slide.style.width = "";
+                    slide.style.flexBasis = "";
+                });
+                textSlides.forEach((slide) => {
+                    slide.style.width = "";
+                    slide.style.flexBasis = "";
+                });
+            }
+
+            state.sideOffset = isCompactMobile ? 0 : Math.max((viewportWidth - firstSlideWidth) / 2, 0);
+            state.maxOffset = isCompactMobile
+                ? Math.max(solutionList.scrollWidth - viewportWidth, 0)
+                : Math.max(solutionList.scrollWidth - firstSlideWidth, 0);
             state.desktopOffsets = [];
         }
 
@@ -673,6 +806,25 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         state.current = nearestOffset;
+    }
+
+    function goToSlide(targetIndex) {
+        const safeIndex = clamp(targetIndex, 0, slides.length - 1);
+        const targetSlide = slides[safeIndex];
+
+        if (!targetSlide) {
+            return;
+        }
+
+        state.current = clamp(targetSlide.offsetLeft, 0, state.maxOffset);
+    }
+
+    function getActiveSlideIndex() {
+        return slides.reduce((nearestIndex, slide, index) => {
+            const offset = clamp(slide.offsetLeft, 0, state.maxOffset);
+            const nearestOffset = clamp(slides[nearestIndex]?.offsetLeft ?? 0, 0, state.maxOffset);
+            return Math.abs(state.current - offset) < Math.abs(state.current - nearestOffset) ? index : nearestIndex;
+        }, 0);
     }
 
     function render() {
@@ -729,6 +881,7 @@ document.addEventListener("DOMContentLoaded", () => {
         state.on = getClientX(event);
         state.off = state.current;
         solutionList.classList.add("is_dragging");
+        dismissSwipeHint();
         event.preventDefault();
     }
 
@@ -813,6 +966,7 @@ document.addEventListener("DOMContentLoaded", () => {
         solutionList.classList.remove("is_dragging");
         solutionSection.classList.toggle("is_desktop_scroll", state.mode === "desktop");
         solutionSection.classList.toggle("is_mobile_drag", state.mode === "mobile");
+        updateSwipeHintVisibility();
 
         if (state.mode === "desktop") {
             if (modeChanged) {
@@ -850,6 +1004,7 @@ document.addEventListener("DOMContentLoaded", () => {
         state.on = getClientX(event);
         state.off = state.current;
         solutionList.classList.add("is_dragging");
+        dismissSwipeHint();
     }, { passive: true });
     window.addEventListener("touchmove", (event) => {
         if (!state.dragging || state.mode !== "mobile") {
@@ -865,6 +1020,22 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("mouseleave", stopDragging);
 
     window.addEventListener("resize", applySolutionMode);
+
+    solutionPrevButton?.addEventListener("click", () => {
+        if (state.mode !== "mobile") {
+            return;
+        }
+
+        goToSlide(getActiveSlideIndex() - 1);
+    });
+
+    solutionNextButton?.addEventListener("click", () => {
+        if (state.mode !== "mobile") {
+            return;
+        }
+
+        goToSlide(getActiveSlideIndex() + 1);
+    });
 
     applySolutionMode();
     render();
@@ -883,11 +1054,23 @@ document.addEventListener("DOMContentLoaded", () => {
     const partnerScrollDownButton = document.getElementById("partnerScrollDownButton");
     const partnerSticky = partnerSection.querySelector(".partner_sticky");
     const PARTNER_HOLD_PROGRESS = 0.18;
+    const canUsePartnerCursor = window.matchMedia("(pointer: fine)").matches;
     let isCompactPartnerLayout = window.innerWidth <= 900 || !window.gsap || !window.ScrollTrigger;
     let partnerSceneTrigger = null;
+    let partnerCursor = null;
+    let lastPartnerPointerX = 0;
+    let lastPartnerPointerY = 0;
+    let hasPartnerPointerPosition = false;
 
     if (!cards.length) {
         return;
+    }
+
+    if (canUsePartnerCursor) {
+        partnerCursor = document.createElement("div");
+        partnerCursor.className = "partner-click-cursor";
+        partnerCursor.innerHTML = "<span>Click</span>";
+        document.body.appendChild(partnerCursor);
     }
 
     const smoothStep = (progress) => progress * progress * (3 - (2 * progress));
@@ -928,7 +1111,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const closeAllPartnerCards = () => {
         cards.forEach((card) => {
             card.classList.remove("is_open");
-            card.classList.remove("is_label_visible");
+            card.classList.toggle(
+                "is_label_visible",
+                isCompactPartnerLayout || card.classList.contains("is_interactive")
+            );
             const wrapper = card.querySelector(".partner_card_wrapper");
             const tiltShell = card.querySelector(".partner_tilt_shell");
             const images = Array.from(card.querySelectorAll(".partner_face img"));
@@ -993,7 +1179,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const tiltShell = card.querySelector(".partner_tilt_shell");
             const images = Array.from(card.querySelectorAll(".partner_face img"));
 
-            card.classList.remove("is_interactive", "is_open");
+            card.classList.remove("is_open");
+            card.classList.add("is_interactive");
             card.classList.add("is_label_visible");
             wrapper?.classList.remove("is_hovered", "is_open");
 
@@ -1212,6 +1399,55 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const partnerWrappers = Array.from(partnerSection.querySelectorAll(".partner_card_wrapper"));
 
+    function movePartnerCursor(event) {
+        if (!partnerCursor) {
+            return;
+        }
+
+        lastPartnerPointerX = event.clientX;
+        lastPartnerPointerY = event.clientY;
+        hasPartnerPointerPosition = true;
+        partnerCursor.style.left = `${event.clientX}px`;
+        partnerCursor.style.top = `${event.clientY}px`;
+    }
+
+    function hidePartnerCursor() {
+        partnerCursor?.classList.remove("is-visible", "is-active");
+    }
+
+    function showPartnerCursor(event) {
+        if (!partnerCursor || isCompactPartnerLayout) {
+            return;
+        }
+
+        movePartnerCursor(event);
+        partnerCursor.classList.add("is-visible");
+    }
+
+    function syncPartnerCursorToViewport() {
+        if (!partnerCursor || isCompactPartnerLayout || !partnerSection || !hasPartnerPointerPosition) {
+            hidePartnerCursor();
+            return;
+        }
+
+        const rect = partnerSection.getBoundingClientRect();
+        const isPointerInsideSection =
+            lastPartnerPointerX >= rect.left &&
+            lastPartnerPointerX <= rect.right &&
+            lastPartnerPointerY >= rect.top &&
+            lastPartnerPointerY <= rect.bottom;
+
+        if (!isPointerInsideSection) {
+            hidePartnerCursor();
+            return;
+        }
+
+        showPartnerCursor({
+            clientX: lastPartnerPointerX,
+            clientY: lastPartnerPointerY,
+        });
+    }
+
     partnerWrappers.forEach((wrapper) => {
         const tiltShell = wrapper.querySelector(".partner_tilt_shell");
         const images = Array.from(wrapper.querySelectorAll(".partner_face img"));
@@ -1267,12 +1503,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         wrapper.addEventListener("click", (event) => {
-            if (isCompactPartnerLayout) {
-                return;
-            }
-
             const card = wrapper.closest(".partner_card");
-            if (!card || !card.classList.contains("is_interactive")) {
+            if (!card || (!isCompactPartnerLayout && !card.classList.contains("is_interactive"))) {
                 return;
             }
 
@@ -1284,18 +1516,51 @@ document.addEventListener("DOMContentLoaded", () => {
             if (willOpen) {
                 card.classList.add("is_open");
                 wrapper.classList.add("is_open");
-                if (!isCompactPartnerLayout) {
-                    partnerCardsContainer?.classList.add("has_open_card");
-                }
+                partnerCardsContainer?.classList.add("has_open_card");
             }
         });
     });
 
-    document.addEventListener("click", (event) => {
-        if (isCompactPartnerLayout) {
-            return;
-        }
+    if (canUsePartnerCursor && partnerSection) {
+        partnerSection.addEventListener("pointerenter", showPartnerCursor);
+        partnerSection.addEventListener("pointermove", (event) => {
+            if (!partnerCursor || isCompactPartnerLayout) {
+                hidePartnerCursor();
+                return;
+            }
 
+            movePartnerCursor(event);
+        });
+        partnerSection.addEventListener("pointerleave", hidePartnerCursor);
+        partnerSection.addEventListener("pointerdown", () => {
+            if (!partnerCursor || isCompactPartnerLayout) {
+                return;
+            }
+
+            partnerCursor.classList.add("is-active");
+        });
+        partnerSection.addEventListener("pointerup", () => {
+            partnerCursor?.classList.remove("is-active");
+        });
+        partnerSection.addEventListener("pointercancel", () => {
+            partnerCursor?.classList.remove("is-active");
+        });
+    }
+
+    if (canUsePartnerCursor) {
+        window.addEventListener("pointermove", (event) => {
+            lastPartnerPointerX = event.clientX;
+            lastPartnerPointerY = event.clientY;
+            hasPartnerPointerPosition = true;
+        }, { passive: true });
+        window.addEventListener("scroll", syncPartnerCursorToViewport, { passive: true });
+    }
+    window.addEventListener("blur", hidePartnerCursor);
+    window.addEventListener("pointerup", () => {
+        partnerCursor?.classList.remove("is-active");
+    });
+
+    document.addEventListener("click", (event) => {
         const clickedInsidePartnerCard = event.target instanceof Element && event.target.closest(".partner_card_wrapper");
 
         if (!clickedInsidePartnerCard) {
