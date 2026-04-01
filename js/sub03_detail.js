@@ -1,9 +1,113 @@
 const trimTabs = document.querySelectorAll('.trim_selector .trim_tab');
+const trimTabBox = document.querySelector('.trim_selector .trim_tab_box');
 const trimVisual = document.querySelector('.trim_selector .trim_visual');
 const trimName = document.querySelector('.trim_selector .trim_name');
 const trimPrice = document.querySelector('.trim_selector .trim_price');
 const trimChipList = document.querySelector('.trim_selector .trim_chip_list');
 const trimInfo = document.querySelector('.trim_selector .trim_info');
+
+let trimTabActiveBg = null;
+let hasInitializedTrimTabActiveBg = false;
+const trimTabMotionStyleId = 'trim-tab-motion-style';
+
+const ensureTrimTabMotionStyles = () => {
+  if (!trimTabBox || document.getElementById(trimTabMotionStyleId)) return;
+
+  const style = document.createElement('style');
+  style.id = trimTabMotionStyleId;
+  style.textContent = `
+    .trim_selector .trim_tab_box {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+    }
+
+    .trim_selector .trim_tab {
+      position: relative;
+      z-index: 1;
+    }
+
+    .trim_selector .trim_tab_active_bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 0;
+      border-radius: 999px;
+      pointer-events: none;
+      opacity: 0;
+      transform: translate(0, 0);
+      background: rgba(251, 246, 239, 0.05);
+      border: 1px solid rgba(178, 221, 222, 0.55);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.16);
+      transition:
+        transform 420ms cubic-bezier(0.2, 0.9, 0.22, 1.2),
+        width 360ms cubic-bezier(0.18, 0.88, 0.22, 1.15),
+        height 360ms cubic-bezier(0.18, 0.88, 0.22, 1.15),
+        opacity 180ms ease;
+      will-change: transform, width, height, opacity;
+      z-index: 0;
+    }
+
+    .trim_selector .trim_tab_active_bg.is-instant {
+      transition: none;
+    }
+
+    .trim_selector .trim_tab.on,
+    .trim_selector .trim_tab.is_active {
+      background: transparent;
+      border-color: transparent;
+      box-shadow: none;
+    }
+  `;
+
+  document.head.append(style);
+};
+
+const ensureTrimTabActiveBg = () => {
+  if (!trimTabBox) return null;
+
+  ensureTrimTabMotionStyles();
+
+  if (!trimTabActiveBg) {
+    trimTabActiveBg = document.createElement('span');
+    trimTabActiveBg.className = 'trim_tab_active_bg';
+    trimTabBox.prepend(trimTabActiveBg);
+  }
+
+  return trimTabActiveBg;
+};
+
+const getActiveTrimTab = () =>
+  Array.from(trimTabs).find((tab) => tab.classList.contains('is_active') || tab.classList.contains('on')) || null;
+
+const syncTrimTabActiveBg = ({ animate = true } = {}) => {
+  const activeTab = getActiveTrimTab();
+  const activeBg = ensureTrimTabActiveBg();
+  if (!activeTab || !activeBg || !trimTabBox) return;
+
+  const boxRect = trimTabBox.getBoundingClientRect();
+  const tabRect = activeTab.getBoundingClientRect();
+  const x = Math.round(tabRect.left - boxRect.left);
+  const y = Math.round(tabRect.top - boxRect.top);
+  const width = Math.round(tabRect.width);
+  const height = Math.round(tabRect.height);
+  const maxX = Math.max(boxRect.width - width, 0);
+  const clampedX = Math.min(Math.max(x, 0), Math.round(maxX));
+  const clampedWidth = Math.min(width, Math.round(boxRect.width));
+
+  activeBg.classList.toggle('is-instant', !animate);
+  activeBg.style.width = `${clampedWidth}px`;
+  activeBg.style.height = `${height}px`;
+  activeBg.style.transform = `translate(${clampedX}px, ${y}px)`;
+  activeBg.style.opacity = '1';
+
+  if (!animate) {
+    requestAnimationFrame(() => {
+      activeBg.classList.remove('is-instant');
+    });
+  }
+};
 
 const trimData = {
   'light-rwd': {
@@ -175,6 +279,8 @@ const setTrim = (trimKey) => {
 
   renderTrimChips(currentTrim.chips);
   renderTrimCards(currentTrim.cards);
+  syncTrimTabActiveBg({ animate: hasInitializedTrimTabActiveBg });
+  hasInitializedTrimTabActiveBg = true;
 };
 
 trimTabs.forEach((tab) => {
@@ -184,6 +290,10 @@ trimTabs.forEach((tab) => {
 });
 
 setTrim('light-rwd');
+
+window.addEventListener('resize', () => {
+  syncTrimTabActiveBg({ animate: false });
+});
 
 const interiorButtons = document.querySelectorAll('.interior .interior_hotspot');
 const interiorPanel = document.querySelector('.interior .interior_panel');
