@@ -247,6 +247,11 @@ const openInteriorPanel = (panelKey) => {
 
 interiorButtons.forEach((button) => {
   button.addEventListener('click', function () {
+    if (this.classList.contains('is-active') && interiorPanel && !interiorPanel.hidden) {
+      closeInteriorPanel();
+      return;
+    }
+
     openInteriorPanel(this.dataset.panel);
   });
 });
