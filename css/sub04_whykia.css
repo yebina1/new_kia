@@ -1092,6 +1092,58 @@ h2 {
     cursor: pointer;
 }
 
+.partner-click-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 46px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px 50px 50px 50px;
+    background: rgba(251, 246, 239, 0.12);
+    border: 1px solid rgba(251, 246, 239, 0.28);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.35),
+        0 12px 32px rgba(0, 0, 0, 0.24);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.88);
+    transform-origin: center;
+    transition:
+        opacity 0.2s ease,
+        transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: 1200;
+}
+
+.partner-click-cursor span {
+    color: #fbf6ef;
+    font-family: var(--font-outfit);
+    font-size: 15px;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 1;
+}
+
+.partner-click-cursor.is-visible {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.partner-click-cursor.is-active {
+    border-color: #fbf6ef;
+}
+
+@media (pointer: fine) {
+    .partner_section,
+    .partner_section *:not(input):not(textarea):not(select) {
+        cursor: none;
+    }
+}
+
 .partner_tilt_shell {
     width: 100%;
     height: 100%;

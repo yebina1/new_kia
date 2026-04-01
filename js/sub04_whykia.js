@@ -1054,11 +1054,20 @@ document.addEventListener("DOMContentLoaded", () => {
     const partnerScrollDownButton = document.getElementById("partnerScrollDownButton");
     const partnerSticky = partnerSection.querySelector(".partner_sticky");
     const PARTNER_HOLD_PROGRESS = 0.18;
+    const canUsePartnerCursor = window.matchMedia("(pointer: fine)").matches;
     let isCompactPartnerLayout = window.innerWidth <= 900 || !window.gsap || !window.ScrollTrigger;
     let partnerSceneTrigger = null;
+    let partnerCursor = null;
 
     if (!cards.length) {
         return;
+    }
+
+    if (canUsePartnerCursor) {
+        partnerCursor = document.createElement("div");
+        partnerCursor.className = "partner-click-cursor";
+        partnerCursor.innerHTML = "<span>Click</span>";
+        document.body.appendChild(partnerCursor);
     }
 
     const smoothStep = (progress) => progress * progress * (3 - (2 * progress));
@@ -1384,6 +1393,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const partnerWrappers = Array.from(partnerSection.querySelectorAll(".partner_card_wrapper"));
 
+    function movePartnerCursor(event) {
+        if (!partnerCursor) {
+            return;
+        }
+
+        partnerCursor.style.left = `${event.clientX}px`;
+        partnerCursor.style.top = `${event.clientY}px`;
+    }
+
+    function hidePartnerCursor() {
+        partnerCursor?.classList.remove("is-visible", "is-active");
+    }
+
+    function showPartnerCursor(event) {
+        if (!partnerCursor || isCompactPartnerLayout) {
+            return;
+        }
+
+        movePartnerCursor(event);
+        partnerCursor.classList.add("is-visible");
+    }
+
     partnerWrappers.forEach((wrapper) => {
         const tiltShell = wrapper.querySelector(".partner_tilt_shell");
         const images = Array.from(wrapper.querySelectorAll(".partner_face img"));
@@ -1455,6 +1486,38 @@ document.addEventListener("DOMContentLoaded", () => {
                 partnerCardsContainer?.classList.add("has_open_card");
             }
         });
+    });
+
+    if (canUsePartnerCursor && partnerSection) {
+        partnerSection.addEventListener("pointerenter", showPartnerCursor);
+        partnerSection.addEventListener("pointermove", (event) => {
+            if (!partnerCursor || isCompactPartnerLayout) {
+                hidePartnerCursor();
+                return;
+            }
+
+            movePartnerCursor(event);
+        });
+        partnerSection.addEventListener("pointerleave", hidePartnerCursor);
+        partnerSection.addEventListener("pointerdown", () => {
+            if (!partnerCursor || isCompactPartnerLayout) {
+                return;
+            }
+
+            partnerCursor.classList.add("is-active");
+        });
+        partnerSection.addEventListener("pointerup", () => {
+            partnerCursor?.classList.remove("is-active");
+        });
+        partnerSection.addEventListener("pointercancel", () => {
+            partnerCursor?.classList.remove("is-active");
+        });
+    }
+
+    window.addEventListener("scroll", hidePartnerCursor, { passive: true });
+    window.addEventListener("blur", hidePartnerCursor);
+    window.addEventListener("pointerup", () => {
+        partnerCursor?.classList.remove("is-active");
     });
 
     document.addEventListener("click", (event) => {
