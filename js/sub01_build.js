@@ -122,12 +122,12 @@ document.addEventListener("DOMContentLoaded", () => {
     EV9: [
       {
         name: "7-Passenger Package",
-        price: "+$0",
+        price: "+$ 0",
         details: ["7-Passenger Seating"]
       },
       {
         name: "Nightfall Edition Package",
-        price: "+$1,500",
+        price: "+$ 1,500",
         details: [
           "20-in. Nightfall Exclusive Alloy Wheels w/ Black Finish",
           "Boost Feature",
@@ -580,7 +580,10 @@ document.addEventListener("DOMContentLoaded", () => {
       .filter(({ card }) => card.classList.contains("is-selected"))
       .map(({ card, index }) => {
       const name = card.querySelector(".hero_accessory_card_top strong")?.textContent?.trim() || "";
-      const priceText = card.querySelector(".hero_accessory_card_top span")?.textContent?.trim() || "+$0";
+      const priceText =
+        card.querySelector(".hero_accessory_add_btn")?.textContent?.trim() ||
+        card.querySelector(".hero_accessory_card_top span")?.textContent?.trim() ||
+        "+$ 0";
 
       return {
         type: "accessory",
@@ -1269,10 +1272,9 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="hero_package_card_top">
               <div class="hero_package_card_heading">
                 <strong>${escapeHtml(packageItem.name)}</strong>
-                <span>${escapeHtml(packageItem.price)}</span>
               </div>
               <button type="button" class="hero_package_add_btn" aria-pressed="${selectedPackages.has(index) ? "true" : "false"}">
-                ${selectedPackages.has(index) ? "Remove -" : "Add +"}
+                ${escapeHtml(packageItem.price)}
               </button>
             </div>
             <div class="hero_package_card_details">
@@ -1565,6 +1567,7 @@ document.addEventListener("DOMContentLoaded", () => {
         "aria-hidden",
         isSummaryStage ? "false" : "true"
       );
+      heroVisual?.classList.toggle("is-model-stage", isModelStage);
       startStepButton?.classList.toggle("is-hidden", !isModelStage);
       heroTopTabs?.classList.toggle("is-hidden", !isModelStage);
       heroTopTabsIndicator?.classList.toggle("is-hidden", !isModelStage);
@@ -1999,9 +2002,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const addButton = card.querySelector(".hero_accessory_add_btn");
       const moreButton = card.querySelector(".hero_accessory_more_btn");
       card.classList.remove("is-selected", "expanded");
-      if (addButton) {
-        addButton.textContent = "Add +";
-      }
       addButton?.setAttribute("aria-pressed", "false");
       moreButton?.setAttribute("aria-expanded", "false");
       applySelectedTrim(getCurrentCar()?.title || "EV9");
@@ -2715,7 +2715,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       card.classList.toggle("is-selected", willSelect);
       card.classList.toggle("expanded", willSelect);
-      addTrigger.textContent = willSelect ? "Remove -" : "Add +";
       addTrigger.setAttribute("aria-pressed", willSelect ? "true" : "false");
 
       if (moreButton) {

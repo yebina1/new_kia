@@ -66,7 +66,7 @@ button {
   --hero-stage-panel-offset-x: -0px;
   /* 오른쪽 카드 위치 조정 */
   --hero-title-offset-y: 100px;
-  --hero-model-title-anchor-offset: 200px;
+  --hero-model-title-anchor-offset: 264px;
   --hero-model-center-offset-y: 0px;
   --hero-model-title-top: -120px;
   --hero-model-vehicle-height-estimate: calc(var(--hero-model-vehicle-width) * 0.48);
@@ -74,7 +74,7 @@ button {
   --hero-model-start-offset-y: calc((var(--hero-model-vehicle-height-estimate) / 2) + var(--hero-model-start-gap) - 40px);
   --hero-model-start-bottom-offset: calc(var(--hero-stage-steps-bottom) + 28px);
   --hero-model-arrow-size: 60px;
-  --hero-model-arrow-side-padding: clamp(20px, 5vw, 56px);
+  --hero-model-arrow-side-padding: clamp(40px, 5vw, 56px);
     /* 모델 페이지 모델명 위치 조정 가능 */
   /* 좌우 버튼 간격 조정 가능 */
   --hero-stage-actions-left: 40px;
@@ -2135,7 +2135,7 @@ button {
   color: var(--kia-white1);
   font-family: "Outfit", sans-serif;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 1;
   text-align: center;
   backdrop-filter: blur(5px) saturate(180%);
@@ -2538,7 +2538,7 @@ button {
   color: var(--kia-white1);
   font-family: "Outfit", sans-serif;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 1;
   text-align: center;
   backdrop-filter: blur(5px) saturate(180%);
@@ -2832,7 +2832,7 @@ button {
   padding: 8px 16px;
   flex: 0 0 auto;
   white-space: nowrap;
-  font-weight: 600;
+  font-weight: 500;
   color: #fbf6ef;
 }
 
@@ -3653,7 +3653,7 @@ button {
     --hero-stage-vehicle-bottom: 18%;
     --hero-accessory-plan-panel-overlap: clamp(56px, 6vw, 120px);
     --hero-model-center-offset-y: 0px;
-    --hero-model-title-anchor-offset: 174px;
+    --hero-model-title-anchor-offset: 220px;
     --hero-model-title-top: -44px;
     --hero-model-start-gap: 64px;
     --hero-model-start-bottom-offset: calc(var(--hero-stage-steps-bottom) + 28px);
@@ -4059,7 +4059,7 @@ button {
     --hero-stage-bottom-rail: 32px;
     --hero-stage-steps-bottom: 32px;
     --hero-model-start-bottom-offset: calc(var(--hero-stage-steps-bottom) + 24px);
-    --hero-model-title-anchor-offset: 120px;
+    --hero-model-title-anchor-offset: 148px;
     --hero-stage-vehicle-top: 57%;
   }
 
@@ -4427,7 +4427,7 @@ button {
     --hero-stage-vehicle-top: 51%;
     --hero-stage-vehicle-bottom: 16%;
     --hero-model-center-offset-y: 0px;
-    --hero-model-title-anchor-offset: 108px;
+    --hero-model-title-anchor-offset: 130px;
     --hero-model-title-top: -28px;
     --hero-model-start-gap: 52px;
     --hero-model-start-bottom-offset: calc(var(--hero-stage-steps-bottom) + 22px);

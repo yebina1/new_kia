@@ -94,6 +94,38 @@
 }
 
 @media (max-width: 1280px) {
+  .hero_visual.is-model-stage {
+    height: calc(100dvh - 64px);
+    min-height: calc(100dvh - 64px);
+    max-height: calc(100dvh - 64px);
+    padding-top: 108px;
+    overflow: hidden;
+  }
+
+  .hero_visual.is-model-stage .hero_top_tabs {
+    top: 96px;
+  }
+
+  .hero_visual.is-model-stage .hero_title {
+    top: clamp(156px, 20vw, 208px);
+  }
+
+  .hero_visual.is-model-stage .hero_car {
+    width: min(72vw, 620px);
+  }
+
+  .hero_visual.is-model-stage .hero_arrow_frame {
+    width: min(calc(100vw - 64px), calc(var(--hero-model-vehicle-width) + 200px));
+  }
+
+  .hero_visual.is-model-stage .hero_start_btn_zone {
+    bottom: 94px;
+  }
+
+  .hero_visual.is-model-stage .hero_bottom_steps {
+    bottom: 18px;
+  }
+
   .hero {
     --hero-stage-shell-right: 32px;
     --hero-right-rail: clamp(20px, 3vw, 32px);
@@ -163,6 +195,38 @@
 }
 
 @media (max-width: 1024px) {
+  .hero_visual.is-model-stage {
+    height: calc(100dvh - 64px);
+    min-height: calc(100dvh - 64px);
+    max-height: calc(100dvh - 64px);
+    padding-top: 96px;
+  }
+
+  .hero_visual.is-model-stage .hero_top_tabs {
+    top: 84px;
+  }
+
+  .hero_visual.is-model-stage .hero_title {
+    top: clamp(138px, 20vw, 188px);
+    font-size: clamp(30px, 4.4vw, 42px);
+  }
+
+  .hero_visual.is-model-stage .hero_car {
+    width: min(68vw, 520px);
+  }
+
+  .hero_visual.is-model-stage .hero_arrow_frame {
+    width: min(calc(100vw - 40px), calc(var(--hero-model-vehicle-width) + 140px));
+  }
+
+  .hero_visual.is-model-stage .hero_start_btn_zone {
+    bottom: 82px;
+  }
+
+  .hero_visual.is-model-stage .hero_bottom_steps {
+    bottom: 16px;
+  }
+
   .hero {
     --hero-stage-shell-right: 24px;
     --hero-right-rail: 24px;
@@ -393,6 +457,48 @@
 }
 
 @media (max-width: 768px) {
+  .hero_visual.is-model-stage {
+    height: calc(100dvh - 64px);
+    min-height: calc(100dvh - 64px);
+    max-height: calc(100dvh - 64px);
+    padding-top: 88px;
+  }
+
+  .hero_visual.is-model-stage .hero_top_tabs {
+    top: 72px;
+  }
+
+  .hero_visual.is-model-stage .hero_title {
+    top: clamp(124px, 22vw, 172px);
+    font-size: clamp(22px, 5vw, 30px);
+  }
+
+  .hero_visual.is-model-stage .hero_car {
+    width: min(70vw, 420px);
+  }
+
+  .hero_visual.is-model-stage .hero_arrow_frame {
+    width: calc(100vw - 28px);
+  }
+
+  .hero_visual.is-model-stage .hero_start_btn_zone {
+    bottom: 74px;
+  }
+
+  .hero_visual.is-model-stage .hero_model_start_btn {
+    min-width: 96px;
+    padding: 10px 14px !important;
+    font-size: 14px;
+  }
+
+  .hero_visual.is-model-stage .hero_model_start_btn i {
+    font-size: 14px;
+  }
+
+  .hero_visual.is-model-stage .hero_bottom_steps {
+    bottom: 12px;
+  }
+
   .hero {
     --hero-stage-shell-right: 20px;
     --hero-right-rail: 20px;
@@ -632,6 +738,48 @@
 }
 
 @media (max-width: 560px) {
+  .hero_visual.is-model-stage {
+    height: calc(100dvh - 64px);
+    min-height: calc(100dvh - 64px);
+    max-height: calc(100dvh - 64px);
+    padding-top: 76px;
+  }
+
+  .hero_visual.is-model-stage .hero_top_tabs {
+    top: 60px;
+  }
+
+  .hero_visual.is-model-stage .hero_title {
+    top: clamp(106px, 22vw, 144px);
+    font-size: clamp(18px, 5.4vw, 24px);
+  }
+
+  .hero_visual.is-model-stage .hero_car {
+    width: calc(100vw - 116px);
+  }
+
+  .hero_visual.is-model-stage .hero_arrow_frame {
+    width: calc(100vw - 16px);
+  }
+
+  .hero_visual.is-model-stage .hero_start_btn_zone {
+    bottom: 64px;
+  }
+
+  .hero_visual.is-model-stage .hero_model_start_btn {
+    min-width: 76px;
+    padding: 8px 12px !important;
+    font-size: 12px;
+  }
+
+  .hero_visual.is-model-stage .hero_model_start_btn i {
+    font-size: 12px;
+  }
+
+  .hero_visual.is-model-stage .hero_bottom_steps {
+    bottom: 10px;
+  }
+
   .hero {
     --hero-stage-shell-right: 16px;
     --hero-right-rail: 16px;
