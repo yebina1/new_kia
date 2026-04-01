@@ -269,51 +269,40 @@ article.ev9 {
 }
 
 article.ev9 .ev9_trace_svg {
-  position: absolute;
-  inset: -5px;
-  width: calc(100% + 10px);
-  height: calc(100% + 10px);
-  display: block;
-  overflow: visible;
-  pointer-events: none;
-  z-index: 4;
+  display: none;
 }
 
-article.ev9 .ev9_trace_line {
-  fill: none;
-  stroke: rgba(199, 255, 238, 0.96);
-  stroke-width: 2.6;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: 62 500;
-  stroke-dashoffset: 0;
-  vector-effect: non-scaling-stroke;
-  filter: drop-shadow(0 0 6px rgba(172, 255, 235, 0.24));
-  animation: ev9-border-spinner 1s linear infinite;
+article.ev9::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 30px;
+  border: 1px solid rgba(199, 255, 238, 0.95);
+  box-shadow:
+    0 0 14px rgba(172, 255, 235, 0.28),
+    0 0 30px rgba(125, 224, 208, 0.18);
+  pointer-events: none;
+  opacity: 0;
+  z-index: 1;
+  animation: ev9-border-flicker 1.15s ease-in-out infinite alternate;
+}
+
+article.ev9 > * {
+  position: relative;
+  z-index: 2;
 }
 
 article.ev9 .btn_compare {
   z-index: 5;
 }
 
-@keyframes ev9-border-spinner {
+@keyframes ev9-border-flicker {
   from {
-    stroke-dashoffset: 0;
     opacity: 0;
-  }
-
-  8% {
-    opacity: 1;
-  }
-
-  88% {
-    stroke-dashoffset: -304;
-    opacity: 1;
   }
 
   to {
-    stroke-dashoffset: -304;
-    opacity: 0;
+    opacity: 1;
   }
 }
 
