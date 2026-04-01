@@ -1758,23 +1758,21 @@ section[class*="option"] .bottom>ul.cars>li:hover .info_con>ul.info {
   z-index: 1;
 }
 
-.belt_machine_body {
+.belt_machine_body,
+.belt_machine_body2 {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
   width: 100%;
   height: auto;
+}
+
+.belt_machine_body {
   z-index: 4;
 }
 
-.belt_machine_body2{
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: auto;
+.belt_machine_body2 {
   z-index: 2;
 }
 
