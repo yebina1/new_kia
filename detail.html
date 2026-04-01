@@ -255,50 +255,54 @@
 
         <section class="size_it_up">
             <div class="inner">
-                <h2 class="section_title">Size It Up</h2>
-
-                <div class="img_box">
-                    <img src="./img/sub03_detail/size_it_up_dimensions.png" alt="EV9 size drawing" />
+                <div class="size_it_up_header">
+                    <h2 class="section_title">Size It Up</h2>
                 </div>
 
-                <div class="size_info_box">
-                    <ul class="size_info_list">
-                        <li class="size_info_item">
-                            <p class="size_info_code">A, C</p>
-                            <p class="size_info_desc">Max height (with antenna)</p>
-                            <p class="size_info_value">68.9 in</p>
-                        </li>
+                <div class="size_it_up_visual_group">
+                    <div class="img_box">
+                        <img src="./img/sub03_detail/size_it_up_dimensions.png" alt="EV9 size drawing" />
+                    </div>
 
-                        <li class="size_info_item">
-                            <p class="size_info_code">B, D</p>
-                            <p class="size_info_desc">Width (side mirrors folded)</p>
-                            <p class="size_info_value">78 in</p>
-                        </li>
+                    <div class="size_info_box">
+                        <ul class="size_info_list">
+                            <li class="size_info_item">
+                                <p class="size_info_code">A, C</p>
+                                <p class="size_info_desc">Max height (with antenna)</p>
+                                <p class="size_info_value">68.9 in</p>
+                            </li>
 
-                        <li class="size_info_item">
-                            <p class="size_info_code">E</p>
-                            <p class="size_info_desc">Wheelbase</p>
-                            <p class="size_info_value">122.0 in</p>
-                        </li>
+                            <li class="size_info_item">
+                                <p class="size_info_code">B, D</p>
+                                <p class="size_info_desc">Width (side mirrors folded)</p>
+                                <p class="size_info_value">78 in</p>
+                            </li>
 
-                        <li class="size_info_item">
-                            <p class="size_info_code">F</p>
-                            <p class="size_info_desc">Length</p>
-                            <p class="size_info_value">197.2 in</p>
-                        </li>
+                            <li class="size_info_item">
+                                <p class="size_info_code">E</p>
+                                <p class="size_info_desc">Wheelbase</p>
+                                <p class="size_info_value">122.0 in</p>
+                            </li>
 
-                        <li class="size_info_item">
-                            <p class="size_info_code">G</p>
-                            <p class="size_info_desc">Approach angle</p>
-                            <p class="size_info_value">20.0°</p>
-                        </li>
+                            <li class="size_info_item">
+                                <p class="size_info_code">F</p>
+                                <p class="size_info_desc">Length</p>
+                                <p class="size_info_value">197.2 in</p>
+                            </li>
 
-                        <li class="size_info_item">
-                            <p class="size_info_code">H</p>
-                            <p class="size_info_desc">Departure angle</p>
-                            <p class="size_info_value">22.8°</p>
-                        </li>
-                    </ul>
+                            <li class="size_info_item">
+                                <p class="size_info_code">G</p>
+                                <p class="size_info_desc">Approach angle</p>
+                                <p class="size_info_value">20.0°</p>
+                            </li>
+
+                            <li class="size_info_item">
+                                <p class="size_info_code">H</p>
+                                <p class="size_info_desc">Departure angle</p>
+                                <p class="size_info_value">22.8°</p>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </section>
@@ -343,13 +347,13 @@
                     <img class="interior_main_img" src="./img/sub03_detail/interior_overview_cabin.png"
                         alt="EV9 interior layout" />
 
-                    <button type="button" class="interior_hotspot white_origin spacious-3-row" data-panel="spacious-3-row"
-                        aria-label="Spacious 3-Row">
+                    <button type="button" class="interior_hotspot white_origin spacious-3-row"
+                        data-panel="spacious-3-row" aria-label="Spacious 3-Row">
                         <span class="blind">Spacious 3-Row</span>
                     </button>
 
-                    <button type="button" class="interior_hotspot white_origin meridian-audio" data-panel="meridian-audio"
-                        aria-label="Meridian Audio">
+                    <button type="button" class="interior_hotspot white_origin meridian-audio"
+                        data-panel="meridian-audio" aria-label="Meridian Audio">
                         <span class="blind">Meridian Audio</span>
                     </button>
 
@@ -358,8 +362,8 @@
                         <span class="blind">Panoramic Display</span>
                     </button>
 
-                    <button type="button" class="interior_hotspot white_origin power-front-seats" data-panel="power-front-seats"
-                        aria-label="Power Front Seats">
+                    <button type="button" class="interior_hotspot white_origin power-front-seats"
+                        data-panel="power-front-seats" aria-label="Power Front Seats">
                         <span class="blind">Power Front Seats</span>
                     </button>
 
@@ -370,6 +374,9 @@
 
                     <div class="interior_panel" hidden>
                         <img class="interior_panel_img" src="" alt="" />
+                        <div class="interior_panel_copy" aria-live="polite">
+                            <p class="interior_panel_desc"></p>
+                        </div>
                         <button type="button" class="interior_panel_close" aria-label="닫기"></button>
                     </div>
                 </div>
@@ -451,12 +458,14 @@
 
         <section class="ev_features">
             <div class="inner">
-                <p class="feature_eyebrow">EV FEATURES</p>
-                <h2 class="feature_title">Go further, charge faster.</h2>
-                <p class="feature_desc">The EV9 is designed to make electric driving easy and efficient.</p>
+                <div class="ev_features_header">
+                    <p class="feature_eyebrow">EV FEATURES</p>
+                    <h2 class="feature_title">Go further, charge faster.</h2>
+                    <p class="feature_desc">The EV9 is designed to make electric driving easy and efficient.</p>
+                </div>
 
-                <ul class="feature_list">
-                    <li class="feature_item">
+                <ul class="feature_list ev_features_grid">
+                    <li class="feature_item ev_feature_card">
                         <div class="feature_img_box">
                             <img src="./img/sub03_detail/ev_fast_charging_feature.png"
                                 alt="Fast charging illustration" />
@@ -470,7 +479,7 @@
                         </div>
                     </li>
 
-                    <li class="feature_item">
+                    <li class="feature_item ev_feature_card">
                         <div class="feature_img_box">
                             <img src="./img/sub03_detail/ev_range_confidence_feature.png"
                                 alt="Range confidence illustration" />
@@ -483,7 +492,7 @@
                         </div>
                     </li>
 
-                    <li class="feature_item">
+                    <li class="feature_item ev_feature_card">
                         <div class="feature_img_box is_contain">
                             <img src="./img/sub03_detail/ev_v2l_utility_feature.png"
                                 alt="Versatile utility V2L illustration" />
@@ -496,7 +505,7 @@
                         </div>
                     </li>
 
-                    <li class="feature_item">
+                    <li class="feature_item ev_feature_card">
                         <div class="feature_img_box">
                             <img src="./img/sub03_detail/ev_towing_capacity_feature.png"
                                 alt="Towing capacity illustration" />

@@ -298,28 +298,34 @@ window.addEventListener('resize', () => {
 const interiorButtons = document.querySelectorAll('.interior .interior_hotspot');
 const interiorPanel = document.querySelector('.interior .interior_panel');
 const interiorPanelImg = document.querySelector('.interior .interior_panel_img');
+const interiorPanelDesc = document.querySelector('.interior .interior_panel_desc');
 const interiorPanelClose = document.querySelector('.interior .interior_panel_close');
 
 const interiorData = {
   'spacious-3-row': {
     image: './img/sub03_detail/interior_spacious_3_row_panel.png',
-    alt: 'Spacious 3-Row Room for everyone panel'
+    alt: 'Spacious 3-Row Room for everyone panel',
+    desc: 'A spacious 3-row interior gives every passenger more room to stretch out and enjoy the ride.'
   },
   'meridian-audio': {
     image: './img/sub03_detail/interior_meridian_audio_panel.png',
-    alt: 'Meridian Audio Premium sound panel'
+    alt: 'Meridian Audio Premium sound panel',
+    desc: 'Experience rich, immersive sound with premium audio throughout the cabin.'
   },
   'panoramic-display-rear': {
     image: './img/sub03_detail/interior_panoramic_display_rear_panel.png',
-    alt: 'Panoramic Display Dual 12.3-in screens panel'
+    alt: 'Panoramic Display Dual 12.3-in screens panel',
+    desc: 'Dual 12.3-inch screens provide a sleek, connected digital experience.'
   },
   'power-front-seats': {
     image: './img/sub03_detail/interior_power_front_seats_panel.png',
-    alt: 'Power Front Seats Easy seat adjustment panel'
+    alt: 'Power Front Seats Easy seat adjustment panel',
+    desc: 'Find your ideal driving position with smooth, intuitive seat controls.'
   },
   'panoramic-display-front': {
     image: './img/sub03_detail/interior_panoramic_display_front_panel.png',
-    alt: 'Panoramic Display Wide intuitive view panel'
+    alt: 'Panoramic Display Wide intuitive view panel',
+    desc: 'A wide digital display keeps key information clear and within view.'
   }
 };
 
@@ -337,6 +343,10 @@ const closeInteriorPanel = () => {
       interiorPanel.hidden = true;
       interiorPanelImg.removeAttribute('src');
       interiorPanelImg.setAttribute('alt', '');
+      if (interiorPanelDesc) {
+        interiorPanelDesc.textContent = '';
+        interiorPanelDesc.parentElement?.classList.remove('is_visible');
+      }
     }
   }, 280);
 };
@@ -346,11 +356,19 @@ const openInteriorPanel = (panelKey) => {
   if (!currentPanel || !interiorPanel) return;
 
   interiorButtons.forEach((button) => {
-    button.classList.toggle('is-active', button.dataset.panel === panelKey);
+    const isCurrentButton = button.dataset.panel === panelKey;
+    button.classList.toggle('is-active', isCurrentButton);
+    button.classList.toggle('on', isCurrentButton);
   });
 
   interiorPanelImg.src = currentPanel.image;
   interiorPanelImg.alt = currentPanel.alt;
+
+  if (interiorPanelDesc) {
+    interiorPanelDesc.textContent = currentPanel.desc || '';
+    interiorPanelDesc.parentElement?.classList.toggle('is_visible', Boolean(currentPanel.desc));
+  }
+
   interiorPanel.hidden = false;
 
   requestAnimationFrame(() => {
