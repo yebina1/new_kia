@@ -1449,6 +1449,7 @@ const $reviewCon = document.querySelector('.review_con');
 const $lists = document.querySelectorAll('.review_con ul');
 const $modal = document.querySelector('.modal');
 const $reviewFirstList = $lists[0];
+const $reviewModalLink = $modal ? $modal.querySelector('.white_origin') : null;
 
 let $currentScroll = 0;
 let $step = 276;
@@ -1590,11 +1591,19 @@ function releaseReview(isDown) {
 }
 
 function showModal() {
+    if ($reviewModalLink) {
+        $reviewModalLink.classList.remove('on');
+    }
+
     $modal.classList.add('show');
 }
 
 function hideModal() {
     $modal.classList.remove('show');
+
+    if ($reviewModalLink) {
+        $reviewModalLink.classList.remove('on');
+    }
 }
 
 function handleReviewWheel(e) {

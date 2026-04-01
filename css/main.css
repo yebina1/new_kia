@@ -726,7 +726,7 @@ body.section_transition_lock {
   position: absolute;
   left: clamp(76px, 6.1vw, 112px);
   top: auto;
-  bottom: 184px;
+  bottom: calc(var(--ev6-details-bottom) + var(--bg-overscan));
   width: min(40vw, 640px);
   display: grid;
   grid-template-columns: minmax(220px, 1.08fr) minmax(190px, 0.92fr);
@@ -1757,10 +1757,10 @@ body.review_locked {
   display: flex;
   justify-content: center;
   gap: 60px;
-  height: 530px;
+  height: clamp(530px, 70vh, 800px);
   overflow: hidden;
   align-items: flex-start;
-  padding-top: 115px;
+  padding-top: calc((clamp(530px, 70vh, 800px) - 300px) / 2);
 }
 
 .review .review_con::before {
@@ -1892,7 +1892,7 @@ body.review_locked {
   opacity: 1;
 }
 
-.modal a {
+.modal .white_origin {
   padding: 16px 32px;
   border-radius: 55px;
   font-size: 20px;
@@ -1903,7 +1903,7 @@ body.review_locked {
   opacity: 0.35;
 }
 
-.modal button a:hover {
+.modal .white_origin:hover {
   transform: translateY(-4px);
 }
 
