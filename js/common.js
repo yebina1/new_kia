@@ -454,6 +454,7 @@ window.addEventListener('resize', () => {
 
 const $familySite = document.querySelector('footer .f_fam');
 const $familyToggle = document.querySelector('footer .f_fam strong');
+const $whiteOriginTriggers = Array.from(document.querySelectorAll('.white_origin'));
 
 if ($familySite && $familyToggle) {
   $familyToggle.addEventListener('click', (e) => {
@@ -468,3 +469,17 @@ if ($familySite && $familyToggle) {
     }
   });
 }
+
+$whiteOriginTriggers.forEach((trigger) => {
+  trigger.addEventListener('click', (event) => {
+    const href = trigger.getAttribute('href');
+    const isToggleOnlyLink =
+      trigger.tagName === 'A' && (!href || href === '#' || href.trim() === '');
+
+    if (isToggleOnlyLink) {
+      event.preventDefault();
+    }
+
+    trigger.classList.toggle('on');
+  });
+});

@@ -27,14 +27,16 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
-    <!-- ??css -->
+    <!-- css -->
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/common.css">
     <link rel="stylesheet" href="css/sub01_build.css">
     <link rel="stylesheet" href="css/common_media.css">
     <link rel="stylesheet" href="css/sub01_build_media.css">
 
-    <!-- 揶쎛?紐꾩궔 js -->
+    <!-- js -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
     <script src="js/common.js" defer></script>
     <script src="js/sub01_build.js" defer></script>
 </head>
@@ -158,7 +160,7 @@
             <div class="hero_overlay"></div>
             <div class="hero_header_space"></div>
 
-            <div class="hero_visual" id="heroVisual">
+            <div class="hero_visual is-model-stage" id="heroVisual">
 
                 <!-- Shared Stage Header -->
                 <div class="hero_trim_header" id="heroTrimHeader" aria-hidden="true">
@@ -199,13 +201,13 @@
                         <ul class="hero_car_list">
                             <li>
                                 <h2 class="hero_car_name">EV<span
-                                        class="hero_title_suffix hero_title_suffix_ev_6">6</span></h2>
-                                <img src="./img/sub01_build/build_ev6.png" alt="EV6" />
+                                        class="hero_title_suffix hero_title_suffix_ev_9">9</span></h2>
+                                <img src="./img/sub01_build/build_ev9.png" alt="EV9" />
                             </li>
                             <li>
                                 <h2 class="hero_car_name">EV<span
-                                        class="hero_title_suffix hero_title_suffix_ev_9">9</span></h2>
-                                <img src="./img/sub01_build/build_ev9.png" alt="EV9" />
+                                        class="hero_title_suffix hero_title_suffix_ev_6">6</span></h2>
+                                <img src="./img/sub01_build/build_ev6.png" alt="EV6" />
                             </li>
                         </ul>
                     </section>
@@ -225,16 +227,23 @@
                 <div class="hero_model_stage" id="heroModelStage">
                     <div class="hero_center">
                         <h2 class="hero_title" id="heroTitle">Sportage</h2>
+                        <div class="hero_arrow_frame">
 
-                        <button class="hero_arrow hero_arrow_left" id="prevCar" type="button" aria-label="??곸읈">
-                            <i class="bx bx-chevron-left"></i>
-                        </button>
-                        <button class="hero_arrow hero_arrow_right" id="nextCar" type="button" aria-label="??쇱벉">
-                            <i class="bx bx-chevron-right"></i>
-                        </button>
+                            <button class="hero_arrow hero_arrow_left" id="prevCar" type="button" aria-label="??곸읈">
+                                <i class="bx bx-chevron-left"></i>
+                            </button>
+                            <button class="hero_arrow hero_arrow_right" id="nextCar" type="button" aria-label="??쇱벉">
+                                <i class="bx bx-chevron-right"></i>
+                            </button>
 
+                        </div>
                         <div class="hero_car">
                             <img id="heroCarImage" src="./img/sub01_build/trim_light.png" alt="ev9 image" />
+                        </div>
+                        <div class="magnet_zone hero_start_btn_zone">
+                            <button type="button" class="hero_start_btn hero_model_start_btn dark_origin cta_btn"
+                                id="startStepButton">Start
+                                <i class="bx bx-chevron-right"></i></button>
                         </div>
                     </div>
                 </div>
@@ -437,22 +446,22 @@
                                         data-type="exterior" data-name="Panthera Metal" data-price=""
                                         data-image-id="colorAssetPanthera" aria-label="Panthera Metal"></button>
                                     <button type="button" class="hero_color_swatch hero_color_swatch_white_pearl"
-                                        data-type="exterior" data-name="Glacial White Pearl" data-price="+$695"
+                                        data-type="exterior" data-name="Glacial White Pearl" data-price="+$ 695"
                                         data-image-id="colorAssetWhitePearl" aria-label="Glacial White Pearl"></button>
                                     <button type="button" class="hero_color_swatch hero_color_swatch_ivory_silver"
                                         data-type="exterior" data-name="Ivory Silver" data-price=""
                                         data-image-id="colorAssetIvorySilver" aria-label="Ivory Silver"></button>
                                     <button type="button" class="hero_color_swatch hero_color_swatch_ocean_blue"
-                                        data-type="exterior" data-name="Ocean Blue" data-price="+$695"
+                                        data-type="exterior" data-name="Ocean Blue" data-price="+$ 695"
                                         data-image-id="colorAssetOceanBlue" aria-label="Ocean Blue"></button>
                                     <button type="button" class="hero_color_swatch hero_color_swatch_road_rider_brown"
-                                        data-type="exterior" data-name="Road Rider Brown" data-price="+$1,500"
+                                        data-type="exterior" data-name="Road Rider Brown" data-price="+$ 1,500"
                                         data-image-id="colorAssetRoadRiderBrown" aria-label="Road Rider Brown"></button>
                                     <button type="button" class="hero_color_swatch hero_color_swatch_wolf_gray"
                                         data-type="exterior" data-name="Wolf Gray" data-price=""
                                         data-image-id="colorAssetWolfGray" aria-label="Wolf Gray"></button>
                                     <button type="button" class="hero_color_swatch hero_color_swatch_ebony_black"
-                                        data-type="exterior" data-name="Ebony Black" data-price="+$695"
+                                        data-type="exterior" data-name="Ebony Black" data-price="+$ 695"
                                         data-image-id="colorAssetEbonyBlack" aria-label="Ebony Black"></button>
                                 </div>
                             </div>
@@ -543,10 +552,9 @@
                                 <div class="hero_package_card_top">
                                     <div class="hero_package_card_heading">
                                         <strong>7-Passenger Package</strong>
-                                        <span>+$0</span>
                                     </div>
-                                    <button type="button" class="hero_package_add_btn" aria-pressed="false">Add
-                                        +</button>
+                                    <button type="button" class="hero_package_add_btn" aria-pressed="false">+$
+                                        0</button>
                                 </div>
                                 <div class="hero_package_card_details">
                                     <ul>
@@ -563,10 +571,9 @@
                                 <div class="hero_package_card_top">
                                     <div class="hero_package_card_heading">
                                         <strong>Nightfall Edition Package</strong>
-                                        <span>+$1,500</span>
                                     </div>
-                                    <button type="button" class="hero_package_add_btn" aria-pressed="false">Add
-                                        +</button>
+                                    <button type="button" class="hero_package_add_btn" aria-pressed="false">+$
+                                        1,500</button>
                                 </div>
                                 <div class="hero_package_card_details">
                                     <ul>
@@ -627,8 +634,7 @@
                                 <div class="hero_accessory_card_body">
                                     <div class="hero_accessory_card_top">
                                         <strong>Cargo Cover</strong>
-                                        <span>+$195</span>
-                                        <button type="button" class="hero_accessory_add_btn">Add +</button>
+                                        <button type="button" class="hero_accessory_add_btn">+$ 195</button>
                                     </div>
                                     <p class="hero_accessory_card_desc">Safeguard your belongings by keeping them out of
                                         sight with this valuable addition to your cargo area.</p>
@@ -649,8 +655,7 @@
                                 <div class="hero_accessory_card_body">
                                     <div class="hero_accessory_card_top">
                                         <strong>Cargo Net</strong>
-                                        <span>+$65</span>
-                                        <button type="button" class="hero_accessory_add_btn">Add +</button>
+                                        <button type="button" class="hero_accessory_add_btn">+$ 65</button>
                                     </div>
                                     <p class="hero_accessory_card_desc">Helps secure sporting equipment, groceries, and
                                         other lightweight cargo.</p>
@@ -670,8 +675,7 @@
                                 <div class="hero_accessory_card_body">
                                     <div class="hero_accessory_card_top">
                                         <strong>Cargo Tray</strong>
-                                        <span>+$145</span>
-                                        <button type="button" class="hero_accessory_add_btn">Add +</button>
+                                        <button type="button" class="hero_accessory_add_btn">+$ 145</button>
                                     </div>
                                     <p class="hero_accessory_card_desc">Protect your cargo area from spills and stains
                                         with a durable and easy to clean cargo tray.</p>
@@ -692,9 +696,8 @@
                                 </div>
                                 <div class="hero_accessory_card_body">
                                     <div class="hero_accessory_card_top">
-                                        <strong>Carpeted Cargo Mat w/<br> Seatback Protection</strong>
-                                        <span>+$145</span>
-                                        <button type="button" class="hero_accessory_add_btn">Add +</button>
+                                        <strong>Carpeted Cargo Mat w/ Seatback Protection</strong>
+                                        <button type="button" class="hero_accessory_add_btn">+$ 145</button>
                                     </div>
                                     <p class="hero_accessory_card_desc">Enhance your interior and protect your rear
                                         seatbacks with a stylish and practical carpeted cargo mat w/ seatback
@@ -716,8 +719,7 @@
                                 <div class="hero_accessory_card_body">
                                     <div class="hero_accessory_card_top">
                                         <strong>Carpeted Floor Mats</strong>
-                                        <span>+$240</span>
-                                        <button type="button" class="hero_accessory_add_btn">Add +</button>
+                                        <button type="button" class="hero_accessory_add_btn">+$ 240</button>
                                     </div>
                                     <p class="hero_accessory_card_desc">Carpeted mats are custom fit and
                                         color-coordinated to match your Kia interior.</p>
@@ -738,8 +740,7 @@
                                 <div class="hero_accessory_card_body">
                                     <div class="hero_accessory_card_top">
                                         <strong>Cross Bars</strong>
-                                        <span>+$380</span>
-                                        <button type="button" class="hero_accessory_add_btn">Add +</button>
+                                        <button type="button" class="hero_accessory_add_btn">+$ 380</button>
                                     </div>
                                     <p class="hero_accessory_card_desc">Carpeted mats are custom fit and
                                         color-coordinated to match your Kia interior.</p>
@@ -761,8 +762,7 @@
                                 <div class="hero_accessory_card_body">
                                     <div class="hero_accessory_card_top">
                                         <strong>First Aid Kit, Small</strong>
-                                        <span>+$45</span>
-                                        <button type="button" class="hero_accessory_add_btn">Add +</button>
+                                        <button type="button" class="hero_accessory_add_btn">+$ 45</button>
                                     </div>
                                     <p class="hero_accessory_card_desc">This durable zippered case includes adhesive
                                         strips, sterile pads, gauze, gloves, tools, and other roadside first aid
@@ -789,8 +789,7 @@
                                 <div class="hero_accessory_card_body">
                                     <div class="hero_accessory_card_top">
                                         <strong>Mud Guards</strong>
-                                        <span>+$160</span>
-                                        <button type="button" class="hero_accessory_add_btn">Add +</button>
+                                        <button type="button" class="hero_accessory_add_btn">+$ 160</button>
                                     </div>
                                     <p class="hero_accessory_card_desc">Help protect your new Kia from the chips and
                                         blemishes that can come from road debris with these specially designed, custom
@@ -813,8 +812,7 @@
                                 <div class="hero_accessory_card_body">
                                     <div class="hero_accessory_card_top">
                                         <strong>NACS Charge Port DC Adapter</strong>
-                                        <span>+$0</span>
-                                        <button type="button" class="hero_accessory_add_btn">Add +</button>
+                                        <button type="button" class="hero_accessory_add_btn">+$ 0</button>
                                     </div>
                                     <p class="hero_accessory_card_desc">Included in ZEV states only.</p>
                                     <div class="hero_accessory_card_details">
@@ -833,8 +831,7 @@
                                 <div class="hero_accessory_card_body">
                                     <div class="hero_accessory_card_top">
                                         <strong>Rear Seat Entertainment</strong>
-                                        <span>+$1,500</span>
-                                        <button type="button" class="hero_accessory_add_btn">Add +</button>
+                                        <button type="button" class="hero_accessory_add_btn">+$ 1,500</button>
                                     </div>
                                     <p class="hero_accessory_card_desc">Keep your rear seat passengers entertained with
                                         this dual headrest entertainment system featuring two monitors, two remotes, and
@@ -857,8 +854,7 @@
                                 <div class="hero_accessory_card_body">
                                     <div class="hero_accessory_card_top">
                                         <strong>Roadside Assistance Kit</strong>
-                                        <span>+$75</span>
-                                        <button type="button" class="hero_accessory_add_btn">Add +</button>
+                                        <button type="button" class="hero_accessory_add_btn">+$ 75</button>
                                     </div>
                                     <p class="hero_accessory_card_desc">Be prepared for the unexpected with a carrying
                                         bag packed with cables, tools, safety gear, adhesive bandages, and antiseptic
@@ -885,8 +881,7 @@
                                 <div class="hero_accessory_card_body">
                                     <div class="hero_accessory_card_top">
                                         <strong>Side Step Bars, Black</strong>
-                                        <span>+$740</span>
-                                        <button type="button" class="hero_accessory_add_btn">Add +</button>
+                                        <button type="button" class="hero_accessory_add_btn">+$ 740</button>
                                     </div>
                                     <p class="hero_accessory_card_desc">Black Side Step Bars can make it easier to get
                                         in and out of your vehicle while enhancing its rugged appearance.</p>
@@ -907,8 +902,7 @@
                                 <div class="hero_accessory_card_body">
                                     <div class="hero_accessory_card_top">
                                         <strong>Tow Hitch</strong>
-                                        <span>+$765</span>
-                                        <button type="button" class="hero_accessory_add_btn">Add +</button>
+                                        <button type="button" class="hero_accessory_add_btn">+$ 765</button>
                                     </div>
                                     <p class="hero_accessory_card_desc">Custom designed, this tow hitch mounts directly
                                         to the vehicle frame for a reliable towing connection. Additional equipment may
@@ -933,8 +927,7 @@
                                 <div class="hero_accessory_card_body">
                                     <div class="hero_accessory_card_top">
                                         <strong>Wheel Locks</strong>
-                                        <span>+$90</span>
-                                        <button type="button" class="hero_accessory_add_btn">Add +</button>
+                                        <button type="button" class="hero_accessory_add_btn">+$ 90</button>
                                     </div>
                                     <p class="hero_accessory_card_desc">Wheel locks are designed to secure the wheels to
                                         your vehicle and help prevent theft.</p>
@@ -1170,8 +1163,10 @@
                                 </div>
                             </div>
                             <div class="hero_summary_cta">
-                                <button type="button" class="hero_summary_cta_btn">View Inventory</button>
-                                <button type="button" class="hero_summary_cta_btn">Share Build</button>
+                                <button type="button" class="hero_summary_cta_btn" disabled aria-disabled="true">View
+                                    Inventory</button>
+                                <button type="button" class="hero_summary_cta_btn" disabled aria-disabled="true">Share
+                                    Build</button>
                                 <button type="button" class="hero_summary_cta_btn" id="requestQuoteButton"
                                     aria-expanded="false">Request a Quote</button>
                             </div>
@@ -1211,7 +1206,8 @@
                                     <label class="hero_quote_field">
                                         <span class="hero_quote_field_shell">
                                             <span class="hero_quote_field_label">First name</span>
-                                            <input type="text" id="quoteFirstName" placeholder="First name" />
+                                            <input type="text" id="quoteFirstName" placeholder="First name"
+                                                value="Alex" />
                                         </span>
                                         <span class="hero_quote_error" id="quoteFirstNameError" hidden>First Name is
                                             Required</span>
@@ -1219,7 +1215,7 @@
                                     <label class="hero_quote_field">
                                         <span class="hero_quote_field_shell">
                                             <span class="hero_quote_field_label">Last name</span>
-                                            <input type="text" id="quoteLastName" placeholder="Last name" />
+                                            <input type="text" id="quoteLastName" placeholder="Last name" value="Kim" />
                                         </span>
                                         <span class="hero_quote_error" id="quoteLastNameError" hidden>Last Name is
                                             Required</span>
@@ -1227,7 +1223,8 @@
                                     <label class="hero_quote_field hero_quote_field_full">
                                         <span class="hero_quote_field_shell">
                                             <span class="hero_quote_field_label">Phone</span>
-                                            <input type="tel" id="quotePhone" placeholder="phone" />
+                                            <input type="tel" id="quotePhone" placeholder="phone"
+                                                value="010-1234-5678" />
                                         </span>
                                         <span class="hero_quote_error" id="quotePhoneError" hidden>Phone is
                                             Required</span>
@@ -1235,7 +1232,8 @@
                                     <label class="hero_quote_field hero_quote_field_full">
                                         <span class="hero_quote_field_shell">
                                             <span class="hero_quote_field_label">Email</span>
-                                            <input type="email" id="quoteEmail" placeholder="email" />
+                                            <input type="email" id="quoteEmail" placeholder="email"
+                                                value="alex.kim@example.com" />
                                         </span>
                                         <span class="hero_quote_error" id="quoteEmailError" hidden>Email is
                                             Required</span>
@@ -1243,7 +1241,8 @@
                                     <label class="hero_quote_field hero_quote_field_full">
                                         <span class="hero_quote_field_shell">
                                             <span class="hero_quote_field_label">Address</span>
-                                            <input type="text" id="quoteAddress" placeholder="address" />
+                                            <input type="text" id="quoteAddress" placeholder="address"
+                                                value="123 Gangnam-daero, Seoul" />
                                         </span>
                                         <span class="hero_quote_error" id="quoteAddressError" hidden>Address is
                                             Required</span>
@@ -1329,10 +1328,6 @@
                                     </div>
                                 </section>
 
-                                <div class="hero_quote_actions">
-                                    <button type="button" class="hero_quote_back_btn" id="quoteBackButton">Back</button>
-                                    <button type="button" class="hero_quote_send_btn" id="quoteSendButton">Send</button>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -1345,9 +1340,6 @@
                 </div>
 
                 <!-- Start / Progress -->
-                <button type="button" class="hero_start_btn hero_model_start_btn dark_origin" id="startStepButton">Start
-                    <i class="bx bx-chevron-right"></i></button>
-
                 <div class="hero_bottom_steps" id="heroBottomSteps">
                     <div class="hero_progress" aria-hidden="true">
                         <div class="hero_progress_track"></div>
@@ -1355,14 +1347,20 @@
                     </div>
 
                     <div class="hero_bottom_tabs" role="tablist" aria-label="Build steps">
-                        <button type="button" class="active" data-step="0" role="tab"
+                        <button type="button" class="active" data-step="0" data-mobile-label="Model" role="tab"
                             aria-selected="true">Model</button>
-                        <button type="button" data-step="1" role="tab" aria-selected="false">Trim</button>
-                        <button type="button" data-step="2" role="tab" aria-selected="false">Color</button>
-                        <button type="button" data-step="3" role="tab" aria-selected="false">Packages</button>
-                        <button type="button" data-step="4" role="tab" aria-selected="false">Accessories</button>
-                        <button type="button" data-step="5" role="tab" aria-selected="false">Maintenance Plan</button>
-                        <button type="button" data-step="6" role="tab" aria-selected="false">Summary</button>
+                        <button type="button" data-step="1" data-mobile-label="Trim" role="tab"
+                            aria-selected="false">Trim</button>
+                        <button type="button" data-step="2" data-mobile-label="Color" role="tab"
+                            aria-selected="false">Color</button>
+                        <button type="button" data-step="3" data-mobile-label="Package" role="tab"
+                            aria-selected="false">Packages</button>
+                        <button type="button" data-step="4" data-mobile-label="Accessory" role="tab"
+                            aria-selected="false">Accessories</button>
+                        <button type="button" data-step="5" data-mobile-label="Plan" role="tab"
+                            aria-selected="false">Maintenance Plan</button>
+                        <button type="button" data-step="6" data-mobile-label="Summary" role="tab"
+                            aria-selected="false">Summary</button>
                     </div>
                 </div>
             </div>

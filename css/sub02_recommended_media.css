@@ -822,6 +822,10 @@
         opacity: 0.5;
     }
 
+    .selection_modal_visual img {
+        filter: brightness(0.42) saturate(0.92);
+    }
+
     .selection_modal_specs ul {
         padding-left: 18px;
     }
@@ -837,6 +841,10 @@
         width: 120%;
         max-width: 680px;
         opacity: 0.56;
+    }
+
+    .selection_modal_visual img {
+        filter: brightness(0.38) saturate(0.9);
     }
 
     .wrap {
