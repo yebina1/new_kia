@@ -194,20 +194,28 @@ h2 {
 }
 
 .scroll_down_button {
-    position: absolute;
+    position: fixed;
     left: 50%;
     bottom: 32px;
-    z-index: 3;
+    z-index: 1100;
     display: inline-block;
     padding-top: 60px;
-    transform: translateX(-50%);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-50%) translateY(12px);
     color: #C7FFEE;
     font-size: 14px;
     font-weight: 400;
     letter-spacing: 0.22em;
     text-decoration: none;
     text-transform: uppercase;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.scroll_down_button.is_visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
 }
 
 .scroll_down_button:hover {

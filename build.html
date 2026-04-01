@@ -42,6 +42,46 @@
 </head>
 
 <body>
+    <div class="selection_modal build_selection_modal" id="buildSendModal" aria-hidden="true">
+        <div class="selection_modal_dim" data-build-modal-close></div>
+        <div class="selection_modal_panel" role="dialog" aria-modal="true" aria-labelledby="build-send-modal-title">
+            <button type="button" class="selection_modal_close" id="buildSendModalClose"
+                aria-label="Close modal">&times;</button>
+            <div class="selection_modal_inner">
+                <div class="selection_modal_header">
+                    <strong class="selection_modal_logo"><img src="img/sub02_recommended/logo/logo_white.svg"
+                            alt=""></strong>
+                    <p id="buildSendModalEyebrow">Your Final Selection Estimate</p>
+                </div>
+                <div class="selection_modal_body">
+                    <div class="selection_modal_copy">
+                        <div class="selection_modal_titlebox">
+                            <h3 id="build-send-modal-title">EV9 (Land AWD)</h3>
+                        </div>
+                        <div class="selection_modal_desc">
+                            <p class="selection_modal_label">Status:</p>
+                            <p id="buildSendModalDescription">Quote request has been sent successfully.</p>
+                        </div>
+                        <div class="selection_modal_specs">
+                            <p class="selection_modal_label">Selected Specs :</p>
+                            <ul id="buildSendModalSpecs">
+                                <li>Trim: Land AWD</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="selection_modal_visual">
+                        <img id="buildSendModalImage" src="./img/sub01_build/trim_land.png" alt="Selected build preview">
+                    </div>
+                </div>
+                <div class="selection_modal_actions">
+                    <div class="selection_modal_buttons">
+                        <button type="button" class="is-primary" id="buildSendModalPrimary">Done</button>
+                        <button type="button" id="buildSendModalSecondary">Continue Editing</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="wrap build_wrap" style="--build-page-bg: url('./img/sub01_build/build_bg.png');">
 
         <header>

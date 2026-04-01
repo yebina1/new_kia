@@ -18,6 +18,7 @@ body {
   background: #f3f3f3;
   font-family: "Pretendard Variable", "Noto Sans KR", sans-serif;
   color: #fff;
+  overflow-x: hidden;
 }
 
 .build_wrap {
@@ -28,6 +29,7 @@ body {
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
+  overflow-x: hidden;
 }
 
 img {
@@ -50,6 +52,9 @@ button {
 .hero {
   --hero-swatch-width: 66px;
   --hero-swatch-height: 34px;
+  --hero-seat-preview-size: clamp(132px, 17vw, 208px);
+  --hero-seat-preview-right: 10%;
+  --hero-seat-preview-bottom: 8%;
   --hero-color-frame-padding-block: 24px;
   --hero-color-frame-padding-inline: 16px;
   --hero-vehicle-max-width: 1320px;
@@ -57,6 +62,9 @@ button {
   --hero-stage-wide-panel-width: clamp(820px, 66vw, 1419px);
   --hero-stage-wide-panel-max-width: calc(100vw - 320px);
   --hero-model-vehicle-width: min(84vw, var(--hero-vehicle-max-width));
+  --hero-model-stage-car-width: var(--hero-model-vehicle-width);
+  --hero-model-title-gap: 56px;
+  --hero-model-title-offset-factor: 0.2;
   /* 차량 사진 크기 조정 */
   --hero-stage-vehicle-width: var(--hero-model-vehicle-width);
   --hero-stage-vehicle-center-x: 25vw;
@@ -124,6 +132,7 @@ button {
   object-fit: cover;
   object-position: center center;
 }
+
 
 .hero_header_space {
   width: 100%;
@@ -586,6 +595,7 @@ button {
 
 .hero_color_vehicle {
   margin-top: 0;
+  overflow: visible;
   /* 차량 사진 위치 조정 */
 }
 
@@ -614,10 +624,10 @@ button {
 
 .hero_color_seat_preview {
   position: absolute;
-  right: 208px;
-  bottom: 36px;
+  right: var(--hero-seat-preview-right);
+  bottom: var(--hero-seat-preview-bottom);
   /* 시트 이미지 위치 조정 */
-  width: 208px;
+  width: var(--hero-seat-preview-size);
   aspect-ratio: 1;
   border-radius: 50%;
   border: 3px solid rgba(255, 255, 255, 0.88);
@@ -1794,8 +1804,8 @@ button {
   border: 1px solid rgba(255, 255, 255, 0.8);
   color: var(--kia-white1);
   font-family: "Outfit", sans-serif;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 500;
   line-height: 1;
   text-align: center;
   white-space: nowrap;
@@ -1823,6 +1833,7 @@ button {
 
 #requestQuoteButton {
   color: var(--kia-white1);
+  font-size: 20px;
 }
 
 .hero_accessory_cards {
@@ -3253,6 +3264,10 @@ button {
   transform: translate(-50%, -50%);
 }
 
+.hero_visual.is-model-stage .hero_title {
+  top: calc(50% - (var(--hero-model-stage-car-width) * var(--hero-model-title-offset-factor)) - var(--hero-model-title-gap));
+}
+
 .hero_car_name {
   display: inline-flex;
   align-items: flex-start;
@@ -3342,6 +3357,10 @@ button {
   user-select: none;
   -webkit-user-select: none;
   cursor: grab;
+}
+
+.hero_visual.is-model-stage .hero_car {
+  width: var(--hero-model-stage-car-width);
 }
 
 .hero_car::after {
@@ -3837,7 +3856,7 @@ button {
   .hero_summary_intro {
     display: flex;
     align-items: flex-start;
-    justify-content: space-between;
+    justify-content: flex-start;
     gap: 24px;
     width: 100%;
     max-width: none;
@@ -3853,10 +3872,10 @@ button {
   .hero_summary_summary {
     flex: 0 0 auto;
     max-width: clamp(280px, 31vw, 420px);
-    margin-left: auto;
+    margin-left: 0;
     padding-left: 0;
     padding-top: 26px;
-    text-align: right;
+    text-align: left;
   }
 
   .hero_trim_title,
@@ -4257,8 +4276,8 @@ button {
   }
 
   .hero_color_seat_preview {
-    right: -2px;
-    bottom: -10px;
+    right: 10%;
+    bottom: 8%;
     width: clamp(104px, 25vw, 146px);
     border-width: 3px;
     box-shadow:
@@ -4882,4 +4901,217 @@ button {
   [class*="hero_summary_"],
   [class*="hero_quote_"]):not(.hero_trim_select_btn):not(.hero_package_add_btn):not(.hero_accessory_add_btn):not(.hero_plan_add_btn):not(.hero_summary_cta_btn):not(.hero_quote_send_btn):not(.hero_quote_back_btn):not(.hero_summary_row_price):not(.hero_trim_card_price):not(.hero_trim_card_lease):not(.hero_package_card_heading span):not(.hero_accessory_card_top span):not(.hero_plan_card_top span) {
   line-height: 1.3;
+}
+
+/* =============================================
+   BUILD SEND MODAL
+============================================= */
+.selection_modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.42s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.selection_modal.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.selection_modal[aria-hidden="false"] {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.selection_modal_dim {
+  position: absolute;
+  inset: 0;
+  background: rgba(7, 10, 13, 0.7);
+  backdrop-filter: blur(10px);
+}
+
+.selection_modal_panel {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(1180px, calc(100% - 72px));
+  height: min(680px, calc(100vh - 48px));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  box-sizing: border-box;
+  box-shadow: 10px 12px 20px rgba(0, 0, 0, 0.35);
+  background:
+    linear-gradient(rgba(10, 10, 10, 0.5), rgba(10, 10, 10, 0.5)),
+    url("../img/sub02_recommended/modal/modal_bg.png") center / 124% 124% no-repeat;
+  opacity: 0;
+  transform: translate(-50%, calc(-50% + 18px));
+  will-change: opacity, transform;
+  transition: opacity 0.42s cubic-bezier(0.22, 1, 0.36, 1), transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.selection_modal.is-open .selection_modal_panel {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+}
+
+.selection_modal[aria-hidden="false"] .selection_modal_panel {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+}
+
+.selection_modal_inner {
+  min-height: 100%;
+  height: 100%;
+  padding: 34px 44px 30px 100px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+  color: #ddd8d1;
+}
+
+.selection_modal_close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 20;
+  border: 0;
+  background: transparent;
+  color: rgba(150, 150, 150, 0.72);
+  font-size: 46px;
+  font-weight: 300;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.selection_modal_header {
+  text-align: center;
+}
+
+.selection_modal_logo {
+  display: block;
+}
+
+.selection_modal_logo img {
+  display: block;
+  height: 42px;
+  width: auto;
+  margin: 0 auto;
+}
+
+.selection_modal_header p {
+  margin-top: 8px;
+  font-size: 16px;
+}
+
+.selection_modal_body {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 36px;
+  flex: 1 1 auto;
+}
+
+.selection_modal_copy {
+  width: min(100%, 520px);
+  position: relative;
+  z-index: 2;
+}
+
+.selection_modal_titlebox {
+  width: 100%;
+  padding: 26px 0 16px;
+  border-bottom: 1px solid rgba(221, 216, 209, 0.6);
+}
+
+.selection_modal_titlebox h3 {
+  color: #ddd8d1;
+  font-size: 40px;
+  line-height: 1.3;
+}
+
+.selection_modal_desc,
+.selection_modal_specs {
+  margin-top: 32px;
+}
+
+.selection_modal_label {
+  font-size: 18px;
+  line-height: 1.3;
+}
+
+.selection_modal_desc p:last-child,
+.selection_modal_specs li {
+  color: #fbf6ef;
+  font-size: 21px;
+  line-height: 1.3;
+}
+
+.selection_modal_desc p:last-child,
+.selection_modal_specs li:first-child {
+  margin-top: 8px;
+}
+
+.selection_modal_specs ul {
+  padding-left: 22px;
+  list-style: disc;
+}
+
+.selection_modal_visual {
+  position: absolute;
+  right: -120px;
+  bottom: 92px;
+  width: min(100%, 760px);
+}
+
+.selection_modal_visual img {
+  width: 100%;
+  display: block;
+  filter: drop-shadow(0 24px 36px rgba(0, 0, 0, 0.36));
+}
+
+.selection_modal_actions {
+  position: absolute;
+  left: 100px;
+  right: 44px;
+  bottom: 30px;
+}
+
+.selection_modal_buttons {
+  display: flex;
+  align-items: center;
+  gap: 21px;
+  flex-wrap: wrap;
+}
+
+.selection_modal_buttons button {
+  width: 213px;
+  height: 54px;
+  padding: 16px 32px;
+  font-size: 20px;
+  border-radius: 55px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(251, 246, 239, 0.08);
+  color: #fbf6ef;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+}
+
+.selection_modal_buttons .is-primary {
+  background: rgba(50, 176, 180, 0.3);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+body.modal-open {
+  overflow: hidden;
 }
