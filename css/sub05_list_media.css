@@ -143,15 +143,23 @@
   }
 
   .vehicle_card .actions {
-    display: grid;
-    grid-template-columns: 118px minmax(0, 1fr);
+    display: flex;
     gap: 16px;
     width: 100%;
   }
 
   .vehicle_card .actions a {
+    flex: 1 1 0;
     min-height: 48px;
     font-size: 1rem;
+  }
+
+  .vehicle_card .actions .btn_build {
+    flex: 0.96 1 0;
+  }
+
+  .vehicle_card .actions .btn_detail {
+    flex: 1.04 1 0;
   }
 
   .assistant_banner {
@@ -171,11 +179,28 @@
   .assistant_banner .cta {
     min-height: 56px;
     padding: 16px 32px;
-    font-size: 20px;
+    font-size: 1.5rem;
   }
 
   .assistant_banner .cta i {
     font-size: 24px;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .vehicle_card .actions .btn_build {
+    padding-inline: clamp(14px, 1.8vw, 18px);
+  }
+}
+
+@media screen and (max-width: 880px) {
+  .vehicle_card .actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .vehicle_card .actions a {
+    width: 100%;
   }
 }
 
@@ -308,6 +333,6 @@
     justify-content: center;
     min-height: 56px;
     padding: 16px 32px;
-    font-size: 20px;
+    font-size: 1.5rem;
   }
 }

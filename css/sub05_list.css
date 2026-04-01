@@ -277,7 +277,7 @@ article.ev9::after {
   position: absolute;
   inset: -6px;
   border-radius: 30px;
-  border: 1px solid rgba(199, 255, 238, 0.95);
+  border: 2px solid rgba(199, 255, 238, 0.95);
   box-shadow:
     0 0 14px rgba(172, 255, 235, 0.28),
     0 0 30px rgba(125, 224, 208, 0.18);
@@ -431,40 +431,39 @@ article.ev9 .btn_compare {
 
 .vehicle_card .actions {
   display: flex;
-  gap: 10px;
+  gap: 8px;
 }
 
 .vehicle_card .actions a {
-  flex: 1;
+  flex: 1 1 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-height: 44px;
+  min-width: 0;
+  padding: 14px 20px;
   border-radius: 999px;
-  font-size: 1.125rem;
+  font-size: 1rem;
   font-family: "Outfit", sans-serif;
-  font-weight: 600;
-  text-transform: uppercase;
+  font-weight: 500;
+  text-transform: capitalize;
+  white-space: nowrap;
+  color: var(--kia-white1);
 }
 
 .vehicle_card .actions .btn_build {
-  background: rgba(251, 246, 239, 0.24);
-  color: var(--kia-white1);
-  padding: 16px 16px;
+  flex: 0.96 1 0;
 }
 
 .vehicle_card .actions .btn_detail {
-  background: linear-gradient(90deg,
-      rgba(251, 246, 239, 0.1),
-      rgba(50, 176, 180, 0.2));
-  color: var(--kia-white1);
-  padding: 16px 16px;
+  flex: 1.04 1 0;
+  min-width: 126px;
 }
 
 .assistant_banner {
   margin-top: 12px;
   margin-bottom: 24px;
-  padding: 28px 32px;
+  padding: 64px 32px;
   border-radius: 32px;
   border: 1px solid rgba(251, 246, 239, 0.14);
   background: rgba(251, 246, 239, 0.05);
@@ -498,16 +497,28 @@ article.ev9 .btn_compare {
   align-items: center;
   gap: 8px;
   white-space: nowrap;
-  padding: 16px 28px;
+  padding: 16px 32px;
   border-radius: 999px;
-  background: rgba(251, 246, 239, 0.45);
-  color: #121212;
-  font-size: 18px;
+  /* background: rgba(251, 246, 239, 0.45); */
+  color: var(--kia-white1);
+  font-size: 1.2rem;
   font-weight: 500;
   font-family: "Outfit", sans-serif;
 }
 
 .assistant_banner .cta i {
-  color: var(--kia-black);
-  font-size: 20px;
+  color: var(--kia-white1);
+  /* font-size: 20px; */
+  font-size: 1.5rem;
+}
+
+.assistant_banner .white_origin:hover{
+  border: 1px solid #ABF4F6;
+  /* color: #ABF4F6; */
+  border-color: rgba(160, 247, 255, 0.92);
+  color: var(--kia-white1);
+  box-shadow:
+    inset 0 5px 10px rgba(255, 255, 255, 0.5),
+    inset 0 -3px 5px rgba(0, 0, 0, 0.05),
+    0px 0px 11px 8px rgba(172, 255, 235, 0.26);
 }
