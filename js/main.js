@@ -722,13 +722,21 @@ function initEv6Scene() {
   const seatingMask = document.getElementById("seatingMask");
   const carpetsMask = document.getElementById("carpetsMask");
   const detailsLayer = document.getElementById("detailsLayer");
-  const materialPhotoCard = document.getElementById("materialPhotoCard");
-  const materialPhotoImage = document.getElementById("materialPhotoImage");
+  const dashPhotoCard = document.getElementById("dashPhotoCard");
+  const luggagePhotoCard = document.getElementById("luggagePhotoCard");
+  const seatingPhotoCard = document.getElementById("seatingPhotoCard");
+  const carpetsPhotoCard = document.getElementById("carpetsPhotoCard");
   const bg1CopyStage = section?.querySelector(".bg1_copy_stage");
   const bg2CopyStage = section?.querySelector(".bg2_copy_stage");
   const bg1Desc = section?.querySelector(".bg1_copy_right .desc");
   const bg2Desc = section?.querySelector(".bg2_copy_left .desc");
   const root = document.documentElement;
+  const photoCards = {
+    dashboard: dashPhotoCard,
+    luggage: luggagePhotoCard,
+    seating: seatingPhotoCard,
+    carpets: carpetsPhotoCard,
+  };
 
   const requiredNodes = [
     section,
@@ -743,8 +751,7 @@ function initEv6Scene() {
     seatingMask,
     carpetsMask,
     detailsLayer,
-    materialPhotoCard,
-    materialPhotoImage,
+    ...Object.values(photoCards),
   ];
 
   if (requiredNodes.some((node) => !node)) {
@@ -756,29 +763,25 @@ function initEv6Scene() {
     {
       key: "dashboard",
       mask: dashMask,
-      photo: "./img/main/ev6/recycled.png",
-      alt: "Dashboard trim detail",
+      photoCard: photoCards.dashboard,
       growVar: "--dash-grow",
     },
     {
       key: "luggage",
       mask: luggageMask,
-      photo: "./img/main/ev6/recycled1.png",
-      alt: "Luggage material detail",
+      photoCard: photoCards.luggage,
       growVar: "--luggage-grow",
     },
     {
       key: "seating",
       mask: seatingMask,
-      photo: "./img/main/ev6/recycled2.png",
-      alt: "Seating recycled material detail",
+      photoCard: photoCards.seating,
       growVar: "--seating-grow",
     },
     {
       key: "carpets",
       mask: carpetsMask,
-      photo: "./img/main/ev6/recycled3.png",
-      alt: "Carpets and Mats recycled material detail",
+      photoCard: photoCards.carpets,
       growVar: "--carpet-grow",
     },
   ];
@@ -802,9 +805,6 @@ function initEv6Scene() {
   ];
 
   let rafId = null;
-  let photoSwapTimer = null;
-  let photoSwapToken = 0;
-  let currentPhotoKey = "";
   let bg2Locked = false;
 
   if (bg1Desc) {
@@ -823,71 +823,47 @@ function initEv6Scene() {
   }
 
   function syncFeatureBottomToVisiblePhotoCard() {
-    const isVisible = Number.parseFloat(materialPhotoCard.style.opacity || "0") > 0.01;
+    const visibleCards = Object.values(photoCards).filter((card) => {
+      const opacity = Number.parseFloat(card.style.opacity || "0");
+      return opacity > 0.01;
+    });
 
-    if (!isVisible) {
+    if (!visibleCards.length) {
       scene.style.removeProperty("--ev6-photo-card-bottom");
       return;
     }
 
     const sceneRect = scene.getBoundingClientRect();
-    const photoRect = materialPhotoCard.getBoundingClientRect();
-    const clampedBottom = Math.min(photoRect.bottom, sceneRect.bottom);
+    const visibleCardBottom = Math.max(
+      ...visibleCards.map((card) => card.getBoundingClientRect().bottom)
+    );
+    const clampedBottom = Math.min(visibleCardBottom, sceneRect.bottom);
     const bottomOffset = Math.max(sceneRect.bottom - clampedBottom, 0);
 
     scene.style.setProperty("--ev6-photo-card-bottom", `${Math.round(bottomOffset)}px`);
   }
 
-  function setPhotoVisible(isVisible) {
-    materialPhotoCard.classList.toggle("is_hidden", !isVisible);
-    materialPhotoCard.style.opacity = isVisible ? "1" : "0";
-    materialPhotoCard.style.transform = isVisible
+  function setPhotoCardVisible(card, isVisible) {
+    if (!card) {
+      return;
+    }
+
+    card.classList.toggle("is_hidden", !isVisible);
+    card.style.opacity = isVisible ? "1" : "0";
+    card.style.transform = isVisible
       ? "translate3d(0, 0, 0) scale(1)"
       : "translate3d(0, 18px, 0) scale(0.76)";
   }
 
-  function swapPhoto(step) {
+  function setActivePhoto(step) {
     if (!step) {
-      currentPhotoKey = "";
-      setPhotoVisible(false);
+      Object.values(photoCards).forEach((card) => setPhotoCardVisible(card, false));
       return;
     }
 
-    const isHidden = materialPhotoCard.classList.contains("is_hidden");
-
-    if (currentPhotoKey === step.key && !isHidden) {
-      setPhotoVisible(true);
-      return;
-    }
-
-    if (photoSwapTimer) {
-      window.clearTimeout(photoSwapTimer);
-      photoSwapTimer = null;
-    }
-
-    const token = ++photoSwapToken;
-
-    if (!currentPhotoKey || isHidden) {
-      materialPhotoImage.src = step.photo;
-      materialPhotoImage.alt = step.alt;
-      currentPhotoKey = step.key;
-      setPhotoVisible(true);
-      return;
-    }
-
-    setPhotoVisible(false);
-
-    photoSwapTimer = window.setTimeout(() => {
-      if (token !== photoSwapToken) {
-        return;
-      }
-
-      materialPhotoImage.src = step.photo;
-      materialPhotoImage.alt = step.alt;
-      currentPhotoKey = step.key;
-      setPhotoVisible(true);
-      photoSwapTimer = null;
-    }, 140);
+    Object.entries(photoCards).forEach(([key, card]) => {
+      setPhotoCardVisible(card, key === step.key);
+    });
   }
 
   function resetFeatureGrowth() {
@@ -907,9 +883,9 @@ function initEv6Scene() {
 
     if (activeStep) {
       root.style.setProperty(activeStep.growVar, "1");
-      swapPhoto(activeStep);
+      setActivePhoto(activeStep);
     } else {
-      swapPhoto(null);
+      setActivePhoto(null);
     }
   }
 
@@ -919,34 +895,6 @@ function initEv6Scene() {
     const rawProgress = passed / total;
     const vh = window.innerHeight;
 
-<<<<<<< HEAD
-    const baseEnd = 0.49;
-    const baseP = clamp(p / baseEnd);
-
-    const enterP = sstep(0.03, 0.24, baseP);
-    const cruiseP = sstep(0.24, 0.46, baseP);
-    const panelPushP = sstep(0.46, 0.68, baseP);
-    const morphP = sstep(0.72, 0.84, baseP);
-
-    const trackY = Math.round(mix(0, -vh, panelPushP));
-    bgTrack.style.transform = `translate3d(0, ${trackY}px, 0)`;
-    if (bg2FeaturesTrack) {
-      bg2FeaturesTrack.style.transform = `translate3d(0, ${trackY}px, 0)`;
-    }
-
-    const bg1InnerY = mix(0, -vh * 0.03, sstep(0.06, 0.46, baseP));
-    const bg2InnerY = mix(vh * 0.035, 0, panelPushP);
-    const bg1Scale = mix(1.02, 1.0, panelPushP);
-    const bg2Scale = mix(1.04, 1.0, panelPushP);
-
-    if (bg1Img) {
-      bg1Img.style.transform = `translate3d(0, ${Math.round(bg1InnerY)}px, 0) scale(${bg1Scale * 1.002})`;
-    }
-    bg2Img.style.transform = `translate3d(0, ${Math.round(bg2InnerY)}px, 0) scale(${bg2Scale * 1.002})`;
-    if (bg2FeaturesSurface) {
-      bg2FeaturesSurface.style.transform = `translate3d(0, ${Math.round(bg2InnerY)}px, 0) scale(${bg2Scale * 1.002})`;
-    }
-=======
     if (rawProgress <= 0.005 && section.getBoundingClientRect().top >= 0) {
       bg2Locked = false;
     }
@@ -960,8 +908,19 @@ function initEv6Scene() {
     const bgTransitionProgress = sstep(0.18, 0.3, visualProgress);
     const bg1SceneProgress = sstep(0.02, 0.18, rawProgress);
 
-    bgTrack.style.transform = `translate3d(0, ${Math.round(-vh * bgTransitionProgress)}px, 0)`;
-    bg2Img.style.transform = `translate3d(0, ${Math.round(mix(vh * 0.03, 0, bgTransitionProgress))}px, 0) scale(${mix(1.04, 1, bgTransitionProgress)})`;
+    const trackY = Math.round(-vh * bgTransitionProgress);
+    const bg2InnerY = Math.round(mix(vh * 0.03, 0, bgTransitionProgress));
+    const bg2Scale = mix(1.04, 1, bgTransitionProgress);
+
+    bgTrack.style.transform = `translate3d(0, ${trackY}px, 0)`;
+    if (bg2FeaturesTrack) {
+      bg2FeaturesTrack.style.transform = `translate3d(0, ${trackY}px, 0)`;
+    }
+
+    bg2Img.style.transform = `translate3d(0, ${bg2InnerY}px, 0) scale(${bg2Scale})`;
+    if (bg2FeaturesSurface) {
+      bg2FeaturesSurface.style.transform = `translate3d(0, ${bg2InnerY}px, 0) scale(${bg2Scale})`;
+    }
 
     if (bg1CopyStage) {
       bg1CopyStage.style.opacity = String(1 - bgTransitionProgress);
@@ -972,7 +931,6 @@ function initEv6Scene() {
       bg2CopyStage.style.opacity = String(bgTransitionProgress);
       bg2CopyStage.style.transform = `translate3d(0, ${Math.round(mix(28, 0, bgTransitionProgress))}px, 0)`;
     }
->>>>>>> 947782eb1fcd272ede67bf65b39401c0af9f205f
 
     const carHeight = carWrap.offsetHeight;
     const startY = carHeight * 1.16 + vh * 0.14;
