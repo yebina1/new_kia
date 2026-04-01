@@ -517,9 +517,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const dragArea = solutionSection?.querySelector(".container");
     const solutionList = solutionSection?.querySelector(".solution_list");
     const solutionProgress = solutionSection?.querySelector(".con");
+    const solutionSub = solutionSection?.querySelector(".solution_sub");
+    const solutionPrevButton = solutionSection?.querySelector(".solution_nav_prev");
+    const solutionNextButton = solutionSection?.querySelector(".solution_nav_next");
 
     if (!solutionSection || !solutionInner || !solutionList || !dragArea) {
         return;
+    }
+
+    if (solutionSub) {
+        solutionSub.innerHTML = "A responsible step for humanity and the planet<br>Kia's sustainable journey.";
     }
 
     solutionList.classList.add("solution_media_list");
@@ -564,6 +571,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const DESKTOP_BREAKPOINT = 900;
     const SOLUTION_DESKTOP_HOLD = 0.16;
     const SOLUTION_ACCENT_COLOR = "#C7FFEE";
+    let hasDismissedSwipeHint = false;
 
     function clamp(value, min, max) {
         return Math.min(Math.max(value, min), max);
@@ -588,10 +596,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const currentOffset = state.mode === "desktop" ? state.lastOne : state.lastTwo;
         const scale = state.maxOffset > 0 ? currentOffset / state.maxOffset : 0;
+        const activeIndex = slides.reduce((nearestIndex, slide, index) => {
+            const offset = clamp(slide.offsetLeft, 0, state.maxOffset);
+            const nearestOffset = clamp(slides[nearestIndex]?.offsetLeft ?? 0, 0, state.maxOffset);
+            return Math.abs(currentOffset - offset) < Math.abs(currentOffset - nearestOffset) ? index : nearestIndex;
+        }, 0);
 
         solutionProgress.style.setProperty("--solution-progress-scale", scale.toFixed(4));
         solutionProgress.style.setProperty("--solution-travel-progress", scale.toFixed(4));
         solutionProgress.style.setProperty("--solution-accent", SOLUTION_ACCENT_COLOR);
+        solutionSection.classList.toggle("is_first_slide", state.mode === "desktop" && activeIndex === 0);
+        solutionSection.classList.toggle("is_last_slide", state.mode === "desktop" && activeIndex === slides.length - 1);
+
+        if (state.mode === "mobile" && window.innerWidth <= 899) {
+            if (solutionPrevButton) {
+                solutionPrevButton.disabled = activeIndex === 0;
+            }
+
+            if (solutionNextButton) {
+                solutionNextButton.disabled = activeIndex === slides.length - 1;
+            }
+        } else {
+            if (solutionPrevButton) {
+                solutionPrevButton.disabled = false;
+            }
+
+            if (solutionNextButton) {
+                solutionNextButton.disabled = false;
+            }
+        }
     }
 
     function updateSlideFocus() {
@@ -609,6 +642,71 @@ document.addEventListener("DOMContentLoaded", () => {
             slide.style.setProperty("--slide-focus", eased.toFixed(4));
             textSlides[index]?.style.setProperty("--slide-focus", eased.toFixed(4));
         });
+    }
+
+    function updateSwipeHintVisibility() {
+        const shouldShowHint = state.mode === "mobile" && window.innerWidth <= 899 && !hasDismissedSwipeHint;
+        solutionSection.classList.toggle("show_swipe_hint", shouldShowHint);
+    }
+
+    function dismissSwipeHint() {
+        if (hasDismissedSwipeHint) {
+            return;
+        }
+
+        hasDismissedSwipeHint = true;
+        solutionSection.classList.remove("show_swipe_hint");
+    }
+
+    function setupSolutionCursor() {
+        const cursor = document.createElement("div");
+        const label = document.createElement("span");
+
+        cursor.className = "solution-swipe-cursor";
+        label.textContent = "← Swipe →";
+        cursor.appendChild(label);
+        document.body.appendChild(cursor);
+        solutionCursor = cursor;
+
+        function moveCursor(event) {
+            solutionCursor.style.left = `${event.clientX}px`;
+            solutionCursor.style.top = `${event.clientY}px`;
+        }
+
+        function showCursor(event) {
+            if (state.mode !== "mobile") {
+                return;
+            }
+
+            moveCursor(event);
+            solutionCursor.classList.add("is-visible");
+        }
+
+        function hideCursor() {
+            solutionCursor.classList.remove("is-visible", "is-active");
+        }
+
+        function activateCursor() {
+            if (state.mode !== "mobile") {
+                return;
+            }
+
+            solutionCursor.classList.add("is-active");
+        }
+
+        function deactivateCursor() {
+            solutionCursor.classList.remove("is-active");
+        }
+
+        dragArea.addEventListener("pointerenter", showCursor);
+        dragArea.addEventListener("pointermove", moveCursor);
+        dragArea.addEventListener("pointerleave", hideCursor);
+        dragArea.addEventListener("pointerdown", activateCursor);
+        dragArea.addEventListener("pointerup", deactivateCursor);
+        dragArea.addEventListener("pointercancel", deactivateCursor);
+        window.addEventListener("blur", hideCursor);
+        window.addEventListener("scroll", hideCursor, { passive: true });
+        window.addEventListener("pointerup", deactivateCursor);
     }
 
     function updateBounds() {
@@ -710,6 +808,25 @@ document.addEventListener("DOMContentLoaded", () => {
         state.current = nearestOffset;
     }
 
+    function goToSlide(targetIndex) {
+        const safeIndex = clamp(targetIndex, 0, slides.length - 1);
+        const targetSlide = slides[safeIndex];
+
+        if (!targetSlide) {
+            return;
+        }
+
+        state.current = clamp(targetSlide.offsetLeft, 0, state.maxOffset);
+    }
+
+    function getActiveSlideIndex() {
+        return slides.reduce((nearestIndex, slide, index) => {
+            const offset = clamp(slide.offsetLeft, 0, state.maxOffset);
+            const nearestOffset = clamp(slides[nearestIndex]?.offsetLeft ?? 0, 0, state.maxOffset);
+            return Math.abs(state.current - offset) < Math.abs(state.current - nearestOffset) ? index : nearestIndex;
+        }, 0);
+    }
+
     function render() {
         state.lastOne = lerp(state.lastOne, state.current, 0.085);
         state.lastTwo = lerp(state.lastTwo, state.current, 0.08);
@@ -764,6 +881,7 @@ document.addEventListener("DOMContentLoaded", () => {
         state.on = getClientX(event);
         state.off = state.current;
         solutionList.classList.add("is_dragging");
+        dismissSwipeHint();
         event.preventDefault();
     }
 
@@ -848,6 +966,7 @@ document.addEventListener("DOMContentLoaded", () => {
         solutionList.classList.remove("is_dragging");
         solutionSection.classList.toggle("is_desktop_scroll", state.mode === "desktop");
         solutionSection.classList.toggle("is_mobile_drag", state.mode === "mobile");
+        updateSwipeHintVisibility();
 
         if (state.mode === "desktop") {
             if (modeChanged) {
@@ -885,6 +1004,7 @@ document.addEventListener("DOMContentLoaded", () => {
         state.on = getClientX(event);
         state.off = state.current;
         solutionList.classList.add("is_dragging");
+        dismissSwipeHint();
     }, { passive: true });
     window.addEventListener("touchmove", (event) => {
         if (!state.dragging || state.mode !== "mobile") {
@@ -900,6 +1020,22 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("mouseleave", stopDragging);
 
     window.addEventListener("resize", applySolutionMode);
+
+    solutionPrevButton?.addEventListener("click", () => {
+        if (state.mode !== "mobile") {
+            return;
+        }
+
+        goToSlide(getActiveSlideIndex() - 1);
+    });
+
+    solutionNextButton?.addEventListener("click", () => {
+        if (state.mode !== "mobile") {
+            return;
+        }
+
+        goToSlide(getActiveSlideIndex() + 1);
+    });
 
     applySolutionMode();
     render();
