@@ -711,7 +711,6 @@ function initEv6Scene() {
   const section = document.getElementById("scrollScene");
   const scene = document.getElementById("scene");
   const bgTrack = document.getElementById("bgTrack");
-  const bg1Img = document.getElementById("bg1Img");
   const bg2Img = document.getElementById("bg2Img");
   const carWrap = document.getElementById("carWrap");
   const solidCar = document.getElementById("solidCar");
@@ -721,15 +720,17 @@ function initEv6Scene() {
   const seatingMask = document.getElementById("seatingMask");
   const carpetsMask = document.getElementById("carpetsMask");
   const detailsLayer = document.getElementById("detailsLayer");
-  const dashPhotoCard = document.getElementById("dashPhotoCard");
-  const luggagePhotoCard = document.getElementById("luggagePhotoCard");
-  const seatingPhotoCard = document.getElementById("seatingPhotoCard");
-  const carpetsPhotoCard = document.getElementById("carpetsPhotoCard");
-  const photoCards = [dashPhotoCard, luggagePhotoCard, seatingPhotoCard, carpetsPhotoCard];
+  const materialPhotoCard = document.getElementById("materialPhotoCard");
+  const materialPhotoImage = document.getElementById("materialPhotoImage");
+  const bg1CopyStage = section?.querySelector(".bg1_copy_stage");
+  const bg2CopyStage = section?.querySelector(".bg2_copy_stage");
+  const bg1Desc = section?.querySelector(".bg1_copy_right .desc");
+  const bg2Desc = section?.querySelector(".bg2_copy_left .desc");
   const root = document.documentElement;
 
   const requiredNodes = [
     section,
+    scene,
     bgTrack,
     bg2Img,
     carWrap,
@@ -740,7 +741,8 @@ function initEv6Scene() {
     seatingMask,
     carpetsMask,
     detailsLayer,
-    ...photoCards,
+    materialPhotoCard,
+    materialPhotoImage,
   ];
 
   if (requiredNodes.some((node) => !node)) {
@@ -748,149 +750,227 @@ function initEv6Scene() {
     return;
   }
 
+  const materialSequence = [
+    {
+      key: "dashboard",
+      mask: dashMask,
+      photo: "./img/main/ev6/recycled.png",
+      alt: "Dashboard trim detail",
+      growVar: "--dash-grow",
+    },
+    {
+      key: "luggage",
+      mask: luggageMask,
+      photo: "./img/main/ev6/recycled1.png",
+      alt: "Luggage material detail",
+      growVar: "--luggage-grow",
+    },
+    {
+      key: "seating",
+      mask: seatingMask,
+      photo: "./img/main/ev6/recycled2.png",
+      alt: "Seating recycled material detail",
+      growVar: "--seating-grow",
+    },
+    {
+      key: "carpets",
+      mask: carpetsMask,
+      photo: "./img/main/ev6/recycled3.png",
+      alt: "Carpets and Mats recycled material detail",
+      growVar: "--carpet-grow",
+    },
+  ];
+
+  const sequenceLookup = Object.fromEntries(
+    materialSequence.map((step) => [step.key, step])
+  );
+
+  const stageTimeline = [
+    { key: "bg1_scene", start: 0.0, end: 0.18, type: "bg1" },
+    { key: "bg1_to_bg2_transition", start: 0.18, end: 0.3, type: "transition" },
+    { key: "bg2_basic_hold_short", start: 0.3, end: 0.34, type: "hold" },
+    { key: "dashboard", start: 0.34, end: 0.44, type: "active", materialKey: "dashboard" },
+    { key: "hold_1", start: 0.44, end: 0.48, type: "hold" },
+    { key: "luggage", start: 0.48, end: 0.58, type: "active", materialKey: "luggage" },
+    { key: "hold_2", start: 0.58, end: 0.62, type: "hold" },
+    { key: "seating", start: 0.62, end: 0.72, type: "active", materialKey: "seating" },
+    { key: "hold_3", start: 0.72, end: 0.76, type: "hold" },
+    { key: "carpets", start: 0.76, end: 0.88, type: "active", materialKey: "carpets" },
+    { key: "final_hold_optional", start: 0.88, end: 1.0, type: "hold" },
+  ];
+
   let rafId = null;
-  document.body.style.backgroundColor = "";
+  let photoSwapTimer = null;
+  let photoSwapToken = 0;
+  let currentPhotoKey = "";
+  let bg2Locked = false;
+
+  if (bg1Desc) {
+    bg1Desc.innerHTML = "Our commitment to the Earth is woven into every fiber of the EV6.<br>Kia's innovative engineering transforms recycled plastics into premium, sustainable materials.";
+  }
+
+  if (bg2Desc) {
+    bg2Desc.innerHTML = "A true machine for a sustainable future.<br>We've repurposed 111 plastic water bottles into the luxurious fabrics of the EV6 cabin, proving that high-end design and environmental responsibility can coexist perfectly.";
+  }
+
+  function getCurrentStage(progress) {
+    return (
+      stageTimeline.find((stage) => progress >= stage.start && progress < stage.end) ||
+      stageTimeline[stageTimeline.length - 1]
+    );
+  }
 
   function syncFeatureBottomToVisiblePhotoCard() {
-    if (!scene) return;
+    const isVisible = Number.parseFloat(materialPhotoCard.style.opacity || "0") > 0.01;
 
-    const visibleCards = photoCards.filter((card) => {
-      const opacity = Number.parseFloat(card.style.opacity || "0");
-      return opacity > 0.01;
-    });
-
-    if (!visibleCards.length) {
+    if (!isVisible) {
       scene.style.removeProperty("--ev6-photo-card-bottom");
       return;
     }
 
     const sceneRect = scene.getBoundingClientRect();
-    const visibleCardBottom = Math.max(
-      ...visibleCards.map((card) => card.getBoundingClientRect().bottom)
-    );
-    const clampedBottom = Math.min(visibleCardBottom, sceneRect.bottom);
+    const photoRect = materialPhotoCard.getBoundingClientRect();
+    const clampedBottom = Math.min(photoRect.bottom, sceneRect.bottom);
     const bottomOffset = Math.max(sceneRect.bottom - clampedBottom, 0);
 
     scene.style.setProperty("--ev6-photo-card-bottom", `${Math.round(bottomOffset)}px`);
   }
 
+  function setPhotoVisible(isVisible) {
+    materialPhotoCard.classList.toggle("is_hidden", !isVisible);
+    materialPhotoCard.style.opacity = isVisible ? "1" : "0";
+    materialPhotoCard.style.transform = isVisible
+      ? "translate3d(0, 0, 0) scale(1)"
+      : "translate3d(0, 18px, 0) scale(0.76)";
+  }
+
+  function swapPhoto(step) {
+    if (!step) {
+      currentPhotoKey = "";
+      setPhotoVisible(false);
+      return;
+    }
+
+    const isHidden = materialPhotoCard.classList.contains("is_hidden");
+
+    if (currentPhotoKey === step.key && !isHidden) {
+      setPhotoVisible(true);
+      return;
+    }
+
+    if (photoSwapTimer) {
+      window.clearTimeout(photoSwapTimer);
+      photoSwapTimer = null;
+    }
+
+    const token = ++photoSwapToken;
+
+    if (!currentPhotoKey || isHidden) {
+      materialPhotoImage.src = step.photo;
+      materialPhotoImage.alt = step.alt;
+      currentPhotoKey = step.key;
+      setPhotoVisible(true);
+      return;
+    }
+
+    setPhotoVisible(false);
+
+    photoSwapTimer = window.setTimeout(() => {
+      if (token !== photoSwapToken) {
+        return;
+      }
+
+      materialPhotoImage.src = step.photo;
+      materialPhotoImage.alt = step.alt;
+      currentPhotoKey = step.key;
+      setPhotoVisible(true);
+      photoSwapTimer = null;
+    }, 140);
+  }
+
+  function resetFeatureGrowth() {
+    root.style.setProperty("--dash-grow", "0");
+    root.style.setProperty("--luggage-grow", "0");
+    root.style.setProperty("--seating-grow", "0");
+    root.style.setProperty("--carpet-grow", "0");
+  }
+
+  function applyStageState(stage) {
+    const activeStep = stage.type === "active" ? sequenceLookup[stage.materialKey] : null;
+
+    resetFeatureGrowth();
+    materialSequence.forEach((step) => {
+      step.mask.style.opacity = activeStep && activeStep.key === step.key ? "1" : "0";
+    });
+
+    if (activeStep) {
+      root.style.setProperty(activeStep.growVar, "1");
+      swapPhoto(activeStep);
+    } else {
+      swapPhoto(null);
+    }
+  }
+
   function render() {
     const total = Math.max(section.offsetHeight - window.innerHeight, 1);
     const passed = clamp(-section.getBoundingClientRect().top, 0, total);
-    const p = passed / total;
+    const rawProgress = passed / total;
     const vh = window.innerHeight;
 
-    const baseEnd = 0.49;
-    const baseP = clamp(p / baseEnd);
-
-    const enterP = sstep(0.03, 0.24, baseP);
-    const cruiseP = sstep(0.24, 0.46, baseP);
-    const panelPushP = sstep(0.46, 0.68, baseP);
-    const morphP = sstep(0.72, 0.84, baseP);
-
-    const trackY = Math.round(mix(0, -vh, panelPushP));
-    bgTrack.style.transform = `translate3d(0, ${trackY}px, 0)`;
-
-    const bg1InnerY = mix(0, -vh * 0.03, sstep(0.06, 0.46, baseP));
-    const bg2InnerY = mix(vh * 0.035, 0, panelPushP);
-    const bg1Scale = mix(1.02, 1.0, panelPushP);
-    const bg2Scale = mix(1.04, 1.0, panelPushP);
-
-    if (bg1Img) {
-      bg1Img.style.transform = `translate3d(0, ${Math.round(bg1InnerY)}px, 0) scale(${bg1Scale * 1.002})`;
+    if (rawProgress <= 0.005 && section.getBoundingClientRect().top >= 0) {
+      bg2Locked = false;
     }
-    bg2Img.style.transform = `translate3d(0, ${Math.round(bg2InnerY)}px, 0) scale(${bg2Scale * 1.002})`;
+
+    if (rawProgress >= 0.3) {
+      bg2Locked = true;
+    }
+
+    const visualProgress = bg2Locked ? Math.max(rawProgress, 0.3) : rawProgress;
+    const stage = getCurrentStage(visualProgress);
+    const bgTransitionProgress = sstep(0.18, 0.3, visualProgress);
+    const bg1SceneProgress = sstep(0.02, 0.18, rawProgress);
+
+    bgTrack.style.transform = `translate3d(0, ${Math.round(-vh * bgTransitionProgress)}px, 0)`;
+    bg2Img.style.transform = `translate3d(0, ${Math.round(mix(vh * 0.03, 0, bgTransitionProgress))}px, 0) scale(${mix(1.04, 1, bgTransitionProgress)})`;
+
+    if (bg1CopyStage) {
+      bg1CopyStage.style.opacity = String(1 - bgTransitionProgress);
+      bg1CopyStage.style.transform = `translate3d(0, ${Math.round(mix(0, -20, bgTransitionProgress))}px, 0)`;
+    }
+
+    if (bg2CopyStage) {
+      bg2CopyStage.style.opacity = String(bgTransitionProgress);
+      bg2CopyStage.style.transform = `translate3d(0, ${Math.round(mix(28, 0, bgTransitionProgress))}px, 0)`;
+    }
 
     const carHeight = carWrap.offsetHeight;
-    const startY = carHeight * 1.18 + vh * 0.18;
-    const enterY = mix(startY, -vh * 0.04, enterP);
-    const cruiseY = mix(0, -vh * 0.04, cruiseP);
-    const settleY = mix(0, -vh * 0.08, panelPushP);
-    const y = enterY + cruiseY + settleY;
+    const startY = carHeight * 1.16 + vh * 0.14;
+    const enterY = mix(startY, -vh * 0.05, bg1SceneProgress);
+    const settleY = mix(-vh * 0.05, -vh * 0.1, bgTransitionProgress);
+    const carTranslateY = visualProgress < 0.18 ? enterY : settleY;
+    const carScale = mix(1.08, 0.5, sstep(0.08, 0.3, visualProgress));
 
-    const approachScale = mix(1.12, 1.0, enterP);
-    const shrinkScale = mix(1.0, 0.5, panelPushP);
-    const holdScale = approachScale * shrinkScale;
-    carWrap.style.transform = `translate(-50%, -100%) translate3d(0, ${y}px, 0) scale(${holdScale})`;
+    carWrap.style.transform = `translate(-50%, -100%) translate3d(0, ${Math.round(carTranslateY)}px, 0) scale(${carScale})`;
 
-    const solidVisibleP = sstep(0.05, 0.14, baseP);
-    const solidOpacity = solidVisibleP * (1 - morphP);
-    const solidBlur = mix(18, 0, solidVisibleP);
-    const solidShadowY = mix(84, 32, panelPushP);
-    const solidShadowBlur = mix(120, 56, panelPushP);
+    const solidOpacity = sstep(0.04, 0.12, rawProgress) * (1 - sstep(0.22, 0.32, visualProgress));
     solidCar.style.opacity = String(solidOpacity);
-    solidCar.style.filter = `drop-shadow(0 ${solidShadowY}px ${solidShadowBlur}px rgba(0,0,0,0.45)) blur(${solidBlur}px)`;
+    solidCar.style.filter = `drop-shadow(0 ${Math.round(mix(72, 30, bgTransitionProgress))}px ${Math.round(mix(108, 56, bgTransitionProgress))}px rgba(0,0,0,0.45)) blur(${mix(14, 0, sstep(0.05, 0.16, rawProgress))}px)`;
 
-    const xrayOpacity = morphP;
-    const xrayBlur = mix(8, 0.6, morphP);
-    const xrayGlow = mix(8, 26, morphP);
-    const xrayBrightness = mix(1.0, 1.08, morphP);
+    const xrayOpacity = sstep(0.23, 0.32, visualProgress);
     xrayCar.style.opacity = String(xrayOpacity);
-    xrayCar.style.filter = `drop-shadow(0 0 ${xrayGlow}px rgba(255,255,255,0.16)) blur(${xrayBlur}px) brightness(${xrayBrightness})`;
+    xrayCar.style.filter = `drop-shadow(0 0 ${Math.round(mix(8, 24, xrayOpacity))}px rgba(255,255,255,0.16)) blur(${mix(8, 0.6, xrayOpacity)}px) brightness(${mix(1, 1.08, xrayOpacity)})`;
 
-    const bodyBlend = sstep(0.56, 0.74, baseP);
-    const ev6Background = bodyBlend < 0.5 ? "#000000" : "#252941";
-    section.style.backgroundColor = ev6Background;
-    if (scene) {
-      scene.style.backgroundColor = ev6Background;
-    }
+    const sectionBackground = bgTransitionProgress < 1 ? "#0C1115" : "#252941";
+    section.style.backgroundColor = sectionBackground;
+    scene.style.backgroundColor = sectionBackground;
 
-    const bg2StageP = clamp((p - baseEnd) / (1 - baseEnd));
-    const dashReveal = sstep(0.05, 0.15, bg2StageP);
-    const dashFadeOut = sstep(0.22, 0.26, bg2StageP);
-    const dashVisible = dashReveal > 0.001 ? 1 - dashFadeOut : 0;
-    dashMask.style.opacity = String(dashVisible);
-    dashMask.style.clipPath = `inset(${(1 - dashReveal) * 100}% 0 0 0)`;
+    detailsLayer.style.opacity = visualProgress >= 0.3 ? "1" : "0";
+    detailsLayer.style.transform = visualProgress >= 0.3
+      ? "translate3d(0, 0, 0)"
+      : "translate3d(0, 18px, 0)";
 
-    const luggageReveal = sstep(0.31, 0.40, bg2StageP);
-    const luggageFadeOut = sstep(0.47, 0.51, bg2StageP);
-    const seatReveal = sstep(0.56, 0.65, bg2StageP);
-    const seatFadeOut = sstep(0.72, 0.76, bg2StageP);
-    const carpetReveal = sstep(0.81, 0.90, bg2StageP);
-
-    const luggageVisible = luggageReveal > 0.001 ? 1 - luggageFadeOut : 0;
-    luggageMask.style.opacity = String(luggageVisible);
-    luggageMask.style.clipPath = `inset(${(1 - luggageReveal) * 100}% 0 0 0)`;
-
-    const seatVisible = seatReveal > 0.001 ? 1 - seatFadeOut : 0;
-    seatingMask.style.opacity = String(seatVisible);
-    seatingMask.style.clipPath = `inset(${(1 - seatReveal) * 100}% 0 0 0)`;
-
-    const carpetVisible = carpetReveal > 0.001 ? carpetReveal : 0;
-    carpetsMask.style.opacity = String(carpetVisible);
-    carpetsMask.style.clipPath = `inset(${(1 - carpetReveal) * 100}% 0 0 0)`;
-
-    const anyDetailsOn = bg2StageP >= 0.11;
-    detailsLayer.style.opacity = anyDetailsOn ? "1" : "0";
-    detailsLayer.style.transform = anyDetailsOn ? "translate3d(0, 0, 0)" : "translate3d(0, 18px, 0)";
-
-    const dashPhotoOpacity = sstep(0.11, 0.16, bg2StageP) * (1 - sstep(0.22, 0.26, bg2StageP));
-    const nextPhotoOpacity = sstep(0.37, 0.42, bg2StageP) * (1 - sstep(0.47, 0.51, bg2StageP));
-    const seatPhotoOpacity = sstep(0.62, 0.67, bg2StageP) * (1 - sstep(0.72, 0.76, bg2StageP));
-    const carpetPhotoOpacity = sstep(0.87, 0.92, bg2StageP);
-
-    dashPhotoCard.style.opacity = String(dashPhotoOpacity);
-    dashPhotoCard.style.transform = `translate3d(0, ${dashPhotoOpacity > 0 ? 0 : 18}px, 0) scale(${dashPhotoOpacity > 0 ? 1 : 0.76})`;
-    luggagePhotoCard.style.opacity = String(nextPhotoOpacity);
-    luggagePhotoCard.style.transform = `translate3d(0, ${nextPhotoOpacity > 0 ? 0 : 18}px, 0) scale(${nextPhotoOpacity > 0 ? 1 : 0.76})`;
-    seatingPhotoCard.style.opacity = String(seatPhotoOpacity);
-    seatingPhotoCard.style.transform = `translate3d(0, ${seatPhotoOpacity > 0 ? 0 : 18}px, 0) scale(${seatPhotoOpacity > 0 ? 1 : 0.76})`;
-    carpetsPhotoCard.style.opacity = String(carpetPhotoOpacity);
-    carpetsPhotoCard.style.transform = `translate3d(0, ${carpetPhotoOpacity > 0 ? 0 : 18}px, 0) scale(${carpetPhotoOpacity > 0 ? 1 : 0.76})`;
+    applyStageState(stage);
     syncFeatureBottomToVisiblePhotoCard();
-
-    const dashFocusOn = bg2StageP >= 0.11 && bg2StageP < 0.22;
-    const luggageFocusOn = bg2StageP >= 0.37 && bg2StageP < 0.47;
-    const seatingFocusOn = bg2StageP >= 0.62 && bg2StageP < 0.72;
-    const carpetFocusOn = bg2StageP >= 0.87;
-
-    root.style.setProperty("--dash-grow", dashFocusOn ? "1" : "0");
-    root.style.setProperty("--luggage-grow", luggageFocusOn ? "1" : "0");
-    root.style.setProperty("--seating-grow", seatingFocusOn ? "1" : "0");
-    root.style.setProperty("--carpet-grow", carpetFocusOn ? "1" : "0");
-    root.style.setProperty("--photo-scale", "1");
-    root.style.setProperty("--photo-opacity", "1");
-    root.style.setProperty("--photo-y", "0px");
   }
 
   function requestRender() {

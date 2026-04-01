@@ -16,7 +16,7 @@
   --photo-scale: 0.76;
   --photo-opacity: 0;
   --photo-y: 18px;
-  --ev6-details-bottom: clamp(56px, 11vh, 110px);
+  --ev6-details-bottom: clamp(34px, 7.5vh, 74px);
   --ev6-photo-card-bottom: var(--ev6-details-bottom);
   --ev6-bg-layer-bottom: calc(var(--ev6-photo-card-bottom) + var(--bg-overscan));
 }
@@ -842,7 +842,10 @@ body.section_transition_lock {
 }
 
 .bg2_feature_dashboard .bg2_feature_copy {
-  font-size: calc(18px + (6px * var(--dash-grow)));
+  width: 320px;
+  max-width: 320px;
+  font-size: calc(18px + (8px * var(--dash-grow)));
+  line-height: 1.18;
   color: color-mix(in srgb, var(--kia-white2), #90E3FF calc(var(--dash-grow) * 100%));
 }
 
@@ -865,7 +868,7 @@ body.section_transition_lock {
 }
 
 .bg2_feature_luggage .bg2_feature_copy {
-  font-size: calc(18px + (6px * var(--luggage-grow)));
+  font-size: calc(18px + (8px * var(--luggage-grow)));
   color: color-mix(in srgb, var(--kia-white2) calc(100% - (var(--luggage-grow) * 100%)), #90E3FF calc(var(--luggage-grow) * 100%));
 }
 
@@ -882,7 +885,7 @@ body.section_transition_lock {
 }
 
 .bg2_feature_seating .bg2_feature_copy {
-  font-size: calc(18px + (6px * var(--seating-grow)));
+  font-size: calc(18px + (8px * var(--seating-grow)));
   color: color-mix(in srgb, var(--kia-white2) calc(100% - (var(--seating-grow) * 100%)), #90E3FF calc(var(--seating-grow) * 100%));
 }
 
@@ -899,7 +902,7 @@ body.section_transition_lock {
 }
 
 .bg2_feature_carpets .bg2_feature_copy {
-  font-size: calc(18px + (6px * var(--carpet-grow)));
+  font-size: calc(18px + (8px * var(--carpet-grow)));
   color: color-mix(in srgb, var(--kia-white2) calc(100% - (var(--carpet-grow) * 100%)), #90E3FF calc(var(--carpet-grow) * 100%));
 }
 
@@ -960,23 +963,21 @@ body.section_transition_lock {
 .dash_mask, .luggage_mask, .seating_mask, .carpets_mask {
   opacity: 0;
   z-index: 3;
-  clip-path: inset(100% 0 0 0);
   filter: drop-shadow(0 0 14px rgba(110,220,255,0.18));
+  transform: translate(-50%, -5px);
+  transition: opacity .16s linear;
 }
 
 .luggage_mask {
   z-index: 4;
-  transform: translateX(calc(-50% - 5px));
 }
 
 .seating_mask {
   z-index: 5;
-  /* transform: translate(-50%, -6px); */
 }
 
 .carpets_mask {
   z-index: 6;
-  /* transform: translate(-50%, -2px); */
 }
 
 .depth_overlay {
@@ -1170,6 +1171,9 @@ body.section_transition_lock {
 
 .photo_card {
   width: 100%;
+  position: absolute;
+  right: 0;
+  bottom: 0;
   transform-origin: center center;
   opacity: var(--photo-opacity);
   transform: translate3d(0, var(--photo-y), 0) scale(var(--photo-scale));
