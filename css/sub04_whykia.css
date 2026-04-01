@@ -1104,8 +1104,8 @@ h2 {
     position: fixed;
     top: 0;
     left: 0;
-    width: 46px;
-    height: 46px;
+    width: 62px;
+    height: 62px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1130,7 +1130,7 @@ h2 {
 .partner-click-cursor span {
     color: #fbf6ef;
     font-family: var(--font-outfit);
-    font-size: 15px;
+    font-size: 20px;
     font-weight: 500;
     white-space: nowrap;
     opacity: 1;
