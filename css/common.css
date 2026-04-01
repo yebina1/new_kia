@@ -18,6 +18,14 @@ body {
   font-family: "Inter", sans-serif;
 }
 
+a[href=""],
+a[href=""]:hover,
+a[href=""]:focus-visible {
+  color: rgba(221, 216, 209, 0.3) ;
+  pointer-events: none;
+  cursor: default;
+}
+
 div,
 p,
 a,
@@ -588,6 +596,7 @@ header nav .icons {
 header nav .icons img {
   width: 24px;
   height: 24px;
+  opacity: 0.3;
 }
 
 header nav .icons a{
@@ -598,6 +607,7 @@ header nav .icons a{
 
 header nav .icons a i {
   font-size: 26px;
+  color: rgba(221, 216, 209, 0.3);
 }
 
 header nav .icons .icon_menu {
@@ -606,6 +616,7 @@ header nav .icons .icon_menu {
 
 header nav .icons .icon_menu i {
   font-size: 29px;
+  color: var(--kia-white1);
 }
 
 header .header_bottom {
@@ -1124,29 +1135,29 @@ footer .f_right .f_copy {
 body > .scroll_down_wrap,
 body .wrap > .scroll_down_wrap,
 body .wrap > header + .scroll_down_wrap {
-  position: fixed !important;
-  top: auto !important;
-  right: auto !important;
-  left: 50% !important;
-  bottom: 32px !important;
-  transform: translateX(-50%) !important;
-  z-index: 1095 !important;
-  display: flex !important;
+  position: fixed ;
+  top: auto ;
+  right: auto ;
+  left: 50% ;
+  bottom: 32px ;
+  transform: translateX(-50%) ;
+  z-index: 1095 ;
+  display: flex ;
   justify-content: center;
   align-items: center;
   width: max-content;
-  height: auto !important;
-  min-height: 0 !important;
-  margin-top: 0 !important;
-  padding-bottom: 0 !important;
-  opacity: 1 !important;
-  visibility: visible !important;
+  height: auto ;
+  min-height: 0 ;
+  margin-top: 0 ;
+  padding-bottom: 0 ;
+  opacity: 1 ;
+  visibility: visible ;
   pointer-events: none;
 }
 
 body .scroll_down {
   position: relative;
-  display: inline-block !important;
+  display: inline-block ;
   padding-top: 60px;
   color: var(--kia-white1);
   font-size: 14px;
@@ -1209,7 +1220,7 @@ body .scroll_down span::before {
   body > .scroll_down_wrap,
   body .wrap > .scroll_down_wrap,
   body .wrap > header + .scroll_down_wrap {
-    bottom: calc(24px + env(safe-area-inset-bottom, 0px)) !important;
+    bottom: calc(24px + env(safe-area-inset-bottom, 0px)) ;
   }
 
   body .scroll_down {
