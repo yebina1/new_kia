@@ -1,0 +1,201 @@
+@charset "utf-8";
+
+@media (max-width: 1200px) {
+      .bg1_copy_left .num { font-size: 108px; }
+      .bg1_copy_left .word,
+      .bg1_copy_right .title { font-size: 82px; }
+      .bg1_copy_left .copy,
+      .bg1_copy_right .sub { font-size: 22px; }
+      .bg1_copy_right .desc { font-size: 18px; margin-right: 72px; }
+    }
+
+    @media (max-width: 1400px) {
+      .car_wrap { height: min(126vh, 1340px); }
+      .scroll_scene { height: 1420vh; }
+    }
+
+    @media (max-width: 1024px) {
+        :root {
+        --belt-speed: 92;
+    }
+      .scroll_scene { height: 1360vh; }
+      .car_wrap { height: min(118vh, 1180px); }
+      .overview_left { top: 60%; width: min(40vw, 420px); }
+      .overview_right { width: min(58vw, 620px); }
+      .details_intro { width: min(36vw, 400px); }
+      .details_intro .desc { width: min(36vw, 400px); }
+      .details_features { width: min(54vw, 620px); }
+      .details_right { width: 300px; }
+    .partnership .inner {
+        padding-top: 64px;
+        gap: 28px;
+    }
+
+    .car_item {
+        height: clamp(118px, 14.8vw, 172px);
+    }
+
+    .car_lane {
+        width: 86.4%;
+        bottom: 22.1%;
+    }
+    }
+
+    @media (max-width: 767px) {
+      .scroll_scene { height: 1320vh; }
+      .car_wrap { height: min(110vh, 980px); }
+      .scroll_down_wrap { padding-bottom: 24px; }
+      .scroll_down {
+        padding-top: 52px;
+        font-size: 12px;
+        letter-spacing: 0.18em;
+      }
+      .scroll_down span {
+        width: 26px;
+        height: 44px;
+        margin-left: -13px;
+      }
+      .scroll_down span::before {
+        top: 9px;
+        width: 5px;
+        height: 5px;
+        margin-left: -2.5px;
+      }
+
+      
+      .bg1_copy_left { left: 24px; top: auto; bottom: 18vh; }
+      .bg1_copy_left .num { font-size: 64px; }
+      .bg1_copy_left .word { font-size: 58px; }
+      .bg1_copy_left .copy {
+        margin-left: 0;
+        width: 220px;
+        text-align: left;
+        font-size: 18px;
+      }
+      .bg1_copy_right {
+        left: 24px;
+        right: 24px;
+        top: 28px;
+        width: auto;
+      }
+      .bg1_copy_right .title { font-size: 52px; }
+      .bg1_copy_right .sub { font-size: 18px; }
+      .bg1_copy_right .desc {
+        width: 100%;
+        margin-right: 0;
+        font-size: 16px;
+        text-align: left;
+      }
+
+
+      .bg2_copy_left {
+        left: 24px;
+        top: 28px;
+        width: min(76vw, 320px);
+      }
+      .bg2_copy_left .title { font-size: 36px; }
+      .bg2_copy_left .desc {
+        width: 100%;
+        margin-top: 14px;
+        font-size: 16px;
+      }
+      .bg2_copy_right {
+        right: 24px;
+        top: 28px;
+      }
+      .bg2_copy_right .title { font-size: 52px; }
+      .bg2_features {
+        left: 24px;
+        right: 24px;
+        width: auto;
+        bottom: 40px;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px 18px;
+      }
+      .bg2_feature_title,
+      .bg2_feature_copy { font-size: 16px; }
+
+      .overview_left,
+      .overview_right,
+      .details_intro,
+      .details_right,
+      .details_features {
+        left: 24px;
+        right: 24px;
+        width: auto;
+      }
+
+      .overview_left {
+        top: auto;
+        bottom: 22vh;
+        transform: none;
+      }
+
+      .overview_left p {
+        margin-left: 0;
+        width: min(70vw, 260px);
+        text-align: left;
+      }
+
+      .overview_right,
+      .details_right {
+        top: 28px;
+        gap: 18px;
+      }
+
+      .overview_right .desc,
+      .details_intro .desc {
+        width: 100%;
+        text-align: left;
+      }
+
+      .details_intro {
+        top: 28px;
+      }
+
+      .details_right {
+        justify-items: end;
+        text-align: right;
+      }
+
+      .details_features {
+        bottom: 40px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px 18px;
+      }
+
+      .photo_card {
+        width: min(42vw, 250px);
+      }
+    }
+@media (max-width: 640px) {
+:root {
+        --belt-speed: 72;
+    }
+
+    .partnership .inner {
+        height: 100vh;
+        padding: 48px 0 0;
+        gap: 20px;
+    }
+
+    .tit p {
+        margin-top: 12px;
+        font-size: 14px;
+    }
+
+    .car_lane {
+        width: 85.8%;
+        bottom: 22.8%;
+    }
+
+    .car_track {
+        gap: 48px;
+    }
+
+    .car_item {
+        height: 24vw;
+    }
+
+}

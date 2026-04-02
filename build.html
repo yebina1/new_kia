@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>kia</title>
+    <meta name="keywords"
+        content="Kia, Kia Motors, automotive, SUV, electric vehicle, EV9, Sportage, Sorento, Telluride, car models, vehicle specs, car features">
+    <meta name="author" content="OneTeam - UI/UX Designer">
+    <!-- favicon -->
+    <link rel="shortcut icon" href="img/favicon/favicon.ico" type="image/x-icon">
+    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="img/favicon/favicon-16x16.png">
+    <!-- 애플 -->
+    <link rel="apple-touch-icon" sizes="180x180" href="img/favicon/apple-touch-icon.png">
+    <!-- 안드로이드 -->
+    <link rel="icon" type="image/png" sizes="192x192" href="img/favicon/android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="img/favicon/android-chrome-512x512.png">
+    <!-- 揶쎛?紐꾩궔 css -->
+    <!-- Basic Icons -->
+    <link href="https://cdn.boxicons.com/3.0.8/fonts/basic/boxicons.min.css" rel="stylesheet">
+    <!-- Filled Icons -->
+    <link href="https://cdn.boxicons.com/3.0.8/fonts/filled/boxicons-filled.min.css" rel="stylesheet">
+    <!-- Brand Icons -->
+    <link href="https://cdn.boxicons.com/3.0.8/fonts/brands/boxicons-brands.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <!-- css -->
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/sub01_build.css">
+    <link rel="stylesheet" href="css/common_media.css">
+    <link rel="stylesheet" href="css/sub01_build_media.css">
+
+    <!-- js -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+    <script src="js/common.js" defer></script>
+    <script src="js/sub01_build.js" defer></script>
+</head>
+
+<body>
+    <div class="selection_modal build_selection_modal" id="buildSendModal" aria-hidden="true">
+        <div class="selection_modal_dim" data-build-modal-close></div>
+        <div class="selection_modal_panel" role="dialog" aria-modal="true" aria-labelledby="build-send-modal-title">
+            <button type="button" class="selection_modal_close" id="buildSendModalClose"
+                aria-label="Close modal">&times;</button>
+            <div class="selection_modal_inner">
+                <div class="selection_modal_header">
+                    <strong class="selection_modal_logo"><img src="img/sub02_recommended/logo/logo_white.svg"
+                            alt=""></strong>
+                    <p id="buildSendModalEyebrow">Your Final Selection Estimate</p>
+                </div>
+                <div class="selection_modal_body">
+                    <div class="selection_modal_copy">
+                        <div class="selection_modal_titlebox">
+                            <h3 id="build-send-modal-title">EV9 (Land AWD)</h3>
+                        </div>
+                        <div class="selection_modal_desc">
+                            <p class="selection_modal_label">Status:</p>
+                            <p id="buildSendModalDescription">Quote request has been sent successfully.</p>
+                        </div>
+                        <div class="selection_modal_specs">
+                            <p class="selection_modal_label">Selected Specs :</p>
+                            <ul id="buildSendModalSpecs">
+                                <li>Trim: Land AWD</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="selection_modal_visual">
+                        <img id="buildSendModalImage" src="./img/sub01_build/trim_land.png" alt="Selected build preview">
+                    </div>
+                </div>
+                <div class="selection_modal_actions">
+                    <div class="selection_modal_buttons">
+                        <button type="button" class="is-primary" id="buildSendModalPrimary">Done</button>
+                        <button type="button" id="buildSendModalSecondary">Continue Editing</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="wrap build_wrap" style="--build-page-bg: url('./img/sub01_build/build_bg.png');">
+
+        <header>
+      <div class="inner">
+        <div class="header_top">
+          <h1><a href="index.html"><img src="img/logo.svg" alt="kia"></a></h1>
+          <nav class="glass_bg2">
+            <ul class="gnb">
+              <li>
+                <a href="whykia.html">company</a>
+              </li>
+              <li>
+                <a href="list.html">vehicles</a>
+              </li>
+              <li>
+                <a href="recommended.html">shopping assistant</a>
+              </li>
+              <li><a href="">inventory</a></li>
+              <li>
+                <a href="">center</a>
+              </li>
+              <li><a href="https://owners.kia.com/us/en/kia-owner-portal.html/?_cl=lwUtf1tE82IMPKyvdS7rDF6I">owners page<i class="bx bx-arrow-up-right-stroke"></i></a></li>
+            </ul>
+            <div class="icons">
+              <a href="" aria-label="customer support"><img src="img/main/header/headphone.svg"
+                  alt="customer support"></a>
+              <a href="" aria-label="search"><i class="bx bx-search-big"></i></a>
+              <a href="" aria-label="language"><i class="bx bx-globe-alt"></i></a>
+              <a href="#" class="icon_menu" aria-label="menu"><i class="bx bx-menu"></i></a>
+            </div>
+          </nav>
+        </div>
+        <div class="header_bottom">
+          <ul class="sub_nav">
+            <li><a href="build.html">build my kia</a></li>
+            <li><a href="recommended.html">kia recommended</a></li>
+            <li><a href="">payment calculator</a></li>
+            <li><a href="">trade in</a></li>
+            <li><a href="">easy buy</a></li>
+            <li><a href="">certified pre-owned</a></li>
+            <li><a href="">sub shop</a></li>
+          </ul>
+        </div>
+        <div class="m_panel" aria-hidden="true">
+          <nav class="m_nav">
+            <div class="m_top">
+              <div class="m_left">
+                <a href="" aria-label="customer support"><img src="img/main/header/headphone.svg"
+                    alt="customer support"></a>
+                <a href="" aria-label="search"><i class="bx bx-search-big"></i></a>
+                <a href="" aria-label="language"><i class="bx bx-globe-alt"></i></a>
+              </div>
+              <button type="button" class="close" aria-label="close mobile menu">
+                <i class="bx bx-x"></i>
+              </button>
+            </div>
+            <ul class="m_gnb">
+              <li>
+                <button type="button">company <i class="bx bx-chevron-down"></i></button>
+                <ul class="m_sub">
+                  <li><a href="whykia.html">why kia</a></li>
+                  <li><a href="">safety</a></li>
+                  <li><a href="">kia media</a></li>
+                  <li><a href="">event</a></li>
+                </ul> <!-- //.m_sub -->
+              </li>
+              <li>
+                <button type="button">vehicles <i class="bx bx-chevron-down"></i></button>
+                <ul class="m_sub">
+                  <li><a href="list.html#ev">EV</a></li>
+                  <li><a href="list.html#hybrid">Hybrid</a></li>
+                  <li><a href="list.html#suv">SUV / CUV / MPV</a></li>
+                  <li><a href="list.html#sedan">sedan</a></li>
+                </ul> <!-- //.m_sub -->
+              </li>
+              <li class="on">
+                <button type="button" class="" aria-expanded="true">
+                  <span>shopping assistant</span>
+                  <i class="bx bx-chevron-down"></i>
+                </button>
+                <ul class="m_sub">
+                  <li><a href="build.html">build my kia</a></li>
+                  <li><a href="recommended.html">kia recommended</a></li>
+                  <li><a href="">payment calculator</a></li>
+                  <li><a href="">trade in</a></li>
+                  <li><a href="">easy buy</a></li>
+                  <li><a href="">certified pre-owned</a></li>
+                  <li><a href="">sub shop</a></li>
+                </ul> <!-- //.m_sub -->
+              </li>
+              <li>
+                <a href="">inventory</a>
+              </li>
+              <li>
+                <button type="button">center<i class="bx bx-chevron-down"></i></button>
+                <ul class="m_sub">
+                  <li><a href="">map</a></li>
+                  <li><a href="">kia connect</a></li>
+                  <li><a href="">consultation</a></li>
+                  <li><a href="">FAQ</a></li>
+                </ul> <!-- //.m_sub -->
+              </li>
+              <li>
+                <a href="https://owners.kia.com/us/en/kia-owner-portal.html/?_cl=lwUtf1tE82IMPKyvdS7rDF6I">owners page <i class="bx bx-arrow-up-right-stroke"></i></a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+    </header> <!-- Header -->
+
+        <!-- Build Hero -->
+        <section class="hero" id="heroSection" data-default-bg="./img/sub01_build/build_bg.png">
+            <div class="hero_bg" aria-hidden="true">
+                <img id="heroBgImage" src="./img/sub01_build/build_bg.png" alt="" />
+            </div>
+            <div class="hero_overlay"></div>
+            <div class="hero_header_space"></div>
+
+            <div class="hero_visual is-model-stage" id="heroVisual">
+
+                <!-- Shared Stage Header -->
+                <div class="hero_trim_header" id="heroTrimHeader" aria-hidden="true">
+                    <div class="hero_trim_header_logo" aria-hidden="true"></div>
+                    <div class="hero_trim_header_nav" aria-hidden="true"></div>
+                </div>
+
+                <!-- Model Category Tabs -->
+                <div class="hero_top_tabs" id="heroTopTabs" role="tablist" aria-label="Vehicle categories">
+                    <button type="button" class="active" data-category="ev" role="tab" aria-selected="true">EV</button>
+                    <button type="button" data-category="hybrids" role="tab" aria-selected="false">Hybrids</button>
+                    <button type="button" data-category="suv" role="tab" aria-selected="false">SUV / CUV / MPV</button>
+                    <button type="button" data-category="sedans" role="tab" aria-selected="false">Sedans</button>
+                </div>
+                <span class="hero_top_tabs_indicator" id="heroTopTabsIndicator" aria-hidden="true"></span>
+
+                <!-- Hidden Catalog Data -->
+                <div class="hero_catalog" id="heroCatalog" aria-hidden="true">
+                    <section class="hero_category_panel" data-category="suv">
+                        <ul class="hero_car_list">
+                            <li>
+                                <h2>Sportage</h2>
+                                <img src="./img/sub01_build/build_sportage.png" alt="Sportage" />
+                            </li>
+                        </ul>
+                    </section>
+
+                    <section class="hero_category_panel" data-category="hybrids">
+                        <ul class="hero_car_list">
+                            <li>
+                                <h2 class="hero_car_name hero_car_name_sorento_hybrid">Sorento Hybrid</h2>
+                                <img src="./img/sub01_build/build_sorentoHb.png" alt="Sorento Hybrid" />
+                            </li>
+                        </ul>
+                    </section>
+
+                    <section class="hero_category_panel" data-category="ev">
+                        <ul class="hero_car_list">
+                            <li>
+                                <h2 class="hero_car_name">EV<span
+                                        class="hero_title_suffix hero_title_suffix_ev_9">9</span></h2>
+                                <img src="./img/sub01_build/build_ev9.png" alt="EV9" />
+                            </li>
+                            <li>
+                                <h2 class="hero_car_name">EV<span
+                                        class="hero_title_suffix hero_title_suffix_ev_6">6</span></h2>
+                                <img src="./img/sub01_build/build_ev6.png" alt="EV6" />
+                            </li>
+                        </ul>
+                    </section>
+
+                    <section class="hero_category_panel" data-category="sedans">
+                        <ul class="hero_car_list">
+                            <li>
+                                <h2 class="hero_car_name">K<span class="hero_title_suffix hero_title_suffix_k4">4</span>
+                                </h2>
+                                <img src="./img/sub01_build/build_K4.png" alt="K4" />
+                            </li>
+                        </ul>
+                    </section>
+                </div>
+
+                <!-- 1. Model Stage -->
+                <div class="hero_model_stage" id="heroModelStage">
+                    <div class="hero_center">
+                        <h2 class="hero_title" id="heroTitle">Sportage</h2>
+                        <div class="hero_arrow_frame">
+
+                            <button class="hero_arrow hero_arrow_left" id="prevCar" type="button" aria-label="??곸읈">
+                                <i class="bx bx-chevron-left"></i>
+                            </button>
+                            <button class="hero_arrow hero_arrow_right" id="nextCar" type="button" aria-label="??쇱벉">
+                                <i class="bx bx-chevron-right"></i>
+                            </button>
+
+                        </div>
+                        <div class="hero_car">
+                            <img id="heroCarImage" src="./img/sub01_build/trim_light.png" alt="ev9 image" />
+                        </div>
+                        <div class="magnet_zone hero_start_btn_zone">
+                            <button type="button" class="hero_start_btn hero_model_start_btn cta_btn white_origin"
+                                id="startStepButton">Start
+                                <i class="bx bx-chevron-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Trim Stage -->
+                <div class="hero_trim_stage" id="heroTrimStage" aria-hidden="true">
+                    <div class="hero_trim_intro">
+                        <h2 class="hero_trim_title" id="heroTrimTitle">EV9</h2>
+                        <div class="hero_trim_summary">
+                            <p class="hero_trim_grade" id="heroTrimGrade">Light RWD</p>
+                            <p class="hero_trim_price" id="heroTrimPrice"><span class="hero_price_value">$54,900</span>
+                                <span class="hero_price_suffix">Starting MSRP*</span>
+                            </p>
+                            <p class="hero_trim_lease" id="heroTrimLease">$560 / 36 mo est. lease payments*</p>
+                        </div>
+                    </div>
+
+                    <div class="hero_trim_vehicle">
+                        <img id="heroTrimImage" src="./img/sub01_build/trim_light.png" alt="EV9 Light RWD" />
+                    </div>
+
+                    <section class="hero_trim_panel" aria-label="Trim options">
+                        <h3 class="hero_trim_panel_title">Trim</h3>
+                        <div class="hero_trim_cards" id="heroTrimCards">
+                            <article class="hero_trim_card selected expanded" data-trim-index="0">
+                                <img class="hero_trim_card_asset" src="./img/sub01_build/trim_light.png"
+                                    alt="EV9 Light RWD" />
+                                <div class="hero_trim_card_meta">
+                                    <p class="hero_trim_card_price">$54,900 Starting MSRP*</p>
+                                    <p class="hero_trim_card_lease">$491 / 36 mo est. lease payments*</p>
+                                </div>
+                                <div class="hero_trim_card_head">
+                                    <strong>Light RWD</strong>
+                                    <button type="button" class="hero_trim_select_btn"
+                                        aria-pressed="true">Selected</button>
+                                </div>
+                                <div class="hero_trim_card_details">
+                                    <ul>
+                                        <li>$54,900 Starting MSRP*</li>
+                                        <li>NACS Charging Port</li>
+                                        <li>7-Passenger Seating w/ 2nd-row Bench Seat</li>
+                                        <li>27 Driver &amp; Safety Assistance Features*</li>
+                                    </ul>
+                                </div>
+                                <button type="button" class="hero_trim_more_btn" aria-expanded="true">
+                                    <span class="hero_more_label">More</span>
+                                    <i class="bx bx-chevron-down hero_more_icon" aria-hidden="true"></i>
+                                </button>
+                            </article>
+
+                            <article class="hero_trim_card" data-trim-index="1">
+                                <img class="hero_trim_card_asset" src="./img/sub01_build/trim_light.png"
+                                    alt="EV9 Light Long Range RWD" />
+                                <div class="hero_trim_card_meta">
+                                    <p class="hero_trim_card_price">$57,900 Starting MSRP*</p>
+                                    <p class="hero_trim_card_lease">$511 / 36 mo est. lease payments*</p>
+                                </div>
+                                <div class="hero_trim_card_head">
+                                    <strong>Light Long Range RWD</strong>
+                                    <button type="button" class="hero_trim_select_btn"
+                                        aria-pressed="false">Select</button>
+                                </div>
+                                <div class="hero_trim_card_details">
+                                    <ul>
+                                        <li>$57,900 Starting MSRP*</li>
+                                        <li>7-Passenger Seating or 6-Passenger Option</li>
+                                        <li>Homelink Rearview Mirror &amp; Power Sunroof*</li>
+                                        <li>Front &amp; Rear Parking Sensors*</li>
+                                    </ul>
+                                </div>
+                                <button type="button" class="hero_trim_more_btn" aria-expanded="false">
+                                    <span class="hero_more_label">More</span>
+                                    <i class="bx bx-chevron-down hero_more_icon" aria-hidden="true"></i>
+                                </button>
+                            </article>
+
+                            <article class="hero_trim_card" data-trim-index="2">
+                                <img class="hero_trim_card_asset" src="./img/sub01_build/trim_wind.png"
+                                    alt="EV9 Wind AWD" />
+                                <div class="hero_trim_card_meta">
+                                    <p class="hero_trim_card_price">$63,900 Starting MSRP*</p>
+                                    <p class="hero_trim_card_lease">$560 / 36 mo est. lease payments*</p>
+                                </div>
+                                <div class="hero_trim_card_head">
+                                    <strong>Wind AWD</strong>
+                                    <button type="button" class="hero_trim_select_btn"
+                                        aria-pressed="false">Select</button>
+                                </div>
+                                <div class="hero_trim_card_details">
+                                    <ul>
+                                        <li>$63,900 Starting MSRP*</li>
+                                        <li>379 hp &amp; 443 lb.-ft. of torque (Dual Motor)</li>
+                                        <li>Dual Sunroofs &amp; Driver's Memory System</li>
+                                        <li>Blind-Spot &amp; 360 Surround View Monitor*</li>
+                                        <li>Included All-Wheel Drive</li>
+                                    </ul>
+                                </div>
+                                <button type="button" class="hero_trim_more_btn" aria-expanded="false">
+                                    <span class="hero_more_label">More</span>
+                                    <i class="bx bx-chevron-down hero_more_icon" aria-hidden="true"></i>
+                                </button>
+                            </article>
+
+                            <article class="hero_trim_card" data-trim-index="3">
+                                <img class="hero_trim_card_asset" src="./img/sub01_build/trim_land.png"
+                                    alt="EV9 Land AWD" />
+                                <div class="hero_trim_card_meta">
+                                    <p class="hero_trim_card_price">$68,900 Starting MSRP*</p>
+                                    <p class="hero_trim_card_lease">$648 / 36 mo est. lease payments*</p>
+                                </div>
+                                <div class="hero_trim_card_head">
+                                    <strong>Land AWD</strong>
+                                    <button type="button" class="hero_trim_select_btn"
+                                        aria-pressed="false">Select</button>
+                                </div>
+                                <div class="hero_trim_card_details">
+                                    <ul>
+                                        <li>$68,900 Starting MSRP*</li>
+                                        <li>Meridian Premium Audio System*</li>
+                                        <li>Self-Leveling Rear Susp. &amp; 5,000 lb. Towing*</li>
+                                        <li>Available Nightfall Edition Package</li>
+                                        <li>Included All-Wheel Drive</li>
+                                    </ul>
+                                </div>
+                                <button type="button" class="hero_trim_more_btn" aria-expanded="false">
+                                    <span class="hero_more_label">More</span>
+                                    <i class="bx bx-chevron-down hero_more_icon" aria-hidden="true"></i>
+                                </button>
+                            </article>
+
+                            <article class="hero_trim_card" data-trim-index="4">
+                                <img class="hero_trim_card_asset" src="./img/sub01_build/trim_gt.png"
+                                    alt="EV9 GT-Line AWD" />
+                                <div class="hero_trim_card_meta">
+                                    <p class="hero_trim_card_price">$71,900 Starting MSRP*</p>
+                                    <p class="hero_trim_card_lease">$677 / 36 mo est. lease payments*</p>
+                                </div>
+                                <div class="hero_trim_card_head">
+                                    <strong>GT-Line AWD</strong>
+                                    <button type="button" class="hero_trim_select_btn"
+                                        aria-pressed="false">Select</button>
+                                </div>
+                                <div class="hero_trim_card_details">
+                                    <ul>
+                                        <li>$71,900 Starting MSRP*</li>
+                                        <li>0-60 mph in 4.5 seconds*</li>
+                                        <li>Head-Up Display &amp; 21-in. Alloy Wheels*</li>
+                                        <li>Parking Collision-Avoidance Assist Systems*</li>
+                                        <li>Included All-Wheel Drive</li>
+                                    </ul>
+                                </div>
+                                <button type="button" class="hero_trim_more_btn" aria-expanded="false">
+                                    <span class="hero_more_label">More</span>
+                                    <i class="bx bx-chevron-down hero_more_icon" aria-hidden="true"></i>
+                                </button>
+                            </article>
+                        </div>
+                    </section>
+                    <div class="hero_stage_actions hero_trim_actions">
+                        <button type="button" class="hero_trim_action_btn white_origin" id="viewModelButton"><i
+                                class="bx bx-chevron-left"></i> View Model</button>
+                        <button type="button" class="hero_trim_action_btn white_origin" id="nextColorButton">Next Color <i
+                                class="bx bx-chevron-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- 3. Color Stage -->
+                <div class="hero_color_stage" id="heroColorStage" aria-hidden="true">
+                    <div class="hero_color_intro">
+                        <h2 class="hero_color_title" id="heroColorTitle">EV9</h2>
+                        <div class="hero_color_summary">
+                            <p class="hero_color_trim" id="heroColorTrim">EV9 Land AWD</p>
+                            <p class="hero_color_price" id="heroColorPrice"><span
+                                    class="hero_price_value">$68,900</span>
+                                <span class="hero_price_suffix">Starting MSRP*</span>
+                            </p>
+                            <p class="hero_color_lease" id="heroColorLease">$648 / 36 mo est. lease payments*</p>
+                        </div>
+                    </div>
+
+                    <div class="hero_color_vehicle" id="heroColorVehicle">
+                        <img id="heroColorImage" src="./img/sub01_build/trim_land.png" alt="EV9 Land AWD exterior" />
+                        <div class="hero_color_seat_preview" id="heroSeatPreview" aria-hidden="true">
+                            <img id="heroSeatPreviewImage" src="./img/sub01_build/seat_BlackGray1.png"
+                                alt="Black and Dark Gray seat trim preview" />
+                        </div>
+                    </div>
+
+                    <div class="hero_color_panels">
+                        <section class="hero_color_panel" aria-labelledby="heroExteriorPanelTitle">
+                            <h3 class="hero_color_panel_title" id="heroExteriorPanelTitle">Exterior</h3>
+                            <div class="hero_color_frame">
+                                <div class="hero_color_choice_row">
+                                    <p class="hero_color_choice_name" id="heroExteriorName">Panthera Metal</p>
+                                    <p class="hero_color_choice_price" id="heroExteriorPrice"></p>
+                                </div>
+                                <div class="hero_color_swatches" id="heroExteriorSwatches">
+                                    <button type="button"
+                                        class="hero_color_swatch hero_color_swatch_panthera is-selected"
+                                        data-type="exterior" data-name="Panthera Metal" data-price=""
+                                        data-image-id="colorAssetPanthera" aria-label="Panthera Metal"></button>
+                                    <button type="button" class="hero_color_swatch hero_color_swatch_white_pearl"
+                                        data-type="exterior" data-name="Glacial White Pearl" data-price="+$ 695"
+                                        data-image-id="colorAssetWhitePearl" aria-label="Glacial White Pearl"></button>
+                                    <button type="button" class="hero_color_swatch hero_color_swatch_ivory_silver"
+                                        data-type="exterior" data-name="Ivory Silver" data-price=""
+                                        data-image-id="colorAssetIvorySilver" aria-label="Ivory Silver"></button>
+                                    <button type="button" class="hero_color_swatch hero_color_swatch_ocean_blue"
+                                        data-type="exterior" data-name="Ocean Blue" data-price="+$ 695"
+                                        data-image-id="colorAssetOceanBlue" aria-label="Ocean Blue"></button>
+                                    <button type="button" class="hero_color_swatch hero_color_swatch_road_rider_brown"
+                                        data-type="exterior" data-name="Road Rider Brown" data-price="+$ 1,500"
+                                        data-image-id="colorAssetRoadRiderBrown" aria-label="Road Rider Brown"></button>
+                                    <button type="button" class="hero_color_swatch hero_color_swatch_wolf_gray"
+                                        data-type="exterior" data-name="Wolf Gray" data-price=""
+                                        data-image-id="colorAssetWolfGray" aria-label="Wolf Gray"></button>
+                                    <button type="button" class="hero_color_swatch hero_color_swatch_ebony_black"
+                                        data-type="exterior" data-name="Ebony Black" data-price="+$ 695"
+                                        data-image-id="colorAssetEbonyBlack" aria-label="Ebony Black"></button>
+                                </div>
+                            </div>
+                            <div class="hero_color_vehicle_assets" aria-hidden="true" hidden>
+                                <img id="colorAssetPanthera" src="./img/sub01_build/trim_land.png"
+                                    alt="EV9 Panthera Metal exterior" />
+                                <img id="colorAssetWhitePearl" src="./img/sub01_build/whitePearl1.png"
+                                    alt="EV9 Glacial White Pearl exterior" />
+                                <img id="colorAssetIvorySilver" src="./img/sub01_build/ivorySilver2.png"
+                                    alt="EV9 Ivory Silver exterior" />
+                                <img id="colorAssetOceanBlue" src="./img/sub01_build/oceanBlue3.png"
+                                    alt="EV9 Ocean Blue exterior" />
+                                <img id="colorAssetRoadRiderBrown" src="./img/sub01_build/brown4.png"
+                                    alt="EV9 Road Rider Brown exterior" />
+                                <img id="colorAssetWolfGray" src="./img/sub01_build/wolfGray5.png"
+                                    alt="EV9 Wolf Gray exterior" />
+                                <img id="colorAssetEbonyBlack" src="./img/sub01_build/black6.png"
+                                    alt="EV9 Ebony Black exterior" />
+                            </div>
+                        </section>
+
+                        <section class="hero_color_panel" aria-labelledby="heroInteriorPanelTitle">
+                            <h3 class="hero_color_panel_title" id="heroInteriorPanelTitle">Interior</h3>
+                            <div class="hero_color_frame">
+                                <p class="hero_color_choice_name hero_color_choice_name_interior" id="heroInteriorName">
+                                    Black &amp; Dark Gray Quilted Stripes SynTex Seat Trim
+                                </p>
+                                <div class="hero_color_swatches hero_color_swatches_interior" id="heroInteriorSwatches">
+                                    <button type="button"
+                                        class="hero_color_swatch hero_color_swatch_interior hero_color_swatch_interior_black_gray is-selected"
+                                        data-type="interior"
+                                        data-name="Black &amp; Dark Gray Quilted Stripes SynTex Seat Trim"
+                                        data-image-id="seatAssetBlackGray" aria-label="Black and Dark Gray seat trim">
+                                        <img src="img/sub01_build/seat_color1.png"
+                                            alt="Black and Dark Gray seat trim swatch" />
+                                    </button>
+                                    <button type="button"
+                                        class="hero_color_swatch hero_color_swatch_interior hero_color_swatch_interior_dark_light_gray"
+                                        data-type="interior"
+                                        data-name="Dark Gray &amp; Light Gray Quilted Stripes SynTex Seat Trim"
+                                        data-image-id="seatAssetDarkLightGray"
+                                        aria-label="Dark Gray and Light Gray seat trim">
+                                        <img src="./img/sub01_build/seat_color2.png"
+                                            alt="Dark Gray and Light Gray seat trim swatch" />
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="hero_color_seat_assets" aria-hidden="true" hidden>
+                                <img id="seatAssetBlackGray" src="img/sub01_build/seat_BlackGray1.png"
+                                    alt="Black and Dark Gray seat trim preview" />
+                                <img id="seatAssetDarkLightGray" src="./img/sub01_build/seat_DarkGray2.png"
+                                    alt="Dark Gray and Light Gray seat trim preview" />
+                            </div>
+                        </section>
+                    </div>
+
+                    <div class="hero_stage_actions hero_color_actions">
+                        <button type="button" class="hero_trim_action_btn white_origin" id="viewTrimButton"><i
+                                class="bx bx-chevron-left"></i> View Trim</button>
+                        <button type="button" class="hero_trim_action_btn white_origin" id="nextPackagesButton">Next Packages <i
+                                class="bx bx-chevron-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- 4. Packages Stage -->
+                <div class="hero_package_stage" id="heroPackageStage" aria-hidden="true">
+                    <div class="hero_package_intro">
+                        <h2 class="hero_package_title" id="heroPackageTitle">EV9</h2>
+                        <div class="hero_package_summary">
+                            <p class="hero_package_trim" id="heroPackageTrim">Land AWD</p>
+                            <p class="hero_package_price" id="heroPackagePrice"><span
+                                    class="hero_price_value">$68,900</span>
+                                <span class="hero_price_suffix">Starting MSRP*</span>
+                            </p>
+                            <p class="hero_package_lease" id="heroPackageLease">$648 / 36 mo est. lease payments*</p>
+                        </div>
+                    </div>
+
+                    <div class="hero_package_vehicle" id="heroPackageVehicle">
+                        <img id="heroPackageImage" src="./img/sub01_build/trim_lightLong.png"
+                            alt="EV9 Land AWD package preview" />
+                    </div>
+
+                    <section class="hero_package_panel" aria-labelledby="heroPackagePanelTitle">
+                        <h3 class="hero_package_panel_title" id="heroPackagePanelTitle">Packages</h3>
+                        <div class="hero_package_cards" id="heroPackageCards">
+                            <article class="hero_package_card" data-package-index="0">
+                                <div class="hero_package_card_top">
+                                    <div class="hero_package_card_heading">
+                                        <strong>7-Passenger Package</strong>
+                                    </div>
+                                    <button type="button" class="hero_package_add_btn" aria-pressed="false">+$
+                                        0</button>
+                                </div>
+                                <div class="hero_package_card_details">
+                                    <ul>
+                                        <li>7-Passenger Seating</li>
+                                    </ul>
+                                </div>
+                                <button type="button" class="hero_package_more_btn" aria-expanded="false">
+                                    <span class="hero_more_label">More</span>
+                                    <i class="bx bx-chevron-down hero_more_icon" aria-hidden="true"></i>
+                                </button>
+                            </article>
+
+                            <article class="hero_package_card" data-package-index="1">
+                                <div class="hero_package_card_top">
+                                    <div class="hero_package_card_heading">
+                                        <strong>Nightfall Edition Package</strong>
+                                    </div>
+                                    <button type="button" class="hero_package_add_btn" aria-pressed="false">+$
+                                        1,500</button>
+                                </div>
+                                <div class="hero_package_card_details">
+                                    <ul>
+                                        <li>20-in. Nightfall Exclusive Alloy Wheels w/ Black Finish</li>
+                                        <li>Boost Feature</li>
+                                        <li>Front &amp; Rear Skid Plates, Gloss Black</li>
+                                        <li>Front Grille Trim, Gloss Black</li>
+                                        <li>Lower Window Surrounds, Gloss Black</li>
+                                        <li>Lower Body Side Garnish, Gloss Black</li>
+                                        <li>Gloss Black Side View Mirrors</li>
+                                        <li>Roof Rails, Low Profile Gloss Black</li>
+                                        <li>Exclusive Seat Pattern</li>
+                                        <li>Black Headliner</li>
+                                    </ul>
+                                </div>
+                                <button type="button" class="hero_package_more_btn" aria-expanded="false">
+                                    <span class="hero_more_label">More</span>
+                                    <i class="bx bx-chevron-down hero_more_icon" aria-hidden="true"></i>
+                                </button>
+                            </article>
+                        </div>
+                    </section>
+
+                    <div class="hero_stage_actions hero_package_actions">
+                        <button type="button" class="hero_trim_action_btn hero_trim_action_btn_back white_origin"
+                            id="viewColorButton"><i class="bx bx-chevron-left"></i> View Color</button>
+                        <button type="button" class="hero_trim_action_btn white_origin" id="nextAccessoriesButton">Next Accessories
+                            <i class="bx bx-chevron-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- 5. Accessories Stage -->
+                <div class="hero_accessory_stage" id="heroAccessoryStage" aria-hidden="true">
+                    <div class="hero_accessory_intro">
+                        <h2 class="hero_accessory_title" id="heroAccessoryTitle">EV9</h2>
+                        <div class="hero_accessory_summary">
+                            <p class="hero_accessory_trim" id="heroAccessoryTrim">Land AWD</p>
+                            <p class="hero_accessory_price" id="heroAccessoryPrice"><span
+                                    class="hero_price_value">$68,900</span> <span class="hero_price_suffix">Starting
+                                    MSRP*</span></p>
+                            <p class="hero_accessory_lease" id="heroAccessoryLease">$648 / 36 mo est. lease payments*
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="hero_accessory_vehicle" id="heroAccessoryVehicle">
+                        <img id="heroAccessoryImage" src="./img/sub01_build/trim_land.png"
+                            alt="EV9 Land AWD accessory preview" />
+                    </div>
+
+                    <section class="hero_accessory_panel" aria-labelledby="heroAccessoryPanelTitle">
+                        <h3 class="hero_accessory_panel_title" id="heroAccessoryPanelTitle">Selected Accessories</h3>
+                        <div class="hero_accessory_cards" id="heroAccessoryCards">
+                            <article class="hero_accessory_card">
+                                <div class="hero_accessory_card_media">
+                                    <img src="./img/sub01_build/cargoCover.png" alt="Cargo Cover" />
+                                </div>
+                                <div class="hero_accessory_card_body">
+                                    <div class="hero_accessory_card_top">
+                                        <strong>Cargo Cover</strong>
+                                        <button type="button" class="hero_accessory_add_btn">+$ 195</button>
+                                    </div>
+                                    <p class="hero_accessory_card_desc">Safeguard your belongings by keeping them out of
+                                        sight with this valuable addition to your cargo area.</p>
+                                    <div class="hero_accessory_card_details">
+                                        <p>Safeguard your belongings by keeping them out of sight with this valuable
+                                            addition to your cargo area.</p>
+                                    </div>
+                                    <button type="button" class="hero_accessory_more_btn" aria-expanded="false"><span
+                                            class="hero_more_label">More</span><i
+                                            class="bx bx-chevron-down hero_more_icon" aria-hidden="true"></i></button>
+                                </div>
+                            </article>
+
+                            <article class="hero_accessory_card">
+                                <div class="hero_accessory_card_media">
+                                    <img src="./img/sub01_build/cargoNet.png" alt="Cargo Net" />
+                                </div>
+                                <div class="hero_accessory_card_body">
+                                    <div class="hero_accessory_card_top">
+                                        <strong>Cargo Net</strong>
+                                        <button type="button" class="hero_accessory_add_btn">+$ 65</button>
+                                    </div>
+                                    <p class="hero_accessory_card_desc">Helps secure sporting equipment, groceries, and
+                                        other lightweight cargo.</p>
+                                    <div class="hero_accessory_card_details">
+                                        <p>Helps secure sporting equipment, groceries, and other lightweight cargo.</p>
+                                    </div>
+                                    <button type="button" class="hero_accessory_more_btn" aria-expanded="false"><span
+                                            class="hero_more_label">More</span><i
+                                            class="bx bx-chevron-down hero_more_icon" aria-hidden="true"></i></button>
+                                </div>
+                            </article>
+
+                            <article class="hero_accessory_card">
+                                <div class="hero_accessory_card_media">
+                                    <img src="./img/sub01_build/cargoTray.png" alt="Cargo Tray" />
+                                </div>
+                                <div class="hero_accessory_card_body">
+                                    <div class="hero_accessory_card_top">
+                                        <strong>Cargo Tray</strong>
+                                        <button type="button" class="hero_accessory_add_btn">+$ 145</button>
+                                    </div>
+                                    <p class="hero_accessory_card_desc">Protect your cargo area from spills and stains
+                                        with a durable and easy to clean cargo tray.</p>
+                                    <div class="hero_accessory_card_details">
+                                        <p>Protect your cargo area from spills and stains with a durable and easy to
+                                            clean cargo tray.</p>
+                                    </div>
+                                    <button type="button" class="hero_accessory_more_btn" aria-expanded="false"><span
+                                            class="hero_more_label">More</span><i
+                                            class="bx bx-chevron-down hero_more_icon" aria-hidden="true"></i></button>
+                                </div>
+                            </article>
+
+                            <article class="hero_accessory_card">
+                                <div class="hero_accessory_card_media">
+                                    <img src="./img/sub01_build/seatProtection.png"
+                                        alt="Carpeted Cargo Mat with Seatback Protection" />
+                                </div>
+                                <div class="hero_accessory_card_body">
+                                    <div class="hero_accessory_card_top">
+                                        <strong>Carpeted Cargo Mat w/ Seatback Protection</strong>
+                                        <button type="button" class="hero_accessory_add_btn">+$ 145</button>
+                                    </div>
+                                    <p class="hero_accessory_card_desc">Enhance your interior and protect your rear
+                                        seatbacks with a stylish and practical carpeted cargo mat w/ seatback
+                                        protection.</p>
+                                    <div class="hero_accessory_card_details">
+                                        <p>Enhance your interior and protect your rear seatbacks with a stylish and
+                                            practical carpeted cargo mat w/ seatback protection.</p>
+                                    </div>
+                                    <button type="button" class="hero_accessory_more_btn" aria-expanded="false"><span
+                                            class="hero_more_label">More</span><i
+                                            class="bx bx-chevron-down hero_more_icon" aria-hidden="true"></i></button>
+                                </div>
+                            </article>
+
+                            <article class="hero_accessory_card">
+                                <div class="hero_accessory_card_media">
+                                    <img src="./img/sub01_build/floorMats.png" alt="Carpeted Floor Mats" />
+                                </div>
+                                <div class="hero_accessory_card_body">
+                                    <div class="hero_accessory_card_top">
+                                        <strong>Carpeted Floor Mats</strong>
+                                        <button type="button" class="hero_accessory_add_btn">+$ 240</button>
+                                    </div>
+                                    <p class="hero_accessory_card_desc">Carpeted mats are custom fit and
+                                        color-coordinated to match your Kia interior.</p>
+                                    <div class="hero_accessory_card_details">
+                                        <p>Carpeted mats are custom fit and color-coordinated to match your Kia
+                                            interior.</p>
+                                    </div>
+                                    <button type="button" class="hero_accessory_more_btn" aria-expanded="false"><span
+                                            class="hero_more_label">More</span><i
+                                            class="bx bx-chevron-down hero_more_icon" aria-hidden="true"></i></button>
+                                </div>
+                            </article>
+
+                            <article class="hero_accessory_card">
+                                <div class="hero_accessory_card_media">
+                                    <img src="./img/sub01_build/crossBars.png" alt="Cross Bars" />
+                                </div>
+                                <div class="hero_accessory_card_body">
+                                    <div class="hero_accessory_card_top">
+                                        <strong>Cross Bars</strong>
+                                        <button type="button" class="hero_accessory_add_btn">+$ 380</button>
+                                    </div>
+                                    <p class="hero_accessory_card_desc">Carpeted mats are custom fit and
+                                        color-coordinated to match your Kia interior.</p>
+                                    <div class="hero_accessory_card_details">
+                                        <p>These versatile cross bars create a secure base for all roof attachments
+                                            enabling you to easily attach compatible equipment such as bicycle racks and
+                                            ski and snowboard holders.</p>
+                                    </div>
+                                    <button type="button" class="hero_accessory_more_btn" aria-expanded="false"><span
+                                            class="hero_more_label">More</span><i
+                                            class="bx bx-chevron-down hero_more_icon" aria-hidden="true"></i></button>
+                                </div>
+                            </article>
+
+                            <article class="hero_accessory_card">
+                                <div class="hero_accessory_card_media">
+                                    <img src="./img/sub01_build/aid_kit.png" alt="First Aid Kit, Small" />
+                                </div>
+                                <div class="hero_accessory_card_body">
+                                    <div class="hero_accessory_card_top">
+                                        <strong>First Aid Kit, Small</strong>
+                                        <button type="button" class="hero_accessory_add_btn">+$ 45</button>
+                                    </div>
+                                    <p class="hero_accessory_card_desc">This durable zippered case includes adhesive
+                                        strips, sterile pads, gauze, gloves, tools, and other roadside first aid
+                                        essentials.</p>
+                                    <div class="hero_accessory_card_details">
+                                        <p>This durable zippered case includes 10 plastic adhesive strips (3/4-in.), 10
+                                            butterfly strips, 6 sterile non-woven pads (4-in.), 6 sting relief pads, 6
+                                            insect repellent packets, 4 extra-large adhesive strips, 3 cleansing
+                                            towelettes, 2 sterile stretch gauze rolls (2-in.), 1 maxi pad, 1 latex-free
+                                            tape, 1 triangular bandage with 2 pins, 1 pair of latex-free gloves, 1
+                                            elastic bandage with clips (2-in.), 1 BloodSTOP hemostatic gauze, 1 First
+                                            Aid Quick Guide, plus tweezers/magnifier and scissors.</p>
+                                    </div>
+                                    <button type="button" class="hero_accessory_more_btn" aria-expanded="false"><span
+                                            class="hero_more_label">More</span><i
+                                            class="bx bx-chevron-down hero_more_icon" aria-hidden="true"></i></button>
+                                </div>
+                            </article>
+
+                            <article class="hero_accessory_card">
+                                <div class="hero_accessory_card_media">
+                                    <img src="./img/sub01_build/mudGuards.png" alt="Mud Guards" />
+                                </div>
+                                <div class="hero_accessory_card_body">
+                                    <div class="hero_accessory_card_top">
+                                        <strong>Mud Guards</strong>
+                                        <button type="button" class="hero_accessory_add_btn">+$ 160</button>
+                                    </div>
+                                    <p class="hero_accessory_card_desc">Help protect your new Kia from the chips and
+                                        blemishes that can come from road debris with these specially designed, custom
+                                        fitted-molded thermoplastic Mud Guards.</p>
+                                    <div class="hero_accessory_card_details">
+                                        <p>Help protect your new Kia from the chips and blemishes that can come from
+                                            road debris with these specially designed, custom fitted-molded
+                                            thermoplastic Mud Guards.</p>
+                                    </div>
+                                    <button type="button" class="hero_accessory_more_btn" aria-expanded="false"><span
+                                            class="hero_more_label">More</span><i
+                                            class="bx bx-chevron-down hero_more_icon" aria-hidden="true"></i></button>
+                                </div>
+                            </article>
+
+                            <article class="hero_accessory_card">
+                                <div class="hero_accessory_card_media hero_accessory_card_media_contain">
+                                    <img src="./img/sub01_build/logo.png" alt="NACS Charge Port DC Adapter" />
+                                </div>
+                                <div class="hero_accessory_card_body">
+                                    <div class="hero_accessory_card_top">
+                                        <strong>NACS Charge Port DC Adapter</strong>
+                                        <button type="button" class="hero_accessory_add_btn">+$ 0</button>
+                                    </div>
+                                    <p class="hero_accessory_card_desc">Included in ZEV states only.</p>
+                                    <div class="hero_accessory_card_details">
+                                        <p>Included in ZEV states only.</p>
+                                    </div>
+                                    <button type="button" class="hero_accessory_more_btn" aria-expanded="false"><span
+                                            class="hero_more_label">More</span><i
+                                            class="bx bx-chevron-down hero_more_icon" aria-hidden="true"></i></button>
+                                </div>
+                            </article>
+
+                            <article class="hero_accessory_card">
+                                <div class="hero_accessory_card_media">
+                                    <img src="./img/sub01_build/entertainment.png" alt="Rear Seat Entertainment" />
+                                </div>
+                                <div class="hero_accessory_card_body">
+                                    <div class="hero_accessory_card_top">
+                                        <strong>Rear Seat Entertainment</strong>
+                                        <button type="button" class="hero_accessory_add_btn">+$ 1,500</button>
+                                    </div>
+                                    <p class="hero_accessory_card_desc">Keep your rear seat passengers entertained with
+                                        this dual headrest entertainment system featuring two monitors, two remotes, and
+                                        USB ports.</p>
+                                    <div class="hero_accessory_card_details">
+                                        <p>Keep your rear seat passengers entertained when you're on the road with this
+                                            dual headrest entertainment system. Two monitors and two remotes. Provides
+                                            USB ports. Headphones not included.</p>
+                                    </div>
+                                    <button type="button" class="hero_accessory_more_btn" aria-expanded="false"><span
+                                            class="hero_more_label">More</span><i
+                                            class="bx bx-chevron-down hero_more_icon" aria-hidden="true"></i></button>
+                                </div>
+                            </article>
+
+                            <article class="hero_accessory_card">
+                                <div class="hero_accessory_card_media">
+                                    <img src="./img/sub01_build/kit.png" alt="Roadside Assistance Kit" />
+                                </div>
+                                <div class="hero_accessory_card_body">
+                                    <div class="hero_accessory_card_top">
+                                        <strong>Roadside Assistance Kit</strong>
+                                        <button type="button" class="hero_accessory_add_btn">+$ 75</button>
+                                    </div>
+                                    <p class="hero_accessory_card_desc">Be prepared for the unexpected with a carrying
+                                        bag packed with cables, tools, safety gear, adhesive bandages, and antiseptic
+                                        wipes.</p>
+                                    <div class="hero_accessory_card_details">
+                                        <p>Be prepared for the unexpected with a carrying bag packed with a set of
+                                            booster cables, 7 cable ties (12-in.), 1 roll hose tape, 1 Phillips
+                                            screwdriver, 1 flathead screwdriver, 1 shop towel, 1 poncho, 1 pair of work
+                                            gloves, 1 emergency blanket, 1 flashlight, 1 accident report form, 1 bungee
+                                            cord, 1 lightstick, 1 pair slip joint pliers, 1 hazard triangle with
+                                            instructions (12-in.), plus 10 adhesive bandages (3/4-in.) and 6 antiseptic
+                                            wipes.</p>
+                                    </div>
+                                    <button type="button" class="hero_accessory_more_btn" aria-expanded="false"><span
+                                            class="hero_more_label">More</span><i
+                                            class="bx bx-chevron-down hero_more_icon" aria-hidden="true"></i></button>
+                                </div>
+                            </article>
+
+                            <article class="hero_accessory_card">
+                                <div class="hero_accessory_card_media">
+                                    <img src="./img/sub01_build/stepBar.png" alt="Side Step Bars, Black" />
+                                </div>
+                                <div class="hero_accessory_card_body">
+                                    <div class="hero_accessory_card_top">
+                                        <strong>Side Step Bars, Black</strong>
+                                        <button type="button" class="hero_accessory_add_btn">+$ 740</button>
+                                    </div>
+                                    <p class="hero_accessory_card_desc">Black Side Step Bars can make it easier to get
+                                        in and out of your vehicle while enhancing its rugged appearance.</p>
+                                    <div class="hero_accessory_card_details">
+                                        <p>Black Side Step Bars can make it easier to get in and out of your vehicle
+                                            while enhancing its rugged appearance.</p>
+                                    </div>
+                                    <button type="button" class="hero_accessory_more_btn" aria-expanded="false"><span
+                                            class="hero_more_label">More</span><i
+                                            class="bx bx-chevron-down hero_more_icon" aria-hidden="true"></i></button>
+                                </div>
+                            </article>
+
+                            <article class="hero_accessory_card">
+                                <div class="hero_accessory_card_media">
+                                    <img src="./img/sub01_build/towHitch.png" alt="Tow Hitch" />
+                                </div>
+                                <div class="hero_accessory_card_body">
+                                    <div class="hero_accessory_card_top">
+                                        <strong>Tow Hitch</strong>
+                                        <button type="button" class="hero_accessory_add_btn">+$ 765</button>
+                                    </div>
+                                    <p class="hero_accessory_card_desc">Custom designed, this tow hitch mounts directly
+                                        to the vehicle frame for a reliable towing connection. Additional equipment may
+                                        be required.</p>
+                                    <div class="hero_accessory_card_details">
+                                        <p>Custom designed, this tow hitch mounts directly to the vehicle frame,
+                                            offering a reliable way to attach and tow your additional equipment to the
+                                            specified capacity of your vehicle. Towing requires additional equipment.
+                                            See Owner's Manual for towing instructions. Always use caution while towing.
+                                        </p>
+                                    </div>
+                                    <button type="button" class="hero_accessory_more_btn" aria-expanded="false"><span
+                                            class="hero_more_label">More</span><i
+                                            class="bx bx-chevron-down hero_more_icon" aria-hidden="true"></i></button>
+                                </div>
+                            </article>
+
+                            <article class="hero_accessory_card">
+                                <div class="hero_accessory_card_media">
+                                    <img src="./img/sub01_build/locks.png" alt="Wheel Locks" />
+                                </div>
+                                <div class="hero_accessory_card_body">
+                                    <div class="hero_accessory_card_top">
+                                        <strong>Wheel Locks</strong>
+                                        <button type="button" class="hero_accessory_add_btn">+$ 90</button>
+                                    </div>
+                                    <p class="hero_accessory_card_desc">Wheel locks are designed to secure the wheels to
+                                        your vehicle and help prevent theft.</p>
+                                    <div class="hero_accessory_card_details">
+                                        <p>Wheel locks are designed to secure the wheels to your vehicle and help
+                                            prevent theft.</p>
+                                    </div>
+                                    <button type="button" class="hero_accessory_more_btn" aria-expanded="false"><span
+                                            class="hero_more_label">More</span><i
+                                            class="bx bx-chevron-down hero_more_icon" aria-hidden="true"></i></button>
+                                </div>
+                            </article>
+                        </div>
+                    </section>
+
+                    <div class="hero_stage_actions hero_accessory_actions">
+                        <button type="button" class="hero_trim_action_btn hero_trim_action_btn_back white_origin"
+                            id="viewPackagesButton"><i class="bx bx-chevron-left"></i> View Packages</button>
+                        <button type="button" class="hero_trim_action_btn white_origin" id="nextPlanButton">Next Plan <i
+                                class="bx bx-chevron-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- 6. Maintenance Plan Stage -->
+                <div class="hero_plan_stage" id="heroPlanStage" aria-hidden="true">
+                    <div class="hero_plan_intro">
+                        <h2 class="hero_plan_title" id="heroPlanTitle">EV9</h2>
+                        <div class="hero_plan_summary">
+                            <p class="hero_plan_trim" id="heroPlanTrim">Land AWD</p>
+                            <p class="hero_plan_price" id="heroPlanPrice"><span class="hero_price_value">$68,900</span>
+                                <span class="hero_price_suffix">Starting MSRP*</span>
+                            </p>
+                            <p class="hero_plan_lease" id="heroPlanLease">$648 / 36 mo est. lease payments*</p>
+                        </div>
+                    </div>
+
+                    <div class="hero_plan_vehicle" id="heroPlanVehicle">
+                        <img id="heroPlanImage" src="./img/sub01_build/trim_lightLong.png"
+                            alt="EV9 Land AWD maintenance plan preview" />
+                    </div>
+
+                    <section class="hero_plan_panel" aria-labelledby="heroPlanPanelTitle">
+                        <h3 class="hero_plan_panel_title" id="heroPlanPanelTitle">Kia Connect Plan</h3>
+                        <div class="hero_plan_cards" id="heroPlanCards">
+                            <article class="hero_plan_card is-selected expanded">
+                                <div class="hero_plan_card_body">
+                                    <div class="hero_plan_card_top">
+                                        <strong>Lite</strong>
+                                        <span>Complimentary for up to 5 years</span>
+                                        <button type="button" class="hero_plan_add_btn"
+                                            aria-pressed="true">Selected</button>
+                                    </div>
+                                    <div class="hero_plan_card_details">
+                                        <p class="hero_plan_card_section_title">Free basic vehicle management</p>
+                                        <ul class="hero_plan_card_list">
+                                            <li>Monitor trip information and vehicle health</li>
+                                            <li>Access your car with Digital Key</li>
+                                            <li>Check vehicle status and basic remote features</li>
+                                            <li>Receive maintenance reminders and emergency support</li>
+                                        </ul>
+                                        <div class="hero_plan_card_divider"></div>
+                                        <p class="hero_plan_card_section_title"><i class="bx bx-leaf"
+                                                aria-hidden="true"></i> EV Charging</p>
+                                        <ul class="hero_plan_card_list">
+                                            <li>Check charging status</li>
+                                            <li>Manage basic charging settings</li>
+                                        </ul>
+                                    </div>
+                                    <button type="button" class="hero_plan_more_btn" aria-expanded="true"><span
+                                            class="hero_more_label">More</span><i
+                                            class="bx bx-chevron-down hero_more_icon" aria-hidden="true"></i></button>
+                                </div>
+                            </article>
+
+                            <article class="hero_plan_card">
+                                <div class="hero_plan_card_body">
+                                    <div class="hero_plan_card_top">
+                                        <strong>Care</strong>
+                                        <span>$5.99 monthly $59 annually</span>
+                                        <button type="button" class="hero_plan_add_btn"
+                                            aria-pressed="false">Select</button>
+                                    </div>
+                                    <div class="hero_plan_card_details">
+                                        <p class="hero_plan_card_section_title">Enhanced safety and vehicle care</p>
+                                        <ul class="hero_plan_card_list">
+                                            <li>Includes all Lite features</li>
+                                            <li>Get roadside assistance when needed</li>
+                                            <li>Automatic emergency connection (911)</li>
+                                            <li>Track and locate your vehicle</li>
+                                            <li>Receive safety alerts (geofence, speed, diagnostics)</li>
+                                        </ul>
+                                        <div class="hero_plan_card_divider"></div>
+                                        <p class="hero_plan_card_section_title"><i class="bx bx-leaf"
+                                                aria-hidden="true"></i> EV Charging</p>
+                                        <ul class="hero_plan_card_list">
+                                            <li>Charging status monitoring</li>
+                                            <li>Basic charging management</li>
+                                        </ul>
+                                    </div>
+                                    <button type="button" class="hero_plan_more_btn" aria-expanded="false"><span
+                                            class="hero_more_label">More</span><i
+                                            class="bx bx-chevron-down hero_more_icon" aria-hidden="true"></i></button>
+                                </div>
+                            </article>
+
+                            <article class="hero_plan_card">
+                                <div class="hero_plan_card_body">
+                                    <div class="hero_plan_card_top">
+                                        <strong>Plus</strong>
+                                        <span>$14.99 monthly $149 annually</span>
+                                        <button type="button" class="hero_plan_add_btn"
+                                            aria-pressed="false">Select</button>
+                                    </div>
+                                    <div class="hero_plan_card_details">
+                                        <p class="hero_plan_card_section_title">Advanced remote control and convenience
+                                        </p>
+                                        <ul class="hero_plan_card_list">
+                                            <li>Includes all Care features</li>
+                                            <li>Remotely start your vehicle and control climate</li>
+                                            <li>Lock or unlock doors from anywhere</li>
+                                            <li>Control seats and ventilation remotely</li>
+                                            <li>View surroundings with 360吏?camera</li>
+                                            <li>Access full alert system</li>
+                                        </ul>
+                                        <div class="hero_plan_card_divider"></div>
+                                        <p class="hero_plan_card_section_title"><i class="bx bx-leaf"
+                                                aria-hidden="true"></i> EV Charging</p>
+                                        <ul class="hero_plan_card_list">
+                                            <li>Start or stop charging remotely</li>
+                                            <li>Schedule charging times</li>
+                                        </ul>
+                                    </div>
+                                    <button type="button" class="hero_plan_more_btn" aria-expanded="false"><span
+                                            class="hero_more_label">More</span><i
+                                            class="bx bx-chevron-down hero_more_icon" aria-hidden="true"></i></button>
+                                </div>
+                            </article>
+
+                            <article class="hero_plan_card">
+                                <div class="hero_plan_card_body">
+                                    <div class="hero_plan_card_top">
+                                        <strong>Ultimate</strong>
+                                        <span>$19.99 monthly $199 annually</span>
+                                        <button type="button" class="hero_plan_add_btn"
+                                            aria-pressed="false">Select</button>
+                                    </div>
+                                    <div class="hero_plan_card_details">
+                                        <p class="hero_plan_card_section_title">Full connected car experience</p>
+                                        <ul class="hero_plan_card_list">
+                                            <li>Includes all Plus features</li>
+                                            <li>Send destinations directly to your vehicle</li>
+                                            <li>Real-time navigation and traffic updates</li>
+                                            <li>Over-the-air (OTA) updates</li>
+                                            <li>Voice assistant integration (Alexa)</li>
+                                            <li>Access connected services like weather and info</li>
+                                        </ul>
+                                        <div class="hero_plan_card_divider"></div>
+                                        <p class="hero_plan_card_section_title"><i class="bx bx-leaf"
+                                                aria-hidden="true"></i> EV Charging</p>
+                                        <ul class="hero_plan_card_list">
+                                            <li>Smart charging with connected navigation</li>
+                                            <li>Fully integrated EV and route planning</li>
+                                        </ul>
+                                    </div>
+                                    <button type="button" class="hero_plan_more_btn" aria-expanded="false"><span
+                                            class="hero_more_label">More</span><i
+                                            class="bx bx-chevron-down hero_more_icon" aria-hidden="true"></i></button>
+                                </div>
+                            </article>
+                        </div>
+                    </section>
+
+                    <div class="hero_stage_actions hero_plan_actions">
+                        <button type="button" class="hero_trim_action_btn hero_trim_action_btn_back white_origin"
+                            id="viewAccessoriesButton"><i class="bx bx-chevron-left"></i> View Accessories</button>
+                        <button type="button" class="hero_trim_action_btn white_origin" id="nextSummaryButton">Next Summary <i
+                                class="bx bx-chevron-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- 7. Summary Stage -->
+                <div class="hero_summary_stage" id="heroSummaryStage" aria-hidden="true">
+                    <div class="hero_summary_intro">
+                        <h2 class="hero_summary_title" id="heroSummaryTitle">EV9</h2>
+                        <div class="hero_summary_summary">
+                            <p class="hero_summary_trim" id="heroSummaryTrim">Land AWD</p>
+                            <p class="hero_summary_price" id="heroSummaryPrice"><span
+                                    class="hero_price_value">$68,900</span> <span class="hero_price_suffix">Starting
+                                    MSRP*</span></p>
+                            <p class="hero_summary_lease" id="heroSummaryLease">$648 / 36 mo est. lease payments*</p>
+                        </div>
+                    </div>
+
+                    <div class="hero_summary_vehicle" id="heroSummaryVehicle">
+                        <img id="heroSummaryImage" src="./img/sub01_build/trim_lightLong.png"
+                            alt="EV9 Land AWD summary preview" />
+                    </div>
+
+                    <div class="hero_summary_side">
+                        <section class="hero_summary_panel" aria-labelledby="heroSummaryPanelTitle">
+                            <h3 class="hero_summary_panel_title" id="heroSummaryPanelTitle">Price Breakdown</h3>
+                            <div class="hero_summary_breakdown" id="heroSummaryBreakdown">
+                                <div class="hero_summary_items">
+                                    <div class="hero_summary_row">
+                                        <span class="hero_summary_row_label" id="summaryRowTrim">Land AWD</span>
+                                        <span class="hero_summary_row_price" id="summaryRowTrimPrice">$68,900</span>
+                                    </div>
+                                    <div class="hero_summary_row">
+                                        <span class="hero_summary_row_label" id="summaryRowExterior">Panthera
+                                            Metal</span>
+                                        <span class="hero_summary_row_price" id="summaryRowExteriorPrice">$0</span>
+                                    </div>
+                                    <div class="hero_summary_row">
+                                        <span class="hero_summary_row_label" id="summaryRowInterior">Black &amp; Dark
+                                            Gray
+                                            Quilted Stripes SynTex Seat Trim</span>
+                                        <span class="hero_summary_row_price" id="summaryRowInteriorPrice">$0</span>
+                                    </div>
+                                    <div class="hero_summary_row">
+                                        <span class="hero_summary_row_label" id="summaryRowPlan">Lite</span>
+                                        <span class="hero_summary_row_price" id="summaryRowPlanPrice">$5</span>
+                                    </div>
+                                    <div class="hero_summary_selected" id="heroSummarySelectedItems"></div>
+                                </div>
+                                <div class="hero_summary_divider"></div>
+                                <div class="hero_summary_row hero_summary_row_fee">
+                                    <span class="hero_summary_row_label">Destination Fee</span>
+                                    <span class="hero_summary_row_price" id="summaryDestinationFee">$1,645</span>
+                                </div>
+                                <div class="hero_summary_row hero_summary_row_total">
+                                    <span class="hero_summary_row_label">Build Total*</span>
+                                    <span class="hero_summary_row_price" id="summaryBuildTotal">$70,545</span>
+                                </div>
+                            </div>
+                            <div class="hero_summary_cta">
+                                <button type="button" class="hero_summary_cta_btn white_origin" disabled aria-disabled="true">View
+                                    Inventory</button>
+                                <button type="button" class="hero_summary_cta_btn white_origin" disabled aria-disabled="true">Share
+                                    Build</button>
+                                <button type="button" class="hero_summary_cta_btn white_origin" id="requestQuoteButton"
+                                    aria-expanded="false">Request a Quote</button>
+                            </div>
+                        </section>
+                        <div class="hero_quote_panel" id="heroQuotePanel" hidden>
+                            <div class="hero_quote_intro">
+                                <h4 class="hero_quote_title">Request a Quote</h4>
+                                <button type="button" class="hero_quote_title_icon_btn" id="quoteCloseButton"
+                                    aria-label="Back to price breakdown">
+                                    <i class="bx bx-arrow-out-left-square-half hero_quote_title_icon"
+                                        aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <div class="hero_quote_panel_body">
+                                <div class="hero_quote_group">
+                                    <p class="hero_quote_label">Contact Method: *</p>
+                                    <div class="hero_quote_method_tabs">
+                                        <button type="button" class="hero_quote_method_btn" aria-pressed="false">
+                                            <span class="hero_quote_check"><i class="bx bx-check"
+                                                    aria-hidden="true"></i></span>
+                                            <span>Email</span>
+                                        </button>
+                                        <button type="button" class="hero_quote_method_btn" aria-pressed="false">
+                                            <span class="hero_quote_check"><i class="bx bx-check"
+                                                    aria-hidden="true"></i></span>
+                                            <span>Text</span>
+                                        </button>
+                                        <button type="button" class="hero_quote_method_btn" aria-pressed="false">
+                                            <span class="hero_quote_check"><i class="bx bx-check"
+                                                    aria-hidden="true"></i></span>
+                                            <span>Call</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="hero_quote_fields">
+                                    <label class="hero_quote_field">
+                                        <span class="hero_quote_field_shell">
+                                            <span class="hero_quote_field_label">First name</span>
+                                            <input type="text" id="quoteFirstName" placeholder="First name"
+                                                value="Alex" />
+                                        </span>
+                                        <span class="hero_quote_error" id="quoteFirstNameError" hidden>First Name is
+                                            Required</span>
+                                    </label>
+                                    <label class="hero_quote_field">
+                                        <span class="hero_quote_field_shell">
+                                            <span class="hero_quote_field_label">Last name</span>
+                                            <input type="text" id="quoteLastName" placeholder="Last name" value="Kim" />
+                                        </span>
+                                        <span class="hero_quote_error" id="quoteLastNameError" hidden>Last Name is
+                                            Required</span>
+                                    </label>
+                                    <label class="hero_quote_field hero_quote_field_full">
+                                        <span class="hero_quote_field_shell">
+                                            <span class="hero_quote_field_label">Phone</span>
+                                            <input type="tel" id="quotePhone" placeholder="phone"
+                                                value="010-1234-5678" />
+                                        </span>
+                                        <span class="hero_quote_error" id="quotePhoneError" hidden>Phone is
+                                            Required</span>
+                                    </label>
+                                    <label class="hero_quote_field hero_quote_field_full">
+                                        <span class="hero_quote_field_shell">
+                                            <span class="hero_quote_field_label">Email</span>
+                                            <input type="email" id="quoteEmail" placeholder="email"
+                                                value="alex.kim@example.com" />
+                                        </span>
+                                        <span class="hero_quote_error" id="quoteEmailError" hidden>Email is
+                                            Required</span>
+                                    </label>
+                                    <label class="hero_quote_field hero_quote_field_full">
+                                        <span class="hero_quote_field_shell">
+                                            <span class="hero_quote_field_label">Address</span>
+                                            <input type="text" id="quoteAddress" placeholder="address"
+                                                value="123 Gangnam-daero, Seoul" />
+                                        </span>
+                                        <span class="hero_quote_error" id="quoteAddressError" hidden>Address is
+                                            Required</span>
+                                    </label>
+                                    <label class="hero_quote_field hero_quote_field_full">
+                                        <span class="hero_quote_field_shell hero_quote_field_shell_selected_model">
+                                            <span class="hero_quote_field_label">Selected Model</span>
+                                            <span id="quoteSelectedModel"
+                                                class="hero_quote_selected_model_input"></span>
+                                        </span>
+                                    </label>
+                                </div>
+
+                                <div class="hero_quote_group hero_quote_group_payment">
+                                    <p class="hero_quote_label">Payment Method: *</p>
+                                    <div class="hero_quote_method_tabs">
+                                        <button type="button" class="hero_quote_payment_btn" aria-pressed="false">
+                                            <span class="hero_quote_check"><i class="bx bx-check"
+                                                    aria-hidden="true"></i></span>
+                                            <span>Cash</span>
+                                        </button>
+                                        <button type="button" class="hero_quote_payment_btn" aria-pressed="false">
+                                            <span class="hero_quote_check"><i class="bx bx-check"
+                                                    aria-hidden="true"></i></span>
+                                            <span>Lease</span>
+                                        </button>
+                                        <button type="button" class="hero_quote_payment_btn" aria-pressed="false">
+                                            <span class="hero_quote_check"><i class="bx bx-check"
+                                                    aria-hidden="true"></i></span>
+                                            <span>Finance</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <section class="hero_quote_dealer_section" aria-labelledby="heroQuoteDealerTitle">
+                                    <div class="hero_quote_dealer_header">
+                                        <h5 class="hero_quote_dealer_title" id="heroQuoteDealerTitle">Select Dealer</h5>
+                                        <p class="hero_quote_dealer_copy">Please note, dealer might not have the exact
+                                            vehicle you built, but they will work with you to find your ideal Kia
+                                            vehicle.</p>
+                                    </div>
+                                    <div class="hero_quote_dealer_meta">
+                                        <p class="hero_quote_dealer_hint">(Select all that apply)</p>
+                                        <div class="hero_quote_zip_editor">
+                                            <span class="hero_quote_zip_btn">Showing dealers within 25 miles of <span
+                                                    id="quoteZipDisplay">12345</span></span>
+                                            <button type="button" class="hero_quote_zip_edit_btn"
+                                                id="quoteZipEditButton" aria-label="Edit zip code"><i
+                                                    class="bx bx-edit-alt" aria-hidden="true"></i></button>
+                                            <input type="text" class="hero_quote_zip_input" id="quoteZipInput"
+                                                value="12345" inputmode="numeric" hidden />
+                                        </div>
+                                    </div>
+                                    <div class="hero_quote_dealer_cards">
+                                        <button type="button" class="hero_quote_dealer_card" aria-pressed="false">
+                                            <span class="hero_quote_dealer_check"><i class="bx bx-check"
+                                                    aria-hidden="true"></i></span>
+                                            <span class="hero_quote_dealer_copy_block">
+                                                <strong class="hero_quote_dealer_name">Matthews Kia of
+                                                    Schenectady</strong>
+                                                <span class="hero_quote_dealer_distance">(4.3mi)</span>
+                                            </span>
+                                        </button>
+                                        <button type="button" class="hero_quote_dealer_card" aria-pressed="false">
+                                            <span class="hero_quote_dealer_check"><i class="bx bx-check"
+                                                    aria-hidden="true"></i></span>
+                                            <span class="hero_quote_dealer_copy_block">
+                                                <strong class="hero_quote_dealer_name">Destination Kia</strong>
+                                                <span class="hero_quote_dealer_distance">(12.4mi)</span>
+                                            </span>
+                                        </button>
+                                    </div>
+                                    <div class="hero_quote_optin">
+                                        <label class="hero_quote_optin_row">
+                                            <input type="checkbox" />
+                                            <span>I would like to be contacted by Kia America, Inc. (Kia) and by local
+                                                Kia dealers and receive text messages (via automated technology), voice
+                                                calls (including pre-recorded messages) and emails for marketing and
+                                                other purposes that include receiving information and updat...</span>
+                                        </label>
+                                        <button type="button" class="hero_quote_more_link">See More <i
+                                                class="bx bx-chevron-down" aria-hidden="true"></i></button>
+                                    </div>
+                                </section>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hero_stage_actions hero_summary_actions">
+                        <button type="button" class="hero_trim_action_btn hero_trim_action_btn_back white_origin"
+                            id="viewPlanButton"><i class="bx bx-chevron-left"></i> View Plan</button>
+                        <button type="button" class="hero_trim_action_btn white_origin" id="sendBuildButton">Send</button>
+                    </div>
+                </div>
+
+                <!-- Start / Progress -->
+                <div class="hero_bottom_steps" id="heroBottomSteps">
+                    <div class="hero_progress" aria-hidden="true">
+                        <div class="hero_progress_track"></div>
+                        <div class="hero_progress_fill" id="heroProgressFill"></div>
+                    </div>
+
+                    <div class="hero_bottom_tabs" role="tablist" aria-label="Build steps">
+                        <button type="button" class="active" data-step="0" data-mobile-label="Model" role="tab"
+                            aria-selected="true">Model</button>
+                        <button type="button" data-step="1" data-mobile-label="Trim" role="tab"
+                            aria-selected="false">Trim</button>
+                        <button type="button" data-step="2" data-mobile-label="Color" role="tab"
+                            aria-selected="false">Color</button>
+                        <button type="button" data-step="3" data-mobile-label="Package" role="tab"
+                            aria-selected="false">Packages</button>
+                        <button type="button" data-step="4" data-mobile-label="Accessory" role="tab"
+                            aria-selected="false">Accessories</button>
+                        <button type="button" data-step="5" data-mobile-label="Plan" role="tab"
+                            aria-selected="false">Maintenance Plan</button>
+                        <button type="button" data-step="6" data-mobile-label="Summary" role="tab"
+                            aria-selected="false">Summary</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,1601 @@
+const heroCanvas = document.getElementById("heroCanvas");
+const heroSection = document.querySelector(".hero_section");
+const heroTitle = document.querySelector(".hero_title");
+
+if (heroCanvas && heroSection) {
+    const MOBILE_BREAKPOINT = 900;
+    const ctx = heroCanvas.getContext("2d");
+    const stars = {
+        near_star: { width: 3, speed: 0.2, count: 50, parallax: 42 },
+        mid_star: { width: 2, speed: 0.1, count: 100, parallax: 24 },
+        far_star: { width: 1, speed: 0.025, count: 350, parallax: 10 }
+    };
+
+    let starArray = [];
+    const pointer = { x: 0, y: 0 };
+    const currentPointer = { x: 0, y: 0 };
+
+    function syncCanvasSize() {
+        heroCanvas.width = heroSection.clientWidth;
+        heroCanvas.height = heroSection.clientHeight;
+    }
+
+    function Star(x, y, width, speed, parallax) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.speed = speed;
+        this.parallax = parallax;
+        this.color = "#ffffff";
+
+        this.draw = function () {
+            const drawX = this.x + (currentPointer.x * this.parallax);
+            const drawY = this.y + (currentPointer.y * this.parallax);
+
+            ctx.fillStyle = this.color;
+            ctx.fillRect(drawX, drawY, this.width, this.width);
+        };
+
+        this.update = function () {
+            if (this.x > heroCanvas.width) {
+                this.x = -this.width;
+            }
+
+            this.x += this.speed;
+            this.draw();
+        };
+    }
+
+    function createStars(config) {
+        for (let i = 0; i < config.count; i += 1) {
+            const x = Math.random() * Math.max(heroCanvas.width - config.width, 1);
+            const y = Math.random() * Math.max(heroCanvas.height - config.width, 1);
+            starArray.push(new Star(x, y, config.width, config.speed, config.parallax));
+        }
+    }
+
+    function initStars() {
+        syncCanvasSize();
+        starArray = [];
+        createStars(stars.near_star);
+        createStars(stars.mid_star);
+        createStars(stars.far_star);
+    }
+
+    function animateStars() {
+        ctx.clearRect(0, 0, heroCanvas.width, heroCanvas.height);
+        currentPointer.x += (pointer.x - currentPointer.x) * 0.055;
+        currentPointer.y += (pointer.y - currentPointer.y) * 0.055;
+
+        for (const star of starArray) {
+            star.update();
+        }
+
+        window.requestAnimationFrame(animateStars);
+    }
+
+    function updatePointer(event) {
+        if (window.innerWidth <= MOBILE_BREAKPOINT) {
+            resetPointer();
+            return;
+        }
+
+        const rect = heroSection.getBoundingClientRect();
+        const normalizedX = (event.clientX - rect.left) / rect.width - 0.5;
+        const normalizedY = (event.clientY - rect.top) / rect.height - 0.5;
+
+        pointer.x = normalizedX * 3.15;
+        pointer.y = normalizedY * 3.15;
+    }
+
+    function resetPointer() {
+        pointer.x = 0;
+        pointer.y = 0;
+    }
+
+    function handleResize() {
+        if (window.innerWidth <= MOBILE_BREAKPOINT) {
+            resetPointer();
+        }
+
+        initStars();
+    }
+
+    window.addEventListener("resize", handleResize);
+    heroSection.addEventListener("mousemove", updatePointer);
+    heroSection.addEventListener("mouseleave", resetPointer);
+
+    initStars();
+    animateStars();
+}
+
+if (heroTitle) {
+    const WAVE_THRESH = 1.35;
+    const CHAR_MULT = 1;
+    const ANIM_STEP = 70;
+    const WAVE_BUF = 3;
+
+    function createAsciiShift(element, options = {}) {
+        let originalText = element.textContent;
+        let originalChars = originalText.split("");
+        let isAnimating = false;
+        let cursorPos = 0;
+        let waves = [];
+        let animationFrameId = null;
+        let isHovering = false;
+        let originalWidth = null;
+
+        const config = {
+            dur: 700,
+            chars: ". · - _",
+            preserveSpaces: true,
+            spread: 1.85,
+            ...options
+        };
+
+        function updateCursorPos(event) {
+            const rect = element.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const length = originalText.length;
+            const nextPos = Math.round((x / rect.width) * length);
+            cursorPos = Math.max(0, Math.min(nextPos, length - 1));
+        }
+
+        function cleanupWaves(time) {
+            waves = waves.filter((wave) => time - wave.startTime < config.dur);
+        }
+
+        function calcWaveEffect(charIndex, time) {
+            let shouldAnimate = false;
+            let resultChar = originalChars[charIndex];
+
+            for (const wave of waves) {
+                const age = time - wave.startTime;
+                const progress = Math.min(age / config.dur, 1);
+                const distance = Math.abs(charIndex - wave.startPos);
+                const maxDistance = Math.max(wave.startPos, originalChars.length - wave.startPos - 1);
+                const radius = (progress * (maxDistance + WAVE_BUF)) / config.spread;
+
+                if (distance <= radius) {
+                    shouldAnimate = true;
+                    const intensity = Math.max(0, radius - distance);
+
+                    if (intensity <= WAVE_THRESH && intensity > 0) {
+                        const scrambledIndex =
+                            (distance * CHAR_MULT + Math.floor(age / ANIM_STEP)) % config.chars.length;
+                        resultChar = config.chars[scrambledIndex];
+                    }
+                }
+            }
+
+            return { shouldAnimate, char: resultChar };
+        }
+
+        function generateScrambledText(time) {
+            return originalChars
+                .map((char, index) => {
+                    if (config.preserveSpaces && char === " ") {
+                        return " ";
+                    }
+
+                    const result = calcWaveEffect(index, time);
+                    return result.shouldAnimate ? result.char : char;
+                })
+                .join("");
+        }
+
+        function stopAnimation() {
+            element.textContent = originalText;
+            element.classList.remove("is_ascii_active");
+
+            if (originalWidth !== null) {
+                element.style.width = "";
+                originalWidth = null;
+            }
+
+            isAnimating = false;
+        }
+
+        function startAnimation() {
+            if (isAnimating) {
+                return;
+            }
+
+            if (originalWidth === null) {
+                originalWidth = element.getBoundingClientRect().width;
+                element.style.width = originalWidth + "px";
+            }
+
+            isAnimating = true;
+            element.classList.add("is_ascii_active");
+
+            function animate() {
+                const time = Date.now();
+                cleanupWaves(time);
+
+                if (!waves.length) {
+                    stopAnimation();
+                    return;
+                }
+
+                element.textContent = generateScrambledText(time);
+                animationFrameId = window.requestAnimationFrame(animate);
+            }
+
+            animationFrameId = window.requestAnimationFrame(animate);
+        }
+
+        function startWave(startPos) {
+            waves.push({
+                startPos,
+                startTime: Date.now(),
+                id: Math.random()
+            });
+
+            if (!isAnimating) {
+                startAnimation();
+            }
+        }
+
+        function playIntroWave() {
+            const centerIndex = Math.max(Math.floor(originalChars.length / 2), 0);
+            startWave(centerIndex);
+        }
+
+        function handleEnter(event) {
+            isHovering = true;
+            updateCursorPos(event);
+            startWave(cursorPos);
+        }
+
+        function handleMove(event) {
+            if (!isHovering) {
+                return;
+            }
+
+            const previousPos = cursorPos;
+            updateCursorPos(event);
+
+            if (cursorPos !== previousPos) {
+                startWave(cursorPos);
+            }
+        }
+
+        function handleLeave() {
+            isHovering = false;
+        }
+
+        element.addEventListener("mouseenter", handleEnter);
+        element.addEventListener("mousemove", handleMove);
+        element.addEventListener("mouseleave", handleLeave);
+
+        window.setTimeout(playIntroWave, 450);
+    }
+
+    createAsciiShift(heroTitle);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const mainScrollDownButton = document.querySelector(".scroll_down_button");
+    const pageFooter = document.querySelector("footer");
+
+    if (mainScrollDownButton && pageFooter) {
+        const syncMainScrollButton = () => {
+            const footerRect = pageFooter.getBoundingClientRect();
+            const shouldShowButton = footerRect.top > window.innerHeight;
+
+            mainScrollDownButton.classList.toggle("is_visible", shouldShowButton);
+        };
+
+        mainScrollDownButton.addEventListener("click", (event) => {
+            event.preventDefault();
+            window.scrollBy({
+                top: window.innerHeight * 0.82,
+                behavior: "smooth",
+            });
+        });
+
+        syncMainScrollButton();
+        window.addEventListener("scroll", syncMainScrollButton, { passive: true });
+        window.addEventListener("resize", syncMainScrollButton);
+    }
+
+    const shell = document.getElementById("storyHistory");
+    const frame = shell?.querySelector(".story_frame");
+    const introCircle = document.getElementById("introCircle");
+    const txtStage = shell?.querySelector(".txt_stage");
+    const lead = document.getElementById("txtHistory1");
+    const stmt = document.getElementById("txtHistory2");
+    const movementStage = document.getElementById("movementStage");
+    const visionTitle = movementStage?.querySelector(".vision_title");
+    const visionTxt = movementStage?.querySelector(".vision_txt");
+    const needsStage = document.getElementById("needsStage");
+    const needsTxt = needsStage?.querySelector(".needs_txt");
+    const needsLines = Array.from(needsStage?.querySelectorAll(".needs_line") || []);
+    const progressBar = document.getElementById("progressBar");
+    const sceneTag = document.getElementById("sceneTag");
+
+    if (!shell || !frame || !introCircle || !txtStage || !lead || !stmt || !movementStage || !visionTitle || !visionTxt || !needsStage || !needsTxt || !needsLines.length) {
+        return;
+    }
+
+    window.setTimeout(() => {
+        lead.classList.add("is_animated");
+        stmt.classList.add("is_animated");
+    }, 100);
+
+    const TOTAL = 6;
+    const STORY_VERTICAL_SHIFT = -24;
+    let activeSceneIndex = 0;
+    let rafId = 0;
+    let storyTrigger = null;
+
+    function clamp(value, min, max) {
+        return Math.min(Math.max(value, min), max);
+    }
+
+    function lerp(start, end, progress) {
+        return start + (end - start) * progress;
+    }
+
+    function easeOutCubic(progress) {
+        return 1 - Math.pow(1 - progress, 3);
+    }
+
+    function easeInOutQuart(progress) {
+        return progress < 0.5
+            ? 8 * Math.pow(progress, 4)
+            : 1 - Math.pow(-2 * progress + 2, 4) / 2;
+    }
+
+    function getRingTargetScale() {
+        const baseSize = introCircle.offsetWidth || 1;
+        const viewportDiameter = Math.max(window.innerWidth, window.innerHeight);
+        return Math.max((viewportDiameter * 2.7) / baseSize, 1);
+    }
+
+    function renderProgress(progress) {
+        const timeline = progress * (TOTAL - 1);
+        const ringTargetScale = getRingTargetScale();
+        const baseRingSize = introCircle.offsetWidth || 1;
+        activeSceneIndex = clamp(Math.round(timeline), 0, TOTAL - 1);
+
+        const stmtIn = clamp((timeline - 0.54) / 0.52, 0, 1);
+        const circleIn = clamp((timeline - 1.36) / 0.32, 0, 1);
+        const circleGrow = clamp((timeline - 1.58) / 1.92, 0, 1);
+        const circleOut = clamp((timeline - 3.18) / 0.92, 0, 1);
+        const movementIn = clamp((timeline - 2.02) / 0.92, 0, 1);
+        const movementOut = clamp((timeline - 3.92) / 0.42, 0, 1);
+        const needsIn = clamp((timeline - 4.18) / 0.42, 0, 1);
+        const circleAppear = easeOutCubic(circleIn);
+        const circleExpand = easeInOutQuart(circleGrow);
+        const circleFade = easeOutCubic(circleOut);
+        const circleExitScale = lerp(1, 1.18, circleFade);
+        const ringScale = lerp(0.88, ringTargetScale, Math.pow(circleExpand, 1.12));
+        const ringDiameter = baseRingSize * ringScale;
+        const textFadeByRing = clamp((ringDiameter - (window.innerWidth * 0.6)) / (window.innerWidth * 0.12), 0, 1);
+        const focusIn = clamp((circleGrow - 0.12) / 0.32, 0, 1);
+        const diffuseOut = clamp((circleGrow - 0.52) / 0.38, 0, 1);
+        const ringBlur = lerp(18, 1.2, easeOutCubic(focusIn)) + lerp(0, 9, easeOutCubic(diffuseOut)) + lerp(0, 4, circleFade);
+        const textFade = easeOutCubic(textFadeByRing);
+        const leadDim = easeOutCubic(stmtIn);
+        const leadOpacity = 1 - textFade;
+        const stmtOpacity = easeOutCubic(stmtIn) * (1 - textFade);
+        const movementOpacity = easeOutCubic(movementIn) * (1 - easeOutCubic(movementOut));
+        const movementReveal = easeOutCubic(clamp((timeline - 2.02) / 0.88, 0, 1));
+        const movementExit = easeOutCubic(movementOut);
+        const needsOpacity = needsIn > 0 ? easeOutCubic(needsIn) : 0;
+        const needsReveal = easeOutCubic(clamp((timeline - 4.18) / 0.58, 0, 1));
+        const movementTextIn = easeOutCubic(clamp((timeline - 2.1) / 0.82, 0, 1));
+        const textStageVisible = timeline < 3.02;
+        const leadVisible = textStageVisible;
+        const stmtVisible = textStageVisible && timeline >= 0.54;
+        const movementVisible = timeline >= 1.98 && timeline < 4.32;
+        const needsVisible = timeline >= 4.18;
+
+        introCircle.style.opacity = Math.max(0, Math.min(1, circleAppear * (1 - circleFade) * 1)).toFixed(3);
+        introCircle.style.transform =
+            `translate(-50%, calc(-50% + ${STORY_VERTICAL_SHIFT}px)) scale(${(ringScale * circleExitScale).toFixed(4)})`;
+        introCircle.style.filter = `blur(${ringBlur.toFixed(2)}px)`;
+
+        txtStage.style.display = textStageVisible ? "block" : "none";
+        txtStage.style.visibility = textStageVisible ? "visible" : "hidden";
+
+        const leadDisplayOpacity = leadVisible ? leadOpacity : 0;
+        lead.style.display = leadVisible ? "block" : "none";
+        lead.style.opacity = leadDisplayOpacity.toFixed(3);
+        lead.style.transform = `translate(-50%, ${lerp(0, -42, textFade).toFixed(2)}px)`;
+        lead.style.color = leadDim > 0 ? "var(--kia-white2)" : "var(--text_main)";
+        lead.style.visibility = leadDisplayOpacity <= 0.05 ? "hidden" : "visible";
+
+        const stmtDisplayOpacity = stmtVisible ? stmtOpacity : 0;
+        stmt.style.display = stmtVisible ? "block" : "none";
+        stmt.style.opacity = stmtDisplayOpacity.toFixed(3);
+        stmt.style.transform = `translate(-50%, ${lerp(36, -24, clamp((stmtIn * 0.4) + (textFade * 0.6), 0, 1)).toFixed(2)}px)`;
+        stmt.style.visibility = stmtDisplayOpacity <= 0.05 ? "hidden" : "visible";
+
+        const movementDisplayOpacity = movementVisible ? movementOpacity : 0;
+        movementStage.style.display = movementVisible ? "flex" : "none";
+        movementStage.style.opacity = movementDisplayOpacity.toFixed(3);
+        movementStage.style.transform = `translateY(${STORY_VERTICAL_SHIFT}px) scale(${lerp(1.06, 0.985, movementExit).toFixed(4)})`;
+        movementStage.style.filter = `blur(${(lerp(18, 0, movementReveal) + lerp(0, 16, movementExit)).toFixed(2)}px)`;
+        movementStage.style.visibility = movementDisplayOpacity <= 0.05 ? "hidden" : "visible";
+        visionTitle.style.opacity = movementDisplayOpacity.toFixed(3);
+        visionTitle.style.letterSpacing = `${lerp(0.42, 0.02, movementReveal).toFixed(3)}em`;
+        visionTitle.style.filter = `blur(${lerp(14, 0, movementReveal).toFixed(2)}px)`;
+        visionTitle.style.textShadow = `0 0 ${lerp(36, 6, movementReveal).toFixed(1)}px rgba(255, 255, 255, ${lerp(0.28, 0.08, movementReveal).toFixed(3)})`;
+        visionTxt.style.opacity = (movementDisplayOpacity * movementTextIn).toFixed(3);
+        visionTxt.style.transform = `translateY(${lerp(22, 0, movementTextIn).toFixed(2)}px)`;
+        visionTxt.style.filter = `blur(${lerp(16, 0, movementTextIn).toFixed(2)}px)`;
+
+        const visibleNeedsOpacity = needsVisible ? (needsOpacity * (1 - (movementDisplayOpacity * 0.7))) : 0;
+
+        needsStage.style.display = needsVisible ? "flex" : "none";
+        needsStage.style.opacity = visibleNeedsOpacity.toFixed(3);
+        needsStage.style.transform = `translateY(${STORY_VERTICAL_SHIFT}px) scale(${lerp(1.28, 1, needsReveal).toFixed(4)})`;
+        needsStage.style.filter = `blur(${lerp(56, 0, needsReveal).toFixed(2)}px)`;
+        needsStage.style.visibility = visibleNeedsOpacity <= 0.05 ? "hidden" : "visible";
+        needsTxt.style.opacity = visibleNeedsOpacity.toFixed(3);
+        needsTxt.style.transform = "translateY(0px)";
+        needsLines.forEach((line, index) => {
+            const stagger = clamp((needsReveal - (index * 0.09)) / 0.91, 0, 1);
+            const lineReveal = easeOutCubic(stagger);
+            line.style.opacity = visibleNeedsOpacity <= 0.05 ? "0" : (visibleNeedsOpacity * lineReveal).toFixed(3);
+            line.style.filter = `blur(${lerp(54 - (index * 4), 0, lineReveal).toFixed(2)}px)`;
+            line.style.transform = `scaleX(${lerp(1.72 - (index * 0.06), 1, lineReveal).toFixed(4)}) scaleY(${lerp(1.14, 1, lineReveal).toFixed(4)})`;
+        });
+
+        if (visibleNeedsOpacity <= 0.001) {
+            needsStage.style.filter = "blur(56px)";
+            needsLines.forEach((line, index) => {
+                line.style.opacity = "0";
+                line.style.filter = `blur(${54 - (index * 4)}px)`;
+                line.style.transform = `scaleX(${(1.72 - (index * 0.06)).toFixed(4)}) scaleY(1.14)`;
+            });
+        }
+
+        lead.style.color = "var(--text_main)";
+        stmt.style.color = "var(--text_main)";
+        visionTitle.style.color = "var(--text_main)";
+        visionTxt.style.color = "var(--text_sub)";
+        needsTxt.style.color = "var(--text_main)";
+
+        if (progressBar) {
+            progressBar.style.height = (progress * 100).toFixed(1) + "%";
+        }
+
+        if (sceneTag) {
+            sceneTag.textContent =
+                String(activeSceneIndex + 1).padStart(2, "0") + " / " + String(TOTAL).padStart(2, "0");
+        }
+    }
+
+    function renderFromScroll() {
+        if (storyTrigger) {
+            return;
+        }
+
+        const start = shell.offsetTop;
+        const end = start + shell.offsetHeight - window.innerHeight;
+        const maxScroll = Math.max(end - start, 1);
+        const scrollTop = window.scrollY;
+        const clamped = clamp(scrollTop - start, 0, maxScroll);
+        renderProgress(clamped / maxScroll);
+    }
+
+    function setupStoryTrigger() {
+        if (!window.gsap || !window.ScrollTrigger || window.innerWidth <= 900) {
+            shell.classList.remove("is_gsap_pin");
+            storyTrigger = null;
+            renderFromScroll();
+            return;
+        }
+
+        window.gsap.registerPlugin(window.ScrollTrigger);
+
+        if (storyTrigger) {
+            storyTrigger.kill();
+            storyTrigger = null;
+        }
+
+        shell.classList.add("is_gsap_pin");
+
+        storyTrigger = window.ScrollTrigger.create({
+            trigger: shell,
+            start: "top top",
+            end: () => `+=${window.innerHeight * (TOTAL - 1)}`,
+            pin: frame,
+            pinSpacing: true,
+            scrub: 1,
+            invalidateOnRefresh: true,
+            onUpdate: (self) => {
+                renderProgress(self.progress);
+            }
+        });
+
+        window.ScrollTrigger.refresh();
+    }
+
+    renderProgress(0);
+    setupStoryTrigger();
+
+    window.addEventListener("resize", () => {
+        if (rafId) {
+            window.cancelAnimationFrame(rafId);
+        }
+
+        rafId = window.requestAnimationFrame(() => {
+            rafId = 0;
+            setupStoryTrigger();
+        });
+    });
+
+    window.addEventListener("scroll", () => {
+        renderFromScroll();
+    }, { passive: true });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const solutionSection = document.getElementById("solutionSection");
+    const solutionInner = solutionSection?.querySelector(".solution_inner");
+    const dragArea = solutionSection?.querySelector(".container");
+    const solutionList = solutionSection?.querySelector(".solution_list");
+    const solutionProgress = solutionSection?.querySelector(".con");
+    const solutionSub = solutionSection?.querySelector(".solution_sub");
+    const solutionPrevButton = solutionSection?.querySelector(".solution_nav_prev");
+    const solutionNextButton = solutionSection?.querySelector(".solution_nav_next");
+
+    if (!solutionSection || !solutionInner || !solutionList || !dragArea) {
+        return;
+    }
+
+    if (solutionSub) {
+        solutionSub.innerHTML = "A responsible step for humanity and the planet<br>Kia's sustainable journey.";
+    }
+
+    solutionList.classList.add("solution_media_list");
+    const textTrack = solutionList.cloneNode(true);
+    textTrack.classList.remove("solution_media_list");
+    textTrack.classList.add("solution_text_list");
+
+    Array.from(textTrack.children).forEach((slide) => {
+        const img = slide.querySelector("img");
+        if (img) {
+            img.remove();
+        }
+
+        const spacer = document.createElement("div");
+        spacer.className = "solution_text_spacer";
+        slide.insertBefore(spacer, slide.firstChild);
+    });
+
+    dragArea.appendChild(textTrack);
+
+    const slides = Array.from(solutionList.children);
+    const textSlides = Array.from(textTrack.children);
+
+    if (!slides.length) {
+        return;
+    }
+
+    const state = {
+        current: 0,
+        on: 0,
+        off: 0,
+        lastOne: 0,
+        lastTwo: 0,
+        dragging: false,
+        sideOffset: 0,
+        maxOffset: 0,
+        mode: "mobile",
+        desktopTrigger: null,
+        desktopOffsets: []
+    };
+
+    const DESKTOP_BREAKPOINT = 900;
+    const SOLUTION_DESKTOP_HOLD = 0.16;
+    const SOLUTION_ACCENT_COLOR = "#C7FFEE";
+    let hasDismissedSwipeHint = false;
+
+    function clamp(value, min, max) {
+        return Math.min(Math.max(value, min), max);
+    }
+
+    function lerp(start, end, progress) {
+        return (1 - progress) * start + (progress * end);
+    }
+
+    function getClientX(event) {
+        if ("touches" in event) {
+            return event.touches[0]?.clientX ?? event.changedTouches[0]?.clientX ?? 0;
+        }
+
+        return event.clientX;
+    }
+
+    function updateProgress() {
+        if (!solutionProgress) {
+            return;
+        }
+
+        const currentOffset = state.mode === "desktop" ? state.lastOne : state.lastTwo;
+        const scale = state.maxOffset > 0 ? currentOffset / state.maxOffset : 0;
+        const activeIndex = slides.reduce((nearestIndex, slide, index) => {
+            const offset = clamp(slide.offsetLeft, 0, state.maxOffset);
+            const nearestOffset = clamp(slides[nearestIndex]?.offsetLeft ?? 0, 0, state.maxOffset);
+            return Math.abs(currentOffset - offset) < Math.abs(currentOffset - nearestOffset) ? index : nearestIndex;
+        }, 0);
+
+        solutionProgress.style.setProperty("--solution-progress-scale", scale.toFixed(4));
+        solutionProgress.style.setProperty("--solution-travel-progress", scale.toFixed(4));
+        solutionProgress.style.setProperty("--solution-accent", SOLUTION_ACCENT_COLOR);
+        solutionSection.classList.toggle("is_first_slide", state.mode === "desktop" && activeIndex === 0);
+        solutionSection.classList.toggle("is_last_slide", state.mode === "desktop" && activeIndex === slides.length - 1);
+
+        if (state.mode === "mobile" && window.innerWidth <= 899) {
+            if (solutionPrevButton) {
+                solutionPrevButton.disabled = activeIndex === 0;
+            }
+
+            if (solutionNextButton) {
+                solutionNextButton.disabled = activeIndex === slides.length - 1;
+            }
+        } else {
+            if (solutionPrevButton) {
+                solutionPrevButton.disabled = false;
+            }
+
+            if (solutionNextButton) {
+                solutionNextButton.disabled = false;
+            }
+        }
+    }
+
+    function updateSlideFocus() {
+        const areaRect = dragArea.getBoundingClientRect();
+        const centerX = areaRect.left + (areaRect.width / 2);
+        const focusRange = Math.max(areaRect.width * 0.42, 1);
+
+        slides.forEach((slide, index) => {
+            const rect = slide.getBoundingClientRect();
+            const slideCenter = rect.left + (rect.width / 2);
+            const distance = Math.abs(centerX - slideCenter);
+            const normalized = clamp(1 - (distance / focusRange), 0, 1);
+            const eased = Math.pow(normalized, 1.35);
+
+            slide.style.setProperty("--slide-focus", eased.toFixed(4));
+            textSlides[index]?.style.setProperty("--slide-focus", eased.toFixed(4));
+        });
+    }
+
+    function updateSwipeHintVisibility() {
+        const shouldShowHint = state.mode === "mobile" && window.innerWidth <= 899 && !hasDismissedSwipeHint;
+        solutionSection.classList.toggle("show_swipe_hint", shouldShowHint);
+    }
+
+    function dismissSwipeHint() {
+        if (hasDismissedSwipeHint) {
+            return;
+        }
+
+        hasDismissedSwipeHint = true;
+        solutionSection.classList.remove("show_swipe_hint");
+    }
+
+    function setupSolutionCursor() {
+        const cursor = document.createElement("div");
+        const label = document.createElement("span");
+
+        cursor.className = "solution-swipe-cursor";
+        label.textContent = "← Swipe →";
+        cursor.appendChild(label);
+        document.body.appendChild(cursor);
+        solutionCursor = cursor;
+
+        function moveCursor(event) {
+            solutionCursor.style.left = `${event.clientX}px`;
+            solutionCursor.style.top = `${event.clientY}px`;
+        }
+
+        function showCursor(event) {
+            if (state.mode !== "mobile") {
+                return;
+            }
+
+            moveCursor(event);
+            solutionCursor.classList.add("is-visible");
+        }
+
+        function hideCursor() {
+            solutionCursor.classList.remove("is-visible", "is-active");
+        }
+
+        function activateCursor() {
+            if (state.mode !== "mobile") {
+                return;
+            }
+
+            solutionCursor.classList.add("is-active");
+        }
+
+        function deactivateCursor() {
+            solutionCursor.classList.remove("is-active");
+        }
+
+        dragArea.addEventListener("pointerenter", showCursor);
+        dragArea.addEventListener("pointermove", moveCursor);
+        dragArea.addEventListener("pointerleave", hideCursor);
+        dragArea.addEventListener("pointerdown", activateCursor);
+        dragArea.addEventListener("pointerup", deactivateCursor);
+        dragArea.addEventListener("pointercancel", deactivateCursor);
+        window.addEventListener("blur", hideCursor);
+        window.addEventListener("scroll", hideCursor, { passive: true });
+        window.addEventListener("pointerup", deactivateCursor);
+    }
+
+    function updateBounds() {
+        const viewportWidth = dragArea.clientWidth;
+        const firstSlideWidth = slides[0]?.getBoundingClientRect().width || viewportWidth;
+        const isCompactMobile = window.innerWidth <= 899;
+
+        if (state.mode === "desktop") {
+            slides.forEach((slide) => {
+                slide.style.width = "";
+                slide.style.flexBasis = "";
+            });
+            textSlides.forEach((slide) => {
+                slide.style.width = "";
+                slide.style.flexBasis = "";
+            });
+
+            const desktopEdgePadding = Math.max((viewportWidth - firstSlideWidth) / 2, 0);
+
+            solutionList.style.paddingLeft = `${desktopEdgePadding}px`;
+            solutionList.style.paddingRight = `${desktopEdgePadding}px`;
+            textTrack.style.paddingLeft = `${desktopEdgePadding}px`;
+            textTrack.style.paddingRight = `${desktopEdgePadding}px`;
+
+            state.sideOffset = 0;
+            state.desktopOffsets = slides.map((slide) => {
+                const slideWidth = slide.getBoundingClientRect().width || viewportWidth;
+                const centeredOffset = slide.offsetLeft - Math.max((viewportWidth - slideWidth) / 2, 0);
+                return clamp(centeredOffset, 0, Math.max(solutionList.scrollWidth - viewportWidth, 0));
+            });
+            state.maxOffset = state.desktopOffsets[state.desktopOffsets.length - 1] || 0;
+        } else {
+            solutionList.style.paddingLeft = "";
+            solutionList.style.paddingRight = "";
+            textTrack.style.paddingLeft = "";
+            textTrack.style.paddingRight = "";
+
+            if (isCompactMobile) {
+                slides.forEach((slide) => {
+                    slide.style.width = `${viewportWidth}px`;
+                    slide.style.flexBasis = `${viewportWidth}px`;
+                });
+                textSlides.forEach((slide) => {
+                    slide.style.width = `${viewportWidth}px`;
+                    slide.style.flexBasis = `${viewportWidth}px`;
+                });
+            } else {
+                slides.forEach((slide) => {
+                    slide.style.width = "";
+                    slide.style.flexBasis = "";
+                });
+                textSlides.forEach((slide) => {
+                    slide.style.width = "";
+                    slide.style.flexBasis = "";
+                });
+            }
+
+            state.sideOffset = isCompactMobile ? 0 : Math.max((viewportWidth - firstSlideWidth) / 2, 0);
+            state.maxOffset = isCompactMobile
+                ? Math.max(solutionList.scrollWidth - viewportWidth, 0)
+                : Math.max(solutionList.scrollWidth - firstSlideWidth, 0);
+            state.desktopOffsets = [];
+        }
+
+        state.current = clamp(state.current, 0, state.maxOffset);
+        state.lastOne = clamp(state.lastOne, 0, state.maxOffset);
+        state.lastTwo = clamp(state.lastTwo, 0, state.maxOffset);
+
+        if (state.mode === "mobile") {
+            solutionList.style.transform = `translate3d(${(state.sideOffset - state.lastOne).toFixed(2)}px, 0, 0)`;
+            textTrack.style.transform = `translate3d(${(state.sideOffset - state.lastTwo).toFixed(2)}px, 0, 0)`;
+        } else {
+            solutionList.style.transform = `translate3d(${(-state.lastOne).toFixed(2)}px, 0, 0)`;
+            textTrack.style.transform = `translate3d(${(-state.lastOne).toFixed(2)}px, 0, 0)`;
+        }
+
+        updateProgress();
+        updateSlideFocus();
+    }
+
+    function snapToNearestSlide() {
+        if (!slides.length) {
+            return;
+        }
+
+        let nearestOffset = 0;
+        let nearestDistance = Number.POSITIVE_INFINITY;
+
+        slides.forEach((slide) => {
+            const offset = clamp(slide.offsetLeft, 0, state.maxOffset);
+            const distance = Math.abs(state.current - offset);
+
+            if (distance < nearestDistance) {
+                nearestDistance = distance;
+                nearestOffset = offset;
+            }
+        });
+
+        state.current = nearestOffset;
+    }
+
+    function goToSlide(targetIndex) {
+        const safeIndex = clamp(targetIndex, 0, slides.length - 1);
+        const targetSlide = slides[safeIndex];
+
+        if (!targetSlide) {
+            return;
+        }
+
+        state.current = clamp(targetSlide.offsetLeft, 0, state.maxOffset);
+    }
+
+    function getActiveSlideIndex() {
+        return slides.reduce((nearestIndex, slide, index) => {
+            const offset = clamp(slide.offsetLeft, 0, state.maxOffset);
+            const nearestOffset = clamp(slides[nearestIndex]?.offsetLeft ?? 0, 0, state.maxOffset);
+            return Math.abs(state.current - offset) < Math.abs(state.current - nearestOffset) ? index : nearestIndex;
+        }, 0);
+    }
+
+    function render() {
+        state.lastOne = lerp(state.lastOne, state.current, 0.085);
+        state.lastTwo = lerp(state.lastTwo, state.current, 0.08);
+
+        if (state.mode === "desktop") {
+            solutionList.style.transform =
+                `translate3d(${(-state.lastOne).toFixed(2)}px, 0, 0)`;
+            textTrack.style.transform =
+                `translate3d(${(-state.lastOne).toFixed(2)}px, 0, 0)`;
+            updateProgress();
+            updateSlideFocus();
+            window.requestAnimationFrame(render);
+            return;
+        }
+
+        const diff = state.current - state.lastOne;
+        const acc = diff / Math.max(dragArea.clientWidth, 1);
+        const isCompactMobile = window.innerWidth <= 899;
+
+        if (isCompactMobile) {
+            solutionList.style.transform =
+                `translate3d(${(state.sideOffset - state.lastOne).toFixed(2)}px, 0, 0)`;
+            textTrack.style.transform =
+                `translate3d(${(state.sideOffset - state.lastTwo).toFixed(2)}px, 0, 0)`;
+            updateProgress();
+            updateSlideFocus();
+            window.requestAnimationFrame(render);
+            return;
+        }
+
+        const bounce = 1 - Math.abs(acc * 0.25);
+        const skew = acc * 7.5;
+        const tiltY = acc * 10;
+        const tiltX = -Math.abs(acc * 6.5);
+
+        solutionList.style.transform =
+            `translate3d(${(state.sideOffset - state.lastOne).toFixed(2)}px, 0, 0) rotateX(${tiltX.toFixed(3)}deg) rotateY(${tiltY.toFixed(3)}deg) scaleY(${bounce.toFixed(4)}) skewX(${skew.toFixed(3)}deg)`;
+        textTrack.style.transform =
+            `translate3d(${(state.sideOffset - state.lastTwo).toFixed(2)}px, 0, 0) rotateX(${(tiltX * 0.55).toFixed(3)}deg) rotateY(${(tiltY * 0.4).toFixed(3)}deg) scaleY(${bounce.toFixed(4)})`;
+
+        updateProgress();
+        updateSlideFocus();
+        window.requestAnimationFrame(render);
+    }
+
+    function onPointerDown(event) {
+        if (state.mode !== "mobile") {
+            return;
+        }
+
+        state.dragging = true;
+        state.on = getClientX(event);
+        state.off = state.current;
+        solutionList.classList.add("is_dragging");
+        dismissSwipeHint();
+        event.preventDefault();
+    }
+
+    function onPointerMove(event) {
+        if (!state.dragging || state.mode !== "mobile") {
+            return;
+        }
+
+        const pointerX = getClientX(event);
+        state.current = state.off - (pointerX - state.on);
+        state.current = clamp(state.current, 0, state.maxOffset);
+    }
+
+    function stopDragging() {
+        if (!state.dragging || state.mode !== "mobile") {
+            return;
+        }
+
+        state.dragging = false;
+        solutionList.classList.remove("is_dragging");
+        snapToNearestSlide();
+    }
+
+    function destroyDesktopScroll() {
+        if (state.desktopTrigger) {
+            state.desktopTrigger.kill();
+            state.desktopTrigger = null;
+        }
+    }
+
+    function setupDesktopScroll() {
+        if (!window.gsap || !window.ScrollTrigger) {
+            return;
+        }
+
+        window.gsap.registerPlugin(window.ScrollTrigger);
+        destroyDesktopScroll();
+
+        state.desktopTrigger = window.ScrollTrigger.create({
+            trigger: solutionSection,
+            start: "top top",
+            end: () => {
+                updateBounds();
+                const viewportWidth = Math.max(dragArea.clientWidth, 1);
+                const travelScreens = state.maxOffset / viewportWidth;
+                return `+=${window.innerHeight * Math.max(travelScreens + 1.35, slides.length + 0.55, 2.35)}`;
+            },
+            pin: solutionSection,
+            pinSpacing: true,
+            pinType: "fixed",
+            pinReparent: true,
+            anticipatePin: 1,
+            scrub: 1,
+            invalidateOnRefresh: true,
+            onRefresh: (self) => {
+                const progress = clamp(self.progress / (1 - SOLUTION_DESKTOP_HOLD), 0, 1);
+                state.current = progress * state.maxOffset;
+            },
+            onUpdate: (self) => {
+                const progress = clamp(self.progress / (1 - SOLUTION_DESKTOP_HOLD), 0, 1);
+                state.current = progress * state.maxOffset;
+            }
+        });
+    }
+
+    function applySolutionMode() {
+        const nextMode = window.innerWidth >= DESKTOP_BREAKPOINT ? "desktop" : "mobile";
+        const modeChanged = nextMode !== state.mode;
+
+        if (nextMode === state.mode && !(nextMode === "desktop" && !state.desktopTrigger)) {
+            updateBounds();
+
+            if (state.mode === "desktop" && window.ScrollTrigger) {
+                window.ScrollTrigger.refresh();
+            }
+
+            return;
+        }
+
+        state.mode = nextMode;
+        state.dragging = false;
+        solutionList.classList.remove("is_dragging");
+        solutionSection.classList.toggle("is_desktop_scroll", state.mode === "desktop");
+        solutionSection.classList.toggle("is_mobile_drag", state.mode === "mobile");
+        updateSwipeHintVisibility();
+
+        if (state.mode === "desktop") {
+            if (modeChanged) {
+                state.current = 0;
+            }
+            state.lastOne = state.current;
+            state.lastTwo = state.current;
+            updateBounds();
+            setupDesktopScroll();
+            return;
+        }
+
+        destroyDesktopScroll();
+        if (modeChanged) {
+            state.current = 0;
+        }
+        state.current = clamp(state.current, 0, state.maxOffset);
+        state.lastOne = state.current;
+        state.lastTwo = state.current;
+        updateBounds();
+    }
+
+    dragArea.addEventListener("mousedown", onPointerDown);
+    window.addEventListener("mousemove", onPointerMove);
+    window.addEventListener("mouseup", stopDragging);
+    dragArea.addEventListener("dragstart", (event) => {
+        event.preventDefault();
+    });
+    dragArea.addEventListener("touchstart", (event) => {
+        if (state.mode !== "mobile") {
+            return;
+        }
+
+        state.dragging = true;
+        state.on = getClientX(event);
+        state.off = state.current;
+        solutionList.classList.add("is_dragging");
+        dismissSwipeHint();
+    }, { passive: true });
+    window.addEventListener("touchmove", (event) => {
+        if (!state.dragging || state.mode !== "mobile") {
+            return;
+        }
+
+        event.preventDefault();
+        const pointerX = getClientX(event);
+        state.current = state.off - (pointerX - state.on);
+        state.current = clamp(state.current, 0, state.maxOffset);
+    }, { passive: false });
+    window.addEventListener("touchend", stopDragging);
+    window.addEventListener("mouseleave", stopDragging);
+
+    window.addEventListener("resize", applySolutionMode);
+
+    solutionPrevButton?.addEventListener("click", () => {
+        if (state.mode !== "mobile") {
+            return;
+        }
+
+        goToSlide(getActiveSlideIndex() - 1);
+    });
+
+    solutionNextButton?.addEventListener("click", () => {
+        if (state.mode !== "mobile") {
+            return;
+        }
+
+        goToSlide(getActiveSlideIndex() + 1);
+    });
+
+    applySolutionMode();
+    render();
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const partnerSection = document.getElementById("partnerSection");
+
+    if (!partnerSection) {
+        return;
+    }
+
+    const cards = Array.from(partnerSection.querySelectorAll(".partner_card"));
+    const partnerHeading = partnerSection.querySelector(".partner_heading");
+    const partnerCardsContainer = partnerSection.querySelector(".partner_cards_container");
+    const partnerScrollDownButton = document.getElementById("partnerScrollDownButton");
+    const partnerSticky = partnerSection.querySelector(".partner_sticky");
+    const PARTNER_HOLD_PROGRESS = 0.18;
+    const canUsePartnerCursor = window.matchMedia("(pointer: fine)").matches;
+    let isCompactPartnerLayout = window.innerWidth <= 900 || !window.gsap || !window.ScrollTrigger;
+    let partnerSceneTrigger = null;
+    let partnerCursor = null;
+    let lastPartnerPointerX = 0;
+    let lastPartnerPointerY = 0;
+    let hasPartnerPointerPosition = false;
+
+    if (!cards.length) {
+        return;
+    }
+
+    if (canUsePartnerCursor) {
+        partnerCursor = document.createElement("div");
+        partnerCursor.className = "partner-click-cursor";
+        partnerCursor.innerHTML = "<span>Click</span>";
+        document.body.appendChild(partnerCursor);
+    }
+
+    const smoothStep = (progress) => progress * progress * (3 - (2 * progress));
+    const setPartnerCardsToInitialState = () => {
+        cards.forEach((card, index) => {
+            const innerCard = card.querySelector(".partner_flip_inner");
+            const wrapper = card.querySelector(".partner_card_wrapper");
+            const tiltShell = card.querySelector(".partner_tilt_shell");
+            const images = Array.from(card.querySelectorAll(".partner_face img"));
+
+            window.gsap.set(card, {
+                opacity: 0,
+                x: index === 0 ? "100%" : index === 1 ? "0%" : "-100%",
+                y: "-100%",
+                rotate: index === 0 ? -5 : index === 1 ? 0 : 5,
+                scale: 0.25,
+            });
+
+            window.gsap.set(innerCard, {
+                rotationY: 0,
+            });
+
+            card.classList.remove("is_interactive", "is_open", "is_label_visible");
+            wrapper?.classList.remove("is_hovered", "is_open");
+
+            if (tiltShell) {
+                tiltShell.style.transform = "rotateX(0deg) rotateY(0deg)";
+            }
+
+            images.forEach((img) => {
+                img.style.transform = "translateX(0px) translateY(0px) scale(1.04)";
+            });
+        });
+
+        partnerCardsContainer?.classList.remove("has_open_card");
+    };
+
+    const closeAllPartnerCards = () => {
+        cards.forEach((card) => {
+            card.classList.remove("is_open");
+            card.classList.toggle(
+                "is_label_visible",
+                isCompactPartnerLayout || card.classList.contains("is_interactive")
+            );
+            const wrapper = card.querySelector(".partner_card_wrapper");
+            const tiltShell = card.querySelector(".partner_tilt_shell");
+            const images = Array.from(card.querySelectorAll(".partner_face img"));
+
+            wrapper?.classList.remove("is_hovered", "is_open");
+
+            if (tiltShell) {
+                tiltShell.style.transform = "rotateX(0deg) rotateY(0deg)";
+            }
+
+            images.forEach((img) => {
+                img.style.transform = "translateX(0px) translateY(0px) scale(1.04)";
+            });
+        });
+
+        partnerCardsContainer?.classList.remove("has_open_card");
+    };
+
+    const clearPartnerInlineState = () => {
+        cards.forEach((card) => {
+            const wrapper = card.querySelector(".partner_card_wrapper");
+            const innerCard = card.querySelector(".partner_flip_inner");
+            const tiltShell = card.querySelector(".partner_tilt_shell");
+            const images = Array.from(card.querySelectorAll(".partner_face img"));
+
+            card.style.opacity = "";
+            card.style.transform = "";
+            card.style.rotate = "";
+            card.style.scale = "";
+            card.style.x = "";
+            card.style.y = "";
+
+            wrapper?.classList.remove("is_hovered", "is_open");
+            wrapper?.removeAttribute("style");
+            innerCard?.removeAttribute("style");
+
+            if (tiltShell) {
+                tiltShell.style.transform = "";
+            }
+
+            images.forEach((img) => {
+                img.style.transform = "";
+            });
+        });
+
+        if (partnerHeading) {
+            partnerHeading.style.opacity = "";
+            partnerHeading.style.transform = "";
+        }
+
+        if (partnerCardsContainer) {
+            partnerCardsContainer.style.zIndex = "";
+        }
+
+        partnerScrollDownButton?.classList.remove("is_visible");
+    };
+
+    const setPartnerCardsToCompactState = () => {
+        cards.forEach((card) => {
+            const innerCard = card.querySelector(".partner_flip_inner");
+            const wrapper = card.querySelector(".partner_card_wrapper");
+            const tiltShell = card.querySelector(".partner_tilt_shell");
+            const images = Array.from(card.querySelectorAll(".partner_face img"));
+
+            card.classList.remove("is_open");
+            card.classList.add("is_interactive");
+            card.classList.add("is_label_visible");
+            wrapper?.classList.remove("is_hovered", "is_open");
+
+            card.style.opacity = "1";
+            card.style.transform = "translate3d(0, 0, 0) scale(1)";
+            card.style.rotate = "0deg";
+
+            if (innerCard) {
+                innerCard.style.transform = "none";
+            }
+
+            if (tiltShell) {
+                tiltShell.style.transform = "rotateX(0deg) rotateY(0deg)";
+            }
+
+            images.forEach((img) => {
+                img.style.transform = "translateX(0px) translateY(0px) scale(1.04)";
+            });
+        });
+
+        if (partnerHeading) {
+            partnerHeading.style.opacity = "1";
+            partnerHeading.style.transform = "none";
+        }
+
+        partnerCardsContainer?.classList.remove("has_open_card");
+        partnerScrollDownButton?.classList.remove("is_visible");
+    };
+
+    const applyPartnerScene = (progress) => {
+        const normalizedProgress = window.gsap.utils.clamp(0, 1, progress / (1 - PARTNER_HOLD_PROGRESS));
+        const clampedProgress = window.gsap.utils.clamp(0, 1, normalizedProgress);
+        const shouldShowPartnerScrollButton = clampedProgress > 0.08 && clampedProgress < 0.78;
+
+        partnerScrollDownButton?.classList.toggle("is_visible", shouldShowPartnerScrollButton);
+
+        if (partnerHeading) {
+            let headingY;
+            let headingOpacity;
+
+            if (clampedProgress < 0.32) {
+                const stageProgress = clampedProgress / 0.32;
+                const eased = smoothStep(stageProgress);
+                headingY = window.gsap.utils.interpolate(320, 0, eased);
+                headingOpacity = window.gsap.utils.interpolate(0, 1, eased);
+            } else {
+                headingY = 0;
+                headingOpacity = 1;
+            }
+
+            window.gsap.set(partnerHeading, {
+                opacity: headingOpacity,
+                xPercent: -50,
+                y: headingY,
+                zIndex: 6,
+            });
+        }
+
+        if (partnerCardsContainer) {
+            partnerCardsContainer.style.zIndex = clampedProgress >= 0.14 ? "2" : "7";
+        }
+
+        cards.forEach((card, index) => {
+            const delay = index * 0.05;
+            const cardStart = delay;
+            const cardDuration = Math.max(0.9 - (delay * 0.1), 0.68);
+            const cardProgress = window.gsap.utils.clamp(
+                0,
+                1,
+                (clampedProgress - cardStart) / cardDuration
+            );
+
+            const innerCard = card.querySelector(".partner_flip_inner");
+            const isInteractive = cardProgress >= 0.98;
+            const startX = index === 0 ? "100%" : index === 1 ? "0%" : "-100%";
+            const startRotate = index === 0 ? -5 : index === 1 ? 0 : 5;
+
+            let y;
+            if (cardProgress < 0.4) {
+                const stageProgress = cardProgress / 0.4;
+                y = window.gsap.utils.interpolate("-100%", "50%", smoothStep(stageProgress));
+            } else if (cardProgress < 0.6) {
+                const stageProgress = (cardProgress - 0.4) / 0.2;
+                y = window.gsap.utils.interpolate("50%", "0%", smoothStep(stageProgress));
+            } else {
+                y = "0%";
+            }
+
+            let scale = 1;
+            if (cardProgress < 0.4) {
+                const stageProgress = cardProgress / 0.4;
+                const eased = smoothStep(stageProgress);
+                scale = window.gsap.utils.interpolate(0.25, 0.75, eased);
+            } else if (cardProgress < 0.6) {
+                const stageProgress = (cardProgress - 0.4) / 0.2;
+                const eased = smoothStep(stageProgress);
+                scale = window.gsap.utils.interpolate(0.75, 1, eased);
+            } else {
+                scale = 1;
+            }
+
+            let opacity;
+            if (cardProgress < 0.2) {
+                const stageProgress = cardProgress / 0.2;
+                opacity = smoothStep(stageProgress);
+            } else {
+                opacity = 1;
+            }
+
+            let x;
+            let rotate;
+            let rotationY;
+
+            if (cardProgress < 0.6) {
+                x = startX;
+                rotate = startRotate;
+                rotationY = 0;
+            } else if (cardProgress < 1) {
+                const stageProgress = (cardProgress - 0.6) / 0.4;
+                const eased = smoothStep(stageProgress);
+                x = window.gsap.utils.interpolate(startX, "0%", eased);
+                rotate = window.gsap.utils.interpolate(startRotate, 0, eased);
+                rotationY = eased * 180;
+            } else {
+                x = "0%";
+                rotate = 0;
+                rotationY = 180;
+            }
+
+            window.gsap.set(card, {
+                opacity: opacity,
+                y: y,
+                x: x,
+                rotate: rotate,
+                scale: scale,
+            });
+
+            window.gsap.set(innerCard, {
+                rotationY: rotationY,
+            });
+
+            card.classList.toggle("is_interactive", isInteractive);
+            card.classList.toggle("is_label_visible", cardProgress >= 0.98 && !card.classList.contains("is_open"));
+
+            if (!isInteractive) {
+                const wrapper = card.querySelector(".partner_card_wrapper");
+                const tiltShell = card.querySelector(".partner_tilt_shell");
+                const images = Array.from(card.querySelectorAll(".partner_face img"));
+
+                wrapper?.classList.remove("is_hovered");
+
+                if (tiltShell) {
+                    tiltShell.style.transform = "rotateX(0deg) rotateY(0deg)";
+                }
+
+                images.forEach((img) => {
+                    img.style.transform = "translateX(0px) translateY(0px) scale(1.04)";
+                });
+
+                card.classList.remove("is_open");
+                card.classList.remove("is_label_visible");
+                wrapper?.classList.remove("is_open");
+            }
+        });
+    };
+
+    const setupPartnerLayout = () => {
+        const nextCompact = window.innerWidth <= 900 || !window.gsap || !window.ScrollTrigger;
+
+        if (partnerSceneTrigger) {
+            partnerSceneTrigger.kill();
+            partnerSceneTrigger = null;
+        }
+
+        clearPartnerInlineState();
+        closeAllPartnerCards();
+        isCompactPartnerLayout = nextCompact;
+
+        if (isCompactPartnerLayout) {
+            setPartnerCardsToCompactState();
+            return;
+        }
+
+        window.gsap.registerPlugin(window.ScrollTrigger);
+        setPartnerCardsToInitialState();
+
+        partnerSceneTrigger = window.ScrollTrigger.create({
+            trigger: partnerSection,
+            start: "top top",
+            end: () => `+=${window.innerHeight * 3.8}`,
+            pin: partnerSticky,
+            pinSpacing: true,
+            scrub: 1,
+            invalidateOnRefresh: true,
+            onEnter: () => applyPartnerScene(0),
+            onEnterBack: () => applyPartnerScene(0),
+            onLeave: () => partnerScrollDownButton?.classList.remove("is_visible"),
+            onLeaveBack: () => {
+                applyPartnerScene(0);
+            },
+            onRefresh: (self) => {
+                if (self.progress <= 0) {
+                    applyPartnerScene(0);
+                } else {
+                    applyPartnerScene(self.progress);
+                }
+            },
+            onUpdate: (self) => applyPartnerScene(self.progress),
+        });
+
+        applyPartnerScene(0);
+    };
+
+    setupPartnerLayout();
+    window.addEventListener("resize", setupPartnerLayout);
+
+    const partnerWrappers = Array.from(partnerSection.querySelectorAll(".partner_card_wrapper"));
+
+    function movePartnerCursor(event) {
+        if (!partnerCursor) {
+            return;
+        }
+
+        lastPartnerPointerX = event.clientX;
+        lastPartnerPointerY = event.clientY;
+        hasPartnerPointerPosition = true;
+        partnerCursor.style.left = `${event.clientX}px`;
+        partnerCursor.style.top = `${event.clientY}px`;
+    }
+
+    function hidePartnerCursor() {
+        partnerCursor?.classList.remove("is-visible", "is-active");
+    }
+
+    function showPartnerCursor(event) {
+        if (!partnerCursor || isCompactPartnerLayout) {
+            return;
+        }
+
+        movePartnerCursor(event);
+        partnerCursor.classList.add("is-visible");
+    }
+
+    function syncPartnerCursorToViewport() {
+        if (!partnerCursor || isCompactPartnerLayout || !partnerSection || !hasPartnerPointerPosition) {
+            hidePartnerCursor();
+            return;
+        }
+
+        const rect = partnerSection.getBoundingClientRect();
+        const isPointerInsideSection =
+            lastPartnerPointerX >= rect.left &&
+            lastPartnerPointerX <= rect.right &&
+            lastPartnerPointerY >= rect.top &&
+            lastPartnerPointerY <= rect.bottom;
+
+        if (!isPointerInsideSection) {
+            hidePartnerCursor();
+            return;
+        }
+
+        showPartnerCursor({
+            clientX: lastPartnerPointerX,
+            clientY: lastPartnerPointerY,
+        });
+    }
+
+    partnerWrappers.forEach((wrapper) => {
+        const tiltShell = wrapper.querySelector(".partner_tilt_shell");
+        const images = Array.from(wrapper.querySelectorAll(".partner_face img"));
+
+        wrapper.addEventListener("mousemove", (event) => {
+            if (isCompactPartnerLayout) {
+                return;
+            }
+
+            const card = wrapper.closest(".partner_card");
+            if (!card || !card.classList.contains("is_interactive") || card.classList.contains("is_open")) {
+                return;
+            }
+
+            const rect = wrapper.getBoundingClientRect();
+            const mouseX = event.clientX - rect.left - (rect.width / 2);
+            const mouseY = event.clientY - rect.top - (rect.height / 2);
+            const px = mouseX / rect.width;
+            const py = mouseY / rect.height;
+
+            wrapper.classList.add("is_hovered");
+
+            if (tiltShell) {
+                tiltShell.style.transform =
+                    `rotateX(${(-py * 24).toFixed(2)}deg) rotateY(${(px * 24).toFixed(2)}deg)`;
+            }
+
+            images.forEach((img) => {
+                img.style.transform =
+                    `translateX(${(px * -34).toFixed(2)}px) translateY(${(py * -34).toFixed(2)}px) scale(1.06)`;
+            });
+        });
+
+        wrapper.addEventListener("mouseleave", () => {
+            if (isCompactPartnerLayout) {
+                return;
+            }
+
+            const card = wrapper.closest(".partner_card");
+            if (card?.classList.contains("is_open")) {
+                return;
+            }
+
+            wrapper.classList.remove("is_hovered");
+
+            if (tiltShell) {
+                tiltShell.style.transform = "rotateX(0deg) rotateY(0deg)";
+            }
+
+            images.forEach((img) => {
+                img.style.transform = "translateX(0px) translateY(0px) scale(1.04)";
+            });
+        });
+
+        wrapper.addEventListener("click", (event) => {
+            const card = wrapper.closest(".partner_card");
+            if (!card || (!isCompactPartnerLayout && !card.classList.contains("is_interactive"))) {
+                return;
+            }
+
+            event.stopPropagation();
+
+            const willOpen = !card.classList.contains("is_open");
+            closeAllPartnerCards();
+
+            if (willOpen) {
+                card.classList.add("is_open");
+                wrapper.classList.add("is_open");
+                partnerCardsContainer?.classList.add("has_open_card");
+            }
+        });
+    });
+
+    if (canUsePartnerCursor && partnerSection) {
+        partnerSection.addEventListener("pointerenter", showPartnerCursor);
+        partnerSection.addEventListener("pointermove", (event) => {
+            if (!partnerCursor || isCompactPartnerLayout) {
+                hidePartnerCursor();
+                return;
+            }
+
+            movePartnerCursor(event);
+        });
+        partnerSection.addEventListener("pointerleave", hidePartnerCursor);
+        partnerSection.addEventListener("pointerdown", () => {
+            if (!partnerCursor || isCompactPartnerLayout) {
+                return;
+            }
+
+            partnerCursor.classList.add("is-active");
+        });
+        partnerSection.addEventListener("pointerup", () => {
+            partnerCursor?.classList.remove("is-active");
+        });
+        partnerSection.addEventListener("pointercancel", () => {
+            partnerCursor?.classList.remove("is-active");
+        });
+    }
+
+    if (canUsePartnerCursor) {
+        window.addEventListener("pointermove", (event) => {
+            lastPartnerPointerX = event.clientX;
+            lastPartnerPointerY = event.clientY;
+            hasPartnerPointerPosition = true;
+        }, { passive: true });
+        window.addEventListener("scroll", syncPartnerCursorToViewport, { passive: true });
+    }
+    window.addEventListener("blur", hidePartnerCursor);
+    window.addEventListener("pointerup", () => {
+        partnerCursor?.classList.remove("is-active");
+    });
+
+    document.addEventListener("click", (event) => {
+        const clickedInsidePartnerCard = event.target instanceof Element && event.target.closest(".partner_card_wrapper");
+
+        if (!clickedInsidePartnerCard) {
+            closeAllPartnerCards();
+        }
+    });
+
+    partnerScrollDownButton?.addEventListener("click", () => {
+        window.scrollBy({
+            top: window.innerHeight * 0.75,
+            behavior: "smooth",
+        });
+    });
+});

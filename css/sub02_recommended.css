@@ -1,0 +1,823 @@
+@charset "utf-8";
+
+.wrap {
+    width: 100%;
+    margin: 0 auto;
+    background: #0C1115;
+    color: #fbf6ef;
+}
+
+body {
+    scrollbar-gutter: stable;
+}
+
+section.way {
+    padding-top: 170px;
+}
+
+@media (max-width: 1500px) {
+    section.way {
+        padding-top: 120px;
+    }
+}
+
+section.way .inner {
+    width: min(100%, 1320px);
+    margin: 0 auto;
+    padding: 60px 24px 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    text-align: center;
+}
+
+section.way .inner p {
+    color: #ddd8d1;
+}
+
+.recco {
+    width: 100%;
+    position: relative;
+}
+
+.recco .inner {
+    width: min(100%, 1920px);
+    margin: 0 auto;
+    min-height: inherit;
+    padding: 0;
+    position: relative;
+}
+
+/* =============================================
+   SELECTION MODAL
+============================================= */
+.selection_modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.42s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.selection_modal.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.selection_modal_dim {
+    position: absolute;
+    inset: 0;
+    background: rgba(7, 10, 13, 0.7);
+    backdrop-filter: blur(10px);
+    transition: opacity 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.selection_modal_panel {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: min(1180px, calc(100% - 72px));
+    height: min(680px, calc(100vh - 48px));
+    transform: translate(-50%, -50%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+    box-sizing: border-box;
+    box-shadow: 10px 12px 20px rgba(0, 0, 0, 0.35);
+    background:
+        linear-gradient(rgba(10, 10, 10, 0.5), rgba(10, 10, 10, 0.5)),
+        url("../img/sub02_recommended/modal/modal_bg.png") center / 124% 124% no-repeat;
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + 18px));
+    will-change: opacity, transform;
+    transition: opacity 0.42s cubic-bezier(0.22, 1, 0.36, 1), transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.selection_modal.is-open .selection_modal_panel {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+}
+
+.selection_modal_inner {
+    min-height: 100%;
+    height: 100%;
+    padding: 34px 44px 30px 100px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-sizing: border-box;
+    color: #ddd8d1;
+    background: transparent;
+}
+
+.selection_modal_close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    z-index: 20;
+    border: 0;
+    background: transparent;
+    color: rgba(150, 150, 150, 0.72);
+    font-size: 46px;
+    font-weight: 300;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.selection_modal_header {
+    text-align: center;
+}
+
+.selection_modal_logo {
+    display: block;
+    color: #fbf6ef;
+    font-size: 48px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1;
+}
+
+.selection_modal_logo img {
+    display: block;
+    height: 42px;
+    width: auto;
+    margin: 0 auto;
+}
+
+.selection_modal_header p {
+    margin-top: 8px;
+    font-size: 16px;
+}
+
+.selection_modal_body {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 36px;
+    flex: 1 1 auto;
+}
+
+.selection_modal_copy {
+    width: min(100%, 500px);
+    padding-top: 0;
+    position: relative;
+    z-index: 2;
+}
+
+.selection_modal_titlebox {
+    width: 100%;
+    max-width: 100%;
+    padding: 26px 0 16px;
+    border-bottom: 1px solid rgba(221, 216, 209, 0.6);
+}
+
+.selection_modal_titlebox h3 {
+    color: #ddd8d1;
+    font-size: 40px;
+    line-height: 1.3;
+    white-space: nowrap;
+}
+
+.selection_modal_desc {
+    margin-top: 32px;
+}
+
+.selection_modal_specs {
+    margin-top: 32px;
+}
+
+.selection_modal_label {
+    font-size: 18px;
+    line-height: 1.3;
+}
+
+.selection_modal_desc p:last-child,
+.selection_modal_specs li {
+    color: #fbf6ef;
+    font-size: 21px;
+    line-height: 1.3;
+}
+
+.selection_modal_desc p:last-child,
+.selection_modal_specs li:first-child {
+    margin-top: 8px;
+}
+
+.selection_modal_specs ul {
+    padding-left: 22px;
+    list-style: disc;
+}
+
+.selection_modal_visual {
+    position: absolute;
+    right: -175px;
+    bottom: 20px;
+    width: min(100%, 800px);
+    margin: 0;
+    flex-shrink: 0;
+}
+
+.selection_modal_visual img {
+    width: 100%;
+    display: block;
+}
+
+.selection_modal_actions {
+    position: absolute;
+    left: 100px;
+    right: 44px;
+    bottom: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-top: 0;
+}
+
+.selection_modal_buttons {
+    display: flex;
+    align-items: center;
+    gap: 21px;
+    flex-wrap: wrap;
+}
+
+.selection_modal_buttons button{
+    border-radius: 55px;
+    /* border: 1px solid rgba(255, 255, 255, 0.18); */
+    /* background: rgba(251, 246, 239, 0.08); */
+    color: var(--kia-white1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+}
+
+.selection_modal_buttons button {
+    width: 213px;
+    height: 54px;
+    padding: 16px 32px;
+    font-size: 20px;
+}
+
+.selection_modal_buttons button.white_origin:hover{
+  border: 1px solid #ABF4F6;
+  border-color: rgba(160, 247, 255, 0.92);
+  color: var(--kia-white1);
+  box-shadow:
+    inset 0 5px 10px rgba(255, 255, 255, 0.5),
+    inset 0 -3px 5px rgba(0, 0, 0, 0.05),
+    0px 0px 11px 8px rgba(172, 255, 235, 0.26);
+}
+
+body.modal-open {
+    overflow: hidden;
+}
+
+/* =============================================
+   RECCO TITLE
+============================================= */
+.recco .tit {
+    position: sticky;
+    top: 0;
+    height: 0;
+    z-index: 30;
+    pointer-events: none;
+}
+
+.recco .tit::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: -48px;
+    width: 100%;
+    height: 360px;
+    background:
+        linear-gradient(180deg, rgba(8, 11, 14, 1) 0%, rgba(12, 17, 21, 0.98) 28%, rgba(12, 17, 21, 0.86) 52%, rgba(12, 17, 21, 0.56) 72%, rgba(12, 17, 21, 0.18) 88%, rgba(12, 17, 21, 0) 100%);
+}
+
+.recco .tit h2 {
+    position: absolute;
+    top: 72px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(251, 246, 239, 0.8);
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    text-shadow: 0 12px 30px rgba(0, 0, 0, 0.52);
+}
+
+/* =============================================
+   CONTENTS GRID
+   핵심 수정: 960px 고정 → clamp() 유동값
+============================================= */
+.recco .contents {
+    position: sticky;
+    top: 0;
+    display: grid;
+    /* 변경 전: grid-template-columns: 960px minmax(0, 1fr); */
+    /* 변경 후: overlay는 최소 600px, 최대 960px, 뷰포트의 63% 기준으로 유동 */
+    grid-template-columns: clamp(600px, 63vw, 960px) minmax(0, 1fr);
+    height: 100vh;
+    overflow: hidden;
+    align-items: stretch;
+}
+
+.recco .contents::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 240px;
+    background:
+        linear-gradient(180deg, rgba(12, 17, 21, 1) 0%, rgba(12, 17, 21, 0.98) 36%, rgba(12, 17, 21, 0.92) 68%, rgba(12, 17, 21, 0) 100%);
+    pointer-events: none;
+    z-index: 4;
+}
+
+/* =============================================
+   OVERLAY
+============================================= */
+.overlay {
+    position: relative;
+    height: 100vh;
+    display: grid;
+    /* tab(96px) + con 영역: tab도 vw 기반으로 최소값 확보 */
+    grid-template-columns: clamp(72px, 6vw, 96px) minmax(0, 1fr);
+    background: #0c0c0c;
+    overflow: hidden;
+}
+
+/* =============================================
+   TAB
+============================================= */
+.tab {
+    position: relative;
+    z-index: 10;
+    overflow: visible;
+}
+
+.mobile_hero {
+    display: none;
+}
+
+.mobile_tabs {
+    display: none;
+}
+
+.mobile_build {
+    display: none;
+}
+
+.tab::before {
+    content: "";
+    position: absolute;
+    left: 60px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 56px;
+    height: 310px;
+    border-radius: 82px;
+    background: linear-gradient(180deg, rgba(56, 74, 78, 0.88) 0%, rgba(37, 49, 52, 0.96) 100%);
+    border: 1px solid rgba(185, 215, 220, 0.22);
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+        0 18px 34px rgba(0, 0, 0, 0.28);
+}
+
+/* =============================================
+   EXPERIMENTAL MODE
+============================================= */
+.recco.recco--experimental {
+    --exp-accent: #88a69f;
+    --exp-accent-soft: rgba(136, 166, 159, 0.22);
+    --exp-progress: 0;
+}
+
+.recco.recco--experimental .tit h2 {
+    transition:
+        color 0.35s ease,
+        letter-spacing 0.45s ease,
+        transform 0.45s ease;
+}
+
+.recco.recco--experimental .tit h2.is-shifting {
+    transform: translateX(-50%) translateY(10px);
+    letter-spacing: 0.02em;
+}
+
+.recco.recco--experimental .overlay {
+    background:
+        radial-gradient(circle at 18% 16%, var(--exp-accent-soft), transparent 26%),
+        linear-gradient(180deg, #111315 0%, #090909 100%);
+    transition: background 0.55s ease;
+}
+
+.recco.recco--experimental .tab::before {
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%),
+        linear-gradient(180deg, rgba(56, 74, 78, 0.88) 0%, rgba(37, 49, 52, 0.96) 100%);
+}
+
+.recco.recco--experimental .tab::after {
+    content: "";
+    position: absolute;
+    left: 67px;
+    top: calc(50% + 148px - (296px * var(--exp-progress)));
+    width: 42px;
+    height: calc(36px + 260px * var(--exp-progress));
+    min-height: 36px;
+    border-radius: 42px;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.24) 0%, rgba(255, 255, 255, 0.06) 100%),
+        linear-gradient(180deg, var(--exp-accent) 0%, rgba(24, 33, 37, 0.95) 100%);
+    box-shadow:
+        0 12px 24px rgba(0, 0, 0, 0.26),
+        inset 0 1px 1px rgba(255, 255, 255, 0.18);
+    transition:
+        top 0.55s cubic-bezier(0.77, 0, 0.175, 1),
+        height 0.55s cubic-bezier(0.77, 0, 0.175, 1),
+        background 0.45s ease;
+}
+
+.tab.has-icons .tab_stage {
+    display: none;
+}
+
+/* =============================================
+   CON / CAR_ALL
+============================================= */
+.con {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.car_all {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    isolation: isolate;
+    overflow: hidden;
+    touch-action: pan-y;
+}
+
+.car_all section {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 20px;
+    /* 변경 전: padding: 330px 120px 60px 144px; */
+    /* 변경 후: 좌우 padding을 vw 기반으로 유동화 */
+    padding: 24vh clamp(40px, 8vw, 120px) 18vh clamp(40px, 9vw, 144px);
+    background: #0c0c0c;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translate3d(0, 18px, 0);
+    transition:
+        opacity 1.05s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 1.05s cubic-bezier(0.22, 1, 0.36, 1),
+        visibility 1.05s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+    backface-visibility: hidden;
+    z-index: 1;
+}
+
+.car_all section.is-active {
+    pointer-events: auto;
+    opacity: 1;
+    visibility: visible;
+    transform: translate3d(0, 0, 0);
+    z-index: 3;
+}
+
+.car_all section.is-past {
+    opacity: 0;
+    visibility: hidden;
+    transform: translate3d(0, -18px, 0);
+}
+
+.car_all .top {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    opacity: 0;
+    transform: translateY(22px);
+    clip-path: inset(0 0 100% 0);
+    transition:
+        opacity 0.88s ease,
+        transform 1.18s cubic-bezier(0.22, 1, 0.36, 1),
+        clip-path 1.18s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.car_all .top .title p {
+    color: #ddd8d1;
+    font-size: 14px;
+    line-height: 1;
+}
+
+.car_all .top .title h2 {
+    margin-top: 4px;
+    font-size: 48px;
+    line-height: 0.94;
+    color: #fbf6ef;
+}
+
+.car_all .top > p {
+    max-width: 540px;
+    color: #ddd8d1;
+    font-size: 18px;
+    line-height: 1.3;
+}
+
+.car_all ul {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    opacity: 0;
+    transform: translateY(26px);
+    clip-path: inset(0 0 100% 0);
+    transition:
+        opacity 0.92s ease,
+        transform 1.24s cubic-bezier(0.22, 1, 0.36, 1),
+        clip-path 1.24s cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: 0s;
+}
+
+.car_all section.is-active .top,
+.car_all section.is-active ul {
+    opacity: 1;
+    transform: translateY(0);
+    clip-path: inset(0 0 0 0);
+}
+
+/* 변경 전: grid-template-columns: 133px minmax(0, 1fr); */
+/* 변경 후: 이미지 컬럼도 뷰포트에 따라 줄어들게 */
+.car_all ul li {
+    display: grid;
+    grid-template-columns: clamp(80px, 9vw, 133px) minmax(0, 1fr);
+    gap: 16px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+/* 변경 전: width:130px; height:130px; */
+/* 변경 후: clamp로 최솟값 확보 */
+.car_all ul li img {
+    width: clamp(80px, 9vw, 130px);
+    height: clamp(80px, 9vw, 130px);
+    display: block;
+    object-fit: cover;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #79614c 0%, #2f241c 100%);
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.25);
+}
+
+.car_all .txt_box {
+    min-height: 108px;
+    padding: 16px 20px;
+    border-radius: 24.71px;
+    background: rgba(251, 246, 239, 0.14);
+    border: 1px solid rgba(251, 246, 239, 0.12);
+    backdrop-filter: blur(6px);
+    box-sizing: border-box;
+    /* 핵심 추가: 텍스트 깨짐 방지 — 최소 너비 확보 */
+    min-width: 0;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+}
+
+.car_all .txt_box b {
+    display: block;
+    margin-bottom: 8px;
+    color: #fbf6ef;
+    /* 변경 전: font-size: 20px; */
+    /* 변경 후: 좁은 화면에서 줄어들게 */
+    font-size: clamp(15px, 1.4vw, 20px);
+    line-height: 1.25;
+    font-weight: 500;
+}
+
+.car_all .txt_box b span {
+    color: #fbf6ef;
+    margin-right: 6px;
+}
+
+.car_all .txt_box p {
+    color: #ddd8d1;
+    /* 변경 전: font-size: 15px; */
+    font-size: clamp(13px, 1.1vw, 15px);
+    line-height: 1.4;
+}
+
+/* =============================================
+   BUILD IT BUTTON
+============================================= */
+.con > button {
+    position: absolute;
+    /* 변경 전: left: 144px; */
+    left: clamp(40px, 9vw, 144px);
+    bottom: 12vh;
+    z-index: 5;
+    width: 170px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 55px;
+    /* border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(12, 17, 21, 0.05);
+    box-shadow: 1px 1px 4px 0 #0c1115; */
+    color: #fbf6ef;
+    font-weight: 600;
+    line-height: 1.3;
+    text-align: center;
+    cursor: pointer;
+}
+
+.con > button.white_origin:hover{
+    border: 1px solid #ABF4F6;
+  border-color: rgba(160, 247, 255, 0.92);
+  color: var(--kia-white1);
+  box-shadow:
+    inset 0 5px 10px rgba(255, 255, 255, 0.5),
+    inset 0 -3px 5px rgba(0, 0, 0, 0.05),
+    0px 0px 11px 8px rgba(172, 255, 235, 0.26);
+
+}
+
+.recco.recco--experimental .con > button {
+    /* background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(12, 17, 21, 0.05) 100%); */
+    transition:
+        transform 0.35s ease,
+        border-color 0.35s ease,
+        box-shadow 0.35s ease;
+}
+
+/* .recco.recco--experimental .con > button:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.18);
+    box-shadow: 0 14px 26px rgba(0, 0, 0, 0.28);
+} */
+
+/* .con > button.white_origin,
+.recco.recco--experimental .con > button.white_origin {
+    color: var(--kia-black);
+    background: linear-gradient(135deg,
+            rgba(255, 255, 255, 0.7) 0%,
+            rgba(255, 255, 255, 0.3) 50%,
+            rgba(200, 200, 200, 0.4) 100%);
+    backdrop-filter: blur(5px) saturate(180%);
+    -webkit-backdrop-filter: blur(5px) saturate(180%);
+    border: 1.5px solid rgba(255, 255, 255, 0.8);
+    box-shadow:
+        inset 0 5px 10px rgba(255, 255, 255, 0.5),
+        inset 0 -3px 5px rgba(0, 0, 0, 0.05),
+        0 10px 20px rgba(0, 0, 0, 0.15);
+} */
+
+/* =============================================
+   EXPERIMENTAL: txt_box
+============================================= */
+.recco.recco--experimental .car_all .txt_box {
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(251, 246, 239, 0.1) 100%);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.12),
+        0 16px 30px rgba(0, 0, 0, 0.14);
+    transition:
+        transform 0.45s ease,
+        border-color 0.45s ease,
+        background 0.45s ease;
+}
+
+.recco.recco--experimental .car_all section.is-active .txt_box {
+    transform: translateX(0);
+    border-color: rgba(255, 255, 255, 0.16);
+}
+
+.recco.recco--experimental .car_all section .txt_box {
+    transform: translateX(14px);
+}
+
+/* =============================================
+   VID (오른쪽 이미지 영역)
+============================================= */
+.vid {
+    position: relative;
+    align-self: start;
+    height: 100vh;
+    /* 추가: 최소 너비 확보 — 너무 좁아지지 않게 */
+    min-width: clamp(160px, 20vw, 400px);
+    background:
+        linear-gradient(180deg, rgba(98, 105, 117, 0.2) 0%, rgba(34, 39, 46, 0.35) 100%),
+        linear-gradient(135deg, #6c7480 0%, #414852 46%, #1f252d 100%);
+    overflow: hidden;
+}
+
+.vid::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    background:
+        linear-gradient(90deg, rgba(12, 12, 12, 0.82) 0%, rgba(12, 12, 12, 0.34) 10%, rgba(12, 12, 12, 0) 22%),
+        linear-gradient(180deg, rgba(12, 17, 21, 0.18) 0%, rgba(12, 17, 21, 0) 18%, rgba(12, 17, 21, 0) 82%, rgba(12, 17, 21, 0.24) 100%);
+}
+
+.vid.has-hero-image::after {
+    display: none;
+}
+
+.vid_hero_image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transform: scale(1.02);
+    transform-origin: center center;
+    object-fit: cover;
+    object-position: center center;
+    filter: drop-shadow(0 28px 48px rgba(0, 0, 0, 0.34));
+    opacity: 0;
+    pointer-events: none;
+    will-change: opacity, transform;
+    transition:
+        opacity 1.08s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 1.08s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.vid_hero_image.is-visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.vid_hero_image.is-base {
+    z-index: 1;
+}
+
+.vid_hero_image.is-overlay {
+    z-index: 2;
+}
+
+/* Align the left recommended panel with the site default background */
+.overlay {
+    background: #0c1115;
+}
+
+.car_all section {
+    background: #0c1115;
+}
+
+.recco.recco--experimental .vid {
+    background:
+        radial-gradient(circle at 24% 18%, var(--exp-accent-soft), transparent 24%),
+        linear-gradient(180deg, rgba(98, 105, 117, 0.22) 0%, rgba(34, 39, 46, 0.42) 100%),
+        linear-gradient(135deg, #6c7480 0%, #414852 46%, #1f252d 100%);
+    transition: background 0.55s ease;
+}
+
+.recco.recco--experimental .vid::before {
+    background:
+        linear-gradient(90deg, rgba(12, 12, 12, 0.82) 0%, rgba(12, 12, 12, 0.34) 10%, rgba(12, 12, 12, 0) 22%),
+        radial-gradient(circle at 50% 38%, rgba(255, 255, 255, 0.12), transparent 22%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 40%),
+        linear-gradient(180deg, rgba(12, 17, 21, 0.18) 0%, rgba(12, 17, 21, 0) 18%, rgba(12, 17, 21, 0) 82%, rgba(12, 17, 21, 0.24) 100%);
+    opacity: calc(0.35 + var(--exp-progress) * 0.25);
+    transition: opacity 0.45s ease;
+}
+
+.vid::after {
+    content: "VIDEO AREA";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    padding: 16px 24px;
+    border: 1px dashed rgba(255, 255, 255, 0.28);
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 14px;
+    letter-spacing: 0.24em;
+}
+
