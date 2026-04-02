@@ -87,6 +87,7 @@ const $showcase = document.querySelector(".best_showcase");
 const $backText = document.querySelector(".best_back_text");
 const $backTextGlass = $backText ? $backText.querySelector(".glass") : null;
 const $cards = Array.from(document.querySelectorAll(".best_car_card"));
+const $progressList = document.querySelector(".best_progress_list");
 const $specValues = document.querySelectorAll(".best_spec_value");
 const $mainVisualSection = document.querySelector(".main_visual");
 const $bestSection = document.querySelector(".best");
@@ -105,6 +106,7 @@ let $isUpperSnapping = false;
 let $upperWheelLockedUntil = 0;
 let $upperSnapReleaseTimer = null;
 let $upperLenisResumeTimer = null;
+let $progressItems = [];
 
 const BEST_SNAP_LOCK = 320;
 const BEST_SNAP_DURATION = 15;
@@ -199,6 +201,56 @@ function updateSpecNumbers(index, shouldAnimate = false) {
     });
 }
 
+function renderBestProgress() {
+    if (!$progressList) {
+        return;
+    }
+
+    const $fragment = document.createDocumentFragment();
+    $progressList.innerHTML = "";
+    $progressItems = [];
+
+    $vehicles.forEach(($vehicle, index) => {
+        const $item = document.createElement("li");
+        const $dot = document.createElement("span");
+        const $indexText = document.createElement("span");
+
+        $item.className = "best_progress_item";
+        $item.dataset.progressIndex = String(index);
+
+        $dot.className = "best_progress_dot";
+        $dot.setAttribute("aria-hidden", "true");
+
+        $indexText.className = "best_progress_index";
+        $indexText.textContent = `${index + 1}. ${$vehicle.name}`;
+
+        $item.append($dot, $indexText);
+        $fragment.appendChild($item);
+        $progressItems.push($item);
+    });
+
+    $progressList.appendChild($fragment);
+    updateBestProgress($currentIndex);
+}
+
+function updateBestProgress(index) {
+    if (!$progressItems.length) {
+        return;
+    }
+
+    $progressItems.forEach(($item, $itemIndex) => {
+        const $isActive = $itemIndex === index;
+
+        $item.classList.toggle("is_active", $isActive);
+
+        if ($isActive) {
+            $item.setAttribute("aria-current", "true");
+        } else {
+            $item.removeAttribute("aria-current");
+        }
+    });
+}
+
 function renderTextContent(index, shouldAnimateSpecs = false) {
     const $currentVehicle = $vehicles[index];
 
@@ -214,6 +266,7 @@ function renderTextContent(index, shouldAnimateSpecs = false) {
     }
 
     updateSpecNumbers(index, shouldAnimateSpecs);
+    updateBestProgress(index);
 }
 
 function setCard(card, slot, vehicleIndex) {
@@ -663,6 +716,7 @@ function syncSectionSnapIndicesOnScroll() {
 }
 
 if ($showcase && $backText && $backTextGlass && $cards.length === 3 && $specValues.length) {
+    renderBestProgress();
     renderState($currentIndex);
     $cards.forEach((card) => {
         card.addEventListener("click", handleCardClick);
