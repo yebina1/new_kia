@@ -56,6 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const quoteBackButton = document.getElementById("quoteBackButton");
   const quoteCloseButton = document.getElementById("quoteCloseButton");
   const quoteSendButton = document.getElementById("quoteSendButton");
+  const quoteTestFillButton = document.getElementById("quoteTestFillButton");
   const quoteZipDisplay = document.getElementById("quoteZipDisplay");
   const quoteZipEditButton = document.getElementById("quoteZipEditButton");
   const quoteZipInput = document.getElementById("quoteZipInput");
@@ -685,7 +686,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const trimName = heroSummaryTrim?.textContent?.trim() || "Land AWD";
     const title = currentCar?.title ? `${currentCar.title} (${trimName})` : trimName;
 
-    buildSendModalTitle.textContent = title;
+    buildSendModalTitle.innerHTML = formatCarTitleMarkup(title);
     buildSendModalEyebrow.textContent = options.eyebrow || "Your Final Selection Estimate";
     buildSendModalDescription.textContent =
       options.description || "Your build summary has been prepared successfully.";
@@ -905,6 +906,18 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
+  function syncExteriorPreviewTone(imageElement) {
+    if (!imageElement) {
+      return;
+    }
+
+    const selectedExteriorName =
+      getSelectedExteriorSwatch()?.dataset.name?.trim() || "";
+    const shouldDesaturate = selectedExteriorName === "Glacial White Pearl";
+
+    imageElement.classList.toggle("is-glacial-white-pearl", shouldDesaturate);
+  }
+
   function setVehicleStageImage(imageElement, fallbackSrc, fallbackAlt) {
     if (!imageElement) {
       return;
@@ -913,6 +926,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const selectedExteriorMedia = getSelectedExteriorMedia(fallbackSrc, fallbackAlt);
     imageElement.src = selectedExteriorMedia.src;
     imageElement.alt = selectedExteriorMedia.alt;
+    syncExteriorPreviewTone(imageElement);
   }
 
   function syncNonColorStageVehicleImages() {
@@ -1025,6 +1039,38 @@ document.addEventListener("DOMContentLoaded", () => {
     quoteZipInput.hidden = true;
     quoteZipDisplay.parentElement?.removeAttribute("hidden");
     quoteZipEditButton.hidden = false;
+  }
+
+  function autofillQuoteTestData() {
+    if (quoteFirstName) {
+      quoteFirstName.value = "Alex";
+      validateQuoteField(quoteFirstName, quoteFirstNameError);
+    }
+
+    if (quoteLastName) {
+      quoteLastName.value = "Kim";
+      validateQuoteField(quoteLastName, quoteLastNameError);
+    }
+
+    if (quotePhone) {
+      quotePhone.value = "010-1234-5678";
+      validateQuoteField(quotePhone, quotePhoneError);
+    }
+
+    if (quoteEmail) {
+      quoteEmail.value = "alex.kim@example.com";
+      validateQuoteField(quoteEmail, quoteEmailError);
+    }
+
+    if (quoteAddress) {
+      quoteAddress.value = "123 Gangnam-daero, Seoul";
+      validateQuoteField(quoteAddress, quoteAddressError);
+    }
+
+    if (quoteZipInput) {
+      quoteZipInput.value = "12345";
+      commitQuoteZip();
+    }
   }
 
   function setExclusiveActiveButton(buttons, targetButton) {
@@ -1374,7 +1420,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <strong>${escapeHtml(packageItem.name)}</strong>
               </div>
               <button type="button" class="hero_package_add_btn" aria-pressed="${selectedPackages.has(index) ? "true" : "false"}">
-                ${escapeHtml(packageItem.price)}
+                ${escapeHtml(packageItem.price).replace(/^\+\s*/, '<i class="bx bx-plus bx-remove-padding"></i>')}
               </button>
             </div>
             <div class="hero_package_card_details">
@@ -2067,7 +2113,11 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.getElementById("heroSummaryBreakdown")?.addEventListener("click", (event) => {
-    const trigger = event.target.closest(".hero_summary_icon_btn");
+    const trigger =
+      event.target.closest(".hero_summary_icon_btn") ||
+      event.target
+        .closest(".hero_summary_row:not(.hero_summary_row_fee):not(.hero_summary_row_total)")
+        ?.querySelector(".hero_summary_icon_btn");
     const targetStep = Number(trigger?.dataset.summaryStep);
     const removeType = trigger?.dataset.summaryRemoveType;
     const removeValue = Number(trigger?.dataset.summaryRemoveValue);
@@ -2180,6 +2230,10 @@ document.addEventListener("DOMContentLoaded", () => {
         validateQuoteField(quoteAddress, quoteAddressError);
       }
     });
+  });
+
+  quoteTestFillButton?.addEventListener("click", () => {
+    autofillQuoteTestData();
   });
 
   quoteSendButton?.addEventListener("click", () => {
@@ -2402,42 +2456,46 @@ document.addEventListener("DOMContentLoaded", () => {
       ".hero_color_seat_preview"
     ].join(", ");
 
+    const summarySelectSelector = [
+      ".hero_summary_breakdown .hero_summary_row:not(.hero_summary_row_fee):not(.hero_summary_row_total)",
+      "#heroSummarySelectedItems .hero_summary_row"
+    ].join(", ");
+
+    const hoverOnlySelector = [
+      ".hero_trim_card",
+      ".hero_color_panel",
+      ".hero_package_card",
+      ".hero_accessory_card",
+      ".hero_plan_card",
+      ".hero_summary_breakdown .hero_summary_row:not(.hero_summary_row_fee):not(.hero_summary_row_total)",
+      "#heroSummarySelectedItems .hero_summary_row"
+    ].join(", ");
+
     const selectSelector = [
-      ".build_wrap button:not(:disabled)",
-      ".hero_trim_select_btn",
-      ".hero_package_add_btn",
-      ".hero_accessory_add_btn",
-      ".hero_plan_add_btn",
-      ".hero_summary_cta_btn",
-      ".hero_color_swatch",
-      ".hero_color_swatches_interior",
       ".hero_trim_card_head",
+      ".hero_color_swatches",
+      ".hero_color_swatches_interior",
       ".hero_package_card_top",
       ".hero_accessory_card_top",
       ".hero_plan_card_top",
       ".hero_trim_more_btn",
       ".hero_package_more_btn",
       ".hero_accessory_more_btn",
-      ".hero_plan_more_btn"
+      ".hero_plan_more_btn",
+      summarySelectSelector
     ].join(", ");
     const selectHitRowSelector = [
       ".hero_trim_card_head",
       ".hero_package_card_top",
       ".hero_accessory_card_top",
-      ".hero_plan_card_top"
-    ].join(", ");
-    const genericBuildButtonSelector = ".build_wrap button:not(:disabled)";
-    const moreHitRowSelector = [
-      ".hero_trim_more_btn",
-      ".hero_package_more_btn",
-      ".hero_accessory_more_btn",
-      ".hero_plan_more_btn"
+      ".hero_plan_card_top",
+      summarySelectSelector
     ].join(", ");
 
     function getExpandedSelectButtonFromPoint(event) {
       const row = event.target.closest(selectHitRowSelector);
       const button = row?.querySelector(
-        ".hero_trim_select_btn, .hero_package_add_btn, .hero_accessory_add_btn, .hero_plan_add_btn"
+        ".hero_trim_select_btn, .hero_package_add_btn, .hero_accessory_add_btn, .hero_plan_add_btn, .hero_summary_icon_btn"
       );
 
       if (!row || !button) {
@@ -2458,82 +2516,37 @@ document.addEventListener("DOMContentLoaded", () => {
       return isWithinExpandedArea ? button : null;
     }
 
-    function getExpandedMoreButtonFromPoint(event) {
-      const moreButton = event.target.closest(moreHitRowSelector);
-
-      if (moreButton) {
-        return moreButton;
-      }
-
-      const card = event.target.closest(
-        ".hero_trim_card, .hero_package_card, .hero_accessory_card, .hero_plan_card"
-      );
-      const candidate = card?.querySelector(moreHitRowSelector);
-
-      if (!card || !candidate) {
-        return null;
-      }
-
-      const rect = candidate.getBoundingClientRect();
-      const isWithinMoreRow =
-        event.clientX >= rect.left &&
-        event.clientX <= rect.right &&
-        event.clientY >= rect.top - 4 &&
-        event.clientY <= rect.bottom + 8;
-
-      return isWithinMoreRow ? candidate : null;
-    }
-
-    function getExpandedBuildButtonFromPoint(event) {
-      const directButton = event.target.closest(genericBuildButtonSelector);
-
-      if (directButton) {
-        return directButton;
-      }
-
-      const buttons = Array.from(document.querySelectorAll(genericBuildButtonSelector));
-
-      return buttons.find((button) => {
-        const rect = button.getBoundingClientRect();
-        const extraTop = 6;
-        const extraBottom = 28;
-        const extraHorizontal = 8;
-
-        return (
-          event.clientX >= rect.left - extraHorizontal &&
-          event.clientX <= rect.right + extraHorizontal &&
-          event.clientY >= rect.top - extraTop &&
-          event.clientY <= rect.bottom + extraBottom
-        );
-      }) || null;
-    }
-
     function moveCursor(event) {
       cursor.style.left = `${event.clientX}px`;
       cursor.style.top = `${event.clientY}px`;
 
       const zoomTarget = event.target.closest(zoomSelector);
+      const hoverOnlyTarget = event.target.closest(hoverOnlySelector);
       const selectTarget =
         event.target.closest(selectSelector) ||
-        getExpandedBuildButtonFromPoint(event) ||
-        getExpandedSelectButtonFromPoint(event) ||
-        getExpandedMoreButtonFromPoint(event);
+        getExpandedSelectButtonFromPoint(event);
 
       if (selectTarget) {
         cursor.dataset.label = "select";
         label.textContent = "Select";
+        cursor.classList.add("is-visible");
+      } else if (hoverOnlyTarget) {
+        cursor.dataset.label = "";
+        label.textContent = "";
+        cursor.classList.add("is-visible");
       } else if (zoomTarget) {
         cursor.dataset.label = "zoom";
         label.textContent = "Zoom";
+        cursor.classList.add("is-visible");
       } else {
         cursor.dataset.label = "";
         label.textContent = "";
+        cursor.classList.remove("is-visible");
       }
     }
 
     function showCursor(event) {
       moveCursor(event);
-      cursor.classList.add("is-visible");
     }
 
     function hideCursor() {
@@ -2560,16 +2573,14 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      const expandedBuildButton = getExpandedBuildButtonFromPoint(event);
       const expandedSelectButton = getExpandedSelectButtonFromPoint(event);
-      const expandedMoreButton = getExpandedMoreButtonFromPoint(event);
 
-      if (!expandedBuildButton && !expandedSelectButton && !expandedMoreButton) {
+      if (!expandedSelectButton) {
         return;
       }
 
       event.preventDefault();
-      (expandedBuildButton || expandedSelectButton || expandedMoreButton).click();
+      expandedSelectButton.click();
     });
 
     window.addEventListener("blur", hideCursor);
@@ -2659,6 +2670,46 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       handler();
+    });
+  }
+
+  function initializeDefaultAccessorySelection() {
+    const accessoryContainer = document.getElementById("heroAccessoryCards");
+
+    if (!accessoryContainer) {
+      return;
+    }
+
+    const accessoryCards = Array.from(
+      accessoryContainer.querySelectorAll(".hero_accessory_card")
+    );
+    const targetCard = accessoryCards.find((card) => {
+      const name =
+        card.querySelector(".hero_accessory_card_top strong")?.textContent?.trim() || "";
+      return name === "NACS Charge Port DC Adapter";
+    });
+
+    if (!targetCard) {
+      return;
+    }
+
+    accessoryContainer.prepend(targetCard);
+
+    accessoryCards.forEach((card) => {
+      const isTarget = card === targetCard;
+      const addButton = card.querySelector(".hero_accessory_add_btn");
+      const moreButton = card.querySelector(".hero_accessory_more_btn");
+
+      card.classList.toggle("is-selected", isTarget);
+      card.classList.toggle("expanded", isTarget);
+
+      if (addButton) {
+        addButton.setAttribute("aria-pressed", isTarget ? "true" : "false");
+      }
+
+      if (moreButton) {
+        moreButton.setAttribute("aria-expanded", isTarget ? "true" : "false");
+      }
     });
   }
 
@@ -2764,6 +2815,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   setSelectedPlanCard(selectedPlanIndex);
+  initializeDefaultAccessorySelection();
   initializeStartButtonMotion();
   initializeAccessoryImageMagnifier();
   initializeBuildCursor();

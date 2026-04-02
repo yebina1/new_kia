@@ -63,7 +63,11 @@ button {
   --hero-stage-wide-panel-max-width: calc(100vw - 320px);
   --hero-model-vehicle-width: min(84vw, var(--hero-vehicle-max-width));
   --hero-model-stage-car-width: var(--hero-model-vehicle-width);
+  --hero-top-tabs-top: 116px;
+  --hero-top-tabs-height: 58px;
+  --hero-model-title-safe-gap: clamp(44px, 3.2vw, 72px);
   --hero-model-title-gap: 56px;
+  --hero-model-title-shift-y: clamp(18px, 2.083vw, 48px);
   --hero-model-title-offset-factor: 0.2;
   /* 차량 사진 크기 조정 */
   --hero-stage-vehicle-width: var(--hero-model-vehicle-width);
@@ -82,7 +86,7 @@ button {
   --hero-model-start-offset-y: calc((var(--hero-model-vehicle-height-estimate) / 2) + var(--hero-model-start-gap) - 40px);
   --hero-model-start-bottom-offset: calc(var(--hero-stage-steps-bottom) + 28px);
   --hero-model-arrow-size: 60px;
-  --hero-model-arrow-side-padding: clamp(40px, 5vw, 56px);
+  --hero-model-arrow-side-padding: clamp(20px, 5vw, 56px);
     /* 모델 페이지 모델명 위치 조정 가능 */
   /* 좌우 버튼 간격 조정 가능 */
   --hero-stage-actions-left: 40px;
@@ -187,7 +191,7 @@ button {
   --hero-top-tabs-notch-width: 40px;
   --hero-top-tabs-notch-height: 20px;
   --hero-top-tabs-indicator-center-x: calc(var(--hero-top-tabs-indicator-x, 18px) + 9px);
-  top: 116px;
+  top: var(--hero-top-tabs-top);
   left: 50%;
   transform: translateX(-50%);
   z-index: 9;
@@ -195,7 +199,7 @@ button {
   align-items: center;
   justify-content: center;
   width: 685px;
-  height: 58px;
+  height: var(--hero-top-tabs-height);
   gap: 10px;
   padding: 0 30px 10px;
   border-radius: 999px;
@@ -620,6 +624,18 @@ button {
 
 .hero_color_vehicle img {
   filter: drop-shadow(0 30px 35px rgba(0, 0, 0, 0.32));
+}
+
+.hero_trim_vehicle img.is-glacial-white-pearl,
+.hero_package_vehicle img.is-glacial-white-pearl,
+.hero_accessory_vehicle img.is-glacial-white-pearl,
+.hero_plan_vehicle img.is-glacial-white-pearl,
+.hero_summary_vehicle img.is-glacial-white-pearl {
+  filter: saturate(0.82);
+}
+
+.hero_color_vehicle img.is-glacial-white-pearl {
+  filter: saturate(0.82) drop-shadow(0 30px 35px rgba(0, 0, 0, 0.32));
 }
 
 .hero_color_seat_preview {
@@ -1181,8 +1197,8 @@ button {
   border-color: rgba(160, 247, 255, 0.92);
   color: var(--kia-white1);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    0px 0px 8px 4px rgba(172, 255, 235, 0.26);
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 8px 16px rgba(0, 0, 0, 0.12);
 }
 
 .hero_summary_row_label::before {
@@ -1724,6 +1740,26 @@ button {
   font-weight: 600;
 }
 
+.hero_quote_test_fill {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 18px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  color: rgba(251, 246, 239, 0.56);
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
+  text-transform: lowercase;
+  box-shadow: none;
+}
+
+.hero_quote_test_fill:hover {
+  color: rgba(171, 244, 246, 0.92);
+}
+
 .hero_quote_send_btn {
   display: inline-flex;
   align-items: center;
@@ -1826,9 +1862,9 @@ button {
   transform: translateY(-1px);
   border-color: rgba(160, 247, 255, 0.92);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    0 0 0 1px rgba(160, 247, 255, 0.32),
-    0 0 12px rgba(160, 247, 255, 0.18);
+    inset 0 5px 10px rgba(255, 255, 255, 0.25),
+    inset 0 -3px 5px rgba(0, 0, 0, 0.05),
+    0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
 #requestQuoteButton {
@@ -2026,8 +2062,40 @@ button {
 }
 
 @media (pointer: fine) {
-  .build_wrap,
-  .build_wrap *:not(input):not(textarea):not(select) {
+  .hero_trim_card,
+  .hero_trim_card *,
+  .hero_color_panel,
+  .hero_color_panel *,
+  .hero_package_card,
+  .hero_package_card *,
+  .hero_accessory_card,
+  .hero_accessory_card *,
+  .hero_plan_card,
+  .hero_plan_card *,
+  .hero_trim_card_head,
+  .hero_trim_card_head *,
+  .hero_color_swatches,
+  .hero_color_swatches *,
+  .hero_color_swatches_interior,
+  .hero_color_swatches_interior *,
+  .hero_package_card_top,
+  .hero_package_card_top *,
+  .hero_accessory_card_top,
+  .hero_accessory_card_top *,
+  .hero_plan_card_top,
+  .hero_plan_card_top *,
+  .hero_summary_breakdown .hero_summary_row:not(.hero_summary_row_fee):not(.hero_summary_row_total),
+  #heroSummarySelectedItems .hero_summary_row,
+  .hero_accessory_card_media,
+  .hero_trim_card_asset,
+  .hero_color_vehicle,
+  .hero_color_seat_preview,
+  .hero_summary_breakdown .hero_summary_row:not(.hero_summary_row_fee):not(.hero_summary_row_total) *,
+  #heroSummarySelectedItems .hero_summary_row *,
+  .hero_accessory_card_media *,
+  .hero_trim_card_asset *,
+  .hero_color_vehicle *,
+  .hero_color_seat_preview * {
     cursor: none;
   }
 }
@@ -2870,6 +2938,12 @@ button {
   color: #fbf6ef;
 }
 
+.hero_package_add_btn .bx-plus,
+.hero_accessory_add_btn .bx-plus {
+  color: var(--kia-white1);
+  margin-right: -2px;
+}
+
 .hero_trim_card_details {
   display: none;
   padding: 0 0 10px var(--hero-compact-card-detail-padding-left);
@@ -3232,8 +3306,8 @@ button {
   border-color: rgba(160, 247, 255, 0.92);
   color: var(--kia-white1);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    0px 0px 11px 8px rgba(172, 255, 235, 0.26);
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 8px 16px rgba(0, 0, 0, 0.12);
 }
 
 .hero_center {
@@ -3265,7 +3339,8 @@ button {
 }
 
 .hero_visual.is-model-stage .hero_title {
-  top: calc(50% - (var(--hero-model-stage-car-width) * var(--hero-model-title-offset-factor)) - var(--hero-model-title-gap));
+  top: max(calc(50% - (var(--hero-model-stage-car-width) * var(--hero-model-title-offset-factor)) - var(--hero-model-title-gap) + var(--hero-model-title-shift-y)),
+      calc(var(--hero-top-tabs-top) + var(--hero-top-tabs-height) + var(--hero-model-title-safe-gap)));
 }
 
 .hero_car_name {
@@ -3446,6 +3521,7 @@ button {
   width: var(--hero-model-arrow-size);
   height: var(--hero-model-arrow-size);
   border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.28);
   background: rgba(255, 255, 255, 0.12);
   color: #fff;
   font-size: 32px;
@@ -3453,7 +3529,14 @@ button {
   text-align: center;
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
-  transition: 0.3s;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 8px 16px rgba(0, 0, 0, 0.12);
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    background-color 0.25s ease,
+    transform 0.25s ease;
   pointer-events: auto;
 }
 
@@ -3472,7 +3555,13 @@ button {
 }
 
 .hero_arrow:hover {
-  background: rgba(255, 255, 255, 0.22);
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(160, 247, 255, 0.92);
+  box-shadow:
+    inset 0 5px 10px rgba(255, 255, 255, 0.25),
+    inset 0 -3px 5px rgba(0, 0, 0, 0.05),
+    0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
 .hero_arrow_left {
@@ -3581,7 +3670,7 @@ button {
   box-shadow:
     inset 0 5px 10px rgba(251, 251, 251, 0.25),
     inset 0 -3px 5px rgba(0, 0, 0, 0.05),
-    0 12px 24px rgba(0, 0, 0, 0.18);
+    0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
 .hero_center .magnet_zone .white_origin {
@@ -3726,7 +3815,7 @@ button {
 
 .hero_bottom_tabs button.active,
 .hero_bottom_tabs button:hover {
-  color: #fff;
+  color: #ABF4F6;
 }
 
 .hero_bottom_tabs button.active {
@@ -3735,6 +3824,9 @@ button {
 
 @media (max-width: 1500px) {
   .hero {
+    --hero-top-tabs-top: 108px;
+    --hero-top-tabs-height: 56px;
+    --hero-model-title-safe-gap: clamp(38px, 3vw, 60px);
     --hero-stage-shell-right: 32px;
     --hero-right-rail: clamp(24px, 3.6vw, 40px);
     --hero-actions-right: clamp(64px, 6.2vw, 128px);
@@ -4077,10 +4169,9 @@ button {
   .hero_top_tabs {
     --hero-top-tabs-notch-width: 36px;
     --hero-top-tabs-notch-height: 18px;
-    top: 108px;
     width: 685px;
     max-width: calc(100vw - 48px);
-    min-height: 56px;
+    min-height: var(--hero-top-tabs-height);
     justify-content: center;
     gap: 8px;
     padding: 0 24px 10px;
@@ -4152,6 +4243,9 @@ button {
 
 @media (max-width: 768px) {
   .hero {
+    --hero-top-tabs-top: 84px;
+    --hero-top-tabs-height: 54px;
+    --hero-model-title-safe-gap: clamp(30px, 6vw, 44px);
     --hero-stage-shell-right: 20px;
     --hero-right-rail: clamp(12px, 4vw, 20px);
     --hero-actions-right: auto;
@@ -4452,7 +4546,7 @@ button {
   }
 
   .hero_bottom_tabs button.is-mobile-active {
-    color: #fbf6ef;
+    color: #ABF4F6;
     font-weight: 700;
   }
 }
@@ -4793,10 +4887,9 @@ button {
   .hero_top_tabs {
     --hero-top-tabs-notch-width: 30px;
     --hero-top-tabs-notch-height: 16px;
-    top: 84px;
     width: calc(100vw - 32px);
     max-width: 685px;
-    min-height: 54px;
+    min-height: var(--hero-top-tabs-height);
     justify-content: center;
     flex-wrap: nowrap;
     gap: 4px;
@@ -4940,9 +5033,11 @@ button {
   left: 50%;
   top: 50%;
   width: min(1180px, calc(100% - 72px));
-  height: min(680px, calc(100vh - 48px));
+  height: auto;
+  max-height: calc(100vh - 48px);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   box-sizing: border-box;
   box-shadow: 10px 12px 20px rgba(0, 0, 0, 0.35);
   background:
@@ -4966,12 +5061,12 @@ button {
 
 .selection_modal_inner {
   min-height: 100%;
-  height: 100%;
+  height: auto;
   padding: 34px 44px 30px 100px;
   position: relative;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow: visible;
   box-sizing: border-box;
   color: #ddd8d1;
 }
@@ -5016,7 +5111,8 @@ button {
   align-items: flex-start;
   gap: 10px;
   margin-top: 36px;
-  flex: 1 1 auto;
+  flex: 0 0 auto;
+  padding-bottom: 28px;
 }
 
 .selection_modal_copy {
@@ -5035,6 +5131,17 @@ button {
   color: #ddd8d1;
   font-size: 40px;
   line-height: 1.3;
+}
+
+.selection_modal_titlebox h3 .hero_title_suffix {
+  display: inline-block;
+  line-height: 0.8;
+  vertical-align: top;
+}
+
+.selection_modal_titlebox h3 .hero_title_suffix_ev9,
+.selection_modal_titlebox h3 .hero_title_suffix_ev_9 {
+  transform: translateY(-6px);
 }
 
 .selection_modal_desc,
@@ -5078,10 +5185,11 @@ button {
 }
 
 .selection_modal_actions {
-  position: absolute;
-  left: 100px;
-  right: 44px;
-  bottom: 30px;
+  position: relative;
+  left: auto;
+  right: auto;
+  bottom: auto;
+  margin-top: 8px;
 }
 
 .selection_modal_buttons {
@@ -5092,14 +5200,8 @@ button {
 }
 
 .selection_modal_buttons button {
-  width: 213px;
-  height: 54px;
-  padding: 16px 32px;
-  font-size: 20px;
   border-radius: 55px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: rgba(251, 246, 239, 0.08);
-  color: #fbf6ef;
+  color: var(--kia-white1);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -5107,9 +5209,41 @@ button {
   cursor: pointer;
 }
 
+.selection_modal_buttons button {
+  width: 213px;
+  height: 54px;
+  padding: 16px 32px;
+  font-size: 20px;
+}
+
 .selection_modal_buttons .is-primary {
   background: rgba(50, 176, 180, 0.3);
   border-color: rgba(255, 255, 255, 0.4);
+}
+
+#buildSendModalPrimary {
+  background: rgba(50, 176, 180, 0.3);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.selection_modal_buttons button.white_origin:hover {
+  border: 1px solid #ABF4F6;
+  border-color: rgba(160, 247, 255, 0.92);
+  color: var(--kia-white1);
+  box-shadow:
+    inset 0 5px 10px rgba(255, 255, 255, 0.5),
+    inset 0 -3px 5px rgba(0, 0, 0, 0.05),
+    0px 0px 11px 8px rgba(172, 255, 235, 0.26);
+}
+
+.selection_modal_buttons .is-primary.white_origin:hover {
+  border: 1px solid #ABF4F6;
+  border-color: rgba(160, 247, 255, 0.92);
+  color: var(--kia-white1);
+  box-shadow:
+    inset 0 5px 10px rgba(255, 255, 255, 0.5),
+    inset 0 -3px 5px rgba(0, 0, 0, 0.05),
+    0px 0px 11px 8px rgba(172, 255, 235, 0.26);
 }
 
 body.modal-open {
