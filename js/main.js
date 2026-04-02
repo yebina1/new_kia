@@ -768,6 +768,7 @@ function initEv6Scene() {
   const bg2Img = document.getElementById("bg2Img");
   const bg2FeaturesTrack = document.getElementById("bg2FeaturesTrack");
   const bg2FeaturesSurface = document.getElementById("bg2FeaturesSurface");
+  const bg2Features = section?.querySelector(".bg2_features");
   const carWrap = document.getElementById("carWrap");
   const solidCar = document.getElementById("solidCar");
   const xrayCar = document.getElementById("xrayCar");
@@ -877,21 +878,14 @@ function initEv6Scene() {
   }
 
   function syncFeatureBottomToVisiblePhotoCard() {
-    const visibleCards = Object.values(photoCards).filter((card) => {
-      const opacity = Number.parseFloat(card.style.opacity || "0");
-      return opacity > 0.01;
-    });
-
-    if (!visibleCards.length) {
+    if (!bg2Features) {
       scene.style.removeProperty("--ev6-photo-card-bottom");
       return;
     }
 
     const sceneRect = scene.getBoundingClientRect();
-    const visibleCardBottom = Math.max(
-      ...visibleCards.map((card) => card.getBoundingClientRect().bottom)
-    );
-    const clampedBottom = Math.min(visibleCardBottom, sceneRect.bottom);
+    const bg2FeaturesRect = bg2Features.getBoundingClientRect();
+    const clampedBottom = Math.min(bg2FeaturesRect.bottom, sceneRect.bottom);
     const bottomOffset = Math.max(sceneRect.bottom - clampedBottom, 0);
 
     scene.style.setProperty("--ev6-photo-card-bottom", `${Math.round(bottomOffset)}px`);
