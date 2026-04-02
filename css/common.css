@@ -949,6 +949,10 @@ header .header_bottom .sub_nav li a[href="#"]:hover {
 
 footer {
   width: 100%;
+  position: relative;
+  z-index: 30;
+  isolation: isolate;
+  background: #0c1115;
 }
 
 footer .inner {

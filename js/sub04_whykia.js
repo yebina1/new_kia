@@ -483,20 +483,25 @@ document.addEventListener("DOMContentLoaded", () => {
         renderProgress(clamped / maxScroll);
     }
 
+    function destroyStoryTrigger() {
+        if (!storyTrigger) {
+            return;
+        }
+
+        storyTrigger.kill();
+        storyTrigger = null;
+    }
+
     function setupStoryTrigger() {
+        destroyStoryTrigger();
+
         if (!window.gsap || !window.ScrollTrigger || window.innerWidth <= 900) {
             shell.classList.remove("is_gsap_pin");
-            storyTrigger = null;
             renderFromScroll();
             return;
         }
 
         window.gsap.registerPlugin(window.ScrollTrigger);
-
-        if (storyTrigger) {
-            storyTrigger.kill();
-            storyTrigger = null;
-        }
 
         shell.classList.add("is_gsap_pin");
 

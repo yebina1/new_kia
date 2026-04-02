@@ -65,130 +65,19 @@
     :root {
         --scene_width: calc(100vw - 40px);
     }
+}
 
-    .site_header {
-        align-items: flex-start;
-        flex-direction: column;
-        height: auto;
-    }
-
-    .nav_shell {
-        width: 100%;
-        flex-wrap: wrap;
-        gap: 16px;
-        border-radius: 28px;
-    }
-
-    .site_nav {
-        flex-wrap: wrap;
-        gap: 14px 18px;
-        font-size: 16px;
-    }
-
-    .header_icons {
-        margin-left: auto;
-    }
-
+@media (min-width: 800px) {
     .solution_section {
-        --solution-list-height: 520px;
+        padding-top: 3vh;
     }
 
     .solution_inner {
-        width: calc(100% - 40px);
-        min-height: auto;
-        padding: 40px 0;
+        padding-top: 1.5vh;
     }
 
-    .container {
-        margin: 44px auto 24px;
-    }
-
-    .solution_list {
-        gap: 40px;
-    }
-
-    .solution_list>li {
-        width: calc(100vw - 40px);
-        height: auto;
-        grid-template-columns: 1fr;
-        row-gap: 28px;
-    }
-
-    .solution_text_spacer {
-        display: none;
-    }
-
-    .solution_list>li>img {
-        max-width: 100%;
-        height: auto;
-        aspect-ratio: 680 / 400;
-    }
-
-    .partner_section {
-        min-height: auto;
-    }
-
-    .partner_sticky {
-        position: relative;
-    }
-
-    .partner_inner {
-        width: calc(100% - 40px);
-        padding: 40px 0 56px;
-    }
-
-    .partner_heading {
-        position: static;
-        opacity: 1;
-        transform: none;
-        white-space: normal;
-        text-align: center;
-        margin: 0 auto 36px;
-    }
-
-    .partner_heading::before {
-        content: none;
-    }
-
-    .partner_intro_cards {
-        position: relative;
-        top: auto;
-        left: auto;
-        width: 100%;
-        margin: 24px auto 32px;
-        transform: none;
-    }
-
-    .partner_intro_card {
-        max-width: 180px;
-    }
-
-    .partner_cards {
-        height: auto;
-        margin-top: 0;
-    }
-
-    .partner_cards_container {
-        flex-direction: column;
-        align-items: center;
-        gap: 40px;
-        width: 100%;
-    }
-
-    .partner_card {
-        width: min(100%, 360px);
-        max-width: none;
-        opacity: 1;
-        transform: none;
-    }
-
-    .partner_label {
-        opacity: 1;
-        transform: none;
-    }
-
-    .tex_box strong {
-        margin-bottom: 18px;
+    .solution_section.is_desktop_scroll .solution_inner {
+        padding: clamp(28px, 3.5vh, 48px) 0 clamp(56px, 7vh, 96px);
     }
 }
 
@@ -250,17 +139,21 @@
         display: none !important;
     }
 
+    .txt_history2 {
+        width: calc(100% - 64px);
+    }
+
     .needs_txt {
-        width: calc(100% - 48px);
-        max-width: 600px;
+        width: calc(100% - 64px);
+        max-width: none;
         margin: 0 auto;
         text-align: center;
     }
 
     .needs_line {
-        width: fit-content;
+        width: auto;
         max-width: 100%;
-        margin: 0 auto;
+        margin: 0;
         white-space: normal;
     }
 
@@ -298,9 +191,19 @@
         content: none;
     }
 
+    .partner_section {
+        min-height: auto;
+        margin-top: 0;
+        padding-top: 0;
+    }
+
+    .partner_sticky {
+        position: relative;
+    }
+
     .partner_inner {
         width: calc(100% - 40px);
-        padding: 96px 0 56px;
+        padding: 0 0 56px;
     }
 
     .partner_intro_cards {
@@ -320,8 +223,8 @@
     }
 
     .partner_card {
-        width: min(100%, 56vw);
-        max-width: 520px;
+        width: calc(100vw - 64px);
+        max-width: calc(100vw - 64px);
         min-width: 220px;
         flex: 0 0 auto;
         gap: 0;
@@ -611,14 +514,19 @@
     }
 
     .partner_heading {
+        position: static;
         width: 100%;
-        margin: 0 auto 36px;
+        margin: 0 auto 78px;
         font-size: clamp(44px, 9vw, 84px) !important;
         line-height: 0.92;
         text-align: center;
         opacity: 1 !important;
         transform: none !important;
         white-space: nowrap;
+    }
+
+    .partner_heading::before {
+        content: none;
     }
 
     .partner_cards_container {
@@ -760,5 +668,41 @@
 
     .awards_marquee {
         animation-duration: 72s;
+    }
+}
+
+@media (max-width: 799px) {
+    .partner_section {
+        margin-top: 198px;
+    }
+
+    .awards {
+        margin-top: 198px;
+        border-top: 0;
+    }
+}
+
+@media (max-width: 577px) {
+    .needs_txt {
+        width: calc(100% - 64px);
+        font-size: clamp(15px, 4.2vw, 18px);
+        line-height: 1.58;
+    }
+
+    .needs_line {
+        width: auto;
+    }
+}
+
+@media (max-width: 820px) and (min-width: 578px) {
+    .needs_txt {
+        width: calc(100% - 64px);
+        font-size: clamp(16px, 2.2vw, 20px);
+        line-height: 1.6;
+    }
+
+    .needs_line {
+        width: auto;
+        max-width: 100%;
     }
 }
