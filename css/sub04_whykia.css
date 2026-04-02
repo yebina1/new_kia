@@ -312,6 +312,11 @@ h2 {
     top: auto;
 }
 
+.story_history.is_gsap_pin {
+    height: auto;
+    min-height: 100vh;
+}
+
 .story_history.is_gsap_pin .txt_history1,
 .story_history.is_gsap_pin .txt_history2,
 .story_history.is_gsap_pin .movement_stage,
@@ -1468,8 +1473,4 @@ h2 {
     100% {
         transform: translate3d(-50%, 0, 0);
     }
-}
-
-.story_history {
-    height: calc(600vh + 400px);
 }
