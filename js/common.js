@@ -16,6 +16,60 @@ let $gnbActiveBg = null;
 let $gnbHoverBg = null;
 let $hoveredGnbItem = null;
 
+const $isPlaceholderHref = (href) => {
+  if (typeof href !== 'string') return true;
+
+  const normalizedHref = href.trim();
+  return normalizedHref === '' || normalizedHref === '#';
+};
+
+const $isDisabledHeaderFooterLink = (anchor) => {
+  if (!(anchor instanceof HTMLAnchorElement)) return false;
+  if (!anchor.closest('header, footer')) return false;
+  if (anchor.classList.contains('icon_menu')) return false;
+
+  return $isPlaceholderHref(anchor.getAttribute('href'));
+};
+
+const $syncDisabledHeaderFooterLinks = (root = document) => {
+  const $anchors = root instanceof Document
+    ? root.querySelectorAll('header a, footer a')
+    : root.querySelectorAll('a');
+
+  $anchors.forEach((anchor) => {
+    if (!$isDisabledHeaderFooterLink(anchor)) return;
+
+    anchor.setAttribute('aria-disabled', 'true');
+    anchor.setAttribute('tabindex', '-1');
+  });
+};
+
+const $isDisabledPrimaryMenuItem = (item) => {
+  const link = item?.querySelector(':scope > a');
+  return $isDisabledHeaderFooterLink(link);
+};
+
+document.addEventListener('click', (event) => {
+  const target = event.target;
+  if (!(target instanceof Element)) return;
+
+  const anchor = target.closest('a');
+  if (!$isDisabledHeaderFooterLink(anchor)) return;
+
+  event.preventDefault();
+  event.stopPropagation();
+}, true);
+
+document.addEventListener('keydown', (event) => {
+  if (event.key !== 'Enter' && event.key !== ' ') return;
+  if (!$isDisabledHeaderFooterLink(document.activeElement)) return;
+
+  event.preventDefault();
+  event.stopPropagation();
+}, true);
+
+$syncDisabledHeaderFooterLinks();
+
 const $resolveMenuKey = (item) => {
   const link = item?.querySelector('a');
   if (!link) return '';
@@ -94,9 +148,12 @@ const $renderSubMenu = (menuKey, menuItem) => {
 
   $subNav.innerHTML = subMenus
     .map(({ label, href }) => {
-      return `<li><a href="${href}" data-text="${label}">${label}</a></li>`;
+      const disabledAttrs = $isPlaceholderHref(href) ? ' aria-disabled="true" tabindex="-1"' : '';
+      return `<li><a href="${href}" data-text="${label}"${disabledAttrs}>${label}</a></li>`;
     })
     .join('');
+
+  $syncDisabledHeaderFooterLinks($headerBottom);
 };
 
 const $ensureGnbPillLayers = () => {
@@ -206,20 +263,38 @@ if ($gnbItems.length > 0) {
   const getPrimaryActive = () => $gnbItems.find((item) => item.classList.contains('on')) || null;
   $getPrimaryActiveItem = getPrimaryActive;
 
+  const resetDisabledPrimaryHoverState = () => {
+    $hoveredGnbItem = null;
+    $hideGnbHoverBg();
+    resetSubMenuToActive();
+  };
+
   $gnbItems.forEach((item) => {
     item.addEventListener('mouseenter', () => {
+      if ($isDisabledPrimaryMenuItem(item)) {
+        resetDisabledPrimaryHoverState();
+        return;
+      }
+
       $hoveredGnbItem = item;
       $setGnbHoverBg(item);
       $renderSubMenu($resolveMenuKey(item), item);
     });
 
     item.addEventListener('focusin', () => {
+      if ($isDisabledPrimaryMenuItem(item)) {
+        resetDisabledPrimaryHoverState();
+        return;
+      }
+
       $hoveredGnbItem = item;
       $setGnbHoverBg(item);
       $renderSubMenu($resolveMenuKey(item), item);
     });
 
     item.addEventListener('click', () => {
+      if ($isDisabledPrimaryMenuItem(item)) return;
+
       setPrimaryActive(item);
       $hoveredGnbItem = item;
       $setGnbHoverBg(item);

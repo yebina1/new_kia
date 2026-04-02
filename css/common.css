@@ -18,12 +18,25 @@ body {
   font-family: "Inter", sans-serif;
 }
 
-a[href=""],
-a[href=""]:hover,
-a[href=""]:focus-visible {
-  color: rgba(221, 216, 209, 0.3) ;
-  pointer-events: none;
-  cursor: default;
+header a:not(.icon_menu):is(:not([href]), [href=""], [href="#"]),
+footer a:is(:not([href]), [href=""], [href="#"]) {
+  color: rgba(221, 216, 209, 0.3) !important;
+  pointer-events: none !important;
+  cursor: default !important;
+}
+
+header a:not(.icon_menu):is(:not([href]), [href=""], [href="#"]) i,
+header a:not(.icon_menu):is(:not([href]), [href=""], [href="#"]) span,
+footer a:is(:not([href]), [href=""], [href="#"]) i,
+footer a:is(:not([href]), [href=""], [href="#"]) span {
+  color: inherit !important;
+}
+
+header a:not(.icon_menu):is(:not([href]), [href=""], [href="#"]) img,
+header a:not(.icon_menu):is(:not([href]), [href=""], [href="#"]) svg,
+footer a:is(:not([href]), [href=""], [href="#"]) img,
+footer a:is(:not([href]), [href=""], [href="#"]) svg {
+  opacity: 0.3;
 }
 
 div,
