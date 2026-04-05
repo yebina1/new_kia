@@ -5,7 +5,7 @@ const $vehicles = [
         name: "Sportage",
         backText: "SPORTAGE",
         backHtml: "SPOR-<br>TAGE",
-        backSize: "210px",
+        backSize: "clamp(120px, 14vw, 210px)",
         backSpacing: "-0.08em",
         backClassName: "is-sportage",
         image: "./img/main/best/sportage.png",
@@ -21,7 +21,7 @@ const $vehicles = [
         name: "Sorento",
         backText: "SORENTO",
         backHtml: "SOREN<br>TO",
-        backSize: "220px",
+        backSize: "clamp(120px, 14.5vw, 220px)",
         backSpacing: "-0.08em",
         backClassName: "is-sorento",
         image: "./img/main/best/sorento.png",
@@ -37,7 +37,7 @@ const $vehicles = [
         name: "Seltos",
         backText: "SELTOS",
         backHtml: "SELTOS",
-        backSize: "300px",
+        backSize: "clamp(200px, 14.5vw, 300px)",
         backSpacing: "-0.08em",
         backClassName: "is-seltos",
         image: "./img/main/best/seltos.png",
@@ -53,7 +53,7 @@ const $vehicles = [
         name: "K4",
         backText: "K4",
         backHtml: "K4",
-        backSize: "380px",
+        backSize: "clamp(280px, 14.5vw, 380px)",
         backSpacing: "-0.08em",
         backClassName: "is-k4",
         image: "./img/main/best/k4.png",
@@ -69,7 +69,7 @@ const $vehicles = [
         name: "Telluride",
         backText: "TELLURIDE",
         backHtml: "TELLU-<br>RIDE",
-        backSize: "210px",
+        backSize: "clamp(120px, 14.5vw, 210px)",
         backSpacing: "-0.1em",
         backClassName: "is-telluride",
         image: "./img/main/best/telluride.png",
@@ -272,18 +272,29 @@ function renderTextContent(index, shouldAnimateSpecs = false) {
 function setCard(card, slot, vehicleIndex) {
     const $vehicle = $vehicles[vehicleIndex];
     const $image = card.querySelector(".best_car_image");
+    let $navIcon = card.querySelector(".best_nav_icon");
 
     card.dataset.slot = slot;
     card.dataset.vehicleIndex = String(vehicleIndex);
-    card.classList.remove("main", "best_car_card_left", "best_car_card_main", "best_car_card_right", "is-hidden-card", "is-floating");
+    card.classList.remove("main", "best_car_card_left", "best_car_card_main", "best_car_card_right", "is-hidden-card", "is-floating", "white_origin", "glass_bg1", "best_nav_button");
     card.classList.add(`best_car_card_${slot}`);
     card.classList.toggle("main", slot === "main");
 
     if (slot === "main") {
         card.classList.add("best_car_card_main");
         card.setAttribute("aria-label", "Current vehicle");
+        if ($navIcon) {
+            $navIcon.remove();
+        }
     } else {
+        card.classList.add("glass_bg1", "best_nav_button");
         card.setAttribute("aria-label", `Show ${slot === "left" ? "previous" : "next"} vehicle`);
+        if (!$navIcon) {
+            $navIcon = document.createElement("i");
+            $navIcon.className = "bx bx-chevron-right best_nav_icon";
+            $navIcon.setAttribute("aria-hidden", "true");
+            card.appendChild($navIcon);
+        }
     }
 
     if ($image) {

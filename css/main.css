@@ -113,12 +113,14 @@ body.section_transition_lock {
 .best_showcase {
     position: relative;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1000px) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, clamp(560px, 78vw, 900px)) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto;
     align-items: center;
     gap: 0;
+    row-gap: clamp(8px, 1.6vh, 18px);
     flex: 1;
     width: 100%;
-    height: clamp(450px, 60vh, 700px);
+    height: clamp(280px, min(38vw, 60vh), 700px);
     margin-top: 20px;
     overflow: visible;
     z-index: 1;
@@ -187,14 +189,15 @@ body.section_transition_lock {
 }
 
 .best_progress {
-    position: absolute;
-    left: 50%;
-    bottom: clamp(18px, 4vh, 42px);
+    position: relative;
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: center;
+    align-self: start;
     z-index: 4;
     display: flex;
     align-items: center;
     justify-content: center;
-    transform: translateX(-50%);
     pointer-events: none;
 }
 
@@ -274,16 +277,21 @@ body.section_transition_lock {
 
 .best_car_card_left {
     grid-column: 1;
+    grid-row: 1;
     transform: translate3d(22px, 0, 0) scale(0.92);
 }
 
 .best_car_card_main {
     grid-column: 2;
+    grid-row: 1;
+    justify-self: center;
+    width: min(100%, clamp(560px, 78vw, 900px));
     transform: translate3d(0, 0, 0) scale(1);
 }
 
 .best_car_card_right {
     grid-column: 3;
+    grid-row: 1;
     transform: translate3d(-22px, 0, 0) scale(0.92);
 }
 
@@ -309,6 +317,11 @@ body.section_transition_lock {
     will-change: transform;
 }
 
+.best_car_card_left .best_car_frame,
+.best_car_card_right .best_car_frame {
+    max-width: 250px;
+}
+
 .best_car_image {
     width: 100%;
     filter: brightness(0.82);
@@ -331,7 +344,7 @@ body.section_transition_lock {
 .best_car_card.main .best_car_frame {
     width: auto;
     max-width: none;
-    height: 350px;
+    height: clamp(180px, 24vw, 350px);
 }
 
 .best_car_card.is-entering-main .best_car_frame {
@@ -372,7 +385,7 @@ body.section_transition_lock {
 
 .best_car_card_left .best_car_image,
 .best_car_card_right .best_car_image {
-    transform: scale(0.96);
+    transform: scale(1.03);
     filter: brightness(0.78) saturate(0.92);
 }
 
