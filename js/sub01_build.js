@@ -51,6 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const heroSummaryPrice = document.getElementById("heroSummaryPrice");
   const heroSummaryLease = document.getElementById("heroSummaryLease");
   const heroSummaryImage = document.getElementById("heroSummaryImage");
+  const heroSummarySide = heroSummaryStage?.querySelector(".hero_summary_side");
   const requestQuoteButton = document.getElementById("requestQuoteButton");
   const heroQuotePanel = document.getElementById("heroQuotePanel");
   const quoteBackButton = document.getElementById("quoteBackButton");
@@ -75,8 +76,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const buildSendModalClose = document.getElementById("buildSendModalClose");
   const buildSendModalTitle = document.getElementById("build-send-modal-title");
   const buildSendModalEyebrow = document.getElementById("buildSendModalEyebrow");
+  const buildSendModalStatusLabel = document.getElementById("buildSendModalStatusLabel");
   const buildSendModalDescription = document.getElementById("buildSendModalDescription");
+  const buildSendModalSpecsLabel = document.getElementById("buildSendModalSpecsLabel");
   const buildSendModalSpecs = document.getElementById("buildSendModalSpecs");
+  const buildSendModalVisual = document.getElementById("buildSendModalVisual");
   const buildSendModalImage = document.getElementById("buildSendModalImage");
   const buildSendModalPrimary = document.getElementById("buildSendModalPrimary");
   const buildSendModalSecondary = document.getElementById("buildSendModalSecondary");
@@ -554,6 +558,19 @@ document.addEventListener("DOMContentLoaded", () => {
     )}</span>`;
   }
 
+  function formatIncrementPriceMarkup(priceLabel) {
+    const trimmedLabel = String(priceLabel || "").trim();
+
+    if (!trimmedLabel) {
+      return "";
+    }
+
+    return escapeHtml(trimmedLabel).replace(
+      /^\+\s*/,
+      '<i class="bx bx-plus bx-remove-padding" aria-hidden="true"></i>'
+    );
+  }
+
   function formatSummaryLinePrice(value) {
     return value > 0 ? formatCurrencyValue(value) : "$0";
   }
@@ -684,21 +701,47 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const currentCar = getCurrentCar();
     const trimName = heroSummaryTrim?.textContent?.trim() || "Land AWD";
-    const title = currentCar?.title ? `${currentCar.title} (${trimName})` : trimName;
+    const title =
+      options.title || (currentCar?.title ? `${currentCar.title} (${trimName})` : trimName);
+    const specs = Array.isArray(options.specs) ? options.specs : getBuildModalSpecs();
+    const variant = options.variant || "default";
+    const showImage = options.showImage !== false;
+
+    if (buildSendModal) {
+      buildSendModal.dataset.variant = variant;
+    }
 
     buildSendModalTitle.innerHTML = formatCarTitleMarkup(title);
     buildSendModalEyebrow.textContent = options.eyebrow || "Your Final Selection Estimate";
+    if (buildSendModalStatusLabel) {
+      buildSendModalStatusLabel.textContent =
+        options.statusLabel || (variant === "incomplete" ? "Action needed:" : "Status:");
+    }
     buildSendModalDescription.textContent =
       options.description || "Your build summary has been prepared successfully.";
+    if (buildSendModalSpecsLabel) {
+      buildSendModalSpecsLabel.textContent =
+        options.specsLabel || (variant === "incomplete" ? "Missing items :" : "Selected Specs :");
+    }
+    if (buildSendModalPrimary) {
+      buildSendModalPrimary.textContent = options.primaryLabel || "Done";
+    }
+    if (buildSendModalSecondary) {
+      buildSendModalSecondary.textContent = options.secondaryLabel || "Continue Editing";
+    }
     buildSendModalSpecs.innerHTML = "";
 
-    getBuildModalSpecs().forEach((item) => {
+    specs.forEach((item) => {
       const li = document.createElement("li");
       li.textContent = item;
       buildSendModalSpecs.appendChild(li);
     });
 
-    if (buildSendModalImage && heroSummaryImage) {
+    if (buildSendModalVisual) {
+      buildSendModalVisual.hidden = !showImage;
+    }
+
+    if (showImage && buildSendModalImage && heroSummaryImage) {
       buildSendModalImage.src = heroSummaryImage.src;
       buildSendModalImage.alt =
         heroSummaryImage.alt || `${currentCar?.title || "Selected build"} preview`;
@@ -1018,14 +1061,126 @@ document.addEventListener("DOMContentLoaded", () => {
     return !isEmpty;
   }
 
-  function validateQuoteForm() {
-    const firstNameValid = validateQuoteField(quoteFirstName, quoteFirstNameError);
-    const lastNameValid = validateQuoteField(quoteLastName, quoteLastNameError);
-    const phoneValid = validateQuoteField(quotePhone, quotePhoneError);
-    const emailValid = validateQuoteField(quoteEmail, quoteEmailError);
-    const addressValid = validateQuoteField(quoteAddress, quoteAddressError);
+  function getQuoteRequiredFields() {
+    return [
+      {
+        input: quoteFirstName,
+        errorElement: quoteFirstNameError,
+        label: "First name"
+      },
+      {
+        input: quoteLastName,
+        errorElement: quoteLastNameError,
+        label: "Last name"
+      },
+      {
+        input: quotePhone,
+        errorElement: quotePhoneError,
+        label: "Phone"
+      },
+      {
+        input: quoteEmail,
+        errorElement: quoteEmailError,
+        label: "Email"
+      },
+      {
+        input: quoteAddress,
+        errorElement: quoteAddressError,
+        label: "Address"
+      }
+    ];
+  }
 
-    return firstNameValid && lastNameValid && phoneValid && emailValid && addressValid;
+  function getQuoteValidationState({ showInlineErrors = false } = {}) {
+    const missingFields = [];
+    const hasContactMethod = Boolean(
+      heroQuotePanel?.querySelector(".hero_quote_method_btn.is-active")
+    );
+    const hasPaymentMethod = Boolean(
+      heroQuotePanel?.querySelector(".hero_quote_payment_btn.is-active")
+    );
+    const hasDealer = Boolean(heroQuotePanel?.querySelector(".hero_quote_dealer_card.is-selected"));
+
+    if (!hasContactMethod) {
+      missingFields.push("Contact Method");
+    }
+
+    getQuoteRequiredFields().forEach(({ input, errorElement, label }) => {
+      const isFilled = showInlineErrors
+        ? validateQuoteField(input, errorElement)
+        : Boolean(input?.value?.trim());
+
+      if (!isFilled) {
+        missingFields.push(label);
+      }
+    });
+
+    if (!hasPaymentMethod) {
+      missingFields.push("Payment Method");
+    }
+
+    if (!hasDealer) {
+      missingFields.push("Select Dealer");
+    }
+
+    return {
+      isValid: missingFields.length === 0,
+      missingFields
+    };
+  }
+
+  function validateQuoteForm() {
+    return getQuoteValidationState({ showInlineErrors: true }).isValid;
+  }
+
+  function updateSendBuildButtonState() {
+    if (!sendBuildButton) {
+      return;
+    }
+
+    const { isValid, missingFields } = getQuoteValidationState();
+    sendBuildButton.disabled = false;
+    sendBuildButton.classList.remove("is-disabled");
+    sendBuildButton.setAttribute("aria-disabled", "false");
+    sendBuildButton.dataset.quoteReady = isValid ? "true" : "false";
+    sendBuildButton.title = isValid
+      ? "Send your quote request."
+      : `Please complete the required quote fields before sending: ${missingFields.join(", ")}.`;
+  }
+
+  function openIncompleteQuoteModal(missingFields) {
+    openBuildSendModal({
+      variant: "incomplete",
+      eyebrow: "Quote Form Incomplete",
+      title: "Complete Required Fields",
+      description:
+        "Please fill in the missing required items below before sending your quote request.",
+      statusLabel: "Action needed:",
+      specsLabel: "Missing items :",
+      specs: missingFields,
+      primaryLabel: "Continue Editing",
+      secondaryLabel: "Close",
+      showImage: false
+    });
+  }
+
+  function handleQuoteSendAttempt() {
+    const validationState = getQuoteValidationState({ showInlineErrors: true });
+
+    if (!validationState.isValid) {
+      openQuotePanel();
+      updateSendBuildButtonState();
+      openIncompleteQuoteModal(validationState.missingFields);
+      return;
+    }
+
+    closeQuotePanel();
+    updateSendBuildButtonState();
+    openBuildSendModal({
+      eyebrow: "Quote Request Complete",
+      description:
+        "Your quote request has been sent successfully. A dealer will review your build and contact you soon."
+    });
   }
 
   function commitQuoteZip() {
@@ -1095,6 +1250,33 @@ document.addEventListener("DOMContentLoaded", () => {
       button.classList.remove("is-active");
       button.setAttribute("aria-pressed", "false");
     });
+  }
+
+  function openQuotePanel() {
+    if (!heroQuotePanel || !heroSummaryStage) {
+      return;
+    }
+
+    syncQuoteSelectedModel();
+    const summarySide = heroQuotePanel.closest(".hero_summary_side");
+    const summaryPanel = summarySide?.querySelector(".hero_summary_panel");
+    const summaryPanelHeight = summaryPanel?.getBoundingClientRect().height ?? 0;
+
+    if (summarySide && summaryPanelHeight > 0) {
+      summarySide.style.setProperty(
+        "--hero-quote-panel-height",
+        `${Math.ceil(summaryPanelHeight)}px`
+      );
+    }
+
+    heroQuotePanel.hidden = false;
+    summarySide?.classList.add("is-quote-mode");
+    heroQuotePanel.querySelector(".hero_quote_panel_body")?.scrollTo({
+      top: 0,
+      behavior: "auto"
+    });
+    requestQuoteButton?.setAttribute("aria-expanded", "true");
+    updateSendBuildButtonState();
   }
 
   function applySelectedTrim(title) {
@@ -1332,7 +1514,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (heroExteriorPrice && selectedExterior) {
-      heroExteriorPrice.textContent = selectedExterior.dataset.price || "";
+      heroExteriorPrice.innerHTML = formatIncrementPriceMarkup(
+        selectedExterior.dataset.price || ""
+      );
     }
 
     if (heroInteriorName && selectedInterior) {
@@ -1420,7 +1604,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <strong>${escapeHtml(packageItem.name)}</strong>
               </div>
               <button type="button" class="hero_package_add_btn" aria-pressed="${selectedPackages.has(index) ? "true" : "false"}">
-                ${escapeHtml(packageItem.price).replace(/^\+\s*/, '<i class="bx bx-plus bx-remove-padding"></i>')}
+                ${formatIncrementPriceMarkup(packageItem.price)}
               </button>
             </div>
             <div class="hero_package_card_details">
@@ -1848,6 +2032,65 @@ document.addEventListener("DOMContentLoaded", () => {
     heroBottomSteps.style.transform = "translateX(-50%)";
   }
 
+  function syncSummaryStageBackdrop() {
+    if (!heroVisual) {
+      return;
+    }
+
+    const shouldShowBackdrop = currentStep !== 0 && window.innerWidth <= 1500;
+
+    if (!shouldShowBackdrop) {
+      heroVisual.classList.remove("has-stage-backdrop");
+      heroVisual.style.removeProperty("--hero-responsive-stage-backdrop-top");
+      if (heroSummaryStage) {
+        heroSummaryStage.style.removeProperty("--hero-summary-card-backdrop-top");
+      }
+      return;
+    }
+
+    const visibleStage = [
+      heroTrimStage,
+      heroColorStage,
+      heroPackageStage,
+      heroAccessoryStage,
+      heroPlanStage,
+      heroSummaryStage
+    ].find((stage) => stage?.classList.contains("is-visible"));
+
+    const stagePanel = visibleStage?.querySelector(
+      ".hero_trim_panel, .hero_color_panels, .hero_package_panel, .hero_accessory_panel, .hero_plan_panel, .hero_summary_side"
+    );
+
+    if (!visibleStage || !stagePanel) {
+      heroVisual.classList.remove("has-stage-backdrop");
+      heroVisual.style.removeProperty("--hero-responsive-stage-backdrop-top");
+      return;
+    }
+
+    const visualRect = heroVisual.getBoundingClientRect();
+    const panelRect = stagePanel.getBoundingClientRect();
+    const backdropTop = Math.max(0, Math.round(panelRect.top - visualRect.top));
+
+    heroVisual.classList.add("has-stage-backdrop");
+    heroVisual.style.setProperty(
+      "--hero-responsive-stage-backdrop-top",
+      `${backdropTop}px`
+    );
+
+    if (heroSummaryStage?.classList.contains("is-visible") && heroSummarySide) {
+      const stageRect = heroSummaryStage.getBoundingClientRect();
+      const sideRect = heroSummarySide.getBoundingClientRect();
+      const summaryBackdropTop = Math.max(0, Math.round(sideRect.top - stageRect.top));
+
+      heroSummaryStage.style.setProperty(
+        "--hero-summary-card-backdrop-top",
+        `${summaryBackdropTop}px`
+      );
+    } else if (heroSummaryStage) {
+      heroSummaryStage.style.removeProperty("--hero-summary-card-backdrop-top");
+    }
+  }
+
   let pendingLayoutSyncFrame = 0;
 
   function scheduleLayoutSync() {
@@ -1862,6 +2105,7 @@ document.addEventListener("DOMContentLoaded", () => {
       syncTopTabsIndicator();
       syncStartButtonPosition();
       syncStageStepsPosition();
+      syncSummaryStageBackdrop();
     });
   }
 
@@ -2159,18 +2403,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  requestQuoteButton?.addEventListener("click", () => {
-    if (!heroQuotePanel || !heroSummaryStage) {
-      return;
-    }
-
-    syncQuoteSelectedModel();
-    initializeQuoteSelections();
-    const summarySide = heroQuotePanel.closest(".hero_summary_side");
-    heroQuotePanel.hidden = false;
-    summarySide?.classList.add("is-quote-mode");
-    requestQuoteButton.setAttribute("aria-expanded", "true");
-  });
+  requestQuoteButton?.addEventListener("click", openQuotePanel);
 
   function closeQuotePanel() {
     if (!heroQuotePanel) {
@@ -2180,7 +2413,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const summarySide = heroQuotePanel.closest(".hero_summary_side");
     heroQuotePanel.hidden = true;
     summarySide?.classList.remove("is-quote-mode");
+    summarySide?.style.removeProperty("--hero-quote-panel-height");
     requestQuoteButton?.setAttribute("aria-expanded", "false");
+    updateSendBuildButtonState();
   }
 
   quoteBackButton?.addEventListener("click", closeQuotePanel);
@@ -2229,24 +2464,18 @@ document.addEventListener("DOMContentLoaded", () => {
       if (input === quoteAddress) {
         validateQuoteField(quoteAddress, quoteAddressError);
       }
+
+      updateSendBuildButtonState();
     });
   });
 
   quoteTestFillButton?.addEventListener("click", () => {
     autofillQuoteTestData();
+    updateSendBuildButtonState();
   });
 
   quoteSendButton?.addEventListener("click", () => {
-    if (!validateQuoteForm()) {
-      return;
-    }
-
-    closeQuotePanel();
-    openBuildSendModal({
-      eyebrow: "Quote Request Complete",
-      description:
-        "Your quote request has been sent successfully. A dealer will review your build and contact you soon."
-    });
+    handleQuoteSendAttempt();
   });
 
   buildSendModalClose?.addEventListener("click", closeBuildSendModal);
@@ -2297,9 +2526,14 @@ document.addEventListener("DOMContentLoaded", () => {
         card.setAttribute("aria-pressed", isActive ? "true" : "false");
       });
     }
+
+    if (methodButton || paymentButton || dealerCard) {
+      updateSendBuildButtonState();
+    }
   });
 
   initializeQuoteSelections();
+  updateSendBuildButtonState();
 
   if (startStepButton) {
     startStepButton.addEventListener("click", () => {
@@ -2792,26 +3026,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   bindInstantActionButton(sendBuildButton, () => {
-    if (!heroQuotePanel?.hidden) {
-      if (!validateQuoteForm()) {
-        return;
-      }
-
-      closeQuotePanel();
-      openBuildSendModal({
-        eyebrow: "Quote Request Complete",
-        description:
-          "Your quote request has been sent successfully. A dealer will review your build and contact you soon."
-      });
-      return;
-    }
-
-    updateSteps(6);
-    openBuildSendModal({
-      eyebrow: "Build Estimate Ready",
-      description:
-        "Your build estimate has been organized into a final summary. You can keep editing or close this window."
-    });
+    handleQuoteSendAttempt();
   });
 
   setSelectedPlanCard(selectedPlanIndex);
