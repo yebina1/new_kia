@@ -1,6 +1,10 @@
 @charset "utf-8";
 
 @media (min-width: 1921px) {
+    .best .inner{
+        gap: 54px;
+    }
+
     .best_showcase {
         grid-template-columns: minmax(0, 1fr) minmax(0, clamp(780px, 50vw, 900px)) minmax(0, 1fr);
         grid-template-rows: none;
@@ -12,7 +16,7 @@
         grid-column: auto;
         grid-row: auto;
         left: 50%;
-        bottom: clamp(18px, 4vh, 42px);
+        bottom: clamp(-16px, -0.5vh, 0px);
         justify-self: auto;
         align-self: auto;
         transform: translateX(-50%);
