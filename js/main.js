@@ -944,12 +944,135 @@ window.addEventListener("resize", () => {
 }, { passive: true });
 
 /* section.ev6 */
+const $ev6MobileSwiperElement = document.querySelector(".ev6_mobile_swiper");
+const $ev6MobileSwiperWrapper = document.querySelector(".ev6_mobile_swiper_wrapper");
+const EV6_MOBILE_BREAKPOINT = 1024;
+let $ev6MobileSwiperInstance = null;
+
+const $ev6MobileSlides = [
+  {
+    key: "dashboard",
+    featureClass: "bg2_feature_dashboard",
+    title: "Dashboard",
+    cardTitle: "Dashboard",
+    cardBody: "Plant-derived plastics and bio-paints",
+    photo: "./img/main/ev6/recycled.png",
+    photoAlt: "Dashboard trim detail",
+    mask: "./img/main/ev6/Dashboard.png",
+  },
+  {
+    key: "luggage",
+    featureClass: "bg2_feature_luggage",
+    title: "Luggage",
+    cardTitle: "Luggage",
+    cardBody: "Bio-based materials and recycled waste",
+    photo: "./img/main/ev6/recycled3.png",
+    photoAlt: "Luggage recycled material detail",
+    mask: "./img/main/ev6/Luggage.png",
+  },
+  {
+    key: "seating",
+    featureClass: "bg2_feature_seating",
+    title: "Seating",
+    cardTitle: "Premium Vegan Leather",
+    cardBody: "Comfort-focused seating made with sustainable material choices",
+    photo: "./img/main/ev6/recycled2.png",
+    photoAlt: "Seating recycled material detail",
+    mask: "./img/main/ev6/Seating.png",
+  },
+  {
+    key: "carpets",
+    featureClass: "bg2_feature_carpets",
+    title: "Carpets and Mats",
+    cardTitle: "Floor Carpets And Mats",
+    cardBody: "Recycled plastics and yarn designed for a refined cabin finish",
+    photo: "./img/main/ev6/recycled1.png",
+    photoAlt: "Carpets and mats recycled material detail",
+    mask: "./img/main/ev6/Carpets.png",
+  },
+];
+
 const clamp = (v, min = 0, max = 1) => Math.min(max, Math.max(min, v));
 const mix = (a, b, t) => a + (b - a) * t;
 const sstep = (a, b, v) => {
   const t = clamp((v - a) / (b - a));
   return t * t * (3 - 2 * t);
 };
+
+function isEv6MobileViewport() {
+  return window.matchMedia(`(max-width: ${EV6_MOBILE_BREAKPOINT}px)`).matches;
+}
+
+function renderEv6MobileSlides() {
+  if (!$ev6MobileSwiperWrapper) {
+    return;
+  }
+
+  $ev6MobileSwiperWrapper.innerHTML = $ev6MobileSlides.map((slide) => `
+    <div class="swiper-slide ev6_mobile_slide" data-ev6-slide="${slide.key}">
+      <div class="ev6_mobile_stage">
+        <div class="ev6_mobile_visual" aria-hidden="true">
+          <div class="ev6_mobile_car_shell">
+            <img class="ev6_mobile_car_mask" src="${slide.mask}" alt="">
+            <div class="photo_card ev6_mobile_photo_card ${slide.featureClass}">
+              <img src="${slide.photo}" alt="${slide.photoAlt}">
+              <div class="ev6_mobile_card_overlay">
+                <button class="ev6_mobile_card_close" type="button" tabindex="-1" aria-hidden="true">×</button>
+                <div class="ev6_mobile_card_text">
+                  <strong class="ev6_mobile_card_title">${slide.cardTitle}</strong>
+                  <p class="ev6_mobile_card_body">${slide.cardBody}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join("");
+}
+
+function initEv6MobileSwiper() {
+  if (!isEv6MobileViewport() || !$ev6MobileSwiperElement || !window.Swiper) {
+    return;
+  }
+
+  if (!$ev6MobileSwiperWrapper || $ev6MobileSwiperInstance) {
+    return;
+  }
+
+  renderEv6MobileSlides();
+  $ev6MobileSwiperInstance = new Swiper($ev6MobileSwiperElement, {
+    slidesPerView: 1,
+    speed: 700,
+    threshold: 8,
+    spaceBetween: 16,
+    simulateTouch: true,
+    allowTouchMove: true,
+    touchStartPreventDefault: false,
+    pagination: {
+      el: ".ev6_mobile_pagination",
+      clickable: true,
+    },
+  });
+}
+
+function destroyEv6MobileSwiper() {
+  if (!$ev6MobileSwiperInstance) {
+    return;
+  }
+
+  $ev6MobileSwiperInstance.destroy(true, true);
+  $ev6MobileSwiperInstance = null;
+}
+
+function syncEv6MobileMode() {
+  if (isEv6MobileViewport()) {
+    initEv6MobileSwiper();
+    return;
+  }
+
+  destroyEv6MobileSwiper();
+}
 
 function initEv6Scene() {
   const section = document.getElementById("scrollScene");
@@ -1218,10 +1341,16 @@ function initEv6Scene() {
 }
 
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initEv6Scene, { once: true });
+  document.addEventListener("DOMContentLoaded", () => {
+    initEv6Scene();
+    syncEv6MobileMode();
+  }, { once: true });
 } else {
   initEv6Scene();
+  syncEv6MobileMode();
 }
+
+window.addEventListener("resize", syncEv6MobileMode, { passive: true });
 
 
 /* section.match */
