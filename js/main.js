@@ -1683,6 +1683,21 @@ function getReviewScrollTop() {
     return Math.round(window.scrollY + $sectionRect.top);
 }
 
+function isWheelInsideReviewCon(e) {
+    if (!$reviewCon) {
+        return false;
+    }
+
+    const $reviewConRect = $reviewCon.getBoundingClientRect();
+
+    return (
+        e.clientX >= $reviewConRect.left &&
+        e.clientX <= $reviewConRect.right &&
+        e.clientY >= $reviewConRect.top &&
+        e.clientY <= $reviewConRect.bottom
+    );
+}
+
 function isReviewInCaptureZone() {
     const $sectionRect = $reviewSection.getBoundingClientRect();
 
@@ -1823,6 +1838,7 @@ function handleReviewWheel(e) {
 
     const $wheelDelta = Math.abs(e.deltaY);
     const isDown = e.deltaY > 0;
+    const isInsideReviewCon = isWheelInsideReviewCon(e);
 
     if ($wheelDelta < $wheelNoiseThreshold) {
         if ($isCaptured) {
@@ -1841,6 +1857,8 @@ function handleReviewWheel(e) {
         }
     }
 
+    if (!$isCaptured && !isInsideReviewCon) return;
+
     if (!$isCaptured && isReviewInCaptureZone()) {
         e.preventDefault();
         captureReview(!isDown);
@@ -1848,6 +1866,11 @@ function handleReviewWheel(e) {
     }
 
     if (!$isCaptured) return;
+
+    if (!isInsideReviewCon) {
+        releaseReview(isDown);
+        return;
+    }
 
     e.preventDefault();
 
