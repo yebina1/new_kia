@@ -37,7 +37,7 @@ const $vehicles = [
         name: "Seltos",
         backText: "SELTOS",
         backHtml: "SELTOS",
-        backSize: "clamp(200px, 14.5vw, 300px)",
+        backSize: "clamp(100px, 14.5vw, 300px)",
         backSpacing: "-0.08em",
         backClassName: "is-seltos",
         image: "./img/main/best/seltos.png",
@@ -53,7 +53,7 @@ const $vehicles = [
         name: "K4",
         backText: "K4",
         backHtml: "K4",
-        backSize: "clamp(280px, 14.5vw, 380px)",
+        backSize: "clamp(220px, 14.5vw, 380px)",
         backSpacing: "-0.08em",
         backClassName: "is-k4",
         image: "./img/main/best/k4.png",
@@ -84,13 +84,18 @@ const $vehicles = [
 ];
 
 const $showcase = document.querySelector(".best_showcase");
+const $bestSwipeArea = document.querySelector(".best_swipe_area");
+const $bestMobileSwiperElement = document.querySelector(".best_mobile_swiper");
+const $bestMobileSwiperWrapper = document.querySelector(".best_mobile_swiper_wrapper");
 const $backText = document.querySelector(".best_back_text");
 const $backTextGlass = $backText ? $backText.querySelector(".glass") : null;
 const $cards = Array.from(document.querySelectorAll(".best_car_card"));
+const $bestProgress = document.querySelector(".best_progress");
 const $progressList = document.querySelector(".best_progress_list");
 const $specValues = document.querySelectorAll(".best_spec_value");
 const $mainVisualSection = document.querySelector(".main_visual");
 const $bestSection = document.querySelector(".best");
+const $bestInfoCon = $bestSection ? $bestSection.querySelector(".info_con") : null;
 const $ev6Section = document.querySelector(".ev6");
 
 const MOVE_DURATION = 900;
@@ -107,12 +112,19 @@ let $upperWheelLockedUntil = 0;
 let $upperSnapReleaseTimer = null;
 let $upperLenisResumeTimer = null;
 let $progressItems = [];
+let $bestTouchStartX = 0;
+let $bestTouchStartY = 0;
+let $bestTouchTracking = false;
+let $bestPointerId = null;
+let $bestSwipeTriggered = false;
+let $bestSwiperInstance = null;
 
 const BEST_SNAP_LOCK = 320;
 const BEST_SNAP_DURATION = 15;
 const UPPER_WHEEL_THRESHOLD = 6;
 const UPPER_ALIGN_TOLERANCE = 6;
 const ENABLE_SECTION_TRANSITION_SNAP = false;
+const BEST_SWIPE_THRESHOLD = 48;
 
 if (window.gsap && window.ScrollTrigger) {
     gsap.registerPlugin(ScrollTrigger);
@@ -312,6 +324,76 @@ function renderState(index) {
     renderTextContent(index);
 }
 
+function renderBestMobileSlides() {
+    if (!$bestMobileSwiperWrapper) {
+        return;
+    }
+
+    $bestMobileSwiperWrapper.innerHTML = $vehicles.map(($vehicle) => `
+        <div class="swiper-slide best_mobile_slide" data-vehicle-index="${$vehicles.indexOf($vehicle)}"></div>
+    `).join("");
+}
+
+function goToBestIndex(index, shouldAnimateSpecs = $hasActivatedSpecCount) {
+    $currentIndex = getLoopedIndex(index);
+    renderTextContent($currentIndex, shouldAnimateSpecs);
+}
+
+function initBestMobileSwiper() {
+    if (!isBestMobileViewport() || !$bestMobileSwiperElement || !window.Swiper) {
+        return;
+    }
+
+    if (!$bestMobileSwiperWrapper || $bestSwiperInstance) {
+        return;
+    }
+
+    renderBestMobileSlides();
+    $bestSwiperInstance = new Swiper($bestMobileSwiperElement, {
+        slidesPerView: 1,
+        speed: 650,
+        initialSlide: $currentIndex,
+        loop: true,
+        threshold: 6,
+        simulateTouch: true,
+        allowTouchMove: true,
+        touchStartPreventDefault: false,
+        nested: true,
+        on: {
+            init(swiper) {
+                goToBestIndex(swiper.realIndex, false);
+            },
+            slideChange(swiper) {
+                goToBestIndex(swiper.realIndex);
+            }
+        }
+    });
+}
+
+function destroyBestMobileSwiper() {
+    if (!$bestSwiperInstance) {
+        return;
+    }
+
+    $bestSwiperInstance.destroy(true, true);
+    $bestSwiperInstance = null;
+}
+
+function syncBestSliderMode() {
+    if (isBestMobileViewport()) {
+        initBestMobileSwiper();
+
+        if ($bestSwiperInstance && $bestSwiperInstance.realIndex !== $currentIndex) {
+            $bestSwiperInstance.slideToLoop($currentIndex, 0);
+        }
+
+        return;
+    }
+
+    destroyBestMobileSwiper();
+    renderState($currentIndex);
+}
+
 function getFrameRect(card) {
     const $frame = card.querySelector(".best_car_frame");
     return ($frame || card).getBoundingClientRect();
@@ -470,6 +552,101 @@ function handleCardClick(event) {
     }
 
     animateTransition($slot);
+}
+
+function isBestMobileViewport() {
+    return window.matchMedia("(max-width: 560px)").matches;
+}
+
+function resetBestTouchState() {
+    $bestPointerId = null;
+    $bestTouchTracking = false;
+    $bestSwipeTriggered = false;
+}
+
+function handleBestPointerDown(event) {
+    if (!isBestMobileViewport() || $isAnimating || !event.isPrimary) {
+        $bestPointerId = null;
+        return;
+    }
+
+    if ($bestSwipeArea && typeof $bestSwipeArea.setPointerCapture === "function") {
+        try {
+            $bestSwipeArea.setPointerCapture(event.pointerId);
+        } catch (error) {
+            // Ignore capture failures and continue with normal pointer tracking.
+        }
+    }
+
+    $bestPointerId = event.pointerId;
+    $bestTouchStartX = event.clientX;
+    $bestTouchStartY = event.clientY;
+    $bestTouchTracking = true;
+    $bestSwipeTriggered = false;
+}
+
+function handleBestPointerMove(event) {
+    if (
+        !isBestMobileViewport() ||
+        !$bestTouchTracking ||
+        $isAnimating ||
+        $bestSwipeTriggered ||
+        ($bestPointerId !== null && event.pointerId !== $bestPointerId)
+    ) {
+        return;
+    }
+
+    const $deltaX = event.clientX - $bestTouchStartX;
+    const $deltaY = event.clientY - $bestTouchStartY;
+    const $isHorizontalSwipe = Math.abs($deltaX) > BEST_SWIPE_THRESHOLD && Math.abs($deltaX) > Math.abs($deltaY);
+
+    if (!$isHorizontalSwipe) {
+        return;
+    }
+
+    $bestSwipeTriggered = true;
+    $bestPointerId = null;
+    $bestTouchTracking = false;
+    animateTransition($deltaX < 0 ? "right" : "left");
+}
+
+function handleBestPointerUp(event) {
+    if ($bestSwipeArea && typeof $bestSwipeArea.releasePointerCapture === "function") {
+        try {
+            if ($bestSwipeArea.hasPointerCapture(event.pointerId)) {
+                $bestSwipeArea.releasePointerCapture(event.pointerId);
+            }
+        } catch (error) {
+            // Ignore release failures.
+        }
+    }
+
+    resetBestTouchState();
+}
+
+function handleBestPointerCancel(event) {
+    if ($bestSwipeArea && typeof $bestSwipeArea.releasePointerCapture === "function") {
+        try {
+            if ($bestSwipeArea.hasPointerCapture(event.pointerId)) {
+                $bestSwipeArea.releasePointerCapture(event.pointerId);
+            }
+        } catch (error) {
+            // Ignore release failures.
+        }
+    }
+
+    resetBestTouchState();
+}
+
+function bindBestSwipeTarget($target) {
+    if (!$target) {
+        return;
+    }
+
+    $target.addEventListener("pointerdown", handleBestPointerDown, { passive: true });
+    $target.addEventListener("pointermove", handleBestPointerMove, { passive: true });
+    $target.addEventListener("pointerup", handleBestPointerUp, { passive: true });
+    $target.addEventListener("pointercancel", handleBestPointerCancel, { passive: true });
 }
 
 function getBestScrollTop() {
@@ -726,12 +903,13 @@ function syncSectionSnapIndicesOnScroll() {
     }
 }
 
-if ($showcase && $backText && $backTextGlass && $cards.length === 3 && $specValues.length) {
+if ($showcase && $bestSwipeArea && $backText && $backTextGlass && $cards.length === 3 && $specValues.length) {
     renderBestProgress();
     renderState($currentIndex);
     $cards.forEach((card) => {
         card.addEventListener("click", handleCardClick);
     });
+    syncBestSliderMode();
 
     if (window.ScrollTrigger && $bestSection) {
         ScrollTrigger.create({
@@ -762,6 +940,7 @@ window.addEventListener("scroll", syncSectionSnapIndicesOnScroll, { passive: tru
 window.addEventListener("resize", () => {
     clearUpperSnapRuntimeState();
     syncCurrentUpperSnapIndex();
+    syncBestSliderMode();
 }, { passive: true });
 
 /* section.ev6 */
