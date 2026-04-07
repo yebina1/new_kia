@@ -811,6 +811,9 @@ button {
     transform 0.3s ease,
     border-color 0.3s ease,
     box-shadow 0.3s ease;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .hero_color_swatch::before {
@@ -5443,16 +5446,6 @@ button {
   height: 54px;
   padding: 16px 32px;
   font-size: 20px;
-}
-
-.selection_modal_buttons .is-primary {
-  background: rgba(50, 176, 180, 0.3);
-  border-color: rgba(255, 255, 255, 0.4);
-}
-
-#buildSendModalPrimary {
-  background: rgba(50, 176, 180, 0.3);
-  border-color: rgba(255, 255, 255, 0.4);
 }
 
 .selection_modal_buttons button.white_origin:hover {

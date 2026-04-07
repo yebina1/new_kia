@@ -124,6 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const heroCenter = document.querySelector(".hero_center");
   const heroCarStageSurface = document.querySelector("#heroModelStage .hero_car");
   const heroBottomSteps = document.getElementById("heroBottomSteps");
+  const heroBottomStepsDefaultParent = heroBottomSteps?.parentElement ?? null;
   const progressFill = document.getElementById("heroProgressFill");
   const stepButtons = Array.from(
     document.querySelectorAll(".hero_bottom_tabs button")
@@ -1844,7 +1845,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     syncResponsiveStepTabs();
-    syncProgressPosition();
 
     if (heroTrimHeader) {
       const shouldShowTrimHeader = currentStep >= 1;
@@ -1910,6 +1910,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     syncTrimSelectionGate();
     syncStageStepsPosition();
+    syncProgressPosition();
     scheduleLayoutSync();
   }
 
@@ -1965,11 +1966,15 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const isModelStage = currentStep === 0;
-    const shouldUseResponsiveStageLayout =
-      !isModelStage && window.innerWidth <= 1500;
+    const resetResponsiveStageSteps = () => {
+      if (
+        heroBottomStepsDefaultParent &&
+        heroBottomSteps.parentElement !== heroBottomStepsDefaultParent
+      ) {
+        heroBottomStepsDefaultParent.appendChild(heroBottomSteps);
+      }
 
-    if (!shouldUseResponsiveStageLayout) {
+      heroBottomSteps.classList.remove("is-inline-stage-steps");
       heroBottomSteps.style.removeProperty("top");
       heroBottomSteps.style.removeProperty("left");
       heroBottomSteps.style.removeProperty("right");
@@ -1977,6 +1982,14 @@ document.addEventListener("DOMContentLoaded", () => {
       heroBottomSteps.style.removeProperty("transform");
       heroBottomSteps.style.removeProperty("width");
       heroBottomSteps.style.removeProperty("max-width");
+    };
+
+    const isModelStage = currentStep === 0;
+    const shouldUseResponsiveStageLayout =
+      !isModelStage && window.innerWidth <= 1500;
+
+    if (!shouldUseResponsiveStageLayout) {
+      resetResponsiveStageSteps();
       return;
     }
 
@@ -1989,51 +2002,29 @@ document.addEventListener("DOMContentLoaded", () => {
       heroSummaryStage
     ].find((stage) => stage?.classList.contains("is-visible"));
 
-    if (!visibleStage) {
+    const stageActions = visibleStage?.querySelector(".hero_stage_actions");
+
+    if (!visibleStage || !stageActions) {
+      resetResponsiveStageSteps();
       return;
     }
 
-    const vehicle = visibleStage.querySelector(
-      ".hero_trim_vehicle, .hero_color_vehicle, .hero_package_vehicle, .hero_accessory_vehicle, .hero_plan_vehicle, .hero_summary_vehicle"
-    );
-    const panel = visibleStage.querySelector(
-      ".hero_trim_panel, .hero_color_panels, .hero_package_panel, .hero_accessory_panel, .hero_plan_panel, .hero_summary_side"
-    );
-
-    if (!vehicle || !panel) {
-      return;
+    if (stageActions.nextElementSibling !== heroBottomSteps) {
+      stageActions.insertAdjacentElement("afterend", heroBottomSteps);
     }
 
-    const visualRect = heroVisual.getBoundingClientRect();
-    const vehicleRect = vehicle.getBoundingClientRect();
-    const panelRect = panel.getBoundingClientRect();
-    const stepsRect = heroBottomSteps.getBoundingClientRect();
-    const isMobileStageLayout = window.innerWidth <= 768;
-    const gapBelowVehicle = isMobileStageLayout ? 16 : 20;
-    const gapAbovePanel = isMobileStageLayout ? 16 : 18;
-    const minTop = vehicleRect.bottom - visualRect.top + gapBelowVehicle;
-    const maxTop = panelRect.top - visualRect.top - stepsRect.height - gapAbovePanel;
-    const preferredTop = minTop + Math.max((maxTop - minTop) * 0.42, 0);
-    const resolvedTop =
-      maxTop > minTop
-        ? Math.min(Math.max(preferredTop, minTop), maxTop)
-        : minTop;
-
-    heroBottomSteps.style.left = "50%";
-    heroBottomSteps.style.right = "auto";
-    heroBottomSteps.style.bottom = "auto";
-    heroBottomSteps.style.top = `${Math.max(0, resolvedTop)}px`;
-    heroBottomSteps.style.width = isMobileStageLayout
-      ? "calc(100vw - 32px)"
-      : "min(calc(100vw - 96px), 760px)";
-    heroBottomSteps.style.maxWidth = isMobileStageLayout
-      ? "calc(100vw - 32px)"
-      : "min(calc(100vw - 96px), 760px)";
-    heroBottomSteps.style.transform = "translateX(-50%)";
+    heroBottomSteps.classList.add("is-inline-stage-steps");
+    heroBottomSteps.style.removeProperty("top");
+    heroBottomSteps.style.removeProperty("left");
+    heroBottomSteps.style.removeProperty("right");
+    heroBottomSteps.style.removeProperty("bottom");
+    heroBottomSteps.style.removeProperty("transform");
+    heroBottomSteps.style.removeProperty("width");
+    heroBottomSteps.style.removeProperty("max-width");
   }
 
   function syncSummaryStageBackdrop() {
-    if (!heroVisual) {
+    if (!heroVisual || !heroSection) {
       return;
     }
 
@@ -2042,6 +2033,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!shouldShowBackdrop) {
       heroVisual.classList.remove("has-stage-backdrop");
       heroVisual.style.removeProperty("--hero-responsive-stage-backdrop-top");
+      heroSection.style.removeProperty("--hero-responsive-stage-scene-height");
       if (heroSummaryStage) {
         heroSummaryStage.style.removeProperty("--hero-summary-card-backdrop-top");
       }
@@ -2064,17 +2056,28 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!visibleStage || !stagePanel) {
       heroVisual.classList.remove("has-stage-backdrop");
       heroVisual.style.removeProperty("--hero-responsive-stage-backdrop-top");
+      heroSection.style.removeProperty("--hero-responsive-stage-scene-height");
       return;
     }
 
     const visualRect = heroVisual.getBoundingClientRect();
     const panelRect = stagePanel.getBoundingClientRect();
     const backdropTop = Math.max(0, Math.round(panelRect.top - visualRect.top));
+    const headerSpaceHeight =
+      document.querySelector(".hero_header_space")?.getBoundingClientRect().height || 64;
+    const sceneHeight = Math.max(
+      Math.round(headerSpaceHeight + backdropTop),
+      Math.round(window.innerHeight)
+    );
 
     heroVisual.classList.add("has-stage-backdrop");
     heroVisual.style.setProperty(
       "--hero-responsive-stage-backdrop-top",
       `${backdropTop}px`
+    );
+    heroSection.style.setProperty(
+      "--hero-responsive-stage-scene-height",
+      `${sceneHeight}px`
     );
 
     if (heroSummaryStage?.classList.contains("is-visible") && heroSummarySide) {
@@ -2101,10 +2104,10 @@ document.addEventListener("DOMContentLoaded", () => {
     pendingLayoutSyncFrame = window.requestAnimationFrame(() => {
       pendingLayoutSyncFrame = 0;
       syncResponsiveStepTabs();
+      syncStageStepsPosition();
       syncProgressPosition();
       syncTopTabsIndicator();
       syncStartButtonPosition();
-      syncStageStepsPosition();
       syncSummaryStageBackdrop();
     });
   }
@@ -2353,6 +2356,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   mobileStepMediaQuery?.addEventListener("change", () => {
     syncResponsiveStepTabs();
+    syncStageStepsPosition();
     syncProgressPosition();
   });
 
@@ -2670,7 +2674,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function initializeBuildCursor() {
     const buildWrap = document.querySelector(".build_wrap");
-    const canUseCustomCursor = window.matchMedia?.("(pointer: fine)")?.matches;
+    const canUseCustomCursor =
+      window.matchMedia?.("(pointer: fine)")?.matches && window.innerWidth > 1500;
 
     if (!buildWrap || !canUseCustomCursor) {
       return;
@@ -2830,51 +2835,29 @@ document.addEventListener("DOMContentLoaded", () => {
     Array.from(container.querySelectorAll(".hero_color_swatch")).forEach(
       (swatch, index) => {
         swatch.dataset.swatchIndex = String(index);
+
+        swatch.addEventListener("pointerdown", (event) => {
+          if (
+            event.button > 0 ||
+            (event.pointerType === "mouse" && event.buttons > 1)
+          ) {
+            return;
+          }
+
+          event.preventDefault();
+          onSelect(index);
+        });
+
+        swatch.addEventListener("click", (event) => {
+          if (event.detail > 0) {
+            return;
+          }
+
+          event.preventDefault();
+          onSelect(index);
+        });
       }
     );
-
-    container.addEventListener("click", (event) => {
-      const swatches = Array.from(container.querySelectorAll(".hero_color_swatch"));
-
-      if (!swatches.length) {
-        return;
-      }
-
-      const directSwatch = event.target.closest(".hero_color_swatch");
-      const swatch =
-        directSwatch && container.contains(directSwatch)
-          ? directSwatch
-          : swatches.reduce((nearest, current) => {
-              if (!("clientX" in event)) {
-                return nearest;
-              }
-
-              const currentRect = current.getBoundingClientRect();
-              const currentDistance = Math.abs(
-                event.clientX - (currentRect.left + currentRect.width / 2)
-              );
-
-              if (!nearest) {
-                return { element: current, distance: currentDistance };
-              }
-
-              return currentDistance < nearest.distance
-                ? { element: current, distance: currentDistance }
-                : nearest;
-            }, null)?.element;
-
-      if (!swatch) {
-        return;
-      }
-
-      const swatchIndex = Number(swatch.dataset.swatchIndex);
-
-      if (Number.isNaN(swatchIndex)) {
-        return;
-      }
-
-      onSelect(swatchIndex);
-    });
   }
 
   function bindInstantActionButton(button, handler) {
