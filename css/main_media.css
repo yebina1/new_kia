@@ -1,5 +1,79 @@
 @charset "utf-8";
 
+@media (max-width: 1023px) {
+    .brand {
+        display: none;
+    }
+}
+
+@media (min-width: 1024px) {
+    .brand {
+        display: block;
+    }
+
+    section[class*="option"] .bottom > ul.cars {
+        overflow: hidden;
+    }
+
+    section[class*="option"] .bottom > ul.cars > li {
+        flex: 1 1 0;
+        transition:
+            flex-grow 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+            transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+            filter 0.4s ease;
+        will-change: flex-grow, transform;
+    }
+
+    section[class*="option"] .bottom > ul.cars > li > h2,
+    section[class*="option"] .bottom > ul.cars > li > strong {
+        transition:
+            font-size 0.35s ease,
+            transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+            opacity 0.4s ease;
+    }
+
+    section[class*="option"] .bottom > ul.cars:hover > li {
+        flex-grow: 0.4;
+    }
+
+    section[class*="option"] .bottom > ul.cars:hover > li:not(:hover) > h2 {
+        font-size: 32px;
+        line-height: 1.15;
+    }
+
+    section.option02 .bottom > ul.cars:hover > li:not(:hover) > h2,
+    section.option03 .bottom > ul.cars:hover > li:not(:hover) > h2,
+    section.option04 .bottom > ul.cars:hover > li:not(:hover) > h2 {
+        display: inline-flex;
+        align-items: flex-end;
+        gap: 2px;
+        line-height: 1;
+    }
+
+    section[class*="option"] .bottom > ul.cars:hover > li:not(:hover) > strong {
+        font-size: 16px;
+    }
+
+    section.option02 .bottom > ul.cars:hover > li:not(:hover) > h2 span {
+        font-size: 36px;
+        transform: translateY(-3px);
+    }
+
+    section.option03 .bottom > ul.cars:hover > li:not(:hover) > h2 span,
+    section.option04 .bottom > ul.cars:hover > li:not(:hover) > h2 span {
+        font-size: 45px;
+        transform: translateY(-4px);
+    }
+
+    section[class*="option"] .bottom > ul.cars:hover > li:not(:hover) {
+        padding-inline: 32px;
+    }
+
+    section[class*="option"] .bottom > ul.cars > li:hover {
+        flex-grow: 2.4;
+    }
+}
+
 @media (min-width: 1921px) {
     .best .inner{
         gap: 54px;
@@ -85,6 +159,14 @@
 @media (max-width: 1024px) {
     .best .inner{
         gap: 32px;
+    }
+
+    .map h2 {
+        font-size: clamp(32px, 4vw, 48px);
+    }
+
+    .map p {
+        font-size: clamp(16px, 2vw, 18px);
     }
 
     .best_showcase {
@@ -670,6 +752,16 @@
 
     .best_progress {
         pointer-events: auto;
+    }
+}
+
+@media (max-width: 500px) {
+    .map .txt_box {
+        text-align: center;
+    }
+
+    .map_mobile_break {
+        display: inline;
     }
 }
 

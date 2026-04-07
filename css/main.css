@@ -111,7 +111,7 @@ body.section_transition_lock {
 
 .best .tit p {
     margin-top: 6px;
-    font-size: clamp(20px, 2vw, 24px);
+    font-size: clamp(16px, 1.7vw, 24px);
 }
 
 .best_swipe_area {
@@ -1329,6 +1329,37 @@ body.section_transition_lock {
   pointer-events: none;
 }
 
+.brand {
+  display: none;
+  background: #0C1115;
+}
+
+.brand .inner {
+  width: 100%;
+  height: clamp(450px, 45vw, 650px);
+  padding-inline: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.brand h4 {
+  font-size: 36px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--kia-white1);
+}
+
+.brand strong {
+  font-size: 48px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--kia-white1);
+}
+
 
 /* section.match */
 .match,
@@ -1382,7 +1413,7 @@ footer {
 }
 
 .intro p {
-  font-size: 24px;
+  font-size: clamp(16px, 1.7vw, 24px);
   line-height: 1.3;
   margin-top: 16px;
 }
@@ -1419,8 +1450,8 @@ section[class*="option"] .inner {
 }
 
 section[class*="option"] .top {
-  flex: 0 0 116px;
-  height: 116px;
+  flex: 0 0 clamp(106px, 8vw, 116px);
+  height: clamp(106px, 8vw, 116px);
   width: 100%;
   padding: 32px 64px;
   display: flex;
@@ -1429,14 +1460,18 @@ section[class*="option"] .top {
 }
 
 section[class*="option"] .top strong {
-  font-size: 2.2rem;
+  font-size: clamp(32px, 2.2vw, 2.2rem);
   font-style: normal;
   font-weight: 400;
 }
 
 section[class*="option"] .top strong span{
-  font-size: 1rem;
-  padding-left: 32px;
+  font-size: clamp(16px, 1.4vw, 20px);
+  margin-left: 32px;
+  padding: 6px 12px;
+  background: var(--kia-white1);
+  border-radius: 555px;
+  color: var(--kia-black);
 }
 
 section[class*="option"] .top a {
@@ -1449,11 +1484,11 @@ section[class*="option"] .top a {
 }
 
 section[class*="option"] .top a i {
-  font-size: 24px;
+  font-size: clamp(20px, 1.6vw, 24px);
 }
 
 section[class*="option"] .top a span {
-  font-size: 1.1rem;
+  font-size: clamp(16px, 1.2vw, 1.1rem);
 }
 
 section[class*="option"] .top a:hover span {
@@ -1464,7 +1499,7 @@ section[class*="option"] .top a:hover span {
 section[class*="option"] .bottom {
   width: 100%;
   flex: 1 1 auto;
-  min-height: 800px;
+  min-height: 850px;
 }
 
 section[class*="option"] .bottom>ul.cars,
@@ -1567,7 +1602,7 @@ section[class*="option"] .bottom>ul.cars>li h2 span {
 }
 
 section.option02 .bottom>ul.cars>li h2 span {
-  font-size: 64px;
+  font-size: clamp(48px, 4vw, 64px);
   transform: translateY(-12px);
 }
 
@@ -1619,7 +1654,7 @@ section[class*="option"] .bottom>ul.cars>li .info_con .tit {
 
 section[class*="option"] .bottom>ul.cars>li .info_con .tit h2 {
   width: 100%;
-  font-size: 64px;
+  font-size: clamp(48px, 4vw, 64px);
   font-weight: 500;
 }
 
@@ -1764,7 +1799,7 @@ section[class*="option"] .bottom>ul.cars>li:hover .info_con>ul.info {
 .partnership .inner {
   width: 100%;
   height: 100vh;
-  min-height: clamp(950px, 90vh, 100vh);
+  min-height: clamp(750px, 90vh, 100vh);
   margin: 0 auto;
   padding: 72px 0 0;
   display: flex;
@@ -1779,13 +1814,14 @@ section[class*="option"] .bottom>ul.cars>li:hover .info_con>ul.info {
 }
 
 .partnership .tit p {
-  font-size: clamp(16px, 1.8vw, 24px);
+  font-size: clamp(16px, 1.7vw, 24px);
   color: var(--kia-white2);
 }
 
 .par_visual {
   position: relative;
-  flex: 1 1 auto;
+  flex: 0 0 clamp(300px, 36vw, 600px);
+  height: clamp(500px, 36vw, 600px);
   min-height: 0;
   width: 100%;
   display: flex;
@@ -1962,9 +1998,12 @@ body.review_locked {
   padding-block: 32px 64px;
   width: 100%;
 }
+.review .tit h2{
+  font-size: clamp(48px, 4vw, 64px);
+}
 
 .review .tit p {
-  font-size: clamp(20px, 2vw, 24px);
+  font-size: clamp(16px, 1.7vw, 24px);
   line-height: 1.3;
   margin: 0;
 }
@@ -2117,7 +2156,13 @@ body.review_locked {
   display: flex;
   gap: 12px;
   font-family: "Outfit", sans-serif;
-  opacity: 0.35;
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.28);
+  box-shadow:
+    inset 0 1px 3px rgba(255, 255, 255, 0.14),
+    0 8px 18px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(4px) saturate(120%);
+  -webkit-backdrop-filter: blur(4px) saturate(120%);
 }
 
 .modal .white_origin:hover {
@@ -2131,6 +2176,7 @@ body.review_locked {
 
 .map .inner {
   width: 100%;
+  min-width: 360px;
   height: 600px;
   padding-block: 240px;
   position: relative;
@@ -2159,9 +2205,17 @@ body.review_locked {
   gap: 16px;
 }
 
+.map h2 {
+  font-size: clamp(48px, 4vw, 64px);
+}
+
 .map p {
-  font-size: clamp(20px, 2vw, 24px);
+  font-size: clamp(16px, 1.7vw, 24px);
   padding-bottom: 32px;
+}
+
+.map_mobile_break {
+  display: none;
 }
 
 
@@ -2172,14 +2226,12 @@ body.review_locked {
   padding-inline: 28px;
   border: 1px solid rgba(255, 255, 255, 0.32);
   border-radius: 999px;
-  background: linear-gradient(135deg,
-      rgba(255, 255, 255, 0.34),
-      rgba(255, 255, 255, 0.14));
+  background: rgba(255, 255, 255, 0.12);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.35),
-    0 10px 30px rgba(0, 0, 0, 0.16);
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 10px 24px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(4px) saturate(120%);
+  -webkit-backdrop-filter: blur(4px) saturate(120%);
   color: var(--kia-black);
   transition:
     transform 0.25s ease,
@@ -2187,7 +2239,6 @@ body.review_locked {
     box-shadow 0.25s ease,
     border-color 0.25s ease;
   color: var(--kia-white1);
-  opacity: 0.7;
   display: flex;
   align-items: center;
   justify-content: baseline;
@@ -2200,15 +2251,13 @@ body.review_locked {
   inset: 2px;
   border-radius: inherit;
   background: linear-gradient(180deg,
-      rgba(255, 255, 255, 0.28),
-      rgba(255, 255, 255, 0.05));
+      rgba(255, 255, 255, 0.1),
+      rgba(255, 255, 255, 0.03));
   pointer-events: none;
-  opacity: 0.7;
 }
 
 
 .map .txt_box > a:hover {
-  transform: translateY(-2px);
   border-color: rgba(255, 255, 255, 0.45);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.4),
