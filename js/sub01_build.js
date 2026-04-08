@@ -51,11 +51,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const heroSummaryPrice = document.getElementById("heroSummaryPrice");
   const heroSummaryLease = document.getElementById("heroSummaryLease");
   const heroSummaryImage = document.getElementById("heroSummaryImage");
+  const heroSummarySide = heroSummaryStage?.querySelector(".hero_summary_side");
   const requestQuoteButton = document.getElementById("requestQuoteButton");
   const heroQuotePanel = document.getElementById("heroQuotePanel");
   const quoteBackButton = document.getElementById("quoteBackButton");
   const quoteCloseButton = document.getElementById("quoteCloseButton");
   const quoteSendButton = document.getElementById("quoteSendButton");
+  const quoteTestFillButton = document.getElementById("quoteTestFillButton");
   const quoteZipDisplay = document.getElementById("quoteZipDisplay");
   const quoteZipEditButton = document.getElementById("quoteZipEditButton");
   const quoteZipInput = document.getElementById("quoteZipInput");
@@ -74,8 +76,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const buildSendModalClose = document.getElementById("buildSendModalClose");
   const buildSendModalTitle = document.getElementById("build-send-modal-title");
   const buildSendModalEyebrow = document.getElementById("buildSendModalEyebrow");
+  const buildSendModalStatusLabel = document.getElementById("buildSendModalStatusLabel");
   const buildSendModalDescription = document.getElementById("buildSendModalDescription");
+  const buildSendModalSpecsLabel = document.getElementById("buildSendModalSpecsLabel");
   const buildSendModalSpecs = document.getElementById("buildSendModalSpecs");
+  const buildSendModalVisual = document.getElementById("buildSendModalVisual");
   const buildSendModalImage = document.getElementById("buildSendModalImage");
   const buildSendModalPrimary = document.getElementById("buildSendModalPrimary");
   const buildSendModalSecondary = document.getElementById("buildSendModalSecondary");
@@ -119,6 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const heroCenter = document.querySelector(".hero_center");
   const heroCarStageSurface = document.querySelector("#heroModelStage .hero_car");
   const heroBottomSteps = document.getElementById("heroBottomSteps");
+  const heroBottomStepsDefaultParent = heroBottomSteps?.parentElement ?? null;
   const progressFill = document.getElementById("heroProgressFill");
   const stepButtons = Array.from(
     document.querySelectorAll(".hero_bottom_tabs button")
@@ -553,6 +559,19 @@ document.addEventListener("DOMContentLoaded", () => {
     )}</span>`;
   }
 
+  function formatIncrementPriceMarkup(priceLabel) {
+    const trimmedLabel = String(priceLabel || "").trim();
+
+    if (!trimmedLabel) {
+      return "";
+    }
+
+    return escapeHtml(trimmedLabel).replace(
+      /^\+\s*/,
+      '<i class="bx bx-plus bx-remove-padding" aria-hidden="true"></i>'
+    );
+  }
+
   function formatSummaryLinePrice(value) {
     return value > 0 ? formatCurrencyValue(value) : "$0";
   }
@@ -683,21 +702,47 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const currentCar = getCurrentCar();
     const trimName = heroSummaryTrim?.textContent?.trim() || "Land AWD";
-    const title = currentCar?.title ? `${currentCar.title} (${trimName})` : trimName;
+    const title =
+      options.title || (currentCar?.title ? `${currentCar.title} (${trimName})` : trimName);
+    const specs = Array.isArray(options.specs) ? options.specs : getBuildModalSpecs();
+    const variant = options.variant || "default";
+    const showImage = options.showImage !== false;
 
-    buildSendModalTitle.textContent = title;
+    if (buildSendModal) {
+      buildSendModal.dataset.variant = variant;
+    }
+
+    buildSendModalTitle.innerHTML = formatCarTitleMarkup(title);
     buildSendModalEyebrow.textContent = options.eyebrow || "Your Final Selection Estimate";
+    if (buildSendModalStatusLabel) {
+      buildSendModalStatusLabel.textContent =
+        options.statusLabel || (variant === "incomplete" ? "Action needed:" : "Status:");
+    }
     buildSendModalDescription.textContent =
       options.description || "Your build summary has been prepared successfully.";
+    if (buildSendModalSpecsLabel) {
+      buildSendModalSpecsLabel.textContent =
+        options.specsLabel || (variant === "incomplete" ? "Missing items :" : "Selected Specs :");
+    }
+    if (buildSendModalPrimary) {
+      buildSendModalPrimary.textContent = options.primaryLabel || "Done";
+    }
+    if (buildSendModalSecondary) {
+      buildSendModalSecondary.textContent = options.secondaryLabel || "Continue Editing";
+    }
     buildSendModalSpecs.innerHTML = "";
 
-    getBuildModalSpecs().forEach((item) => {
+    specs.forEach((item) => {
       const li = document.createElement("li");
       li.textContent = item;
       buildSendModalSpecs.appendChild(li);
     });
 
-    if (buildSendModalImage && heroSummaryImage) {
+    if (buildSendModalVisual) {
+      buildSendModalVisual.hidden = !showImage;
+    }
+
+    if (showImage && buildSendModalImage && heroSummaryImage) {
       buildSendModalImage.src = heroSummaryImage.src;
       buildSendModalImage.alt =
         heroSummaryImage.alt || `${currentCar?.title || "Selected build"} preview`;
@@ -905,6 +950,18 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
+  function syncExteriorPreviewTone(imageElement) {
+    if (!imageElement) {
+      return;
+    }
+
+    const selectedExteriorName =
+      getSelectedExteriorSwatch()?.dataset.name?.trim() || "";
+    const shouldDesaturate = selectedExteriorName === "Glacial White Pearl";
+
+    imageElement.classList.toggle("is-glacial-white-pearl", shouldDesaturate);
+  }
+
   function setVehicleStageImage(imageElement, fallbackSrc, fallbackAlt) {
     if (!imageElement) {
       return;
@@ -913,6 +970,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const selectedExteriorMedia = getSelectedExteriorMedia(fallbackSrc, fallbackAlt);
     imageElement.src = selectedExteriorMedia.src;
     imageElement.alt = selectedExteriorMedia.alt;
+    syncExteriorPreviewTone(imageElement);
   }
 
   function syncNonColorStageVehicleImages() {
@@ -1004,14 +1062,126 @@ document.addEventListener("DOMContentLoaded", () => {
     return !isEmpty;
   }
 
-  function validateQuoteForm() {
-    const firstNameValid = validateQuoteField(quoteFirstName, quoteFirstNameError);
-    const lastNameValid = validateQuoteField(quoteLastName, quoteLastNameError);
-    const phoneValid = validateQuoteField(quotePhone, quotePhoneError);
-    const emailValid = validateQuoteField(quoteEmail, quoteEmailError);
-    const addressValid = validateQuoteField(quoteAddress, quoteAddressError);
+  function getQuoteRequiredFields() {
+    return [
+      {
+        input: quoteFirstName,
+        errorElement: quoteFirstNameError,
+        label: "First name"
+      },
+      {
+        input: quoteLastName,
+        errorElement: quoteLastNameError,
+        label: "Last name"
+      },
+      {
+        input: quotePhone,
+        errorElement: quotePhoneError,
+        label: "Phone"
+      },
+      {
+        input: quoteEmail,
+        errorElement: quoteEmailError,
+        label: "Email"
+      },
+      {
+        input: quoteAddress,
+        errorElement: quoteAddressError,
+        label: "Address"
+      }
+    ];
+  }
 
-    return firstNameValid && lastNameValid && phoneValid && emailValid && addressValid;
+  function getQuoteValidationState({ showInlineErrors = false } = {}) {
+    const missingFields = [];
+    const hasContactMethod = Boolean(
+      heroQuotePanel?.querySelector(".hero_quote_method_btn.is-active")
+    );
+    const hasPaymentMethod = Boolean(
+      heroQuotePanel?.querySelector(".hero_quote_payment_btn.is-active")
+    );
+    const hasDealer = Boolean(heroQuotePanel?.querySelector(".hero_quote_dealer_card.is-selected"));
+
+    if (!hasContactMethod) {
+      missingFields.push("Contact Method");
+    }
+
+    getQuoteRequiredFields().forEach(({ input, errorElement, label }) => {
+      const isFilled = showInlineErrors
+        ? validateQuoteField(input, errorElement)
+        : Boolean(input?.value?.trim());
+
+      if (!isFilled) {
+        missingFields.push(label);
+      }
+    });
+
+    if (!hasPaymentMethod) {
+      missingFields.push("Payment Method");
+    }
+
+    if (!hasDealer) {
+      missingFields.push("Select Dealer");
+    }
+
+    return {
+      isValid: missingFields.length === 0,
+      missingFields
+    };
+  }
+
+  function validateQuoteForm() {
+    return getQuoteValidationState({ showInlineErrors: true }).isValid;
+  }
+
+  function updateSendBuildButtonState() {
+    if (!sendBuildButton) {
+      return;
+    }
+
+    const { isValid, missingFields } = getQuoteValidationState();
+    sendBuildButton.disabled = false;
+    sendBuildButton.classList.remove("is-disabled");
+    sendBuildButton.setAttribute("aria-disabled", "false");
+    sendBuildButton.dataset.quoteReady = isValid ? "true" : "false";
+    sendBuildButton.title = isValid
+      ? "Send your quote request."
+      : `Please complete the required quote fields before sending: ${missingFields.join(", ")}.`;
+  }
+
+  function openIncompleteQuoteModal(missingFields) {
+    openBuildSendModal({
+      variant: "incomplete",
+      eyebrow: "Quote Form Incomplete",
+      title: "Complete Required Fields",
+      description:
+        "Please fill in the missing required items below before sending your quote request.",
+      statusLabel: "Action needed:",
+      specsLabel: "Missing items :",
+      specs: missingFields,
+      primaryLabel: "Continue Editing",
+      secondaryLabel: "Close",
+      showImage: false
+    });
+  }
+
+  function handleQuoteSendAttempt() {
+    const validationState = getQuoteValidationState({ showInlineErrors: true });
+
+    if (!validationState.isValid) {
+      openQuotePanel();
+      updateSendBuildButtonState();
+      openIncompleteQuoteModal(validationState.missingFields);
+      return;
+    }
+
+    closeQuotePanel();
+    updateSendBuildButtonState();
+    openBuildSendModal({
+      eyebrow: "Quote Request Complete",
+      description:
+        "Your quote request has been sent successfully. A dealer will review your build and contact you soon."
+    });
   }
 
   function commitQuoteZip() {
@@ -1025,6 +1195,38 @@ document.addEventListener("DOMContentLoaded", () => {
     quoteZipInput.hidden = true;
     quoteZipDisplay.parentElement?.removeAttribute("hidden");
     quoteZipEditButton.hidden = false;
+  }
+
+  function autofillQuoteTestData() {
+    if (quoteFirstName) {
+      quoteFirstName.value = "Alex";
+      validateQuoteField(quoteFirstName, quoteFirstNameError);
+    }
+
+    if (quoteLastName) {
+      quoteLastName.value = "Kim";
+      validateQuoteField(quoteLastName, quoteLastNameError);
+    }
+
+    if (quotePhone) {
+      quotePhone.value = "010-1234-5678";
+      validateQuoteField(quotePhone, quotePhoneError);
+    }
+
+    if (quoteEmail) {
+      quoteEmail.value = "alex.kim@example.com";
+      validateQuoteField(quoteEmail, quoteEmailError);
+    }
+
+    if (quoteAddress) {
+      quoteAddress.value = "123 Gangnam-daero, Seoul";
+      validateQuoteField(quoteAddress, quoteAddressError);
+    }
+
+    if (quoteZipInput) {
+      quoteZipInput.value = "12345";
+      commitQuoteZip();
+    }
   }
 
   function setExclusiveActiveButton(buttons, targetButton) {
@@ -1049,6 +1251,33 @@ document.addEventListener("DOMContentLoaded", () => {
       button.classList.remove("is-active");
       button.setAttribute("aria-pressed", "false");
     });
+  }
+
+  function openQuotePanel() {
+    if (!heroQuotePanel || !heroSummaryStage) {
+      return;
+    }
+
+    syncQuoteSelectedModel();
+    const summarySide = heroQuotePanel.closest(".hero_summary_side");
+    const summaryPanel = summarySide?.querySelector(".hero_summary_panel");
+    const summaryPanelHeight = summaryPanel?.getBoundingClientRect().height ?? 0;
+
+    if (summarySide && summaryPanelHeight > 0) {
+      summarySide.style.setProperty(
+        "--hero-quote-panel-height",
+        `${Math.ceil(summaryPanelHeight)}px`
+      );
+    }
+
+    heroQuotePanel.hidden = false;
+    summarySide?.classList.add("is-quote-mode");
+    heroQuotePanel.querySelector(".hero_quote_panel_body")?.scrollTo({
+      top: 0,
+      behavior: "auto"
+    });
+    requestQuoteButton?.setAttribute("aria-expanded", "true");
+    updateSendBuildButtonState();
   }
 
   function applySelectedTrim(title) {
@@ -1286,7 +1515,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (heroExteriorPrice && selectedExterior) {
-      heroExteriorPrice.textContent = selectedExterior.dataset.price || "";
+      heroExteriorPrice.innerHTML = formatIncrementPriceMarkup(
+        selectedExterior.dataset.price || ""
+      );
     }
 
     if (heroInteriorName && selectedInterior) {
@@ -1374,7 +1605,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <strong>${escapeHtml(packageItem.name)}</strong>
               </div>
               <button type="button" class="hero_package_add_btn" aria-pressed="${selectedPackages.has(index) ? "true" : "false"}">
-                ${escapeHtml(packageItem.price)}
+                ${formatIncrementPriceMarkup(packageItem.price)}
               </button>
             </div>
             <div class="hero_package_card_details">
@@ -1614,7 +1845,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     syncResponsiveStepTabs();
-    syncProgressPosition();
 
     if (heroTrimHeader) {
       const shouldShowTrimHeader = currentStep >= 1;
@@ -1680,6 +1910,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     syncTrimSelectionGate();
     syncStageStepsPosition();
+    syncProgressPosition();
     scheduleLayoutSync();
   }
 
@@ -1735,11 +1966,15 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const isModelStage = currentStep === 0;
-    const shouldUseResponsiveStageLayout =
-      !isModelStage && window.innerWidth <= 1500;
+    const resetResponsiveStageSteps = () => {
+      if (
+        heroBottomStepsDefaultParent &&
+        heroBottomSteps.parentElement !== heroBottomStepsDefaultParent
+      ) {
+        heroBottomStepsDefaultParent.appendChild(heroBottomSteps);
+      }
 
-    if (!shouldUseResponsiveStageLayout) {
+      heroBottomSteps.classList.remove("is-inline-stage-steps");
       heroBottomSteps.style.removeProperty("top");
       heroBottomSteps.style.removeProperty("left");
       heroBottomSteps.style.removeProperty("right");
@@ -1747,6 +1982,14 @@ document.addEventListener("DOMContentLoaded", () => {
       heroBottomSteps.style.removeProperty("transform");
       heroBottomSteps.style.removeProperty("width");
       heroBottomSteps.style.removeProperty("max-width");
+    };
+
+    const isModelStage = currentStep === 0;
+    const shouldUseResponsiveStageLayout =
+      !isModelStage && window.innerWidth <= 1500;
+
+    if (!shouldUseResponsiveStageLayout) {
+      resetResponsiveStageSteps();
       return;
     }
 
@@ -1759,47 +2002,96 @@ document.addEventListener("DOMContentLoaded", () => {
       heroSummaryStage
     ].find((stage) => stage?.classList.contains("is-visible"));
 
-    if (!visibleStage) {
+    const stageActions = visibleStage?.querySelector(".hero_stage_actions");
+
+    if (!visibleStage || !stageActions) {
+      resetResponsiveStageSteps();
       return;
     }
 
-    const vehicle = visibleStage.querySelector(
-      ".hero_trim_vehicle, .hero_color_vehicle, .hero_package_vehicle, .hero_accessory_vehicle, .hero_plan_vehicle, .hero_summary_vehicle"
-    );
-    const panel = visibleStage.querySelector(
+    if (stageActions.nextElementSibling !== heroBottomSteps) {
+      stageActions.insertAdjacentElement("afterend", heroBottomSteps);
+    }
+
+    heroBottomSteps.classList.add("is-inline-stage-steps");
+    heroBottomSteps.style.removeProperty("top");
+    heroBottomSteps.style.removeProperty("left");
+    heroBottomSteps.style.removeProperty("right");
+    heroBottomSteps.style.removeProperty("bottom");
+    heroBottomSteps.style.removeProperty("transform");
+    heroBottomSteps.style.removeProperty("width");
+    heroBottomSteps.style.removeProperty("max-width");
+  }
+
+  function syncSummaryStageBackdrop() {
+    if (!heroVisual || !heroSection) {
+      return;
+    }
+
+    const shouldShowBackdrop = currentStep !== 0 && window.innerWidth <= 1500;
+
+    if (!shouldShowBackdrop) {
+      heroVisual.classList.remove("has-stage-backdrop");
+      heroVisual.style.removeProperty("--hero-responsive-stage-backdrop-top");
+      heroSection.style.removeProperty("--hero-responsive-stage-scene-height");
+      if (heroSummaryStage) {
+        heroSummaryStage.style.removeProperty("--hero-summary-card-backdrop-top");
+      }
+      return;
+    }
+
+    const visibleStage = [
+      heroTrimStage,
+      heroColorStage,
+      heroPackageStage,
+      heroAccessoryStage,
+      heroPlanStage,
+      heroSummaryStage
+    ].find((stage) => stage?.classList.contains("is-visible"));
+
+    const stagePanel = visibleStage?.querySelector(
       ".hero_trim_panel, .hero_color_panels, .hero_package_panel, .hero_accessory_panel, .hero_plan_panel, .hero_summary_side"
     );
 
-    if (!vehicle || !panel) {
+    if (!visibleStage || !stagePanel) {
+      heroVisual.classList.remove("has-stage-backdrop");
+      heroVisual.style.removeProperty("--hero-responsive-stage-backdrop-top");
+      heroSection.style.removeProperty("--hero-responsive-stage-scene-height");
       return;
     }
 
     const visualRect = heroVisual.getBoundingClientRect();
-    const vehicleRect = vehicle.getBoundingClientRect();
-    const panelRect = panel.getBoundingClientRect();
-    const stepsRect = heroBottomSteps.getBoundingClientRect();
-    const isMobileStageLayout = window.innerWidth <= 768;
-    const gapBelowVehicle = isMobileStageLayout ? 16 : 20;
-    const gapAbovePanel = isMobileStageLayout ? 16 : 18;
-    const minTop = vehicleRect.bottom - visualRect.top + gapBelowVehicle;
-    const maxTop = panelRect.top - visualRect.top - stepsRect.height - gapAbovePanel;
-    const preferredTop = minTop + Math.max((maxTop - minTop) * 0.42, 0);
-    const resolvedTop =
-      maxTop > minTop
-        ? Math.min(Math.max(preferredTop, minTop), maxTop)
-        : minTop;
+    const panelRect = stagePanel.getBoundingClientRect();
+    const backdropTop = Math.max(0, Math.round(panelRect.top - visualRect.top));
+    const headerSpaceHeight =
+      document.querySelector(".hero_header_space")?.getBoundingClientRect().height || 64;
+    const sceneHeight = Math.max(
+      Math.round(headerSpaceHeight + backdropTop),
+      Math.round(window.innerHeight)
+    );
 
-    heroBottomSteps.style.left = "50%";
-    heroBottomSteps.style.right = "auto";
-    heroBottomSteps.style.bottom = "auto";
-    heroBottomSteps.style.top = `${Math.max(0, resolvedTop)}px`;
-    heroBottomSteps.style.width = isMobileStageLayout
-      ? "calc(100vw - 32px)"
-      : "min(calc(100vw - 96px), 760px)";
-    heroBottomSteps.style.maxWidth = isMobileStageLayout
-      ? "calc(100vw - 32px)"
-      : "min(calc(100vw - 96px), 760px)";
-    heroBottomSteps.style.transform = "translateX(-50%)";
+    heroVisual.classList.add("has-stage-backdrop");
+    heroVisual.style.setProperty(
+      "--hero-responsive-stage-backdrop-top",
+      `${backdropTop}px`
+    );
+    heroSection.style.setProperty(
+      "--hero-responsive-stage-scene-height",
+      `${sceneHeight}px`
+    );
+
+    if (heroSummaryStage?.classList.contains("is-visible") && heroSummarySide) {
+      const stageRect = heroSummaryStage.getBoundingClientRect();
+      const sideRect = heroSummarySide.getBoundingClientRect();
+      const summaryBackdropTop = Math.max(0, Math.round(sideRect.top - stageRect.top));
+
+      heroSummaryStage.style.setProperty(
+        "--hero-summary-card-backdrop-top",
+        `${summaryBackdropTop}px`
+      );
+    } else if (heroSummaryStage) {
+      heroSummaryStage.style.removeProperty("--hero-summary-card-backdrop-top");
+    }
   }
 
   let pendingLayoutSyncFrame = 0;
@@ -1812,10 +2104,11 @@ document.addEventListener("DOMContentLoaded", () => {
     pendingLayoutSyncFrame = window.requestAnimationFrame(() => {
       pendingLayoutSyncFrame = 0;
       syncResponsiveStepTabs();
+      syncStageStepsPosition();
       syncProgressPosition();
       syncTopTabsIndicator();
       syncStartButtonPosition();
-      syncStageStepsPosition();
+      syncSummaryStageBackdrop();
     });
   }
 
@@ -2063,11 +2356,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   mobileStepMediaQuery?.addEventListener("change", () => {
     syncResponsiveStepTabs();
+    syncStageStepsPosition();
     syncProgressPosition();
   });
 
   document.getElementById("heroSummaryBreakdown")?.addEventListener("click", (event) => {
-    const trigger = event.target.closest(".hero_summary_icon_btn");
+    const trigger =
+      event.target.closest(".hero_summary_icon_btn") ||
+      event.target
+        .closest(".hero_summary_row:not(.hero_summary_row_fee):not(.hero_summary_row_total)")
+        ?.querySelector(".hero_summary_icon_btn");
     const targetStep = Number(trigger?.dataset.summaryStep);
     const removeType = trigger?.dataset.summaryRemoveType;
     const removeValue = Number(trigger?.dataset.summaryRemoveValue);
@@ -2109,18 +2407,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  requestQuoteButton?.addEventListener("click", () => {
-    if (!heroQuotePanel || !heroSummaryStage) {
-      return;
-    }
-
-    syncQuoteSelectedModel();
-    initializeQuoteSelections();
-    const summarySide = heroQuotePanel.closest(".hero_summary_side");
-    heroQuotePanel.hidden = false;
-    summarySide?.classList.add("is-quote-mode");
-    requestQuoteButton.setAttribute("aria-expanded", "true");
-  });
+  requestQuoteButton?.addEventListener("click", openQuotePanel);
 
   function closeQuotePanel() {
     if (!heroQuotePanel) {
@@ -2130,7 +2417,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const summarySide = heroQuotePanel.closest(".hero_summary_side");
     heroQuotePanel.hidden = true;
     summarySide?.classList.remove("is-quote-mode");
+    summarySide?.style.removeProperty("--hero-quote-panel-height");
     requestQuoteButton?.setAttribute("aria-expanded", "false");
+    updateSendBuildButtonState();
   }
 
   quoteBackButton?.addEventListener("click", closeQuotePanel);
@@ -2179,20 +2468,18 @@ document.addEventListener("DOMContentLoaded", () => {
       if (input === quoteAddress) {
         validateQuoteField(quoteAddress, quoteAddressError);
       }
+
+      updateSendBuildButtonState();
     });
   });
 
-  quoteSendButton?.addEventListener("click", () => {
-    if (!validateQuoteForm()) {
-      return;
-    }
+  quoteTestFillButton?.addEventListener("click", () => {
+    autofillQuoteTestData();
+    updateSendBuildButtonState();
+  });
 
-    closeQuotePanel();
-    openBuildSendModal({
-      eyebrow: "Quote Request Complete",
-      description:
-        "Your quote request has been sent successfully. A dealer will review your build and contact you soon."
-    });
+  quoteSendButton?.addEventListener("click", () => {
+    handleQuoteSendAttempt();
   });
 
   buildSendModalClose?.addEventListener("click", closeBuildSendModal);
@@ -2243,9 +2530,14 @@ document.addEventListener("DOMContentLoaded", () => {
         card.setAttribute("aria-pressed", isActive ? "true" : "false");
       });
     }
+
+    if (methodButton || paymentButton || dealerCard) {
+      updateSendBuildButtonState();
+    }
   });
 
   initializeQuoteSelections();
+  updateSendBuildButtonState();
 
   if (startStepButton) {
     startStepButton.addEventListener("click", () => {
@@ -2382,7 +2674,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function initializeBuildCursor() {
     const buildWrap = document.querySelector(".build_wrap");
-    const canUseCustomCursor = window.matchMedia?.("(pointer: fine)")?.matches;
+    const canUseCustomCursor =
+      window.matchMedia?.("(pointer: fine)")?.matches && window.innerWidth > 1500;
 
     if (!buildWrap || !canUseCustomCursor) {
       return;
@@ -2402,42 +2695,46 @@ document.addEventListener("DOMContentLoaded", () => {
       ".hero_color_seat_preview"
     ].join(", ");
 
+    const summarySelectSelector = [
+      ".hero_summary_breakdown .hero_summary_row:not(.hero_summary_row_fee):not(.hero_summary_row_total)",
+      "#heroSummarySelectedItems .hero_summary_row"
+    ].join(", ");
+
+    const hoverOnlySelector = [
+      ".hero_trim_card",
+      ".hero_color_panel",
+      ".hero_package_card",
+      ".hero_accessory_card",
+      ".hero_plan_card",
+      ".hero_summary_breakdown .hero_summary_row:not(.hero_summary_row_fee):not(.hero_summary_row_total)",
+      "#heroSummarySelectedItems .hero_summary_row"
+    ].join(", ");
+
     const selectSelector = [
-      ".build_wrap button:not(:disabled)",
-      ".hero_trim_select_btn",
-      ".hero_package_add_btn",
-      ".hero_accessory_add_btn",
-      ".hero_plan_add_btn",
-      ".hero_summary_cta_btn",
-      ".hero_color_swatch",
-      ".hero_color_swatches_interior",
       ".hero_trim_card_head",
+      ".hero_color_swatches",
+      ".hero_color_swatches_interior",
       ".hero_package_card_top",
       ".hero_accessory_card_top",
       ".hero_plan_card_top",
       ".hero_trim_more_btn",
       ".hero_package_more_btn",
       ".hero_accessory_more_btn",
-      ".hero_plan_more_btn"
+      ".hero_plan_more_btn",
+      summarySelectSelector
     ].join(", ");
     const selectHitRowSelector = [
       ".hero_trim_card_head",
       ".hero_package_card_top",
       ".hero_accessory_card_top",
-      ".hero_plan_card_top"
-    ].join(", ");
-    const genericBuildButtonSelector = ".build_wrap button:not(:disabled)";
-    const moreHitRowSelector = [
-      ".hero_trim_more_btn",
-      ".hero_package_more_btn",
-      ".hero_accessory_more_btn",
-      ".hero_plan_more_btn"
+      ".hero_plan_card_top",
+      summarySelectSelector
     ].join(", ");
 
     function getExpandedSelectButtonFromPoint(event) {
       const row = event.target.closest(selectHitRowSelector);
       const button = row?.querySelector(
-        ".hero_trim_select_btn, .hero_package_add_btn, .hero_accessory_add_btn, .hero_plan_add_btn"
+        ".hero_trim_select_btn, .hero_package_add_btn, .hero_accessory_add_btn, .hero_plan_add_btn, .hero_summary_icon_btn"
       );
 
       if (!row || !button) {
@@ -2458,82 +2755,37 @@ document.addEventListener("DOMContentLoaded", () => {
       return isWithinExpandedArea ? button : null;
     }
 
-    function getExpandedMoreButtonFromPoint(event) {
-      const moreButton = event.target.closest(moreHitRowSelector);
-
-      if (moreButton) {
-        return moreButton;
-      }
-
-      const card = event.target.closest(
-        ".hero_trim_card, .hero_package_card, .hero_accessory_card, .hero_plan_card"
-      );
-      const candidate = card?.querySelector(moreHitRowSelector);
-
-      if (!card || !candidate) {
-        return null;
-      }
-
-      const rect = candidate.getBoundingClientRect();
-      const isWithinMoreRow =
-        event.clientX >= rect.left &&
-        event.clientX <= rect.right &&
-        event.clientY >= rect.top - 4 &&
-        event.clientY <= rect.bottom + 8;
-
-      return isWithinMoreRow ? candidate : null;
-    }
-
-    function getExpandedBuildButtonFromPoint(event) {
-      const directButton = event.target.closest(genericBuildButtonSelector);
-
-      if (directButton) {
-        return directButton;
-      }
-
-      const buttons = Array.from(document.querySelectorAll(genericBuildButtonSelector));
-
-      return buttons.find((button) => {
-        const rect = button.getBoundingClientRect();
-        const extraTop = 6;
-        const extraBottom = 28;
-        const extraHorizontal = 8;
-
-        return (
-          event.clientX >= rect.left - extraHorizontal &&
-          event.clientX <= rect.right + extraHorizontal &&
-          event.clientY >= rect.top - extraTop &&
-          event.clientY <= rect.bottom + extraBottom
-        );
-      }) || null;
-    }
-
     function moveCursor(event) {
       cursor.style.left = `${event.clientX}px`;
       cursor.style.top = `${event.clientY}px`;
 
       const zoomTarget = event.target.closest(zoomSelector);
+      const hoverOnlyTarget = event.target.closest(hoverOnlySelector);
       const selectTarget =
         event.target.closest(selectSelector) ||
-        getExpandedBuildButtonFromPoint(event) ||
-        getExpandedSelectButtonFromPoint(event) ||
-        getExpandedMoreButtonFromPoint(event);
+        getExpandedSelectButtonFromPoint(event);
 
       if (selectTarget) {
         cursor.dataset.label = "select";
         label.textContent = "Select";
+        cursor.classList.add("is-visible");
+      } else if (hoverOnlyTarget) {
+        cursor.dataset.label = "";
+        label.textContent = "";
+        cursor.classList.add("is-visible");
       } else if (zoomTarget) {
         cursor.dataset.label = "zoom";
         label.textContent = "Zoom";
+        cursor.classList.add("is-visible");
       } else {
         cursor.dataset.label = "";
         label.textContent = "";
+        cursor.classList.remove("is-visible");
       }
     }
 
     function showCursor(event) {
       moveCursor(event);
-      cursor.classList.add("is-visible");
     }
 
     function hideCursor() {
@@ -2560,16 +2812,14 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      const expandedBuildButton = getExpandedBuildButtonFromPoint(event);
       const expandedSelectButton = getExpandedSelectButtonFromPoint(event);
-      const expandedMoreButton = getExpandedMoreButtonFromPoint(event);
 
-      if (!expandedBuildButton && !expandedSelectButton && !expandedMoreButton) {
+      if (!expandedSelectButton) {
         return;
       }
 
       event.preventDefault();
-      (expandedBuildButton || expandedSelectButton || expandedMoreButton).click();
+      expandedSelectButton.click();
     });
 
     window.addEventListener("blur", hideCursor);
@@ -2585,51 +2835,29 @@ document.addEventListener("DOMContentLoaded", () => {
     Array.from(container.querySelectorAll(".hero_color_swatch")).forEach(
       (swatch, index) => {
         swatch.dataset.swatchIndex = String(index);
+
+        swatch.addEventListener("pointerdown", (event) => {
+          if (
+            event.button > 0 ||
+            (event.pointerType === "mouse" && event.buttons > 1)
+          ) {
+            return;
+          }
+
+          event.preventDefault();
+          onSelect(index);
+        });
+
+        swatch.addEventListener("click", (event) => {
+          if (event.detail > 0) {
+            return;
+          }
+
+          event.preventDefault();
+          onSelect(index);
+        });
       }
     );
-
-    container.addEventListener("click", (event) => {
-      const swatches = Array.from(container.querySelectorAll(".hero_color_swatch"));
-
-      if (!swatches.length) {
-        return;
-      }
-
-      const directSwatch = event.target.closest(".hero_color_swatch");
-      const swatch =
-        directSwatch && container.contains(directSwatch)
-          ? directSwatch
-          : swatches.reduce((nearest, current) => {
-              if (!("clientX" in event)) {
-                return nearest;
-              }
-
-              const currentRect = current.getBoundingClientRect();
-              const currentDistance = Math.abs(
-                event.clientX - (currentRect.left + currentRect.width / 2)
-              );
-
-              if (!nearest) {
-                return { element: current, distance: currentDistance };
-              }
-
-              return currentDistance < nearest.distance
-                ? { element: current, distance: currentDistance }
-                : nearest;
-            }, null)?.element;
-
-      if (!swatch) {
-        return;
-      }
-
-      const swatchIndex = Number(swatch.dataset.swatchIndex);
-
-      if (Number.isNaN(swatchIndex)) {
-        return;
-      }
-
-      onSelect(swatchIndex);
-    });
   }
 
   function bindInstantActionButton(button, handler) {
@@ -2659,6 +2887,46 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       handler();
+    });
+  }
+
+  function initializeDefaultAccessorySelection() {
+    const accessoryContainer = document.getElementById("heroAccessoryCards");
+
+    if (!accessoryContainer) {
+      return;
+    }
+
+    const accessoryCards = Array.from(
+      accessoryContainer.querySelectorAll(".hero_accessory_card")
+    );
+    const targetCard = accessoryCards.find((card) => {
+      const name =
+        card.querySelector(".hero_accessory_card_top strong")?.textContent?.trim() || "";
+      return name === "NACS Charge Port DC Adapter";
+    });
+
+    if (!targetCard) {
+      return;
+    }
+
+    accessoryContainer.prepend(targetCard);
+
+    accessoryCards.forEach((card) => {
+      const isTarget = card === targetCard;
+      const addButton = card.querySelector(".hero_accessory_add_btn");
+      const moreButton = card.querySelector(".hero_accessory_more_btn");
+
+      card.classList.toggle("is-selected", isTarget);
+      card.classList.toggle("expanded", isTarget);
+
+      if (addButton) {
+        addButton.setAttribute("aria-pressed", isTarget ? "true" : "false");
+      }
+
+      if (moreButton) {
+        moreButton.setAttribute("aria-expanded", isTarget ? "true" : "false");
+      }
     });
   }
 
@@ -2741,29 +3009,11 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   bindInstantActionButton(sendBuildButton, () => {
-    if (!heroQuotePanel?.hidden) {
-      if (!validateQuoteForm()) {
-        return;
-      }
-
-      closeQuotePanel();
-      openBuildSendModal({
-        eyebrow: "Quote Request Complete",
-        description:
-          "Your quote request has been sent successfully. A dealer will review your build and contact you soon."
-      });
-      return;
-    }
-
-    updateSteps(6);
-    openBuildSendModal({
-      eyebrow: "Build Estimate Ready",
-      description:
-        "Your build estimate has been organized into a final summary. You can keep editing or close this window."
-    });
+    handleQuoteSendAttempt();
   });
 
   setSelectedPlanCard(selectedPlanIndex);
+  initializeDefaultAccessorySelection();
   initializeStartButtonMotion();
   initializeAccessoryImageMagnifier();
   initializeBuildCursor();

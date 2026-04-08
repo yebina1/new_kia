@@ -5,7 +5,7 @@ const $vehicles = [
         name: "Sportage",
         backText: "SPORTAGE",
         backHtml: "SPOR-<br>TAGE",
-        backSize: "210px",
+        backSize: "clamp(120px, 14vw, 210px)",
         backSpacing: "-0.08em",
         backClassName: "is-sportage",
         image: "./img/main/best/sportage.png",
@@ -21,7 +21,7 @@ const $vehicles = [
         name: "Sorento",
         backText: "SORENTO",
         backHtml: "SOREN<br>TO",
-        backSize: "220px",
+        backSize: "clamp(120px, 14.5vw, 220px)",
         backSpacing: "-0.08em",
         backClassName: "is-sorento",
         image: "./img/main/best/sorento.png",
@@ -37,7 +37,7 @@ const $vehicles = [
         name: "Seltos",
         backText: "SELTOS",
         backHtml: "SELTOS",
-        backSize: "300px",
+        backSize: "clamp(100px, 14.5vw, 300px)",
         backSpacing: "-0.08em",
         backClassName: "is-seltos",
         image: "./img/main/best/seltos.png",
@@ -53,7 +53,7 @@ const $vehicles = [
         name: "K4",
         backText: "K4",
         backHtml: "K4",
-        backSize: "380px",
+        backSize: "clamp(220px, 14.5vw, 380px)",
         backSpacing: "-0.08em",
         backClassName: "is-k4",
         image: "./img/main/best/k4.png",
@@ -69,7 +69,7 @@ const $vehicles = [
         name: "Telluride",
         backText: "TELLURIDE",
         backHtml: "TELLU-<br>RIDE",
-        backSize: "210px",
+        backSize: "clamp(120px, 14.5vw, 210px)",
         backSpacing: "-0.1em",
         backClassName: "is-telluride",
         image: "./img/main/best/telluride.png",
@@ -84,13 +84,18 @@ const $vehicles = [
 ];
 
 const $showcase = document.querySelector(".best_showcase");
+const $bestSwipeArea = document.querySelector(".best_swipe_area");
+const $bestMobileSwiperElement = document.querySelector(".best_mobile_swiper");
+const $bestMobileSwiperWrapper = document.querySelector(".best_mobile_swiper_wrapper");
 const $backText = document.querySelector(".best_back_text");
 const $backTextGlass = $backText ? $backText.querySelector(".glass") : null;
 const $cards = Array.from(document.querySelectorAll(".best_car_card"));
+const $bestProgress = document.querySelector(".best_progress");
 const $progressList = document.querySelector(".best_progress_list");
 const $specValues = document.querySelectorAll(".best_spec_value");
 const $mainVisualSection = document.querySelector(".main_visual");
 const $bestSection = document.querySelector(".best");
+const $bestInfoCon = $bestSection ? $bestSection.querySelector(".info_con") : null;
 const $ev6Section = document.querySelector(".ev6");
 
 const MOVE_DURATION = 900;
@@ -107,12 +112,19 @@ let $upperWheelLockedUntil = 0;
 let $upperSnapReleaseTimer = null;
 let $upperLenisResumeTimer = null;
 let $progressItems = [];
+let $bestTouchStartX = 0;
+let $bestTouchStartY = 0;
+let $bestTouchTracking = false;
+let $bestPointerId = null;
+let $bestSwipeTriggered = false;
+let $bestSwiperInstance = null;
 
 const BEST_SNAP_LOCK = 320;
 const BEST_SNAP_DURATION = 15;
 const UPPER_WHEEL_THRESHOLD = 6;
 const UPPER_ALIGN_TOLERANCE = 6;
 const ENABLE_SECTION_TRANSITION_SNAP = false;
+const BEST_SWIPE_THRESHOLD = 48;
 
 if (window.gsap && window.ScrollTrigger) {
     gsap.registerPlugin(ScrollTrigger);
@@ -272,18 +284,29 @@ function renderTextContent(index, shouldAnimateSpecs = false) {
 function setCard(card, slot, vehicleIndex) {
     const $vehicle = $vehicles[vehicleIndex];
     const $image = card.querySelector(".best_car_image");
+    let $navIcon = card.querySelector(".best_nav_icon");
 
     card.dataset.slot = slot;
     card.dataset.vehicleIndex = String(vehicleIndex);
-    card.classList.remove("main", "best_car_card_left", "best_car_card_main", "best_car_card_right", "is-hidden-card", "is-floating");
+    card.classList.remove("main", "best_car_card_left", "best_car_card_main", "best_car_card_right", "is-hidden-card", "is-floating", "white_origin", "glass_bg1", "best_nav_button");
     card.classList.add(`best_car_card_${slot}`);
     card.classList.toggle("main", slot === "main");
 
     if (slot === "main") {
         card.classList.add("best_car_card_main");
         card.setAttribute("aria-label", "Current vehicle");
+        if ($navIcon) {
+            $navIcon.remove();
+        }
     } else {
+        card.classList.add("glass_bg1", "best_nav_button");
         card.setAttribute("aria-label", `Show ${slot === "left" ? "previous" : "next"} vehicle`);
+        if (!$navIcon) {
+            $navIcon = document.createElement("i");
+            $navIcon.className = "bx bx-chevron-right best_nav_icon";
+            $navIcon.setAttribute("aria-hidden", "true");
+            card.appendChild($navIcon);
+        }
     }
 
     if ($image) {
@@ -299,6 +322,76 @@ function renderState(index) {
     setCard($cards[1], "main", index);
     setCard($cards[2], "right", getLoopedIndex(index + 1));
     renderTextContent(index);
+}
+
+function renderBestMobileSlides() {
+    if (!$bestMobileSwiperWrapper) {
+        return;
+    }
+
+    $bestMobileSwiperWrapper.innerHTML = $vehicles.map(($vehicle) => `
+        <div class="swiper-slide best_mobile_slide" data-vehicle-index="${$vehicles.indexOf($vehicle)}"></div>
+    `).join("");
+}
+
+function goToBestIndex(index, shouldAnimateSpecs = $hasActivatedSpecCount) {
+    $currentIndex = getLoopedIndex(index);
+    renderTextContent($currentIndex, shouldAnimateSpecs);
+}
+
+function initBestMobileSwiper() {
+    if (!isBestMobileViewport() || !$bestMobileSwiperElement || !window.Swiper) {
+        return;
+    }
+
+    if (!$bestMobileSwiperWrapper || $bestSwiperInstance) {
+        return;
+    }
+
+    renderBestMobileSlides();
+    $bestSwiperInstance = new Swiper($bestMobileSwiperElement, {
+        slidesPerView: 1,
+        speed: 650,
+        initialSlide: $currentIndex,
+        loop: true,
+        threshold: 6,
+        simulateTouch: true,
+        allowTouchMove: true,
+        touchStartPreventDefault: false,
+        nested: true,
+        on: {
+            init(swiper) {
+                goToBestIndex(swiper.realIndex, false);
+            },
+            slideChange(swiper) {
+                goToBestIndex(swiper.realIndex);
+            }
+        }
+    });
+}
+
+function destroyBestMobileSwiper() {
+    if (!$bestSwiperInstance) {
+        return;
+    }
+
+    $bestSwiperInstance.destroy(true, true);
+    $bestSwiperInstance = null;
+}
+
+function syncBestSliderMode() {
+    if (isBestMobileViewport()) {
+        initBestMobileSwiper();
+
+        if ($bestSwiperInstance && $bestSwiperInstance.realIndex !== $currentIndex) {
+            $bestSwiperInstance.slideToLoop($currentIndex, 0);
+        }
+
+        return;
+    }
+
+    destroyBestMobileSwiper();
+    renderState($currentIndex);
 }
 
 function getFrameRect(card) {
@@ -459,6 +552,101 @@ function handleCardClick(event) {
     }
 
     animateTransition($slot);
+}
+
+function isBestMobileViewport() {
+    return window.matchMedia("(max-width: 560px)").matches;
+}
+
+function resetBestTouchState() {
+    $bestPointerId = null;
+    $bestTouchTracking = false;
+    $bestSwipeTriggered = false;
+}
+
+function handleBestPointerDown(event) {
+    if (!isBestMobileViewport() || $isAnimating || !event.isPrimary) {
+        $bestPointerId = null;
+        return;
+    }
+
+    if ($bestSwipeArea && typeof $bestSwipeArea.setPointerCapture === "function") {
+        try {
+            $bestSwipeArea.setPointerCapture(event.pointerId);
+        } catch (error) {
+            // Ignore capture failures and continue with normal pointer tracking.
+        }
+    }
+
+    $bestPointerId = event.pointerId;
+    $bestTouchStartX = event.clientX;
+    $bestTouchStartY = event.clientY;
+    $bestTouchTracking = true;
+    $bestSwipeTriggered = false;
+}
+
+function handleBestPointerMove(event) {
+    if (
+        !isBestMobileViewport() ||
+        !$bestTouchTracking ||
+        $isAnimating ||
+        $bestSwipeTriggered ||
+        ($bestPointerId !== null && event.pointerId !== $bestPointerId)
+    ) {
+        return;
+    }
+
+    const $deltaX = event.clientX - $bestTouchStartX;
+    const $deltaY = event.clientY - $bestTouchStartY;
+    const $isHorizontalSwipe = Math.abs($deltaX) > BEST_SWIPE_THRESHOLD && Math.abs($deltaX) > Math.abs($deltaY);
+
+    if (!$isHorizontalSwipe) {
+        return;
+    }
+
+    $bestSwipeTriggered = true;
+    $bestPointerId = null;
+    $bestTouchTracking = false;
+    animateTransition($deltaX < 0 ? "right" : "left");
+}
+
+function handleBestPointerUp(event) {
+    if ($bestSwipeArea && typeof $bestSwipeArea.releasePointerCapture === "function") {
+        try {
+            if ($bestSwipeArea.hasPointerCapture(event.pointerId)) {
+                $bestSwipeArea.releasePointerCapture(event.pointerId);
+            }
+        } catch (error) {
+            // Ignore release failures.
+        }
+    }
+
+    resetBestTouchState();
+}
+
+function handleBestPointerCancel(event) {
+    if ($bestSwipeArea && typeof $bestSwipeArea.releasePointerCapture === "function") {
+        try {
+            if ($bestSwipeArea.hasPointerCapture(event.pointerId)) {
+                $bestSwipeArea.releasePointerCapture(event.pointerId);
+            }
+        } catch (error) {
+            // Ignore release failures.
+        }
+    }
+
+    resetBestTouchState();
+}
+
+function bindBestSwipeTarget($target) {
+    if (!$target) {
+        return;
+    }
+
+    $target.addEventListener("pointerdown", handleBestPointerDown, { passive: true });
+    $target.addEventListener("pointermove", handleBestPointerMove, { passive: true });
+    $target.addEventListener("pointerup", handleBestPointerUp, { passive: true });
+    $target.addEventListener("pointercancel", handleBestPointerCancel, { passive: true });
 }
 
 function getBestScrollTop() {
@@ -715,12 +903,13 @@ function syncSectionSnapIndicesOnScroll() {
     }
 }
 
-if ($showcase && $backText && $backTextGlass && $cards.length === 3 && $specValues.length) {
+if ($showcase && $bestSwipeArea && $backText && $backTextGlass && $cards.length === 3 && $specValues.length) {
     renderBestProgress();
     renderState($currentIndex);
     $cards.forEach((card) => {
         card.addEventListener("click", handleCardClick);
     });
+    syncBestSliderMode();
 
     if (window.ScrollTrigger && $bestSection) {
         ScrollTrigger.create({
@@ -751,15 +940,139 @@ window.addEventListener("scroll", syncSectionSnapIndicesOnScroll, { passive: tru
 window.addEventListener("resize", () => {
     clearUpperSnapRuntimeState();
     syncCurrentUpperSnapIndex();
+    syncBestSliderMode();
 }, { passive: true });
 
 /* section.ev6 */
+const $ev6MobileSwiperElement = document.querySelector(".ev6_mobile_swiper");
+const $ev6MobileSwiperWrapper = document.querySelector(".ev6_mobile_swiper_wrapper");
+const EV6_MOBILE_BREAKPOINT = 1024;
+let $ev6MobileSwiperInstance = null;
+
+const $ev6MobileSlides = [
+  {
+    key: "dashboard",
+    featureClass: "bg2_feature_dashboard",
+    title: "Dashboard",
+    cardTitle: "Dashboard",
+    cardBody: "Plant-derived plastics and bio-paints",
+    photo: "./img/main/ev6/recycled.png",
+    photoAlt: "Dashboard trim detail",
+    mask: "./img/main/ev6/Dashboard.png",
+  },
+  {
+    key: "luggage",
+    featureClass: "bg2_feature_luggage",
+    title: "Luggage",
+    cardTitle: "Luggage",
+    cardBody: "Bio-based materials and recycled waste",
+    photo: "./img/main/ev6/recycled3.png",
+    photoAlt: "Luggage recycled material detail",
+    mask: "./img/main/ev6/Luggage.png",
+  },
+  {
+    key: "seating",
+    featureClass: "bg2_feature_seating",
+    title: "Seating",
+    cardTitle: "Premium Vegan Leather",
+    cardBody: "Comfort-focused seating made with sustainable material choices",
+    photo: "./img/main/ev6/recycled2.png",
+    photoAlt: "Seating recycled material detail",
+    mask: "./img/main/ev6/Seating.png",
+  },
+  {
+    key: "carpets",
+    featureClass: "bg2_feature_carpets",
+    title: "Carpets and Mats",
+    cardTitle: "Floor Carpets And Mats",
+    cardBody: "Recycled plastics and yarn designed for a refined cabin finish",
+    photo: "./img/main/ev6/recycled1.png",
+    photoAlt: "Carpets and mats recycled material detail",
+    mask: "./img/main/ev6/Carpets.png",
+  },
+];
+
 const clamp = (v, min = 0, max = 1) => Math.min(max, Math.max(min, v));
 const mix = (a, b, t) => a + (b - a) * t;
 const sstep = (a, b, v) => {
   const t = clamp((v - a) / (b - a));
   return t * t * (3 - 2 * t);
 };
+
+function isEv6MobileViewport() {
+  return window.matchMedia(`(max-width: ${EV6_MOBILE_BREAKPOINT}px)`).matches;
+}
+
+function renderEv6MobileSlides() {
+  if (!$ev6MobileSwiperWrapper) {
+    return;
+  }
+
+  $ev6MobileSwiperWrapper.innerHTML = $ev6MobileSlides.map((slide) => `
+    <div class="swiper-slide ev6_mobile_slide" data-ev6-slide="${slide.key}">
+      <div class="ev6_mobile_stage">
+        <div class="ev6_mobile_visual" aria-hidden="true">
+          <div class="ev6_mobile_car_shell">
+            <img class="ev6_mobile_car_mask" src="${slide.mask}" alt="">
+            <div class="photo_card ev6_mobile_photo_card ${slide.featureClass}">
+              <img src="${slide.photo}" alt="${slide.photoAlt}">
+              <div class="ev6_mobile_card_overlay">
+                <button class="ev6_mobile_card_close" type="button" tabindex="-1" aria-hidden="true">×</button>
+                <div class="ev6_mobile_card_text">
+                  <strong class="ev6_mobile_card_title">${slide.cardTitle}</strong>
+                  <p class="ev6_mobile_card_body">${slide.cardBody}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join("");
+}
+
+function initEv6MobileSwiper() {
+  if (!isEv6MobileViewport() || !$ev6MobileSwiperElement || !window.Swiper) {
+    return;
+  }
+
+  if (!$ev6MobileSwiperWrapper || $ev6MobileSwiperInstance) {
+    return;
+  }
+
+  renderEv6MobileSlides();
+  $ev6MobileSwiperInstance = new Swiper($ev6MobileSwiperElement, {
+    slidesPerView: 1,
+    speed: 700,
+    threshold: 8,
+    spaceBetween: 16,
+    simulateTouch: true,
+    allowTouchMove: true,
+    touchStartPreventDefault: false,
+    pagination: {
+      el: ".ev6_mobile_pagination",
+      clickable: true,
+    },
+  });
+}
+
+function destroyEv6MobileSwiper() {
+  if (!$ev6MobileSwiperInstance) {
+    return;
+  }
+
+  $ev6MobileSwiperInstance.destroy(true, true);
+  $ev6MobileSwiperInstance = null;
+}
+
+function syncEv6MobileMode() {
+  if (isEv6MobileViewport()) {
+    initEv6MobileSwiper();
+    return;
+  }
+
+  destroyEv6MobileSwiper();
+}
 
 function initEv6Scene() {
   const section = document.getElementById("scrollScene");
@@ -768,6 +1081,7 @@ function initEv6Scene() {
   const bg2Img = document.getElementById("bg2Img");
   const bg2FeaturesTrack = document.getElementById("bg2FeaturesTrack");
   const bg2FeaturesSurface = document.getElementById("bg2FeaturesSurface");
+  const bg2Features = section?.querySelector(".bg2_features");
   const carWrap = document.getElementById("carWrap");
   const solidCar = document.getElementById("solidCar");
   const xrayCar = document.getElementById("xrayCar");
@@ -877,21 +1191,14 @@ function initEv6Scene() {
   }
 
   function syncFeatureBottomToVisiblePhotoCard() {
-    const visibleCards = Object.values(photoCards).filter((card) => {
-      const opacity = Number.parseFloat(card.style.opacity || "0");
-      return opacity > 0.01;
-    });
-
-    if (!visibleCards.length) {
+    if (!bg2Features) {
       scene.style.removeProperty("--ev6-photo-card-bottom");
       return;
     }
 
     const sceneRect = scene.getBoundingClientRect();
-    const visibleCardBottom = Math.max(
-      ...visibleCards.map((card) => card.getBoundingClientRect().bottom)
-    );
-    const clampedBottom = Math.min(visibleCardBottom, sceneRect.bottom);
+    const bg2FeaturesRect = bg2Features.getBoundingClientRect();
+    const clampedBottom = Math.min(bg2FeaturesRect.bottom, sceneRect.bottom);
     const bottomOffset = Math.max(sceneRect.bottom - clampedBottom, 0);
 
     scene.style.setProperty("--ev6-photo-card-bottom", `${Math.round(bottomOffset)}px`);
@@ -1034,10 +1341,16 @@ function initEv6Scene() {
 }
 
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initEv6Scene, { once: true });
+  document.addEventListener("DOMContentLoaded", () => {
+    initEv6Scene();
+    syncEv6MobileMode();
+  }, { once: true });
 } else {
   initEv6Scene();
+  syncEv6MobileMode();
 }
+
+window.addEventListener("resize", syncEv6MobileMode, { passive: true });
 
 
 /* section.match */

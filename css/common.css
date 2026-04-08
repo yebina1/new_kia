@@ -101,7 +101,7 @@ h5 {
 }
 
 h6 {
-  font-size: 32px;
+  font-size: 36px;
 }
 
 button {
@@ -990,7 +990,6 @@ header .header_bottom .sub_nav li a {
   position: relative;
 }
 
-/* Reserve bold width to prevent layout shift on hover/active */
 header .header_bottom .sub_nav li a::after {
   content: attr(data-text);
   display: block;

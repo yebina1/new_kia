@@ -47,6 +47,7 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <!-- my script -->
   <script src="js/common.js" defer></script>
   <script src="js/main.js" defer></script>
@@ -182,65 +183,70 @@
           <h2>Featured Vehicles</h2>
           <p>Discover our most popular models</p>
         </div>
-        <div class="best_showcase">
-          <div class="best_back_text" aria-hidden="true">
-            <div class="text_group">
-              <p class="glass">KIA</p>
+        <div class="best_swipe_area">
+          <div class="best_showcase">
+            <div class="best_back_text" aria-hidden="true">
+              <div class="text_group">
+                <p class="glass">KIA</p>
+              </div>
+            </div>
+            <button type="button" class="best_car_card best_car_card_left" data-slot="left"
+              aria-label="Show previous vehicle">
+              <span class="best_car_frame">
+                <img class="best_car_image" src="" alt="">
+              </span>
+            </button>
+            <button type="button" class="best_car_card best_car_card_main main" data-slot="main"
+              aria-label="Current vehicle">
+              <span class="best_car_frame">
+                <img class="best_car_image" src="./img/main/best/sportage.png" alt="Kia Sportage">
+              </span>
+            </button>
+            <button type="button" class="best_car_card best_car_card_right" data-slot="right"
+              aria-label="Show next vehicle">
+              <span class="best_car_frame">
+                <img class="best_car_image" src="" alt="">
+              </span>
+            </button>
+            <div class="best_progress" aria-label="Featured vehicle progress">
+              <ol class="best_progress_list"></ol>
             </div>
           </div>
-          <button type="button" class="best_car_card best_car_card_left" data-slot="left"
-            aria-label="Show previous vehicle">
-            <span class="best_car_frame">
-              <img class="best_car_image" src="" alt="">
-            </span>
-          </button>
-          <button type="button" class="best_car_card best_car_card_main main" data-slot="main"
-            aria-label="Current vehicle">
-            <span class="best_car_frame">
-              <img class="best_car_image" src="./img/main/best/sportage.png" alt="Kia Sportage">
-            </span>
-          </button>
-          <button type="button" class="best_car_card best_car_card_right" data-slot="right"
-            aria-label="Show next vehicle">
-            <span class="best_car_frame">
-              <img class="best_car_image" src="" alt="">
-            </span>
-          </button>
-          <div class="best_progress" aria-label="Featured vehicle progress">
-            <ol class="best_progress_list"></ol>
+          <div class="info_con">
+            <ul class="best_spec_list">
+              <li class="best_spec_item">
+                <span class="best_spec_label"><img src="img/main/best/horsepower.png" alt="Horsepower"></span>
+                <strong class="best_spec_value" data-spec="horsepower">
+                  <span class="best_spec_number"></span>
+                  <span class="best_spec_unit"></span>
+                </strong>
+              </li>
+              <li class="best_spec_item">
+                <span class="best_spec_label"><img src="img/main/best/efficiency.png" alt="Efficiency"></span>
+                <strong class="best_spec_value" data-spec="efficiency">
+                  <span class="best_spec_number"></span>
+                  <span class="best_spec_unit"></span>
+                </strong>
+              </li>
+              <li class="best_spec_item">
+                <span class="best_spec_label"><img src="img/main/best/torque.png" alt="Torque"></span>
+                <strong class="best_spec_value" data-spec="torque">
+                  <span class="best_spec_number"></span>
+                  <span class="best_spec_unit"></span>
+                </strong>
+              </li>
+              <li class="best_spec_item">
+                <span class="best_spec_label"><img src="img/main/best/engine.png" alt="Engine"></span>
+                <strong class="best_spec_value" data-spec="engine">
+                  <span class="best_spec_number"></span>
+                  <span class="best_spec_unit"></span>
+                </strong>
+              </li>
+            </ul>
           </div>
-        </div>
-        <div class="info_con">
-          <ul class="best_spec_list">
-            <li class="best_spec_item">
-              <span class="best_spec_label"><img src="img/main/best/horsepower.png" alt="Horsepower"></span>
-              <strong class="best_spec_value" data-spec="horsepower">
-                <span class="best_spec_number"></span>
-                <span class="best_spec_unit"></span>
-              </strong>
-            </li>
-            <li class="best_spec_item">
-              <span class="best_spec_label"><img src="img/main/best/efficiency.png" alt="Efficiency"></span>
-              <strong class="best_spec_value" data-spec="efficiency">
-                <span class="best_spec_number"></span>
-                <span class="best_spec_unit"></span>
-              </strong>
-            </li>
-            <li class="best_spec_item">
-              <span class="best_spec_label"><img src="img/main/best/torque.png" alt="Torque"></span>
-              <strong class="best_spec_value" data-spec="torque">
-                <span class="best_spec_number"></span>
-                <span class="best_spec_unit"></span>
-              </strong>
-            </li>
-            <li class="best_spec_item">
-              <span class="best_spec_label"><img src="img/main/best/engine.png" alt="Engine"></span>
-              <strong class="best_spec_value" data-spec="engine">
-                <span class="best_spec_number"></span>
-                <span class="best_spec_unit"></span>
-              </strong>
-            </li>
-          </ul>
+          <div class="best_mobile_swiper swiper" aria-hidden="true">
+            <div class="swiper-wrapper best_mobile_swiper_wrapper"></div>
+          </div>
         </div>
       </div> <!-- //.inner -->
     </section> <!-- //.best -->
@@ -984,8 +990,8 @@
       <div class="inner">
         <div class="bg1"></div>
         <div class="txt_box">
-          <h2>Find a Kia near your location</h2>
-          <p>We can provide faster quality service as soon as you arrive</p>
+          <h2>Find a Kia<span class="map_mobile_break"><br></span> near your location</h2>
+          <p>We can provide faster quality service as <span class="map_mobile_break"><br></span>soon as you arrive</p>
           <a href="https://www.kia.com/us/en/inventory/landing">Find a Dealer</a>
         </div>
       </div> <!-- //.inner -->

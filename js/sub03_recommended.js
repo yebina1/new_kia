@@ -42,6 +42,24 @@ const MOBILE_HERO_IMAGES = {
     ev6_electric: { src: "img/sub02_recommended/electric_eco/EV6.png", alt: "EV6" },
     niro_ev_electric: { src: "img/sub02_recommended/electric_eco/Niro EV1.png", alt: "Niro EV" }
 };
+const MODAL_DIAGRAM_IMAGES = {
+    outdoor: {
+        src: "img/sub02_recommended/modal/outdoor_diorama.png",
+        alt: "Outdoor diorama"
+    },
+    family: {
+        src: "img/sub02_recommended/modal/family _diorama.png",
+        alt: "Family diorama"
+    },
+    urban: {
+        src: "img/sub02_recommended/modal/city_diorama.png",
+        alt: "Urban diorama"
+    },
+    electric: {
+        src: "img/sub02_recommended/modal/electricity_diorama.png",
+        alt: "Electric diorama"
+    }
+};
 
 const MOBILE_LAYOUT_BREAKPOINT = 820;
 const DESKTOP_TAB_FRAME_PATHS = {
@@ -518,6 +536,8 @@ function animateMobileSwipeTransition(state, currentSection, nextSection, direct
     currentSection.classList.add("is-mobile-leaving");
     nextSection.classList.add("is-mobile-entering");
 
+    currentSection.hidden = false;
+    nextSection.hidden = false;
     nextSection.style.display = "flex";
     nextSection.style.pointerEvents = "none";
     nextSection.style.transform = `translateX(${incomingOffset}px)`;
@@ -533,6 +553,8 @@ function animateMobileSwipeTransition(state, currentSection, nextSection, direct
     state.mobileSwipeTimer = window.setTimeout(() => {
         currentSection.classList.remove("is-mobile-leaving");
         nextSection.classList.remove("is-mobile-entering");
+        currentSection.hidden = true;
+        nextSection.hidden = false;
         currentSection.style.transform = "";
         currentSection.style.opacity = "";
         nextSection.style.transform = "";
@@ -598,25 +620,32 @@ function enhanceMobileCards(sections) {
         section.dataset.mobileGroup = group;
         section.dataset.mobileIndex = String(indexInGroup);
 
-        if (!section.querySelector(".mobile_hero")) {
-            const hero = document.createElement("div");
+        let hero = section.querySelector(".mobile_hero");
+        if (!hero) {
+            hero = document.createElement("div");
             hero.className = "mobile_hero";
-
-            if (imageSrc) {
-                const heroImage = document.createElement("img");
-                heroImage.className = "mobile_hero_image";
-                heroImage.src = imageSrc;
-                heroImage.alt = imageAlt;
-                hero.append(heroImage);
-            }
-
-            const heroTitle = document.createElement("p");
-            heroTitle.className = "mobile_hero_title";
-            heroTitle.textContent = titleText;
-            hero.append(heroTitle);
-
             section.prepend(hero);
         }
+
+        let heroImage = hero.querySelector(".mobile_hero_image");
+        if (imageSrc && !heroImage) {
+            heroImage = document.createElement("img");
+            heroImage.className = "mobile_hero_image";
+            hero.prepend(heroImage);
+        }
+
+        if (heroImage && imageSrc) {
+            heroImage.src = imageSrc;
+            heroImage.alt = imageAlt;
+        }
+
+        let heroTitle = hero.querySelector(".mobile_hero_title");
+        if (!heroTitle) {
+            heroTitle = document.createElement("p");
+            heroTitle.className = "mobile_hero_title";
+            hero.append(heroTitle);
+        }
+        heroTitle.textContent = titleText;
 
         if (!section.querySelector(".mobile_dots")) {
             const dots = document.createElement("div");
@@ -659,9 +688,12 @@ function populateSelectionModal(section, modal) {
     const modalTitle = modal.querySelector("#selection-modal-title");
     const modalDescription = modal.querySelector(".selection_modal_desc p:last-child");
     const modalSpecs = modal.querySelector(".selection_modal_specs ul");
+    const modalVisual = modal.querySelector(".selection_modal_visual img");
     const subtitle = section.querySelector(".title p")?.textContent?.trim();
     const heading = section.querySelector(".title h2")?.textContent?.trim();
     const description = section.querySelector(".top > p")?.textContent?.replace(/\s+/g, " ").trim();
+    const group = getMobileGroup(section.id);
+    const modalDiagram = MODAL_DIAGRAM_IMAGES[group] || MODAL_DIAGRAM_IMAGES.outdoor;
 
     if (modalTitle) {
         modalTitle.textContent = subtitle && heading ? `${heading} (${subtitle})` : (heading || "Recommended");
@@ -684,6 +716,10 @@ function populateSelectionModal(section, modal) {
         });
     }
 
+    if (modalVisual) {
+        modalVisual.src = modalDiagram.src;
+        modalVisual.alt = heading ? `${heading} ${modalDiagram.alt}` : modalDiagram.alt;
+    }
 }
 
 function applyScrollLayout(recco, totalSections) {
@@ -928,6 +964,18 @@ function getMobileSectionsByGroup(sections, group) {
     return sections.filter((section) => getMobileGroup(section.id) === group);
 }
 
+function updateMobileTabIndicator(buttons) {
+    const tabContainer = buttons?.[0]?.closest(".mobile_tabs");
+    if (!tabContainer) return;
+
+    const activeButton = buttons.find((button) => button.classList.contains("is-active")) || buttons[0];
+
+    if (!activeButton) return;
+
+    tabContainer.style.setProperty("--mobile-tab-indicator-left", `${activeButton.offsetLeft}px`);
+    tabContainer.style.setProperty("--mobile-tab-indicator-width", `${activeButton.offsetWidth}px`);
+}
+
 function syncMobileGroup(state, sections, carAll, buttons, title) {
     if (!isMobileViewport()) {
         resetMobileState(sections, carAll);
@@ -937,6 +985,8 @@ function syncMobileGroup(state, sections, carAll, buttons, title) {
     buttons.forEach((button) => {
         button.classList.toggle("is-active", button.dataset.group === state.activeMobileGroup);
     });
+
+    updateMobileTabIndicator(buttons);
 
     const visibleSections = getMobileSectionsByGroup(sections, state.activeMobileGroup);
 
@@ -953,6 +1003,7 @@ function syncMobileGroup(state, sections, carAll, buttons, title) {
         section.classList.toggle("is-mobile-hidden", !matches);
         section.classList.toggle("is-mobile-visible", matches);
         section.classList.toggle("is-mobile-current", false);
+        section.hidden = true;
         section.style.display = "none";
         section.style.pointerEvents = "none";
     });
@@ -970,6 +1021,7 @@ function syncMobileGroup(state, sections, carAll, buttons, title) {
         const isCurrent = index === safeIndex;
         section.classList.toggle("is-mobile-current", isCurrent);
         section.classList.remove("is-dragging", "is-drag-resetting", "is-mobile-entering", "is-mobile-leaving");
+        section.hidden = !isCurrent;
         section.style.display = isCurrent ? "flex" : "none";
         section.style.pointerEvents = isCurrent ? "auto" : "none";
         section.style.transform = "";
@@ -1021,6 +1073,7 @@ function ensureMobileRecommendationState(state, sections, carAll, buttons, title
 function resetMobileState(sections, carAll) {
     sections.forEach((section) => {
         section.classList.remove("is-mobile-hidden", "is-mobile-visible", "is-mobile-current", "is-mobile-entering", "is-mobile-leaving");
+        section.hidden = false;
         section.style.display = "";
         section.style.pointerEvents = "";
         section.style.minHeight = "";

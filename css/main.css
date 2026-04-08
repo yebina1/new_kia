@@ -16,26 +16,31 @@
   --photo-scale: 0.76;
   --photo-opacity: 0;
   --photo-y: 18px;
-  --ev6-details-bottom: clamp(34px, 7.5vh, 74px);
-  --ev6-photo-card-bottom: var(--ev6-details-bottom);
+  --ev6-features-bottom: calc(15vh + 70px);
+  --ev6-details-bottom: calc(15vh + 70px);
+  --ev6-photo-card-bottom: calc(15vh + 70px);
   --ev6-bg-layer-bottom: calc(var(--ev6-photo-card-bottom) + var(--bg-overscan));
 }
 
 /* main_visual */
 .main_visual {
   width: 100%;
+  min-width: 360px;
+  min-height: 580px;
   position: relative;
+  overflow: hidden;
 }
 
 .main_visual .inner {
   width: 100%;
-  height: 100vh;
-  min-height: clamp(950px, 90vh, 100vh);
+  height: auto;
+  min-height: 580px;
 }
 
 .main_visual video {
   width: 100%;
-  height: 100%;
+  height: auto;
+  min-height: 580px;
   object-fit: cover;
   display: block;
 }
@@ -88,8 +93,8 @@ body.section_transition_lock {
 .best .inner {
     position: relative;
     width: 100%;
-    height: 100vh;
-    min-height: clamp(950px, 90vh, 100vh);
+    height: auto;
+    min-height: 580px;
     padding-block: clamp(100px, 20vw, 200px);
     display: flex;
     flex-direction: column;
@@ -106,22 +111,35 @@ body.section_transition_lock {
 
 .best .tit p {
     margin-top: 6px;
-    font-size: clamp(20px, 2vw, 24px);
+    font-size: clamp(16px, 1.7vw, 24px);
+}
+
+.best_swipe_area {
+    position: relative;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
 }
 
 .best_showcase {
     position: relative;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1000px) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, clamp(560px, 78vw, 900px)) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto;
     align-items: center;
     gap: 0;
+    row-gap: clamp(8px, 1.6vh, 18px);
     flex: 1;
     width: 100%;
-    height: clamp(450px, 60vh, 700px);
+    height: clamp(280px, min(38vw, 60vh), 700px);
     margin-top: 20px;
     overflow: visible;
     z-index: 1;
     perspective: 1800px;
+}
+
+.best_mobile_swiper {
+    display: none;
 }
 
 .best_back_text {
@@ -186,14 +204,15 @@ body.section_transition_lock {
 }
 
 .best_progress {
-    position: absolute;
-    left: 50%;
-    bottom: clamp(18px, 4vh, 42px);
+    position: relative;
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: center;
+    align-self: start;
     z-index: 4;
     display: flex;
     align-items: center;
     justify-content: center;
-    transform: translateX(-50%);
     pointer-events: none;
 }
 
@@ -273,16 +292,21 @@ body.section_transition_lock {
 
 .best_car_card_left {
     grid-column: 1;
+    grid-row: 1;
     transform: translate3d(22px, 0, 0) scale(0.92);
 }
 
 .best_car_card_main {
     grid-column: 2;
+    grid-row: 1;
+    justify-self: center;
+    width: min(100%, clamp(560px, 78vw, 900px));
     transform: translate3d(0, 0, 0) scale(1);
 }
 
 .best_car_card_right {
     grid-column: 3;
+    grid-row: 1;
     transform: translate3d(-22px, 0, 0) scale(0.92);
 }
 
@@ -308,6 +332,11 @@ body.section_transition_lock {
     will-change: transform;
 }
 
+.best_car_card_left .best_car_frame,
+.best_car_card_right .best_car_frame {
+    max-width: 250px;
+}
+
 .best_car_image {
     width: 100%;
     filter: brightness(0.82);
@@ -330,7 +359,7 @@ body.section_transition_lock {
 .best_car_card.main .best_car_frame {
     width: auto;
     max-width: none;
-    height: 350px;
+    height: clamp(180px, 24vw, 350px);
 }
 
 .best_car_card.is-entering-main .best_car_frame {
@@ -371,7 +400,7 @@ body.section_transition_lock {
 
 .best_car_card_left .best_car_image,
 .best_car_card_right .best_car_image {
-    transform: scale(0.96);
+    transform: scale(1.03);
     filter: brightness(0.78) saturate(0.92);
 }
 
@@ -446,7 +475,7 @@ body.section_transition_lock {
 }
 
 
-.info_con {
+.best .info_con {
     width: 100%;
     max-width: 1440px;
     margin: 0 auto;
@@ -558,6 +587,14 @@ body.section_transition_lock {
 /* section.ev6 */
 .ev6 {
   overflow-x: clip;
+}
+
+.ev6_mobile_swiper {
+  display: none;
+}
+
+.ev6_mobile_pagination {
+  display: none;
 }
 
 .serif {
@@ -854,7 +891,7 @@ body.section_transition_lock {
 .bg2_copy_left {
   position: absolute;
   left: clamp(76px, 6.1vw, 112px);
-  top: calc(15vh + 50px);
+  top: calc(17vh + 90px);
   width: min(31vw, 530px);
 }
 
@@ -871,7 +908,7 @@ body.section_transition_lock {
 .bg2_copy_left .desc {
   margin-top: 18px;
   width: min(29vw, 480px);
-  font-size: clamp(20px, 2vw, 24px);
+  font-size: clamp(16px, 2vw, 20px);
   font-weight: 400;
   line-height: 1.36;
   color: var(--kia-white2);
@@ -880,7 +917,7 @@ body.section_transition_lock {
 .bg2_copy_right {
   position: absolute;
   right: clamp(74px, 7vw, 126px);
-  top: calc(15vh + 50px);
+  top: calc(17vh + 90px);
   text-align: right;
 }
 
@@ -898,7 +935,7 @@ body.section_transition_lock {
   position: absolute;
   left: clamp(76px, 6.1vw, 112px);
   top: auto;
-  bottom: var(--ev6-bg-layer-bottom);
+  bottom: var(--ev6-features-bottom);
   width: min(40vw, 640px);
   display: grid;
   grid-template-columns: minmax(220px, 1.08fr) minmax(190px, 0.92fr);
@@ -1217,7 +1254,7 @@ body.section_transition_lock {
 .photo_only_right {
   right: clamp(76px, 7.2vw, 122px);
   top: auto;
-  bottom: var(--ev6-details-bottom);
+  bottom: var(--ev6-photo-card-bottom);
   width: clamp(250px, 22vw, 360px);
   display: block;
   position: absolute;
@@ -1292,6 +1329,37 @@ body.section_transition_lock {
   pointer-events: none;
 }
 
+.brand {
+  display: none;
+  background: #0C1115;
+}
+
+.brand .inner {
+  width: 100%;
+  height: clamp(450px, 45vw, 650px);
+  padding-inline: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.brand h4 {
+  font-size: 36px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--kia-white1);
+}
+
+.brand strong {
+  font-size: 48px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--kia-white1);
+}
+
 
 /* section.match */
 .match,
@@ -1345,7 +1413,7 @@ footer {
 }
 
 .intro p {
-  font-size: 24px;
+  font-size: clamp(16px, 1.7vw, 24px);
   line-height: 1.3;
   margin-top: 16px;
 }
@@ -1382,8 +1450,8 @@ section[class*="option"] .inner {
 }
 
 section[class*="option"] .top {
-  flex: 0 0 116px;
-  height: 116px;
+  flex: 0 0 clamp(106px, 8vw, 116px);
+  height: clamp(106px, 8vw, 116px);
   width: 100%;
   padding: 32px 64px;
   display: flex;
@@ -1392,14 +1460,18 @@ section[class*="option"] .top {
 }
 
 section[class*="option"] .top strong {
-  font-size: 2.2rem;
+  font-size: clamp(32px, 2.2vw, 2.2rem);
   font-style: normal;
   font-weight: 400;
 }
 
 section[class*="option"] .top strong span{
-  font-size: 1rem;
-  padding-left: 32px;
+  font-size: clamp(16px, 1.4vw, 20px);
+  margin-left: 32px;
+  padding: 6px 12px;
+  background: var(--kia-white1);
+  border-radius: 555px;
+  color: var(--kia-black);
 }
 
 section[class*="option"] .top a {
@@ -1412,11 +1484,11 @@ section[class*="option"] .top a {
 }
 
 section[class*="option"] .top a i {
-  font-size: 24px;
+  font-size: clamp(20px, 1.6vw, 24px);
 }
 
 section[class*="option"] .top a span {
-  font-size: 1.1rem;
+  font-size: clamp(16px, 1.2vw, 1.1rem);
 }
 
 section[class*="option"] .top a:hover span {
@@ -1427,7 +1499,7 @@ section[class*="option"] .top a:hover span {
 section[class*="option"] .bottom {
   width: 100%;
   flex: 1 1 auto;
-  min-height: 800px;
+  min-height: 850px;
 }
 
 section[class*="option"] .bottom>ul.cars,
@@ -1530,7 +1602,7 @@ section[class*="option"] .bottom>ul.cars>li h2 span {
 }
 
 section.option02 .bottom>ul.cars>li h2 span {
-  font-size: 64px;
+  font-size: clamp(48px, 4vw, 64px);
   transform: translateY(-12px);
 }
 
@@ -1582,7 +1654,7 @@ section[class*="option"] .bottom>ul.cars>li .info_con .tit {
 
 section[class*="option"] .bottom>ul.cars>li .info_con .tit h2 {
   width: 100%;
-  font-size: 64px;
+  font-size: clamp(48px, 4vw, 64px);
   font-weight: 500;
 }
 
@@ -1727,7 +1799,7 @@ section[class*="option"] .bottom>ul.cars>li:hover .info_con>ul.info {
 .partnership .inner {
   width: 100%;
   height: 100vh;
-  min-height: clamp(950px, 90vh, 100vh);
+  min-height: clamp(750px, 90vh, 100vh);
   margin: 0 auto;
   padding: 72px 0 0;
   display: flex;
@@ -1742,13 +1814,14 @@ section[class*="option"] .bottom>ul.cars>li:hover .info_con>ul.info {
 }
 
 .partnership .tit p {
-  font-size: clamp(16px, 1.8vw, 24px);
+  font-size: clamp(16px, 1.7vw, 24px);
   color: var(--kia-white2);
 }
 
 .par_visual {
   position: relative;
-  flex: 1 1 auto;
+  flex: 0 0 clamp(300px, 36vw, 600px);
+  height: clamp(500px, 36vw, 600px);
   min-height: 0;
   width: 100%;
   display: flex;
@@ -1925,9 +1998,12 @@ body.review_locked {
   padding-block: 32px 64px;
   width: 100%;
 }
+.review .tit h2{
+  font-size: clamp(48px, 4vw, 64px);
+}
 
 .review .tit p {
-  font-size: clamp(20px, 2vw, 24px);
+  font-size: clamp(16px, 1.7vw, 24px);
   line-height: 1.3;
   margin: 0;
 }
@@ -2080,7 +2156,13 @@ body.review_locked {
   display: flex;
   gap: 12px;
   font-family: "Outfit", sans-serif;
-  opacity: 0.35;
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.28);
+  box-shadow:
+    inset 0 1px 3px rgba(255, 255, 255, 0.14),
+    0 8px 18px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(4px) saturate(120%);
+  -webkit-backdrop-filter: blur(4px) saturate(120%);
 }
 
 .modal .white_origin:hover {
@@ -2094,6 +2176,7 @@ body.review_locked {
 
 .map .inner {
   width: 100%;
+  min-width: 360px;
   height: 600px;
   padding-block: 240px;
   position: relative;
@@ -2122,9 +2205,17 @@ body.review_locked {
   gap: 16px;
 }
 
+.map h2 {
+  font-size: clamp(48px, 4vw, 64px);
+}
+
 .map p {
-  font-size: clamp(20px, 2vw, 24px);
+  font-size: clamp(16px, 1.7vw, 24px);
   padding-bottom: 32px;
+}
+
+.map_mobile_break {
+  display: none;
 }
 
 
@@ -2135,14 +2226,12 @@ body.review_locked {
   padding-inline: 28px;
   border: 1px solid rgba(255, 255, 255, 0.32);
   border-radius: 999px;
-  background: linear-gradient(135deg,
-      rgba(255, 255, 255, 0.34),
-      rgba(255, 255, 255, 0.14));
+  background: rgba(255, 255, 255, 0.12);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.35),
-    0 10px 30px rgba(0, 0, 0, 0.16);
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 10px 24px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(4px) saturate(120%);
+  -webkit-backdrop-filter: blur(4px) saturate(120%);
   color: var(--kia-black);
   transition:
     transform 0.25s ease,
@@ -2150,7 +2239,6 @@ body.review_locked {
     box-shadow 0.25s ease,
     border-color 0.25s ease;
   color: var(--kia-white1);
-  opacity: 0.7;
   display: flex;
   align-items: center;
   justify-content: baseline;
@@ -2163,15 +2251,13 @@ body.review_locked {
   inset: 2px;
   border-radius: inherit;
   background: linear-gradient(180deg,
-      rgba(255, 255, 255, 0.28),
-      rgba(255, 255, 255, 0.05));
+      rgba(255, 255, 255, 0.1),
+      rgba(255, 255, 255, 0.03));
   pointer-events: none;
-  opacity: 0.7;
 }
 
 
 .map .txt_box > a:hover {
-  transform: translateY(-2px);
   border-color: rgba(255, 255, 255, 0.45);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.4),
