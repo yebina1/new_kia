@@ -427,7 +427,7 @@ if (driverAssistVideo) {
   if (!section) return;
 
   const canvas = section.querySelector('.wheels_story_canvas');
-  const wheelsTitle = section.querySelector('.wheels_story_title');
+  const wheelsTitle = section.querySelector('.wheels_story_heading');
   const copyBlocks = Array.from(section.querySelectorAll('.wheel_story_block'));
   if (!canvas || !copyBlocks.length) return;
 
@@ -520,7 +520,7 @@ if (driverAssistVideo) {
   const TITLE_TO_WHEEL_START_PX = 240;
   const WHEEL_Y_RATIO = {
     entryStartFallback: 0.22,
-    slot: 0.5,
+    slot: 0.58,
   };
   const MAX_WHEEL_SIZE = 360;
   const WHEEL_SIZE_VW = 0.2;

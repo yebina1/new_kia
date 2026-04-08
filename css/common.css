@@ -939,7 +939,7 @@ footer {
 }
 
 footer .inner {
-  max-width: 1680px;
+  width: min(1920px, calc(100% - 96px));
   margin: 0 auto;
   padding-block: 120px;
   display: flex;
