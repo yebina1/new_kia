@@ -497,6 +497,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!window.gsap || !window.ScrollTrigger || window.innerWidth <= 900) {
             shell.classList.remove("is_gsap_pin");
+            shell.classList.remove("is_scene_active");
             renderFromScroll();
             return;
         }
@@ -513,6 +514,10 @@ document.addEventListener("DOMContentLoaded", () => {
             pinSpacing: true,
             scrub: 1,
             invalidateOnRefresh: true,
+            onEnter: () => shell.classList.add("is_scene_active"),
+            onEnterBack: () => shell.classList.add("is_scene_active"),
+            onLeave: () => shell.classList.remove("is_scene_active"),
+            onLeaveBack: () => shell.classList.remove("is_scene_active"),
             onUpdate: (self) => {
                 renderProgress(self.progress);
             }
@@ -558,26 +563,9 @@ document.addEventListener("DOMContentLoaded", () => {
         solutionSub.innerHTML = "A responsible step for humanity and the planet<br>Kia's sustainable journey.";
     }
 
-    solutionList.classList.add("solution_media_list");
-    const textTrack = solutionList.cloneNode(true);
-    textTrack.classList.remove("solution_media_list");
-    textTrack.classList.add("solution_text_list");
-
-    Array.from(textTrack.children).forEach((slide) => {
-        const img = slide.querySelector("img");
-        if (img) {
-            img.remove();
-        }
-
-        const spacer = document.createElement("div");
-        spacer.className = "solution_text_spacer";
-        slide.insertBefore(spacer, slide.firstChild);
-    });
-
-    dragArea.appendChild(textTrack);
+    dragArea.querySelector(".solution_text_list")?.remove();
 
     const slides = Array.from(solutionList.children);
-    const textSlides = Array.from(textTrack.children);
 
     if (!slides.length) {
         return;
@@ -588,7 +576,6 @@ document.addEventListener("DOMContentLoaded", () => {
         on: 0,
         off: 0,
         lastOne: 0,
-        lastTwo: 0,
         dragging: false,
         sideOffset: 0,
         maxOffset: 0,
@@ -623,7 +610,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        const currentOffset = state.mode === "desktop" ? state.lastOne : state.lastTwo;
+        const currentOffset = state.lastOne;
         const scale = state.maxOffset > 0 ? currentOffset / state.maxOffset : 0;
         const activeIndex = slides.reduce((nearestIndex, slide, index) => {
             const offset = clamp(slide.offsetLeft, 0, state.maxOffset);
@@ -661,7 +648,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const centerX = areaRect.left + (areaRect.width / 2);
         const focusRange = Math.max(areaRect.width * 0.42, 1);
 
-        slides.forEach((slide, index) => {
+        slides.forEach((slide) => {
             const rect = slide.getBoundingClientRect();
             const slideCenter = rect.left + (rect.width / 2);
             const distance = Math.abs(centerX - slideCenter);
@@ -669,7 +656,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const eased = Math.pow(normalized, 1.35);
 
             slide.style.setProperty("--slide-focus", eased.toFixed(4));
-            textSlides[index]?.style.setProperty("--slide-focus", eased.toFixed(4));
         });
     }
 
@@ -748,17 +734,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 slide.style.width = "";
                 slide.style.flexBasis = "";
             });
-            textSlides.forEach((slide) => {
-                slide.style.width = "";
-                slide.style.flexBasis = "";
-            });
 
             const desktopEdgePadding = Math.max((viewportWidth - firstSlideWidth) / 2, 0);
 
             solutionList.style.paddingLeft = `${desktopEdgePadding}px`;
             solutionList.style.paddingRight = `${desktopEdgePadding}px`;
-            textTrack.style.paddingLeft = `${desktopEdgePadding}px`;
-            textTrack.style.paddingRight = `${desktopEdgePadding}px`;
 
             state.sideOffset = 0;
             state.desktopOffsets = slides.map((slide) => {
@@ -770,24 +750,14 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             solutionList.style.paddingLeft = "";
             solutionList.style.paddingRight = "";
-            textTrack.style.paddingLeft = "";
-            textTrack.style.paddingRight = "";
 
             if (isCompactMobile) {
                 slides.forEach((slide) => {
                     slide.style.width = `${viewportWidth}px`;
                     slide.style.flexBasis = `${viewportWidth}px`;
                 });
-                textSlides.forEach((slide) => {
-                    slide.style.width = `${viewportWidth}px`;
-                    slide.style.flexBasis = `${viewportWidth}px`;
-                });
             } else {
                 slides.forEach((slide) => {
-                    slide.style.width = "";
-                    slide.style.flexBasis = "";
-                });
-                textSlides.forEach((slide) => {
                     slide.style.width = "";
                     slide.style.flexBasis = "";
                 });
@@ -802,14 +772,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         state.current = clamp(state.current, 0, state.maxOffset);
         state.lastOne = clamp(state.lastOne, 0, state.maxOffset);
-        state.lastTwo = clamp(state.lastTwo, 0, state.maxOffset);
-
         if (state.mode === "mobile") {
             solutionList.style.transform = `translate3d(${(state.sideOffset - state.lastOne).toFixed(2)}px, 0, 0)`;
-            textTrack.style.transform = `translate3d(${(state.sideOffset - state.lastTwo).toFixed(2)}px, 0, 0)`;
         } else {
             solutionList.style.transform = `translate3d(${(-state.lastOne).toFixed(2)}px, 0, 0)`;
-            textTrack.style.transform = `translate3d(${(-state.lastOne).toFixed(2)}px, 0, 0)`;
         }
 
         updateProgress();
@@ -858,12 +824,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function render() {
         state.lastOne = lerp(state.lastOne, state.current, 0.085);
-        state.lastTwo = lerp(state.lastTwo, state.current, 0.08);
+        const diff = state.current - state.lastOne;
+        const acc = diff / Math.max(dragArea.clientWidth, 1);
+        const isCompactMobile = window.innerWidth <= 899;
 
         if (state.mode === "desktop") {
             solutionList.style.transform =
-                `translate3d(${(-state.lastOne).toFixed(2)}px, 0, 0)`;
-            textTrack.style.transform =
                 `translate3d(${(-state.lastOne).toFixed(2)}px, 0, 0)`;
             updateProgress();
             updateSlideFocus();
@@ -871,15 +837,9 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        const diff = state.current - state.lastOne;
-        const acc = diff / Math.max(dragArea.clientWidth, 1);
-        const isCompactMobile = window.innerWidth <= 899;
-
         if (isCompactMobile) {
             solutionList.style.transform =
                 `translate3d(${(state.sideOffset - state.lastOne).toFixed(2)}px, 0, 0)`;
-            textTrack.style.transform =
-                `translate3d(${(state.sideOffset - state.lastTwo).toFixed(2)}px, 0, 0)`;
             updateProgress();
             updateSlideFocus();
             window.requestAnimationFrame(render);
@@ -893,8 +853,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         solutionList.style.transform =
             `translate3d(${(state.sideOffset - state.lastOne).toFixed(2)}px, 0, 0) rotateX(${tiltX.toFixed(3)}deg) rotateY(${tiltY.toFixed(3)}deg) scaleY(${bounce.toFixed(4)}) skewX(${skew.toFixed(3)}deg)`;
-        textTrack.style.transform =
-            `translate3d(${(state.sideOffset - state.lastTwo).toFixed(2)}px, 0, 0) rotateX(${(tiltX * 0.55).toFixed(3)}deg) rotateY(${(tiltY * 0.4).toFixed(3)}deg) scaleY(${bounce.toFixed(4)})`;
 
         updateProgress();
         updateSlideFocus();
@@ -935,10 +893,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function destroyDesktopScroll() {
-        if (state.desktopTrigger) {
-            state.desktopTrigger.kill();
-            state.desktopTrigger = null;
+        if (!state.desktopTrigger) {
+            return;
         }
+
+        state.desktopTrigger.kill();
+        state.desktopTrigger = null;
     }
 
     function setupDesktopScroll() {
@@ -946,8 +906,8 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        window.gsap.registerPlugin(window.ScrollTrigger);
         destroyDesktopScroll();
+        solutionSection.classList.remove("is_scene_active");
 
         state.desktopTrigger = window.ScrollTrigger.create({
             trigger: solutionSection,
@@ -960,11 +920,13 @@ document.addEventListener("DOMContentLoaded", () => {
             },
             pin: solutionSection,
             pinSpacing: true,
-            pinType: "fixed",
-            pinReparent: true,
-            anticipatePin: 1,
             scrub: 1,
+            anticipatePin: 1,
             invalidateOnRefresh: true,
+            onEnter: () => solutionSection.classList.add("is_scene_active"),
+            onEnterBack: () => solutionSection.classList.add("is_scene_active"),
+            onLeave: () => solutionSection.classList.remove("is_scene_active"),
+            onLeaveBack: () => solutionSection.classList.remove("is_scene_active"),
             onRefresh: (self) => {
                 const progress = clamp(self.progress / (1 - SOLUTION_DESKTOP_HOLD), 0, 1);
                 state.current = progress * state.maxOffset;
@@ -982,11 +944,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (nextMode === state.mode && !(nextMode === "desktop" && !state.desktopTrigger)) {
             updateBounds();
-
-            if (state.mode === "desktop" && window.ScrollTrigger) {
+            if (nextMode === "desktop" && window.ScrollTrigger) {
                 window.ScrollTrigger.refresh();
             }
-
             return;
         }
 
@@ -1001,8 +961,9 @@ document.addEventListener("DOMContentLoaded", () => {
             if (modeChanged) {
                 state.current = 0;
             }
+
+            state.current = clamp(state.current, 0, state.maxOffset);
             state.lastOne = state.current;
-            state.lastTwo = state.current;
             updateBounds();
             setupDesktopScroll();
             return;
@@ -1012,9 +973,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (modeChanged) {
             state.current = 0;
         }
+
         state.current = clamp(state.current, 0, state.maxOffset);
         state.lastOne = state.current;
-        state.lastTwo = state.current;
         updateBounds();
     }
 
@@ -1071,6 +1032,23 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
+    const awardsMarquee = document.querySelector(".awards_marquee");
+    const awardsTrack = awardsMarquee?.querySelector(".awards_track");
+
+    if (!awardsMarquee || !awardsTrack) {
+        return;
+    }
+
+    if (awardsMarquee.querySelector('.awards_track[aria-hidden="true"]')) {
+        return;
+    }
+
+    const duplicateTrack = awardsTrack.cloneNode(true);
+    duplicateTrack.setAttribute("aria-hidden", "true");
+    awardsMarquee.appendChild(duplicateTrack);
+});
+
+document.addEventListener("DOMContentLoaded", () => {
     const partnerSection = document.getElementById("partnerSection");
 
     if (!partnerSection) {
@@ -1082,9 +1060,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const partnerCardsContainer = partnerSection.querySelector(".partner_cards_container");
     const partnerScrollDownButton = document.getElementById("partnerScrollDownButton");
     const partnerSticky = partnerSection.querySelector(".partner_sticky");
-    const PARTNER_HOLD_PROGRESS = 0.18;
     const canUsePartnerCursor = window.matchMedia("(pointer: fine)").matches;
-    let isCompactPartnerLayout = window.innerWidth <= 900 || !window.gsap || !window.ScrollTrigger;
+    const PARTNER_HOLD_PROGRESS = 0.18;
+    let isCompactPartnerLayout = window.innerWidth <= 900;
     let partnerSceneTrigger = null;
     let partnerCursor = null;
     let lastPartnerPointerX = 0;
@@ -1102,7 +1080,9 @@ document.addEventListener("DOMContentLoaded", () => {
         document.body.appendChild(partnerCursor);
     }
 
-    const smoothStep = (progress) => progress * progress * (3 - (2 * progress));
+    const getPartnerCardStartX = (index) => (index === 0 ? 100 : index === 1 ? 0 : -100);
+    const getPartnerCardStartRotate = (index) => (index === 0 ? -5 : index === 1 ? 0 : 5);
+
     const setPartnerCardsToInitialState = () => {
         cards.forEach((card, index) => {
             const innerCard = card.querySelector(".partner_flip_inner");
@@ -1111,10 +1091,10 @@ document.addEventListener("DOMContentLoaded", () => {
             const images = Array.from(card.querySelectorAll(".partner_face img"));
 
             window.gsap.set(card, {
-                opacity: 0,
-                x: index === 0 ? "100%" : index === 1 ? "0%" : "-100%",
-                y: "-100%",
-                rotate: index === 0 ? -5 : index === 1 ? 0 : 5,
+                autoAlpha: 0,
+                xPercent: getPartnerCardStartX(index),
+                yPercent: -100,
+                rotate: getPartnerCardStartRotate(index),
                 scale: 0.25,
             });
 
@@ -1239,145 +1219,143 @@ document.addEventListener("DOMContentLoaded", () => {
         partnerScrollDownButton?.classList.remove("is_visible");
     };
 
-    const applyPartnerScene = (progress) => {
-        const normalizedProgress = window.gsap.utils.clamp(0, 1, progress / (1 - PARTNER_HOLD_PROGRESS));
-        const clampedProgress = window.gsap.utils.clamp(0, 1, normalizedProgress);
-        const shouldShowPartnerScrollButton = clampedProgress > 0.08 && clampedProgress < 0.78;
+    const setPartnerCardsToDesktopState = () => {
+        cards.forEach((card) => {
+            const innerCard = card.querySelector(".partner_flip_inner");
+            const wrapper = card.querySelector(".partner_card_wrapper");
+            const tiltShell = card.querySelector(".partner_tilt_shell");
+            const images = Array.from(card.querySelectorAll(".partner_face img"));
 
-        partnerScrollDownButton?.classList.toggle("is_visible", shouldShowPartnerScrollButton);
+            card.classList.remove("is_open");
+            card.classList.add("is_interactive");
+            card.classList.add("is_label_visible");
+            wrapper?.classList.remove("is_hovered", "is_open");
 
-        if (partnerHeading) {
-            let headingY;
-            let headingOpacity;
-
-            if (clampedProgress < 0.32) {
-                const stageProgress = clampedProgress / 0.32;
-                const eased = smoothStep(stageProgress);
-                headingY = window.gsap.utils.interpolate(320, 0, eased);
-                headingOpacity = window.gsap.utils.interpolate(0, 1, eased);
+            if (window.gsap) {
+                window.gsap.set(card, {
+                    autoAlpha: 1,
+                    x: 0,
+                    y: 0,
+                    scale: 1,
+                    rotate: 0,
+                });
             } else {
-                headingY = 0;
-                headingOpacity = 1;
+                card.style.opacity = "1";
+                card.style.transform = "translate3d(0, 0, 0) scale(1)";
+                card.style.rotate = "0deg";
             }
 
+            if (innerCard) {
+                innerCard.style.transform = "rotateY(180deg)";
+            }
+
+            if (tiltShell) {
+                tiltShell.style.transform = "rotateX(0deg) rotateY(0deg)";
+            }
+
+            images.forEach((img) => {
+                img.style.transform = "translateX(0px) translateY(0px) scale(1.04)";
+            });
+        });
+
+        if (partnerHeading) {
+            if (window.gsap) {
+                window.gsap.set(partnerHeading, {
+                    autoAlpha: 1,
+                    xPercent: -50,
+                    y: 0,
+                });
+            } else {
+                partnerHeading.style.opacity = "1";
+                partnerHeading.style.transform = "translate(-50%, 0)";
+            }
+        }
+
+        if (partnerCardsContainer) {
+            partnerCardsContainer.style.zIndex = "4";
+        }
+
+        partnerCardsContainer?.classList.remove("has_open_card");
+        partnerScrollDownButton?.classList.remove("is_visible");
+    };
+
+    const applyPartnerScene = (progress) => {
+        if (!window.gsap) {
+            setPartnerCardsToDesktopState();
+            return;
+        }
+
+        const normalizedProgress = window.gsap.utils.clamp(0, 1, progress);
+        const heldProgress = normalizedProgress <= PARTNER_HOLD_PROGRESS
+            ? 0
+            : (normalizedProgress - PARTNER_HOLD_PROGRESS) / (1 - PARTNER_HOLD_PROGRESS);
+        const sceneProgress = window.gsap.utils.clamp(0, 1, heldProgress);
+        const headingProgress = window.gsap.utils.clamp(0, 1, sceneProgress / 0.22);
+
+        if (partnerHeading) {
             window.gsap.set(partnerHeading, {
-                opacity: headingOpacity,
+                autoAlpha: headingProgress,
                 xPercent: -50,
-                y: headingY,
-                zIndex: 6,
+                y: window.gsap.utils.interpolate(-56, 0, headingProgress),
             });
         }
 
         if (partnerCardsContainer) {
-            partnerCardsContainer.style.zIndex = clampedProgress >= 0.14 ? "2" : "7";
+            partnerCardsContainer.style.zIndex = sceneProgress > 0.02 ? "4" : "1";
         }
 
         cards.forEach((card, index) => {
-            const delay = index * 0.05;
-            const cardStart = delay;
-            const cardDuration = Math.max(0.9 - (delay * 0.1), 0.68);
-            const cardProgress = window.gsap.utils.clamp(
-                0,
-                1,
-                (clampedProgress - cardStart) / cardDuration
-            );
-
             const innerCard = card.querySelector(".partner_flip_inner");
-            const isInteractive = cardProgress >= 0.98;
-            const startX = index === 0 ? "100%" : index === 1 ? "0%" : "-100%";
-            const startRotate = index === 0 ? -5 : index === 1 ? 0 : 5;
+            const wrapper = card.querySelector(".partner_card_wrapper");
+            const cardDelay = index * 0.11;
+            const localProgress = window.gsap.utils.clamp(0, 1, (sceneProgress - cardDelay) / 0.62);
+            const dropProgress = window.gsap.utils.clamp(0, 1, localProgress / 0.68);
+            const settleProgress = window.gsap.utils.clamp(0, 1, (localProgress - 0.68) / 0.32);
+            const startX = getPartnerCardStartX(index);
+            const startRotate = getPartnerCardStartRotate(index);
 
-            let y;
-            if (cardProgress < 0.4) {
-                const stageProgress = cardProgress / 0.4;
-                y = window.gsap.utils.interpolate("-100%", "50%", smoothStep(stageProgress));
-            } else if (cardProgress < 0.6) {
-                const stageProgress = (cardProgress - 0.4) / 0.2;
-                y = window.gsap.utils.interpolate("50%", "0%", smoothStep(stageProgress));
+            let xPercent = startX;
+            let yPercent = -100;
+            let scale = 0.25;
+            let rotate = startRotate;
+
+            if (dropProgress < 1) {
+                yPercent = window.gsap.utils.interpolate(-100, 50, dropProgress);
+                scale = window.gsap.utils.interpolate(0.25, 0.78, dropProgress);
             } else {
-                y = "0%";
-            }
-
-            let scale = 1;
-            if (cardProgress < 0.4) {
-                const stageProgress = cardProgress / 0.4;
-                const eased = smoothStep(stageProgress);
-                scale = window.gsap.utils.interpolate(0.25, 0.75, eased);
-            } else if (cardProgress < 0.6) {
-                const stageProgress = (cardProgress - 0.4) / 0.2;
-                const eased = smoothStep(stageProgress);
-                scale = window.gsap.utils.interpolate(0.75, 1, eased);
-            } else {
-                scale = 1;
-            }
-
-            let opacity;
-            if (cardProgress < 0.2) {
-                const stageProgress = cardProgress / 0.2;
-                opacity = smoothStep(stageProgress);
-            } else {
-                opacity = 1;
-            }
-
-            let x;
-            let rotate;
-            let rotationY;
-
-            if (cardProgress < 0.6) {
-                x = startX;
-                rotate = startRotate;
-                rotationY = 0;
-            } else if (cardProgress < 1) {
-                const stageProgress = (cardProgress - 0.6) / 0.4;
-                const eased = smoothStep(stageProgress);
-                x = window.gsap.utils.interpolate(startX, "0%", eased);
-                rotate = window.gsap.utils.interpolate(startRotate, 0, eased);
-                rotationY = eased * 180;
-            } else {
-                x = "0%";
-                rotate = 0;
-                rotationY = 180;
+                xPercent = window.gsap.utils.interpolate(startX, 0, settleProgress);
+                yPercent = window.gsap.utils.interpolate(50, 0, settleProgress);
+                scale = window.gsap.utils.interpolate(0.78, 1, settleProgress);
+                rotate = window.gsap.utils.interpolate(startRotate, 0, settleProgress);
             }
 
             window.gsap.set(card, {
-                opacity: opacity,
-                y: y,
-                x: x,
-                rotate: rotate,
-                scale: scale,
+                autoAlpha: window.gsap.utils.clamp(0, 1, localProgress * 2.2),
+                xPercent,
+                yPercent,
+                scale,
+                rotate,
             });
 
-            window.gsap.set(innerCard, {
-                rotationY: rotationY,
-            });
-
-            card.classList.toggle("is_interactive", isInteractive);
-            card.classList.toggle("is_label_visible", cardProgress >= 0.98 && !card.classList.contains("is_open"));
-
-            if (!isInteractive) {
-                const wrapper = card.querySelector(".partner_card_wrapper");
-                const tiltShell = card.querySelector(".partner_tilt_shell");
-                const images = Array.from(card.querySelectorAll(".partner_face img"));
-
-                wrapper?.classList.remove("is_hovered");
-
-                if (tiltShell) {
-                    tiltShell.style.transform = "rotateX(0deg) rotateY(0deg)";
-                }
-
-                images.forEach((img) => {
-                    img.style.transform = "translateX(0px) translateY(0px) scale(1.04)";
+            if (innerCard) {
+                const flipProgress = window.gsap.utils.clamp(0, 1, (localProgress - 0.42) / 0.42);
+                window.gsap.set(innerCard, {
+                    rotationY: window.gsap.utils.interpolate(0, 180, flipProgress),
                 });
-
-                card.classList.remove("is_open");
-                card.classList.remove("is_label_visible");
-                wrapper?.classList.remove("is_open");
             }
+
+            card.classList.toggle("is_interactive", localProgress >= 0.96);
+            card.classList.toggle("is_label_visible", localProgress >= 0.28);
+            card.classList.remove("is_open");
+            wrapper?.classList.remove("is_hovered", "is_open");
         });
+
+        partnerCardsContainer?.classList.remove("has_open_card");
+        partnerScrollDownButton?.classList.toggle("is_visible", normalizedProgress < 0.14);
     };
 
     const setupPartnerLayout = () => {
-        const nextCompact = window.innerWidth <= 900 || !window.gsap || !window.ScrollTrigger;
+        const nextCompact = window.innerWidth <= 900;
 
         if (partnerSceneTrigger) {
             partnerSceneTrigger.kill();
@@ -1389,12 +1367,19 @@ document.addEventListener("DOMContentLoaded", () => {
         isCompactPartnerLayout = nextCompact;
 
         if (isCompactPartnerLayout) {
+            partnerSection.classList.remove("is_scene_active");
             setPartnerCardsToCompactState();
             return;
         }
 
-        window.gsap.registerPlugin(window.ScrollTrigger);
+        if (!window.gsap || !window.ScrollTrigger || !partnerSticky) {
+            partnerSection.classList.remove("is_scene_active");
+            setPartnerCardsToDesktopState();
+            return;
+        }
+
         setPartnerCardsToInitialState();
+        applyPartnerScene(0);
 
         partnerSceneTrigger = window.ScrollTrigger.create({
             trigger: partnerSection,
@@ -1404,23 +1389,26 @@ document.addEventListener("DOMContentLoaded", () => {
             pinSpacing: true,
             scrub: 1,
             invalidateOnRefresh: true,
-            onEnter: () => applyPartnerScene(0),
-            onEnterBack: () => applyPartnerScene(0),
-            onLeave: () => partnerScrollDownButton?.classList.remove("is_visible"),
-            onLeaveBack: () => {
+            onEnter: () => {
+                partnerSection.classList.add("is_scene_active");
                 applyPartnerScene(0);
             },
-            onRefresh: (self) => {
-                if (self.progress <= 0) {
-                    applyPartnerScene(0);
-                } else {
-                    applyPartnerScene(self.progress);
-                }
+            onEnterBack: () => {
+                partnerSection.classList.add("is_scene_active");
+                applyPartnerScene(0);
             },
+            onLeave: () => {
+                partnerSection.classList.remove("is_scene_active");
+                applyPartnerScene(1);
+                partnerScrollDownButton?.classList.remove("is_visible");
+            },
+            onLeaveBack: () => {
+                partnerSection.classList.remove("is_scene_active");
+                applyPartnerScene(0);
+            },
+            onRefresh: (self) => applyPartnerScene(self.progress),
             onUpdate: (self) => applyPartnerScene(self.progress),
         });
-
-        applyPartnerScene(0);
     };
 
     setupPartnerLayout();

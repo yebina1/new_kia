@@ -280,6 +280,12 @@ h2 {
     z-index: 2;
 }
 
+.story_history.is_scene_active,
+.solution_section.is_scene_active,
+.partner_section.is_scene_active {
+    z-index: 40;
+}
+
 .story_frame {
     position: sticky;
     top: 0;
@@ -387,10 +393,11 @@ h2 {
 .txt_history1 {
     position: absolute;
     left: 50%;
-    top: 41%;
-    width: min(700px, 100%);
-    font-size: clamp(16px, 1.5vw, 22px);
-    line-height: 1.7;
+    top: 31%;
+    width: min(860px, calc(100% - 64px));
+    font-size: clamp(22px, 2.2vw, 34px);
+    font-weight: 300;
+    line-height: 1.6;
     color: var(--text_main);
     text-align: center;
     opacity: 0;
@@ -407,8 +414,8 @@ h2 {
 .txt_history2 {
     position: absolute;
     left: 50%;
-    top: 52%;
-    width: min(800px, 100%);
+    top: 58%;
+    width: min(980px, calc(100% - 64px));
     font-size: clamp(20px, 2.2vw, 32px);
     font-weight: 300;
     line-height: 1.6;
@@ -459,8 +466,9 @@ h2 {
 }
 
 .vision_txt {
-    font-size: clamp(16px, 1.4vw, 22px);
-    line-height: 1.5;
+    font-size: clamp(22px, 2.2vw, 34px);
+    font-weight: 300;
+    line-height: 1.65;
     text-align: center;
     color: var(--text_sub);
     opacity: 0;
@@ -847,10 +855,14 @@ h2 {
     left: 0;
     gap: var(--solution-desktop-gap);
     height: var(--solution-desktop-list-height);
-    cursor: default;
-    touch-action: none;
+    cursor: grab;
+    touch-action: pan-x;
     transform-origin: left center;
     z-index: 5;
+}
+
+.solution_section.is_desktop_scroll .solution_list.is_dragging {
+    cursor: grabbing;
 }
 
 .solution_section.is_desktop_scroll .solution_list>li {
@@ -880,15 +892,6 @@ h2 {
     transition: filter 0.24s ease;
     box-shadow: none;
     justify-self: start;
-}
-
-.solution_section.is_desktop_scroll .solution_media_list .tex_box {
-    visibility: visible;
-    opacity: 1;
-}
-
-.solution_section.is_desktop_scroll .solution_text_list {
-    display: none;
 }
 
 .solution_section.is_desktop_scroll .tex_box {
@@ -945,43 +948,6 @@ h2 {
     color: var(--kia-white2);
 }
 
-.solution_media_list {
-    position: absolute;
-    z-index: 5;
-}
-
-.solution_media_list .tex_box {
-    visibility: hidden;
-    opacity: 0;
-}
-
-.solution_text_list {
-    position: absolute;
-    z-index: 6;
-    pointer-events: none;
-}
-
-.solution_text_list>li {
-    opacity: calc(0.14 + (var(--slide-focus, 0) * 0.86));
-    filter: none;
-}
-
-.solution_text_list>li {
-    grid-template-columns: 680px minmax(0, 710px);
-}
-
-.solution_text_spacer {
-    width: 680px;
-    height: 400px;
-    position: relative;
-    z-index: 6;
-}
-
-.solution_section.is_desktop_scroll .solution_text_spacer {
-    background: var(--solution-surface-bg);
-    box-shadow: none;
-}
-
 .solution_section.is_desktop_scroll .tex_box strong,
 .solution_section.is_desktop_scroll .tex_box p {
     opacity: calc(0.32 + (var(--slide-focus, 0) * 0.68));
@@ -1010,17 +976,17 @@ h2 {
 
 .partner_section {
     position: relative;
-    min-height: 320vh;
+    min-height: 100vh;
     padding-top: 5vh;
     background: #0a0f13;
     z-index: 0;
 }
 
 .partner_sticky {
-    position: sticky;
-    top: 0;
+    position: relative;
+    top: auto;
     min-height: 100vh;
-    overflow: hidden;
+    overflow: visible;
     z-index: 0;
     background: #0a0f13;
 }
@@ -1031,6 +997,7 @@ h2 {
     margin: 0 auto;
     padding: 4vh 0 7vh;
     position: relative;
+    overflow: visible;
 }
 
 .partner_heading {
@@ -1043,8 +1010,8 @@ h2 {
     line-height: 0.92;
     text-align: center;
     color: #fbf6ef;
-    opacity: 0;
-    transform: translate(-50%, 160px);
+    opacity: 1;
+    transform: translate(-50%, 0);
     will-change: transform, opacity;
     white-space: nowrap;
     pointer-events: none;
@@ -1069,14 +1036,15 @@ h2 {
     align-items: flex-start;
     justify-content: center;
     margin-top: 31vh;
+    overflow: visible;
 }
 
 .partner_cards_container {
-    width: min(1280px, 100%);
+    width: min(1720px, 100%);
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    gap: 72px;
+    gap: 56px;
     transition: filter 0.35s ease, opacity 0.35s ease;
     position: relative;
     z-index: 4;
@@ -1084,7 +1052,7 @@ h2 {
 
 .partner_card {
     flex: 1;
-    max-width: 380px;
+    max-width: 570px;
     display: flex;
     flex-direction: column;
     gap: 0;
@@ -1257,8 +1225,8 @@ h2 {
     line-height: 1.2;
     color: #fbf6ef;
     text-shadow: 0 6px 18px rgba(0, 0, 0, 0.42);
-    opacity: 0;
-    transform: translateY(10px);
+    opacity: 1;
+    transform: translateY(0);
     transition: opacity 0.3s ease, transform 0.35s ease;
     pointer-events: none;
 }
