@@ -685,7 +685,13 @@ window.addEventListener('resize', () => {
 
 const $familySite = document.querySelector('footer .f_fam');
 const $familyToggle = document.querySelector('footer .f_fam strong');
+const $footerLinks = Array.from(document.querySelectorAll('footer a[href]'));
 const $whiteOriginTriggers = Array.from(document.querySelectorAll('.white_origin'));
+
+$footerLinks.forEach((link) => {
+  link.setAttribute('target', '_blank');
+  link.setAttribute('rel', 'noopener noreferrer');
+});
 
 if ($familySite && $familyToggle) {
   $familyToggle.addEventListener('click', (e) => {
