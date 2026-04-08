@@ -382,18 +382,174 @@ const $mobileHamClose = document.querySelector('header .close');
 const $mobileHamItems = Array.from(document.querySelectorAll('header .m_gnb > li'));
 const $mobileHamBreakpoint = 1500;
 const $topButtonPages = new Set(['index.html', 'list.html', 'whykia.html', 'detail.html', '']);
+const $quickMovePages = new Set(['index.html', '']);
 const $currentPageName = (window.location.pathname.split('/').pop() || 'index.html').toLowerCase();
 let $pageTopBtn = null;
+const QUICK_MOVE_CLOSE_DURATION = 420;
+const $quickMoveState = { root: null, timer: 0 };
+
+const $quickMoveItems = [
+  {
+    label: 'Kia Sustainable',
+    selector: '.ev6',
+    icon: 'brand',
+  },
+  {
+    label: 'Perfect Match',
+    selector: '.match',
+    icon: 'grid',
+  },
+  {
+    label: 'Customer Reviews',
+    selector: '.review',
+    icon: 'review',
+  },
+  {
+    label: 'Go to Top',
+    selector: 'top',
+    icon: 'up',
+  },
+];
+
+const $quickMoveIconMap = {
+  brand: 'img/main/quick_move/kia.png',
+  grid: 'img/main/quick_move/match.png',
+  review: 'img/main/quick_move/review.png',
+  up: 'img/main/quick_move/up.png',
+};
+
+function getQuickMoveIconMarkup(icon) {
+  const iconSrc = $quickMoveIconMap[icon] || $quickMoveIconMap.up;
+  return `<img class="quick_move_icon" src="${iconSrc}" alt="" aria-hidden="true">`;
+}
+
+function getQuickMoveMarkup() {
+  return `
+    <button type="button" class="quick_move_toggle" aria-label="Open quick move" aria-expanded="false" aria-controls="quickMovePanel">
+      <span class="quick_move_toggle_label" aria-hidden="true">
+        <span>Quick</span>
+        <span>Move</span>
+      </span>
+    </button>
+    <div id="quickMovePanel" class="quick_move_panel" aria-hidden="true">
+      ${$quickMoveItems.map((item) => `
+        <button type="button" class="quick_move_action" data-target="${item.selector}" aria-label="${item.label}">
+          ${getQuickMoveIconMarkup(item.icon)}
+          <span class="quick_move_action_label" aria-hidden="true">${item.label}</span>
+        </button>
+      `).join('')}
+    </div>
+    <button type="button" class="quick_move_close" aria-label="Close quick move" aria-hidden="true">
+      <svg class="quick_move_close_icon" viewBox="0 0 36 36" aria-hidden="true" focusable="false">
+        <path d="M10 10 26 26"></path>
+        <path d="M26 10 10 26"></path>
+      </svg>
+    </button>
+  `;
+}
+
+function scrollToPagePosition(selector) {
+  if (selector === 'top') {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+    return;
+  }
+
+  const $target = document.querySelector(selector);
+  if (!$target) return;
+
+  const $headerHeight = $header?.getBoundingClientRect().height || 0;
+  const $targetTop = Math.max(
+    0,
+    window.scrollY + $target.getBoundingClientRect().top - $headerHeight - 16
+  );
+
+  window.scrollTo({
+    top: $targetTop,
+    behavior: 'smooth',
+  });
+}
+
+function setQuickMoveOpen(isOpen, immediate = false) {
+  if (!$quickMoveState.root) return;
+
+  window.clearTimeout($quickMoveState.timer);
+  $quickMoveState.root.querySelector('.quick_move_toggle')?.setAttribute('aria-expanded', String(isOpen));
+  $quickMoveState.root.querySelector('.quick_move_panel')?.setAttribute('aria-hidden', String(!isOpen));
+  $quickMoveState.root.querySelector('.quick_move_close')?.setAttribute('aria-hidden', String(!isOpen));
+
+  if (isOpen) {
+    $quickMoveState.root.classList.remove('is-closing');
+    $quickMoveState.root.classList.add('is-open');
+    return;
+  }
+
+  if (immediate || !$quickMoveState.root.classList.contains('is-open')) {
+    $quickMoveState.root.classList.remove('is-open', 'is-closing');
+    return;
+  }
+
+  $quickMoveState.root.classList.add('is-closing');
+  $quickMoveState.timer = window.setTimeout(() => {
+    $quickMoveState.root?.classList.remove('is-open', 'is-closing');
+  }, QUICK_MOVE_CLOSE_DURATION);
+}
 
 function syncPageTopButtonVisibility() {
   if (!$pageTopBtn) return;
 
   const shouldShow = window.scrollY > Math.max(window.innerHeight * 0.6, 240);
   $pageTopBtn.classList.toggle('is-visible', shouldShow);
+
+  if (!shouldShow) {
+    setQuickMoveOpen(false, true);
+  }
 }
 
 function initPageTopButton() {
   if (!$topButtonPages.has($currentPageName)) return;
+
+  if ($quickMovePages.has($currentPageName)) {
+    $pageTopBtn = document.createElement('div');
+    $pageTopBtn.className = 'quick_move_root';
+    $pageTopBtn.innerHTML = getQuickMoveMarkup();
+
+    $quickMoveState.root = $pageTopBtn;
+    $pageTopBtn.addEventListener('click', (event) => {
+      const $button = event.target.closest('.quick_move_toggle, .quick_move_close, .quick_move_action');
+      if (!$button || !$pageTopBtn.contains($button)) return;
+
+      if ($button.classList.contains('quick_move_toggle')) {
+        setQuickMoveOpen(!$pageTopBtn.classList.contains('is-open'));
+        return;
+      }
+
+      if ($button.classList.contains('quick_move_close')) {
+        setQuickMoveOpen(false);
+        return;
+      }
+
+      scrollToPagePosition($button.dataset.target || 'top');
+      setQuickMoveOpen(false);
+    });
+    document.addEventListener('click', (event) => {
+      if (!$quickMoveState.root?.classList.contains('is-open')) return;
+      if ($pageTopBtn.contains(event.target)) return;
+      setQuickMoveOpen(false);
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        setQuickMoveOpen(false);
+      }
+    });
+
+    document.body.appendChild($pageTopBtn);
+    syncPageTopButtonVisibility();
+    return;
+  }
 
   $pageTopBtn = document.createElement('button');
   $pageTopBtn.type = 'button';
