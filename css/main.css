@@ -589,6 +589,10 @@ body.section_transition_lock {
   overflow-x: clip;
 }
 
+.ev6_mobile_copy{
+  display: none;
+}
+
 .ev6_mobile_swiper {
   display: none;
 }

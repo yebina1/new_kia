@@ -1,4 +1,4 @@
-// Naming rule: const/let variables use $camelCase, function names and parameters use camelCase.
+﻿// Naming rule: const/let variables use $camelCase, function names and parameters use camelCase.
 /* section.best */
 const $vehicles = [
     {
@@ -28,7 +28,7 @@ const $vehicles = [
         alt: "Kia Sorento",
         specs: {
             horsepower: "227 HP",
-            efficiency: "34–37 MPG",
+            efficiency: "34??7 MPG",
             torque: "258 LB-FT",
             engine: "1,598 CC"
         }
@@ -44,7 +44,7 @@ const $vehicles = [
         alt: "Kia Seltos",
         specs: {
             horsepower: "190 HP",
-            efficiency: "25–26 MPG",
+            efficiency: "25??6 MPG",
             torque: "195 LB-FT",
             engine: "1,598 CC"
         }
@@ -60,7 +60,7 @@ const $vehicles = [
         alt: "Kia K4",
         specs: {
             horsepower: "190 HP",
-            efficiency: "26–30 MPG",
+            efficiency: "26??0 MPG",
             torque: "195 LB-FT",
             engine: "1,598 CC"
         }
@@ -76,7 +76,7 @@ const $vehicles = [
         alt: "Kia Telluride",
         specs: {
             horsepower: "291 HP",
-            efficiency: "20–22 MPG",
+            efficiency: "20??2 MPG",
             torque: "262 LB-FT",
             engine: "3,778 CC"
         }
@@ -336,6 +336,11 @@ function renderBestMobileSlides() {
 
 function goToBestIndex(index, shouldAnimateSpecs = $hasActivatedSpecCount) {
     $currentIndex = getLoopedIndex(index);
+    if ($cards.length === 3) {
+        renderState($currentIndex);
+        renderTextContent($currentIndex, shouldAnimateSpecs);
+        return;
+    }
     renderTextContent($currentIndex, shouldAnimateSpecs);
 }
 
@@ -1014,15 +1019,14 @@ function renderEv6MobileSlides() {
         <div class="ev6_mobile_visual" aria-hidden="true">
           <div class="ev6_mobile_car_shell">
             <img class="ev6_mobile_car_mask" src="${slide.mask}" alt="">
-            <div class="photo_card ev6_mobile_photo_card ${slide.featureClass}">
-              <img src="${slide.photo}" alt="${slide.photoAlt}">
-              <div class="ev6_mobile_card_overlay">
-                <button class="ev6_mobile_card_close" type="button" tabindex="-1" aria-hidden="true">×</button>
-                <div class="ev6_mobile_card_text">
-                  <strong class="ev6_mobile_card_title">${slide.cardTitle}</strong>
-                  <p class="ev6_mobile_card_body">${slide.cardBody}</p>
-                </div>
-              </div>
+          </div>
+        </div>
+        <div class="photo_card ev6_mobile_photo_card ${slide.featureClass}">
+          <img src="${slide.photo}" alt="${slide.photoAlt}">
+          <div class="ev6_mobile_card_overlay">
+            <div class="ev6_mobile_card_text">
+              <strong class="ev6_mobile_card_title">${slide.cardTitle}</strong>
+              <p class="ev6_mobile_card_body">${slide.cardBody}</p>
             </div>
           </div>
         </div>
@@ -2259,3 +2263,4 @@ window.addEventListener('load', () => {
     syncReviewLists();
     checkActive();
 });
+

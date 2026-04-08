@@ -1,14 +1,16 @@
 @charset "utf-8";
 
-@media (max-width: 1023px) {
-    .brand {
-        display: none;
-    }
-}
-
-@media (min-width: 1024px) {
+@media (max-width: 1024px) {
     .brand {
         display: block;
+    }
+
+    section[class*="option"] .bottom > ul.cars > li {
+        padding: 64px 24px 56px;
+    }
+
+    section[class*="option"] .bottom > ul.cars > li .info_con {
+        padding: 64px 24px 56px;
     }
 
     section[class*="option"] .bottom > ul.cars {
@@ -32,45 +34,108 @@
             opacity 0.4s ease;
     }
 
-    section[class*="option"] .bottom > ul.cars:hover > li {
+    section[class*="option"] .bottom > ul.cars > li > h2 {
+        font-size: clamp(40px, 4.6vw, 52px);
+        line-height: 1.05;
+    }
+
+    section.option02 .bottom > ul.cars > li > h2,
+    section.option03 .bottom > ul.cars > li > h2,
+    section.option04 .bottom > ul.cars > li > h2 {
+        display: inline-flex;
+        align-items: baseline;
+        gap: 0;
+        font-variant-numeric: lining-nums;
+        font-feature-settings: "lnum" 1;
+    }
+
+    section.option02 .bottom > ul.cars > li > h2 span,
+    section.option03 .bottom > ul.cars > li > h2 span,
+    section.option04 .bottom > ul.cars > li > h2 span {
+        display: inline;
+        font-size: 1em;
+        line-height: inherit;
+        vertical-align: baseline;
+        transform: none;
+        margin-left: 0;
+        font-variant-numeric: lining-nums;
+        font-feature-settings: "lnum" 1;
+    }
+
+    section[class*="option"] .bottom > ul.cars > li > strong {
+        font-size: clamp(16px, 1.9vw, 18px);
+    }
+
+    section[class*="option"] .bottom > ul.cars:hover > li,
+    section[class*="option"] .bottom > ul.cars:focus-within > li {
         flex-grow: 0.4;
     }
 
-    section[class*="option"] .bottom > ul.cars:hover > li:not(:hover) > h2 {
-        font-size: 32px;
-        line-height: 1.15;
+    section[class*="option"] .bottom > ul.cars:hover > li:not(:hover) > h2,
+    section[class*="option"] .bottom > ul.cars:focus-within > li:not(:hover):not(:focus-within) > h2 {
+        font-size: clamp(40px, 4.6vw, 52px);
+        line-height: 1.05;
     }
 
     section.option02 .bottom > ul.cars:hover > li:not(:hover) > h2,
     section.option03 .bottom > ul.cars:hover > li:not(:hover) > h2,
-    section.option04 .bottom > ul.cars:hover > li:not(:hover) > h2 {
+    section.option04 .bottom > ul.cars:hover > li:not(:hover) > h2,
+    section.option02 .bottom > ul.cars:focus-within > li:not(:hover):not(:focus-within) > h2,
+    section.option03 .bottom > ul.cars:focus-within > li:not(:hover):not(:focus-within) > h2,
+    section.option04 .bottom > ul.cars:focus-within > li:not(:hover):not(:focus-within) > h2 {
         display: inline-flex;
-        align-items: flex-end;
-        gap: 2px;
+        align-items: baseline;
+        gap: 0;
         line-height: 1;
+        font-variant-numeric: lining-nums;
+        font-feature-settings: "lnum" 1;
     }
 
-    section[class*="option"] .bottom > ul.cars:hover > li:not(:hover) > strong {
-        font-size: 16px;
+    section[class*="option"] .bottom > ul.cars:hover > li:not(:hover) > strong,
+    section[class*="option"] .bottom > ul.cars:focus-within > li:not(:hover):not(:focus-within) > strong {
+        font-size: clamp(16px, 1.9vw, 18px);
     }
 
-    section.option02 .bottom > ul.cars:hover > li:not(:hover) > h2 span {
-        font-size: 36px;
-        transform: translateY(-3px);
+    section.option02 .bottom > ul.cars:hover > li:not(:hover) > h2 span,
+    section.option02 .bottom > ul.cars:focus-within > li:not(:hover):not(:focus-within) > h2 span {
+        display: inline;
+        font-size: 1em;
+        line-height: inherit;
+        vertical-align: baseline;
+        transform: none;
+        margin-left: 0;
+        font-variant-numeric: lining-nums;
+        font-feature-settings: "lnum" 1;
     }
 
     section.option03 .bottom > ul.cars:hover > li:not(:hover) > h2 span,
-    section.option04 .bottom > ul.cars:hover > li:not(:hover) > h2 span {
-        font-size: 45px;
-        transform: translateY(-4px);
+    section.option04 .bottom > ul.cars:hover > li:not(:hover) > h2 span,
+    section.option03 .bottom > ul.cars:focus-within > li:not(:hover):not(:focus-within) > h2 span,
+    section.option04 .bottom > ul.cars:focus-within > li:not(:hover):not(:focus-within) > h2 span {
+        display: inline;
+        font-size: 1em;
+        line-height: inherit;
+        vertical-align: baseline;
+        transform: none;
+        margin-left: 0;
+        font-variant-numeric: lining-nums;
+        font-feature-settings: "lnum" 1;
     }
 
-    section[class*="option"] .bottom > ul.cars:hover > li:not(:hover) {
-        padding-inline: 32px;
+    section[class*="option"] .bottom > ul.cars:hover > li:not(:hover),
+    section[class*="option"] .bottom > ul.cars:focus-within > li:not(:hover):not(:focus-within) {
+        padding: 64px 24px 56px;
     }
 
-    section[class*="option"] .bottom > ul.cars > li:hover {
+    section[class*="option"] .bottom > ul.cars > li:hover,
+    section[class*="option"] .bottom > ul.cars > li:focus-within {
         flex-grow: 2.4;
+    }
+}
+
+@media (min-width: 1025px) {
+    .brand {
+        display: none;
     }
 }
 
@@ -321,12 +386,13 @@
       }
       .ev6_mobile_stage {
         position: relative;
-        width: min(100%, 420px);
+        width: 100%;
         min-height: 100%;
         margin: 0 auto;
         padding: 12px 0 28px;
       }
       .ev6_mobile_copy {
+        display: block;
         position: relative;
         z-index: 3;
         width: 100%;
@@ -340,6 +406,9 @@
         line-height: 0.92;
         letter-spacing: -0.03em;
         color: var(--kia-white1);
+        white-space: nowrap;
+        font-variant-numeric: lining-nums;
+        font-feature-settings: "lnum" 1;
       }
       .ev6_mobile_desc {
         margin: 10px 0 0;
@@ -388,6 +457,30 @@
         border-radius: 28px;
         filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.34));
       }
+      .ev6_mobile_slide .photo_card.bg2_feature_dashboard {
+        left: 8px;
+        right: auto;
+        top: clamp(440px, 43vh, 540px);
+        transform: none;
+      }
+      .ev6_mobile_slide .photo_card.bg2_feature_luggage {
+        left: auto;
+        right: 8px;
+        top: clamp(360px, 35vh, 440px);
+        transform: none;
+      }
+      .ev6_mobile_slide .photo_card.bg2_feature_seating {
+        left: 8px;
+        right: auto;
+        bottom: clamp(240px, 24vh, 300px);
+        transform: none;
+      }
+      .ev6_mobile_slide .photo_card.bg2_feature_carpets {
+        left: auto;
+        right: 8px;
+        bottom: clamp(190px, 19vh, 250px);
+        transform: none;
+      }
       .ev6_mobile_slide .photo_card img {
         display: block;
         width: 100%;
@@ -400,21 +493,9 @@
         inset: 0;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        justify-content: flex-end;
         padding: 14px 14px 16px;
         background: linear-gradient(180deg, rgba(9, 12, 18, 0.08) 0%, rgba(9, 12, 18, 0.2) 30%, rgba(9, 12, 18, 0.62) 100%);
-      }
-      .ev6_mobile_card_close {
-        align-self: flex-end;
-        width: 34px;
-        height: 34px;
-        border: 0;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.18);
-        color: rgba(255, 255, 255, 0.95);
-        font-size: 28px;
-        line-height: 1;
-        cursor: default;
       }
       .ev6_mobile_card_text {
         color: var(--kia-white1);
@@ -486,6 +567,7 @@
       }
 
       .ev6_mobile_stage {
+        width: 100%;
         padding-bottom: 20px;
       }
 
@@ -504,6 +586,22 @@
       .ev6_mobile_slide .photo_card {
         width: 256px;
         height: 200px;
+      }
+      .ev6_mobile_slide .photo_card.bg2_feature_dashboard {
+        left: 8px;
+        bottom: clamp(360px, 38vh, 440px);
+      }
+      .ev6_mobile_slide .photo_card.bg2_feature_luggage {
+        right: 8px;
+        bottom: clamp(300px, 32vh, 380px);
+      }
+      .ev6_mobile_slide .photo_card.bg2_feature_seating {
+        left: 8px;
+        bottom: clamp(220px, 23vh, 280px);
+      }
+      .ev6_mobile_slide .photo_card.bg2_feature_carpets {
+        right: 8px;
+        bottom: clamp(175px, 18vh, 230px);
       }
 
       .ev6_mobile_card_title {
