@@ -904,7 +904,8 @@ header nav ul.gnb>li:nth-of-type(5)>a>i {
 
 header nav ul.gnb>li>a>i {
   font-size: 22px;
-  color: rgba(221, 216, 209, 0.3);
+  color: var(--kia-white2);
+  /* color: rgba(221, 216, 209, 0.3); */
 }
 
 header nav ul.gnb>li.on>a,
