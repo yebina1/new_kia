@@ -22,6 +22,16 @@
     }
 }
 
+@media (max-width: 1450px) and (min-width: 901px) {
+    .txt_history1 {
+        top: 35%;
+    }
+
+    .txt_history2 {
+        top: 49%;
+    }
+}
+
 @media (max-width: 1024px) and (min-width: 900px) {
     .solution_section.is_desktop_scroll {
         --solution-panel-width: clamp(420px, 45vw, 520px);
@@ -89,12 +99,12 @@
     }
 
     .partner_cards_container {
-        gap: 24px;
+        gap: 20px;
     }
 
     .partner_card {
-        width: min(100%, 56vw);
-        max-width: 520px;
+        width: min(100%, 78vw);
+        max-width: 780px;
         opacity: 1 !important;
         transform: none !important;
         rotate: 0deg !important;
@@ -133,13 +143,15 @@
 }
 
 @media (max-width: 900px) {
-    .solution_text_list,
-    .solution_text_list > li,
-    .solution_text_spacer {
-        display: none !important;
+    .txt_history1 {
+        top: 33%;
+        width: calc(100% - 64px);
+        font-size: clamp(18px, 3vw, 26px);
+        line-height: 1.55;
     }
 
     .txt_history2 {
+        top: 57%;
         width: calc(100% - 64px);
     }
 
@@ -206,6 +218,24 @@
         padding: 0 0 56px;
     }
 
+    .partner_heading {
+        position: static !important;
+        display: block !important;
+        width: 100%;
+        margin: 0 auto 48px;
+        font-size: clamp(44px, 9vw, 84px) !important;
+        line-height: 0.92;
+        text-align: center;
+        opacity: 1 !important;
+        transform: none !important;
+        white-space: normal;
+        z-index: 1;
+    }
+
+    .partner_heading::before {
+        content: none !important;
+    }
+
     .partner_intro_cards {
         gap: 12px;
         margin: 16px auto 24px;
@@ -223,8 +253,8 @@
     }
 
     .partner_card {
-        width: calc(100vw - 64px);
-        max-width: calc(100vw - 64px);
+        width: calc(100vw - 32px);
+        max-width: calc(100vw - 32px);
         min-width: 220px;
         flex: 0 0 auto;
         gap: 0;
@@ -425,22 +455,6 @@
             transform: translateX(8px);
             opacity: 1;
         }
-    }
-
-    .solution_media_list .tex_box {
-        visibility: visible;
-        opacity: 1;
-    }
-
-    .solution_media_list {
-        position: relative !important;
-        left: 0;
-        top: 0;
-        width: 100%;
-    }
-
-    .solution_text_list {
-        display: none;
     }
 
     .solution_list {
@@ -673,11 +687,11 @@
 
 @media (max-width: 799px) {
     .partner_section {
-        margin-top: 198px;
+        margin-top: 0;
     }
 
     .awards {
-        margin-top: 198px;
+        margin-top: 0;
         border-top: 0;
     }
 }
